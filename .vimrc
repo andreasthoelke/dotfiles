@@ -130,7 +130,7 @@ Plug 'neovimhaskell/haskell-vim'
 Plug 'jaspervdj/stylish-haskell'
 Plug 'w0rp/ale'
 
-Plug 'neomake/neomake'
+" Plug 'neomake/neomake'
 Plug 'parsonsmatt/intero-neovim'
 
 " Plug 'Valloric/YouCompleteMe'
@@ -195,14 +195,14 @@ set sessionoptions-=help
 set sessionoptions-=options
 
 " Restore view settings
-set viewoptions=cursor,folds
-set viewdir=$HOME/.vim_view//
-au BufWritePost,BufLeave,WinLeave ?* mkview
-au BufWinEnter ?* silent loadview
+" set viewoptions=cursor,folds
+" set viewdir=$HOME/.vim_view//
+" au BufWritePost,BufLeave,WinLeave ?* mkview
+" au BufWinEnter ?* silent loadview
 
 " Vim-shell fullscreen options
-let g:shell_fullscreen_always_on_top = 0
-let g:shell_fullscreen_items = "mT"
+" let g:shell_fullscreen_always_on_top = 0
+" let g:shell_fullscreen_items = "mT"
 
 " set undodir="C:\Users\Andreas\SkyDrive\Code\5\_undo" --
 set undofile
@@ -214,20 +214,21 @@ set undodir=~/vimtmp/undo,.
 " set nowritebackup
 
 " this is optional. Folder are in 
-set backupdir=~/vimtmp/tmp,.
-set directory=~/vimtmp/tmp,.
+" set backupdir=~/vimtmp/tmp,.
+" set directory=~/vimtmp/tmp,.
 
 
 " Restore view settings
 set viewoptions=cursor,folds
 " set viewdir=$HOME/.vim_view//
 set viewdir=~/vimtmp/view//
-au BufWritePost,BufLeave,WinLeave ?* mkview " for tabs
+" au BufWritePost,BufLeave,WinLeave ?* mkview
+au BufWritePost ?* mkview
 au BufWinEnter ?* silent loadview
 
 " Vim-shell fullscreen options
-let g:shell_fullscreen_always_on_top = 0
-let g:shell_fullscreen_items = "mT"
+" let g:shell_fullscreen_always_on_top = 0
+" let g:shell_fullscreen_items = "mT"
 
 
 " --------------------------------------------------------------------------------
@@ -854,12 +855,17 @@ au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 " Code formatting ------------------------
 
 " Hit enter to add a new line above or below the current line
-nnoremap <S-Enter> O<Esc>
-nnoremap <CR> o<Esc>
+" nnoremap <Enter> o<Esc>
 
 " Break line at cursor position
-nnoremap <C-Enter> i<cr><Esc>
+" noremap L i<CR><Esc>
 " nnoremap <m-j> i<cr><Esc>l " not working!?
+
+" Insert one space
+" nnoremap <M-space> a <esc>
+" nnoremap <leader>L a <esc>
+" nnoremap <C-L> i <esc>l
+
 
 " Necessary to commit line in fireplace quasi REPL window, as ENTER is mapped
 " to new line
@@ -1016,9 +1022,6 @@ nmap <leader>r0 "_d$"0p`[
 nnoremap D "_d
 
 
-" Insert one space
-" nnoremap <M-space> a <esc>
-nnoremap <leader>L a <esc>
 
 
 
@@ -1136,7 +1139,7 @@ onoremap in( :<c-u>normal! f(vi(<cr>
 " omni complete
 " inoremap <C-B> <C-X><C-O>
 " Open omni menu and don't select the first entry
-inoremap <C-space><C-space> <C-x><C-o><C-p>
+" inoremap <C-space><C-space> <C-x><C-o><C-p>
 " navigate the list by using j and k
 inoremap <C-j> <C-n>
 " inoremap <C-k> <C-p>
@@ -1625,8 +1628,8 @@ nnoremap <silent> J j^
 nnoremap <silent> K k^
 " K needs to be remapped in /after/plugin as fireplace is using K 
 " Go to next bracket
-nnoremap <silent> H ?[\(\$\∷\>\→\[\{]<cr>
-nnoremap <silent> L /[\(\$\∷\<\→\[\{\#]<cr>
+" nnoremap <silent> H ?[\(\$\∷\>\→\[\{]<cr>
+" nnoremap <silent> L /[\(\$\∷\<\→\[\{\#]<cr>
 " Todo: This should not influence the most recent search, so hitting n will
 " still work.
 " Todo: delete this and reuse JKLH mappings
