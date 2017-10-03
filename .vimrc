@@ -25,8 +25,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'kien/ctrlp.vim'
 
-" Plug 'tpope/vim-fugitie'
-
+Plug 'tpope/vim-fugitive'
 Plug 'mileszs/ack.vim'
 Plug 'rking/ag.vim'
 
@@ -65,7 +64,6 @@ Plug 'tomasr/molokai'
 
 " General
 Plug 'guns/vim-clojure-static'
-" Plug 'majutsushi/tagbar'
 
 " Plug 'pangloss/vim-javascript'
 Plug 'jelera/vim-javascript-syntax'
@@ -138,7 +136,7 @@ Plug 'parsonsmatt/intero-neovim'
 Plug 'ervandew/supertab'
 Plug 'mhinz/vim-grepper'
 
-" Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar'
 " there is a Haskell integration, but it does not work :Tag.. not.. 
 
 
@@ -223,8 +221,8 @@ set viewoptions=cursor,folds
 " set viewdir=$HOME/.vim_view//
 set viewdir=~/vimtmp/view//
 " au BufWritePost,BufLeave,WinLeave ?* mkview
-au BufWritePost ?* mkview
-au BufWinEnter ?* silent loadview
+" au BufWritePost ?* mkview
+" au BufWinEnter ?* silent loadview
 
 " Vim-shell fullscreen options
 " let g:shell_fullscreen_always_on_top = 0
@@ -721,7 +719,7 @@ augroup interoMaps
 
   " Reloading (pick one)
   " Automatically reload on save
-  au BufWritePost *.hs InteroReload
+  " au BufWritePost *.hs InteroReload
   " Manually save and reload
   " au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
 
@@ -747,7 +745,7 @@ let g:intero_start_immediately = 0
 
 " TODO: when do I need this?
 " let g:haskellmode_completion_ghc = 1
-" autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 " autocmd BufWritePost *.hs GhcModCheckAndLintAsync
 
@@ -803,7 +801,7 @@ else " no gui
   endif
 endif
 
-let g:necoghc_enable_detailed_browse = 1
+let g:necoghc_enable_detailed_browse = 0
 let g:haskell_tabular = 1
 
 vmap a= :Tabularize /=<CR>
@@ -865,6 +863,13 @@ au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 " nnoremap <M-space> a <esc>
 " nnoremap <leader>L a <esc>
 " nnoremap <C-L> i <esc>l
+
+
+" nnoremap <S-L> :TagbarOpen j<cr>j<cr>
+" nnoremap <S-H> :TagbarOpen j<cr>k<cr>
+" nnoremap <S-L> <C-W><C-W>j<cr>
+" nnoremap <S-H> <C-W><C-W>k<cr>
+" TODO: linebreak, indent step, tagbar next/prev, tagbar win
 
 
 " Necessary to commit line in fireplace quasi REPL window, as ENTER is mapped
@@ -2106,6 +2111,42 @@ let g:easy_align_delimiters = {
 \   }
 \ }
 
+" highlight TagbarHighlight guifg=Green ctermfg=Green
+highlight default link TagbarHighlight  Cursor
+set updatetime=500
+
+" set tags=tags;/,codex.tags;/
+
+if executable('lushtags')
+    let g:tagbar_type_haskell = {
+        \ 'ctagsbin' : 'lushtags',
+        \ 'ctagsargs' : '--ignore-parse-error --',
+        \ 'kinds' : [
+            \ 'm:module:0',
+            \ 'e:exports:1',
+            \ 'i:imports:1',
+            \ 't:declarations:0',
+            \ 'd:declarations:1',
+            \ 'n:declarations:1',
+            \ 'f:functions:0',
+            \ 'c:constructors:0'
+        \ ],
+        \ 'sro' : '.',
+        \ 'kind2scope' : {
+            \ 'd' : 'data',
+            \ 'n' : 'newtype',
+            \ 'c' : 'constructor',
+            \ 't' : 'type'
+        \ },
+        \ 'scope2kind' : {
+            \ 'data' : 'd',
+            \ 'newtype' : 'n',
+            \ 'constructor' : 'c',
+            \ 'type' : 't'
+        \ }
+    \ }
+endif
+
 " copied from purescript - pscide-mac:
 fun! s:jsonEncode(thing, ...)
   let nl = a:0 > 0 ? (a:1 ? "\n" : "") : ""
@@ -2146,5 +2187,6 @@ endf
 fun! s:jsonToJSONBool(i)
   return  a:i ? s:jsonTrue() : s:jsonFalse()
 endf
+
 
 
