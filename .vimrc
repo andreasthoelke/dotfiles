@@ -128,7 +128,7 @@ Plug 'neovimhaskell/haskell-vim'
 Plug 'jaspervdj/stylish-haskell'
 Plug 'w0rp/ale'
 
-" Plug 'neomake/neomake'
+Plug 'neomake/neomake'
 Plug 'parsonsmatt/intero-neovim'
 
 " Plug 'Valloric/YouCompleteMe'
@@ -707,12 +707,29 @@ endfun
 " HASKELL
 
 setlocal formatprg=stylish-haskell
+
+
+" --- ALE --- 
 " let g:hindent_on_save = 0
 let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint']}
 let g:ale_lint_on_text_changed = 'normal'
 let g:ale_lint_on_insert_leave = 1
+let g:ale_enabled = 0
+let g:ale_set_quickfix = 1
+let g:ale_emit_conflict_warnings = 0
+nmap <leader>aa :ALEToggle<cr>
+" --- ALE --- 
 
 
+" TODO: automatic Intero+Tagbar setup
+" launch Intero on the right, go the it's window, resize it to width x, then
+"  let g:tagbar_vertical = 35
+" and the TagbarOpen, with should open it above intero
+
+hi NeomakeErrorSign   ctermfg=white
+hi NeomakeWarningSign ctermfg=white
+hi NeomakeIntoSign    ctermfg=white
+hi NeomakeMessageSign ctermfg=white
 
 augroup interoMaps
   au!
@@ -724,9 +741,10 @@ augroup interoMaps
 
   " Open intero/GHCi split horizontally
   au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
+  " au FileType haskell nnoremap <silent> <leader>ioo :TagbarOpen fj<cr>:InteroOpen<CR><C-W>H50<C-W>
   " Open intero/GHCi split vertically
   " au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
-  au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H25<C-W>>
+  " au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H25<C-W>
   au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
 
   " Reloading (pick one)
@@ -925,8 +943,11 @@ nmap ˚ <Plug>MoveLineUp
 " nmap <m-K> <Plug>MoveLineUp
 
 
-nmap <silent> [e :lprev<cr>
-nmap <silent> ]e :lnext<cr>
+" quickfix window and loclist window
+" nmap <silent> [e :lprev<cr>
+" nmap <silent> ]e :lnext<cr>
+nmap <silent> [e :cprev<cr>
+nmap <silent> ]e :cnext<cr>
 
 " window navigation - to learn!
 nmap <silent> [w <c-w>p
@@ -934,6 +955,8 @@ nmap <silent> ]w <c-w><c-w>
 nmap <silent> [c <c-w>c
 
 nnoremap <leader>lk <c-w>c 
+nnoremap dc <c-w>c 
+" close the win below - using this?
 nnoremap <leader>kj <c-w>j<c-w>c 
 
 
@@ -1662,10 +1685,32 @@ nmap glt :call OpenITerm()<cr>
 nmap glf :call OpenFinder()<cr>
 nmap gle :call OpenCurrentFileInSystemEditor()<cr>
 
+
+" --- Tagbar ----
 nmap gkl :TagbarOpen j<cr>
-nmap <leader>kl :TagbarOpen j<cr>
+nmap <leader>to :TagbarOpen j<cr>
+nmap to :TagbarOpen j<cr>
+nmap <leader>th :TagbarClose<cr>
+
+nmap <c-h> gklk<cr>
+nmap <c-l> gklj<cr>
+" --- Tagbar ----
+
+
+
+" --- quickfix & loclist ----
 let g:lt_location_list_toggle_map = 'gll'
 let g:lt_location_list_toggle_map = '<leader>ll'
+let g:lt_quickfix_list_toggle_map = 'gqq'
+let g:lt_quickfix_list_toggle_map = '<leader>qq'
+let g:lt_quickfix_list_toggle_map = '<leader>gq'
+
+nmap <leader>oq :CtrlPQuickfix<cr>
+" --- quickfix & loclist ----
+
+nmap <leader>go :Gstatus<cr>
+
+
 " milkypostman/vim-togglelist
 nmap gsg :call GoogleSearch("word")<cr>
 vmap gsg :call GoogleSearch("visSel")<cr>
