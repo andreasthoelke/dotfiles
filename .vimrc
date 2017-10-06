@@ -34,7 +34,7 @@ Plug 'vim-airline/vim-airline-themes'
 
 " Plug 'bling/vim-bufferline'
 
-" Plug 'gcavallanti/vim-noscrollbar' 
+Plug 'Valloric/ListToggle' 
 Plug 'kshenoy/vim-signature'
 
 " Plug 'terryma/vim-smooth-scroll'
@@ -48,7 +48,7 @@ Plug 'xolox/vim-session'
 " Restore folding
 Plug 'vim-scripts/restore_view.vim'
 
-Plug 'xolox/vim-shell'
+" Plug 'xolox/vim-shell'
 " iTerm2 integration
 Plug 'sjl/vitality.vim'
 
@@ -191,6 +191,9 @@ let g:session_autoload = 'yes'
 set sessionoptions+=folds
 set sessionoptions-=help
 set sessionoptions-=options
+set sessionoptions-=blank
+let g:session_persist_font = 0
+let g:session_persist_colors = 0
 
 " Restore view settings
 " set viewoptions=cursor,folds
@@ -240,11 +243,6 @@ if has('gui_running')
 
 else
 endif
-
-" Windows
-" set guifont=consolas:h11:cANSI
-" set guifont=inconsolata:h13:cANSI
-" set guifont=Ubuntu_Mono:h13:cANSI
 
 
 " How to change colors in the colorscheme?
@@ -307,19 +305,13 @@ set splitbelow
 set splitright
 set nolist
 
-" Auto window sizing
-" set winwidth=55
-" set winheight=9
-" set winminheight=9
-" set winminwidth=9
-" set winheight=999
-
-
 
 " Various mappings ----------------------------------------------
 
 " exit neovim terminal mode
-tnoremap jk <C-\><C-n>
+if has('nvim')
+  tnoremap jk <C-\><C-n>
+endif
 
 " windows should not be kept at equal size
 set noea
@@ -441,8 +433,10 @@ nnoremap tw :call InsertTypeAnnotation()<cr>
 nnoremap ti :call ImportIdentifier()<cr>
 nnoremap tr :PSCIDEend<cr>
 
-nnoremap tt :call SlimeType()<cr>
-vnoremap tt :call SlimeTypeVisSel()<cr>
+nnoremap tt <Plug>InteroGenericType
+vnoremap tt <Plug>InteroGenericType
+" nnoremap tt :call SlimeType()<cr>
+" vnoremap tt :call SlimeTypeVisSel()<cr>
 
 nnoremap <Leader>sii :PSCIDEimportIdentifier<CR>
 nnoremap <Leader>sai :PSCIDEaddImportQualifications<CR>
@@ -562,8 +556,11 @@ endfun
 function! ReplComLine()
     let lineList = split( getline( line(".") ) )
     let fnCallString = ListToHsFnCall(lineList) 
-    " exec 'SlimeSend1 ' . fnCallString 
-    exec 'InteroSend ' . fnCallString
+    if has('nvim')
+      exec 'InteroSend ' . fnCallString
+    else
+      exec 'SlimeSend1 ' . fnCallString 
+    endif
 endfun
 
 function! TraceComLine()
@@ -628,7 +625,12 @@ function! ReplTopFnRL()
     call ReplReload()
     let functionName = get( split( getline( line(".") ) ), 0 )
     " exec 'SlimeSend1 ' . functionName
-    exec 'InteroSend ' . functionName
+    " exec 'InteroSend ' . functionName
+    if has('nvim')
+      exec 'InteroSend ' . functionName
+    else
+      exec 'SlimeSend1 ' . functionName 
+    endif
 endfun
 
 " nmap <leader>ih :SlimeSend1 import Helpers<cr>
@@ -642,9 +644,13 @@ function! ReplReload()
       exec 'SlimeSend1 import ' . modulename
       " exec 'SlimeSend1 import Helpers'
     else
-      " exec 'SlimeSend1 :r'
-      " exec 'SlimeSend1 :l ' . modulename
-      exec ':InteroReload'
+      if has('nvim')
+        exec ':InteroReload'
+      else
+        exec 'SlimeSend1 :r'
+        exec 'SlimeSend1 :l ' . modulename
+      endif
+
     endif
 endfun
 
@@ -653,8 +659,11 @@ function! InsertTypeAnnotation()
     if IsPurs()
       exec ':PSCIDEaddTypeAnnotation'
     else
-      " exec ':GhcModTypeInsert'
-      exec ':InteroTypeInsert'
+      if has('nvim')
+        exec ':InteroTypeInsert'
+      else
+        exec ':GhcModTypeInsert'
+      endif
     endif
     call PurescriptUnicode()
 endfun
@@ -699,7 +708,10 @@ endfun
 
 setlocal formatprg=stylish-haskell
 " let g:hindent_on_save = 0
-" let g:ale_linters.haskell = ['stack-ghc-mod', 'hlint']
+let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint']}
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+
 
 
 augroup interoMaps
@@ -729,9 +741,9 @@ augroup interoMaps
 
   " Type-related information
   " Heads up! These next two differ from the rest.
-  au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
-  au FileType haskell map <silent> <leader>T <Plug>InteroType
-  au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
+  " au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
+  " au FileType haskell map <silent> <leader>T <Plug>InteroType
+  " au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
 
   " Navigation
   " au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
@@ -829,18 +841,18 @@ let g:haskell_indent_in = 1
 let g:haskell_indent_guard = 2
 
 " --------------------------------------------------------------------------------
-nnoremap <Leader>synt :SyntasticToggleMode<CR>
+" nnoremap <Leader>synt :SyntasticToggleMode<CR>
 
 " set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
 " set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 0
+" let g:syntastic_check_on_open = 0
+" let g:syntastic_check_on_wq = 0
 
-let g:psc_ide_syntastic_mode = 1
+" let g:psc_ide_syntastic_mode = 1
 
 au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
@@ -870,12 +882,6 @@ au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 " nnoremap <S-L> <C-W><C-W>j<cr>
 " nnoremap <S-H> <C-W><C-W>k<cr>
 " TODO: linebreak, indent step, tagbar next/prev, tagbar win
-
-
-" Necessary to commit line in fireplace quasi REPL window, as ENTER is mapped
-" to new line
-" nmap <C-Enter> <CR>
-imap <F10> <CR>
 
 
 " delete mixture of Windows line endings and Unix ones showing: ^M
@@ -919,6 +925,16 @@ nmap ˚ <Plug>MoveLineUp
 " nmap <m-K> <Plug>MoveLineUp
 
 
+nmap <silent> [e :lprev<cr>
+nmap <silent> ]e :lnext<cr>
+
+" window navigation - to learn!
+nmap <silent> [w <c-w>p
+nmap <silent> ]w <c-w><c-w>
+nmap <silent> [c <c-w>c
+
+nnoremap <leader>lk <c-w>c 
+nnoremap <leader>kj <c-w>j<c-w>c 
 
 
 " Join line below with current line
@@ -1276,12 +1292,6 @@ let NERDTreeQuitOnOpen=1
 
 
 
-" Windows
-" nnoremap <leader>oO :CtrlP C:\Dropbox\Code1/<cr>
-" Mac
-" nnoremap <leader>l :CtrlP ~/Dropbox/Code1/<cr>
-" nnoremap <leader>oo :CtrlPMRU <cr>
-
 
 "  ----------------------------------------------------------
 " CTRLP  --------------------------------------------------
@@ -1315,34 +1325,6 @@ nmap <leader>oh :CtrlPMixed<cr>
 "  ----------------------------------------------------------
 
 
-" Tabs ----------------------------------------
-nnoremap <leader>N :tabe <cr>
-nnoremap <leader>C :tabc <cr>
-
-" Tab navigation 
-nnoremap <leader>H gT<cr>
-nnoremap <leader>J gt<cr>
-
-nnoremap <c-tab> gT
-nnoremap <c-s-tab> gt
-
-
-" Windows -----------------------------------------
-
-" Next window
-nnoremap <leader>kj <C-w>w
-
-" Window split, vertical split, window close, close others
-" nnoremap <leader>s :sp<cr>
-" nnoremap <leader>S :vsp<cr>
-
-nnoremap <leader>cc <c-w>o
-nnoremap <leader>ll <c-w>o 
-nnoremap <leader>cx <c-w>c
-nnoremap <leader>lk <c-w>c 
-" nnoremap <leader>wo <c-w>o
-
-
 " Buffers -----------------------------------------
 
 " Toggle last buffers
@@ -1366,10 +1348,6 @@ nnoremap <leader>X :bd!<cr>
 " Mac needs these characters ç Ç for option key mappings 
 " nnoremap ç :bd<cr>
 " nnoremap Ç :bd!<cr>
-
-" force clojure syntax e.g. for cljc files
-" nnoremap <leader>vic :set syntax=clojure<cr>
-nnoremap <leader>ssc :set syntax=clojure<cr>
 
 
 " Scrolling ------------------------
@@ -1611,27 +1589,6 @@ let g:loaded_niji = 1
 " vnoremap <leader>doy "gy:call GoogleVisSel()<CR>
 
 " ----------------------------------------------
-" Autohotkey:
-" When the "\<>" key on the cherry keyboard is pressed, the ` key gets triggered
-" SC056::Send {vkC0sc029}
-
-" SC056::-
-" ; `::-
-
-"  switch the windows desktop. Strg + Semicolon and 'n' is shifting the Windows desktops
-" ^;::^#Right
-" ^n::^#Left
-" #2::^#Right
-" #1::^#Left
-
-" -----------------------------------------------------------------
-" S-Expressions (clojure) -----------------------------------------
-
-
-" Navigate line- and bracket wise, without using s-expressions.
-nnoremap <silent> J j^
-nnoremap <silent> K k^
-" K needs to be remapped in /after/plugin as fireplace is using K 
 " Go to next bracket
 " nnoremap <silent> H ?[\(\$\∷\>\→\[\{]<cr>
 " nnoremap <silent> L /[\(\$\∷\<\→\[\{\#]<cr>
@@ -1639,40 +1596,11 @@ nnoremap <silent> K k^
 " still work.
 " Todo: delete this and reuse JKLH mappings
 
-" Copy/Yank element
-" nmap ye yie
-
 " Delete-CUT element and black hole delete the space after it, to
 " be able to paste the cut element
 nmap de die"_dl
 
 nmap <leader>spy \wspy<esc>(
-
-
-let g:sexp_mappings = {
-      \ 'sexp_move_to_prev_top_element':       '<C-h>',
-      \ 'sexp_move_to_next_top_element':       '<C-l>',
-      \ 'sexp_emit_head_element':       '<leader>cj',
-      \ 'sexp_emit_tail_element':       '<leader>ck',
-      \ 'sexp_capture_prev_element':    '<leader>ch',
-      \ 'sexp_capture_next_element':    '<leader>cl',
-      \ }
-" define new mapping for emitting and capturing because lenovo touchpad diver
-" uses <M-s-l>, etc
-
-
-" <Plug>(sexp_capture_next_element)*
-
-" let g:sexp_mappings = {
-"       \ 'sexp_move_to_prev_top_element':       '<C-h>',
-"       \ 'sexp_move_to_next_top_element':       '<C-l>',
-"       \ 'sexp_emit_head_element':      '<M-C-j>',
-"       \ 'sexp_emit_tail_element':      '<M-C-k>',
-"       \ 'sexp_capture_prev_element':   '<M-C-h>',
-"       \ 'sexp_capture_next_element':   '<M-C-l>'
-"       \ }
-
-" -----------------------------------------------------------------
 
 
 
@@ -1709,15 +1637,6 @@ function! CommentToggle()
 endfunction
 
 
-augroup javascript
-  autocmd!
-  autocmd Filetype javascript nnoremap <buffer> <leader>r :!node %<cr> 
-  autocmd Filetype javascript nnoremap <buffer> <leader>c gI//<esc> 
-  autocmd Filetype javascript vnoremap <buffer> <leader>c :normal gI//<esc> 
-
-augroup END
-
-
 
 nmap <leader>op :call OpenUrlUnderCursor()<CR>
 " vmap <leader>op :call OpenSelectedUrl()<CR>
@@ -1743,13 +1662,11 @@ nmap glt :call OpenITerm()<cr>
 nmap glf :call OpenFinder()<cr>
 nmap gle :call OpenCurrentFileInSystemEditor()<cr>
 
-" gsg goog
-" gsd docs
-" gsh github
-" gsf files at root
-" gsb open buffers
-" gsl lib of references (TODO)
-
+nmap gkl :TagbarOpen j<cr>
+nmap <leader>kl :TagbarOpen j<cr>
+let g:lt_location_list_toggle_map = 'gll'
+let g:lt_location_list_toggle_map = '<leader>ll'
+" milkypostman/vim-togglelist
 nmap gsg :call GoogleSearch("word")<cr>
 vmap gsg :call GoogleSearch("visSel")<cr>
 nmap gsd :call DocsForCursorWord()<cr>
@@ -2114,6 +2031,7 @@ let g:easy_align_delimiters = {
 " highlight TagbarHighlight guifg=Green ctermfg=Green
 highlight default link TagbarHighlight  Cursor
 set updatetime=500
+let g:tagbar_sort = 0
 
 " set tags=tags;/,codex.tags;/
 
