@@ -36,9 +36,7 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'Valloric/ListToggle' 
 Plug 'kshenoy/vim-signature'
-
-" Plug 'terryma/vim-smooth-scroll'
-" Plug 'yonchu/accelerated-smooth-scroll'
+Plug 'airblade/vim-gitgutter'
 
 Plug 'AndrewRadev/linediff.vim'
 
@@ -720,6 +718,22 @@ let g:ale_emit_conflict_warnings = 0
 nmap <leader>aa :ALEToggle<cr>
 " --- ALE --- 
 
+" --- GitGutter --- 
+nmap <leader>gg :GitGutterToggle<cr>
+
+" nmap ]h <Plug>GitGutterNextHunk
+" nmap [h <Plug>GitGutterPrevHunk
+" stage the hunk with <Leader>hs or
+" undo it with <Leader>hu.
+"
+" nmap <Leader>ha <Plug>GitGutterStageHunk
+" nmap <Leader>hr <Plug>GitGutterUndoHunk
+let g:gitgutter_realtime = 0
+" let g:gitgutter_eager = 0
+nmap <silent> ]c :call NextHunkAllBuffers()<CR>
+nmap <silent> [c :call PrevHunkAllBuffers()<CR>
+" --- GitGutter --- 
+
 
 " TODO: automatic Intero+Tagbar setup
 " launch Intero on the right, go the it's window, resize it to width x, then
@@ -952,7 +966,7 @@ nmap <silent> ]e :cnext<cr>
 " window navigation - to learn!
 nmap <silent> [w <c-w>p
 nmap <silent> ]w <c-w><c-w>
-nmap <silent> [c <c-w>c
+" nmap <silent> [c <c-w>c
 
 nnoremap <leader>lk <c-w>c 
 nnoremap dc <c-w>c 
@@ -1709,6 +1723,7 @@ nmap <leader>oq :CtrlPQuickfix<cr>
 " --- quickfix & loclist ----
 
 nmap <leader>go :Gstatus<cr>
+nmap <leader>gs :Gstatus<cr>
 
 
 " milkypostman/vim-togglelist
@@ -2151,5 +2166,47 @@ fun! s:jsonToJSONBool(i)
   return  a:i ? s:jsonTrue() : s:jsonFalse()
 endf
 
+" ------- Git gutter ----------------------------------
+function! NextHunkAllBuffers()
+  let line = line('.')
+  GitGutterNextHunk
+  if line('.') != line
+    return
+  endif
 
+  let bufnr = bufnr('')
+  while 1
+    bnext
+    if bufnr('') == bufnr
+      return
+    endif
+    if !empty(GitGutterGetHunks())
+      normal! 1G
+      GitGutterNextHunk
+      return
+    endif
+  endwhile
+endfunction
+
+function! PrevHunkAllBuffers()
+  let line = line('.')
+  GitGutterPrevHunk
+  if line('.') != line
+    return
+  endif
+
+  let bufnr = bufnr('')
+  while 1
+    bprevious
+    if bufnr('') == bufnr
+      return
+    endif
+    if !empty(GitGutterGetHunks())
+      normal! G
+      GitGutterPrevHunk
+      return
+    endif
+  endwhile
+endfunction
+" ------- Git gutter ----------------------------------
 
