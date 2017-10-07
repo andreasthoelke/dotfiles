@@ -713,7 +713,7 @@ let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint']}
 let g:ale_lint_on_text_changed = 'normal'
 let g:ale_lint_on_insert_leave = 1
 let g:ale_enabled = 0
-let g:ale_set_quickfix = 1
+" let g:ale_set_quickfix = 1
 let g:ale_emit_conflict_warnings = 0
 nmap <leader>aa :ALEToggle<cr>
 " --- ALE --- 
@@ -729,7 +729,8 @@ nmap <leader>gg :GitGutterToggle<cr>
 " nmap <Leader>ha <Plug>GitGutterStageHunk
 " nmap <Leader>hr <Plug>GitGutterUndoHunk
 let g:gitgutter_realtime = 0
-" let g:gitgutter_eager = 0
+let g:gitgutter_eager = 0
+let g:gitgutter_enabled = 0
 nmap <silent> ]c :call NextHunkAllBuffers()<CR>
 nmap <silent> [c :call PrevHunkAllBuffers()<CR>
 " --- GitGutter --- 
@@ -958,14 +959,14 @@ nmap ˚ <Plug>MoveLineUp
 
 
 " quickfix window and loclist window
-" nmap <silent> [e :lprev<cr>
-" nmap <silent> ]e :lnext<cr>
+nmap <silent> [w :lprev<cr>
+nmap <silent> ]w :lnext<cr>
 nmap <silent> [e :cprev<cr>
 nmap <silent> ]e :cnext<cr>
 
 " window navigation - to learn!
-nmap <silent> [w <c-w>p
-nmap <silent> ]w <c-w><c-w>
+" nmap <silent> [w <c-w>p
+" nmap <silent> ]w <c-w><c-w>
 " nmap <silent> [c <c-w>c
 
 nnoremap <leader>lk <c-w>c 
@@ -1713,11 +1714,11 @@ nmap <c-l> gklj<cr>
 
 
 " --- quickfix & loclist ----
-let g:lt_location_list_toggle_map = 'gll'
+" let g:lt_location_list_toggle_map = 'gll'
 let g:lt_location_list_toggle_map = '<leader>ll'
-let g:lt_quickfix_list_toggle_map = 'gqq'
+" let g:lt_quickfix_list_toggle_map = 'gqq'
 let g:lt_quickfix_list_toggle_map = '<leader>qq'
-let g:lt_quickfix_list_toggle_map = '<leader>gq'
+" let g:lt_quickfix_list_toggle_map = '<leader>gq'
 
 nmap <leader>oq :CtrlPQuickfix<cr>
 " --- quickfix & loclist ----
@@ -1726,7 +1727,6 @@ nmap <leader>go :Gstatus<cr>
 nmap <leader>gs :Gstatus<cr>
 
 
-" milkypostman/vim-togglelist
 nmap gsg :call GoogleSearch("word")<cr>
 vmap gsg :call GoogleSearch("visSel")<cr>
 nmap gsd :call DocsForCursorWord()<cr>
