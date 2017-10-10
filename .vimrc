@@ -1,17 +1,3 @@
-set nocompatible
-set background=dark
-set laststatus=2
-set number
-
-if has("termguicolors")
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-    set termguicolors
-else
-    set t_Co=256
-endif
-
-set lazyredraw
-
 " purescript requires?
 " syntax on
 " filetype off
@@ -54,14 +40,6 @@ Plug 'sjl/vitality.vim'
 
 Plug 'tomasr/molokai'
 
-" REPL
-" Plug 'tpope/vim-fireplace'
-" Plug 'tpope/vim-classpath'
-
-" Leiningen
-" Plug 'tpope/vim-projectionist.git'
-" Plug 'tpope/vim-dispatch.git'
-
 " General
 Plug 'guns/vim-clojure-static'
 
@@ -71,8 +49,6 @@ Plug 'jelera/vim-javascript-syntax'
 " Code navigation
 " Plug 'justinmk/vim-sneak'
 Plug 'romgrk/vim-sneak', { 'branch': 'use-matchadd' }
-" Plug 'guns/vim-sexp'
-" Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Code utils
 Plug 'tpope/vim-surround'
@@ -83,10 +59,6 @@ Plug 'godlygeek/tabular'
 Plug 'tomtom/tcomment_vim'
 Plug 'kana/vim-textobj-fold'
 Plug 'matze/vim-move'
-" Plug 'terryma/vim-expand-region'
-" Plug 'terryma/vim-multiple-cursors'
-
-" Plug 'guns/vim-clojure-highlight'
 
 Plug 'chrisbra/Colorizer' 
 Plug 'KabbAmine/vCoolor.vim' 
@@ -102,9 +74,6 @@ Plug 'kana/vim-operator-user'
 Plug 'raichoo/purescript-vim'
 Plug 'FrigoEU/psc-ide-vim'
 " Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
-
-" Plug 'vim-syntastic/syntastic', {'for': 'purescript'} 
-" Plug 'vim-syntastic/syntastic'
 
 Plug 'jpalardy/vim-slime'
 
@@ -359,6 +328,7 @@ inoremap => <c-k>=>
 " inoremap <= <c-k><=
 inoremap forall <c-k>FA
 
+" Unicode mappings
 " nnoremap cuc :%s/::/<c-k>::/g<cr>:%s/forall/<c-k>FA/g<cr>
 nnoremap cuf :%s/forall/<c-k>FA/e<cr>
 nnoremap cuc :%s/::/<c-k>::/e<cr>
@@ -379,25 +349,22 @@ endfun
 
 " noremap <leader>ci /<c-k>-><cr>
 " noremap <leader>ci /<c-k>::<cr>
-noremap <leader>ci :call FormatSign()<cr>
-
-" TODO: format haskell/purescript functions signature!!
-fun! FormatSign()
-  exec "normal! /∷\<cr>"
-  let indentPos = col('.')
-  let lineNum = line('.')
-  exec "normal! /→\<cr>"
-  normal cuq
-
-  " exec "insert <cr>"
-  " echo indentPos
-  let ab = append(lineNum, "hii")
-endfun
-
-
+" noremap <leader>ci :call FormatSign()<cr>
+"
+" " TODO: format haskell/purescript functions signature!!
+" fun! FormatSign()
+"   exec "normal! /∷\<cr>"
+"   let indentPos = col('.')
+"   let lineNum = line('.')
+"   exec "normal! /→\<cr>"
+"   normal cuq
+"
+"   " exec "insert <cr>"
+"   " echo indentPos
+"   let ab = append(lineNum, "hii")
+" endfun
 
 noremap <leader>ssp :set syntax=purescript<cr>
-
 
 
 " could also do this with a macro!
@@ -410,7 +377,6 @@ noremap <leader>ssp :set syntax=purescript<cr>
 " endfun
 
 
-
 " inoremap ` -
 " cnoremap ` -
 
@@ -419,15 +385,12 @@ noremap <leader>ssp :set syntax=purescript<cr>
 " nnoremap <leader>kl :echo 'test8'<cr>
 " nnoremap <F4> :echo "test"<cr>
 
-
 " getfile split vertically file under cursor
 " nmap <buffer> sf :vertical wincmd f<CR>
-
 
 " save!
 nnoremap <leader>w :w!<cr>
 " nnoremap <silent><leader>w :up<cr>
-
 
 " edit vim 
 nnoremap <leader>vim :e $MYVIMRC<cr>
@@ -435,14 +398,6 @@ nnoremap <leader>vim :e $MYVIMRC<cr>
 nnoremap <leader>sv :so $MYVIMRC<cr>
 
 
-" nnoremap <leader>sc :colorscheme molokai<cr>
-
-" Vim help for word under curser:
-" These lines are in /after/ftplugin/vim.vim
-" :setlocal keywordprg=:help
-" nnoremap K :help <C-r><C-w><CR>
-
-" let g:psc_ide_log_level = 3
 
 " --------------------------------------------------------------------------------
 " PURESCRIPT
@@ -488,58 +443,58 @@ nnoremap <Leader>slo :PSCIDEload<CR>
 " --------------------------------------------------------------------------------
 " Some test-funtions:
 
-fun! Ac1()
-  let resu = append( line('.') - 1, '" zwei' )
-  return 'result: ' . resu
-endfun
-
-fun! Ac2()
-  let fnames = system('ls')
-  let resu = append( line('.') - 1, fnames )
-  return 'result: ' . resu
-endfun
-
-fun! Ac3()
-  let resu = system('wc -c', "abcdefg")
-  let rv = append( line('.') - 1, resu )
-  return 'result: ' . resu
-endfun
-
-function! PursClientVisSel()
-    let visSel = Get_visual_selection()
-    exec 'SlimeSend1 purs ide client'
-    exec 'SlimeSend1 ' . visSel
-endfun
-
-function! PursClientVisSel2()
-    let visSel = Get_visual_selection()
-    let resu = system('purs ide client', visSel)
-    let rv = append( line('.') - 1, resu )
-    return 'result: ' . resu
-endfun
-
-function! PursClientVisSel3()
-    let resu = s:mysystem('pulp psci', ":q" )
-    let rv = append( line('.') - 1, resu )
-    return 'result: ' . resu
-endfun
-
-function! PursClientVisSel4()
-    let visSel = Get_visual_selection()
-    let enc = s:jsonEncode( visSel )
-    let resu = system('purs ide client', enc)
-    let rv = append( line('.') - 1, resu )
-    return 'result: ' . resu
-endfun
-
-
-nmap dr :echo Ac3()<cr>
-vmap <leader>kh :call PursClientVisSel2()<cr>
-
-
-function! s:mysystem(a, b)
-  return system(a:a, a:b . "\n")
-endfunction
+" fun! Ac1()
+"   let resu = append( line('.') - 1, '" zwei' )
+"   return 'result: ' . resu
+" endfun
+"
+" fun! Ac2()
+"   let fnames = system('ls')
+"   let resu = append( line('.') - 1, fnames )
+"   return 'result: ' . resu
+" endfun
+"
+" fun! Ac3()
+"   let resu = system('wc -c', "abcdefg")
+"   let rv = append( line('.') - 1, resu )
+"   return 'result: ' . resu
+" endfun
+"
+" function! PursClientVisSel()
+"     let visSel = Get_visual_selection()
+"     exec 'SlimeSend1 purs ide client'
+"     exec 'SlimeSend1 ' . visSel
+" endfun
+"
+" function! PursClientVisSel2()
+"     let visSel = Get_visual_selection()
+"     let resu = system('purs ide client', visSel)
+"     let rv = append( line('.') - 1, resu )
+"     return 'result: ' . resu
+" endfun
+"
+" function! PursClientVisSel3()
+"     let resu = s:mysystem('pulp psci', ":q" )
+"     let rv = append( line('.') - 1, resu )
+"     return 'result: ' . resu
+" endfun
+"
+" function! PursClientVisSel4()
+"     let visSel = Get_visual_selection()
+"     let enc = s:jsonEncode( visSel )
+"     let resu = system('purs ide client', enc)
+"     let rv = append( line('.') - 1, resu )
+"     return 'result: ' . resu
+" endfun
+"
+"
+" nmap dr :echo Ac3()<cr>
+" vmap <leader>kh :call PursClientVisSel2()<cr>
+"
+"
+" function! s:mysystem(a, b)
+"   return system(a:a, a:b . "\n")
+" endfunction
 
 " --------------------------------------------------------------------------------
 " --------------------------------------------------------------------------------
@@ -907,18 +862,6 @@ let g:haskell_indent_in = 1
 let g:haskell_indent_guard = 2
 
 " --------------------------------------------------------------------------------
-" nnoremap <Leader>synt :SyntasticToggleMode<CR>
-
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 0
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 0
-
-" let g:psc_ide_syntastic_mode = 1
 
 au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
@@ -963,34 +906,10 @@ nmap ga <Plug>(EasyAlign)
 
 let g:easy_align_ignore_groups = ['Comment', 'String'] 
 
-" Align clojure let binding vector
-" Go to begining of form, (temp-) delete the space after let, activate EasyAlign
-" with gaif, filter mode: not include lines that start with spaces, put space back after let
-nmap <leader>fa (hxgaif<C-f>v/^\s\s\s\s\s\s\s\s\s\s\s\s\s/<CR> (i <esc>wwwhxbb=aF<c-o>
-" ---------------------------------------------------------
-
-" format a clojure map - after commas
-" nmap <leader>d, f,lli<cr><esc>
-
-
-" Insert comment above line in vimscript
-" nmap <leader>; O"<space>
-" free mapping!
 
 " Insert line comment
-" nmap <leader>- i"<esc><leader>_
-" nmap <leader>- i--------------------------------------------------------------------------------<esc>^
 nmap <leader>s- i--------------------------------------------------------------------------------<esc>^
 nmap <leader>ml i--------------------------------------------------------------------------------<esc>^
-
-" free mapping!
-" Moving lines
-" vmap ∆ <Plug>MoveBlockDown
-" vmap ˚ <Plug>MoveBlockUp
-" nmap ∆ <Plug>MoveLineDown
-" nmap ˚ <Plug>MoveLineUp
-" nmap <m-J> <Plug>MoveLineDown
-" nmap <m-K> <Plug>MoveLineUp
 
 
 " quickfix window and loclist window
@@ -1025,7 +944,6 @@ inoremap <m-j> <cr>
 " insert: alt - k: delete line up
 " inoremap <m-k> <esc>kJi
 
-
 " Move to beginning and end of line + related operations
 nmap 9 ^
 omap 9 ^
@@ -1034,19 +952,9 @@ nmap y9 y^
 nmap d9 d^
 nmap c9 c^
 
-" nmap 0 $
-" omap 0 $
-" vmap 0 $
-" nmap y0 y$
-" nmap d0 d$
-" nmap c0 c$
 nmap 0 g_
 omap 0 g_
 vmap 0 g_
-" nmap y0 y$
-" nmap d0 d$
-" nmap c0 c$
-
 
 " ------------------------------------------------------
 " Paste and delete -------------------------------------
@@ -1069,12 +977,6 @@ vnoremap <leader>y "+y
 nmap <leader><m-p> :<c-r>"
 " <c-r>"
  
-" reverse paste commands as I mostly use P
-" nnoremap p P
-" nnoremap P p
-
-" nmap <leader><m-p> :<c-r>"
-
 
 " SOME TOOLS FUNTIONS, TIPS
 " in insert mode, the key sequence backslash f p will insert the current working directory
@@ -1130,12 +1032,6 @@ function! MyFoldText()
 endfunction
 " ------- Folding --------
 
-
-" Format/indent outer clojure form
-" nmap <leader>e =aF<c-o>
-" free mapping
-
-
 " Comment line or selection
 " nmap <leader>gf gcc
 nmap <leader>ge gcc
@@ -1148,11 +1044,6 @@ vmap <leader>ge gc
 " Fill line with dashes 
 nnoremap <leader>_ $a<space><esc>82a-<esc>d82<bar>^
 
-" List contents of registers
-" nnoremap <silent> "" :registers "01234abc*+.<CR>
-" This "" would be a cool mapping for other stuff! Todo:
-" nnoremap <silent> "" :registers "012+.<CR>
-" nnoremap <leader>reg :registers 
 
 "  --------------------------------------------------------
 "
@@ -1258,7 +1149,27 @@ autocmd ColorScheme * hi! link SneakScope Normal
 " autocmd ColorScheme * hi! Sneak guifg=green guibg=orange
 autocmd ColorScheme * hi! link Sneak Cursor
 
+
+" ---- Color ----
+
 colorscheme molokai
+
+set nocompatible
+set background=dark
+set laststatus=2
+set number
+
+if has("termguicolors")
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    set termguicolors
+else
+    set t_Co=256
+endif
+
+" set lazyredraw
+
+" ---- Color ----
+
 
 
 " ------------------------------------------------------
@@ -1479,30 +1390,6 @@ endfunc
 
 
 " ---------------------------------------------------------
-" MACROS:
-"
-" FORMAT A CLOJURE VECTOR OF MAPS
-let @s = 'f{Whf{i'
-" Find the first open brace, go to the next W (map), go back one step (h) and
-" find the next map/open brace again f{ - this will terminate the macro when
-" there is no next map, then insert new line
-" mapping:
-nmap <leader>fs m`22@s``
-
-" FORMAT A CLOJURE MAP by ','
-let @d = 'f,lli'
-" find comma, go 2 steps, linebreak
-" mapping:
-nmap <leader>fd m`80@d``
-
-" FORMAT A CLOJURE VECTOR IN LINES OF TWO ELEMENTS
-let @a = 'f ;a'
-" find space, repeat the find, linebreak
-" mapping:
-nmap <leader>fa m`22@a``
-
-
-" ---------------------------------------------------------
 " Edit MACRO:
 " Record it into the register t: qt---q
 " show the t register :reg t
@@ -1517,138 +1404,6 @@ nmap <leader>fa m`22@a``
 " you can now run the macro by typing @d
 " ---------------------------------------------------------
 
-" function! ReplResInNextLine()
-"   normal yafoPc!af9
-" endfunction
-"
-" function! ReplResBelowForm()
-"   normal yaf)oPc!af9i;; ==>\
-" endfunction
-"
-" function! InsertPprint()
-"   normal \wclojure.pprint/pprint(\wwith-out-strjk(
-" endfunction
-"
-" function! DeletePprint()
-"   normal dsfdawdsfdaw
-" endfunction
-
-" MACRO:
-" PprintLineBreak
-" find pprint linefeed, delte it, insert line break
-let @g = '¯\\rdfnli'
-
-" function! PprintLineBreak()
-"   " find pprint linefeed, delte it, insert line break
-"   normal ¯\\r\dfnli\
-" endfunction
-
-" --------------------------------------------------------------------------------
-" Repl and align a clojure table by comma:
-" 1. repl in next line
-" 2. line break at first level object in collection
-" 3. go end of line and visual select form
-" 4. easy-align by comma(,)
-" nmap <leader>u8 :call ReplTable()<cr>0vaf<cr>,(
-
-" function! ReplTable()
-"   call ReplResInNextLine()
-"
-"   execute "normal! 42@s"
-" endfunction
-
-" --------------------------------------------------------------------------------
-" nmap <leader>up :call ReplPprint()<cr>
-" nmap <leader>up :call ReplPprint()<cr>vaf<cr> 
-
-" function! ReplPprint()
-"   call InsertPprint()
-"   " call ReplResInNextLine()
-"   call ReplResBelowForm()
-"
-"   normal ds"
-"
-"   " Replace escaping around clojure strings the pprint inserts
-"   :s/\\"/"
-"
-"   "find pprint linefeed, delte it, insert line break 
-"   execute "normal! 42@g"
-"
-"   " Easyalign by <space>
-"   normal vaf\ 
-"
-"   " go back in clean up
-"   execute "normal! ?with-out-str\<cr>"
-"   call DeletePprint()
-" endfunction
-
-" ---------------------------------------------------------
-" PASTE IN CODE ------------------------------------------
-" Inner form
-
-" nmap <leader>ui ix<esc>xmtyaf((((()o<esc>Pc!af`t 
-" uses mark t to move the cursor back from where it started
-
-" 9 moves to the beginning of the map, then repeat the macro @w = 'f,lli<esc>' 
-" nmap <leader>ui ix<esc>xmtyaf((((()o<esc>Pc!af922@w
-nmap <leader>ui ix<esc>xmtyaf((((()o<esc>Pc!af9
-" Outer form
-nmap <leader>uo ix<esc>xmt(((((yaf)o<esc>Pc!af9
-" Element
-" nmap <leader>up ix<esc>xmtyie((((()o<esc>Pbc!e`t
-" nmap <leader>up ix<esc>xmtyie((((()o<esc>Pc!af9
-"
-" nmap <leader>up @g@jds"22@t?with-out-str<cr>@h
-
-
-" SHOW STORE 1, 2, 3: PASTE IN CODE ------------------------------------------
-nmap <leader>ur ix<esc>xmt((((()o<esc>"rPc!af`t
-nmap <leader>ue ix<esc>xmt((((()o<esc>"ePc!af`t
-nmap <leader>uw ix<esc>xmt((((()o<esc>"wPc!af`t
-
-
-" IN CONSOLE ---------------------------------------------
-" Inner form
-nmap <leader>uk cpp
-" Outer form
-nmap <leader>ul :Eval<cr>
-" Element
-nmap <leader>u; cpie
-" File
-nmap <leader>uj cp%
-
-
-" SHOW STORE 1, 2, 3: IN CONSOLE ------------------------------------------
-nmap <leader>uf cqp<C-r>r<cr>
-nmap <leader>ud cqp<C-r>e<cr>
-nmap <leader>us cqp<C-r>w<cr>
-
-
-
-" STORE TO 1(r) 2(e) 3(w) ---------------------------------------------
-" Inner form
-nmap <leader>yir "ryaf
-nmap <leader>yie "eyaf
-nmap <leader>yiw "wyaf
-" Outer form
-nmap <leader>yor mt((((("ryaf`t
-nmap <leader>yoe mt((((("eyaf`t
-nmap <leader>yow mt((((("wyaf`t
-" Element
-nmap <leader>ypr "ryie
-nmap <leader>ype "eyie
-nmap <leader>ypw "wyie
-
-
-" ----------------------------------------------
-
-" ----------------------------------------------
-" Go to next bracket
-" nnoremap <silent> H ?[\(\$\∷\>\→\[\{]<cr>
-" nnoremap <silent> L /[\(\$\∷\<\→\[\{\#]<cr>
-" Todo: This should not influence the most recent search, so hitting n will
-" still work.
-" Todo: delete this and reuse JKLH mappings
 
 " Delete-CUT element and black hole delete the space after it, to
 " be able to paste the cut element
@@ -1671,13 +1426,6 @@ function! DiffToggle()
 vmap <leader>di :Linediff<cr>
 nmap <leader>dr :LinediffReset<cr>
 
-
-
-" autocommands -----------------------------------------
-" augroup vimscript
-"   autocmd!
-"   autocmd BufWritePost $MYVIMRC source $MYVIMRC
-" augroup END
 
 
 nmap <leader>op :call OpenUrlUnderCursor()<CR>
@@ -2040,26 +1788,6 @@ function! GetProjectRoot()
    endfo
    return fnameescape(wd == '' ? cph : substitute(wd, mkr.'$', '.', '')) 
 endfunction
-
-" function! UpdatePlugins()
-"   cd ~/vimfiles/bundle
-"   for i in `ls`; do
-"     cd "$i"
-"     git pull
-"     cd ..
-"   endfo
-" endfunction
-
-" function! Example1()
-" getting a word with cursor
-"     " normal m`9 -- set a marker ..
-"     " let fnname = expand("<cword>")
-"     " .. but alternativly do this:
-"     let fnname = get( split( getline( line(".") ) ), 0 )
-"     let modulename = get( split( getline(1) ), 1 )
-"     " normal `` --- return to marker
-"     " echo modulename . ' ' . fnname
-" endfun
 
 
 hi Directory guifg=#11C8D7 ctermfg=DarkMagenta
