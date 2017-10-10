@@ -36,6 +36,7 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'Valloric/ListToggle' 
 Plug 'kshenoy/vim-signature'
+Plug 'mattn/ctrlp-mark'
 Plug 'airblade/vim-gitgutter'
 
 Plug 'AndrewRadev/linediff.vim'
@@ -45,6 +46,7 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 " Restore folding
 Plug 'vim-scripts/restore_view.vim'
+" Plug 'Twinside/vim-haskellFold'
 
 " Plug 'xolox/vim-shell'
 " iTerm2 integration
@@ -66,9 +68,11 @@ Plug 'guns/vim-clojure-static'
 " Plug 'pangloss/vim-javascript'
 Plug 'jelera/vim-javascript-syntax'
 
-" S-Expression navigation
-Plug 'guns/vim-sexp'
-Plug 'tpope/vim-sexp-mappings-for-regular-people'
+" Code navigation
+" Plug 'justinmk/vim-sneak'
+Plug 'romgrk/vim-sneak', { 'branch': 'use-matchadd' }
+" Plug 'guns/vim-sexp'
+" Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Code utils
 Plug 'tpope/vim-surround'
@@ -77,7 +81,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'venantius/vim-cljfmt'
 Plug 'godlygeek/tabular'
 Plug 'tomtom/tcomment_vim'
-
+Plug 'kana/vim-textobj-fold'
 Plug 'matze/vim-move'
 " Plug 'terryma/vim-expand-region'
 " Plug 'terryma/vim-multiple-cursors'
@@ -121,8 +125,11 @@ Plug 'bitc/vim-hdevtools'
 " Plug 'neovimhaskell/haskell-vim', {'for': 'haskell'}
 Plug 'neovimhaskell/haskell-vim'
 " Plug 'alx741/vim-hindent'
-" Plug 'kana/vim-textobj-user'
-" Plug 'gilligan/vim-textobj-haskell'
+
+Plug 'kana/vim-textobj-user'
+Plug 'gilligan/vim-textobj-haskell'
+" requires python
+
 Plug 'jaspervdj/stylish-haskell'
 Plug 'w0rp/ale'
 
@@ -146,6 +153,19 @@ call plug#end()
 
 let $PATH .= (":" . $HOME . "/.cabal/bin")
 let $PATH .= (":" . "/Users/andreas.thoelke/.local/bin")
+
+" let g:python2_host_prog = '/usr/local/bin/python'
+let g:python2_host_prog = '/Users/andreas.thoelke/Library/Python/2.7' 
+let g:python3_host_prog = '/usr/local/bin/python3'
+
+
+" uncomment this to disable Python support
+" let g:loaded_python_provider = 1
+" let g:loaded_python3_provider = 1
+
+" /Users/andreas.thoelke/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py
+let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
+
 
 
 set selection=inclusive
@@ -192,6 +212,10 @@ set sessionoptions-=options
 set sessionoptions-=blank
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
+
+
+" define what is saved/restored from ~/.local/share/nvim/shada/main.shada 
+set shada="!,'100,<50,s10,h,f0"
 
 " Restore view settings
 " set viewoptions=cursor,folds
@@ -248,7 +272,7 @@ endif
 " hit <leader><f7><f7> to view the colors (optional)
 " hit <f7><f7> to edit a color
 " save and run colorscheme molokai
-colorscheme molokai
+" colorscheme molokai
 " colorscheme OceanicNext
 " let g:rehash256 = 1
 
@@ -258,7 +282,11 @@ set numberwidth=5
 
 highlight FoldColumn guibg=gray10 guifg=gray20
 hi        LineNr     guibg=gray10 guifg=gray15 
-
+" highlight Folded     guibg=gray6  guifg=grey60
+" highlight Folded     guifg=grey30
+" hi        Folded     guifg=#465457 guibg=#000000
+" hi        Folded     guifg=#4B5B61 guibg=#0B0B0B gui=bold
+hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
 
 
 " Various settings
@@ -718,11 +746,16 @@ let g:ale_emit_conflict_warnings = 0
 nmap <leader>aa :ALEToggle<cr>
 " --- ALE --- 
 
+
 " --- GitGutter --- 
 nmap <leader>gg :GitGutterToggle<cr>
 
-" nmap ]h <Plug>GitGutterNextHunk
-" nmap [h <Plug>GitGutterPrevHunk
+nmap ]h <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterPrevHunk
+" default! 'hunk' vs. 'change'
+nmap ]c <Plug>GitGutterNextHunk
+nmap [c <Plug>GitGutterPrevHunk
+
 " stage the hunk with <Leader>hs or
 " undo it with <Leader>hu.
 "
@@ -941,7 +974,8 @@ nmap <leader>fa (hxgaif<C-f>v/^\s\s\s\s\s\s\s\s\s\s\s\s\s/<CR> (i <esc>wwwhxbb=a
 
 
 " Insert comment above line in vimscript
-nmap <leader>; O"<space>
+" nmap <leader>; O"<space>
+" free mapping!
 
 " Insert line comment
 " nmap <leader>- i"<esc><leader>_
@@ -949,11 +983,12 @@ nmap <leader>; O"<space>
 nmap <leader>s- i--------------------------------------------------------------------------------<esc>^
 nmap <leader>ml i--------------------------------------------------------------------------------<esc>^
 
+" free mapping!
 " Moving lines
-vmap ∆ <Plug>MoveBlockDown
-vmap ˚ <Plug>MoveBlockUp
-nmap ∆ <Plug>MoveLineDown
-nmap ˚ <Plug>MoveLineUp
+" vmap ∆ <Plug>MoveBlockDown
+" vmap ˚ <Plug>MoveBlockUp
+" nmap ∆ <Plug>MoveLineDown
+" nmap ˚ <Plug>MoveLineUp
 " nmap <m-J> <Plug>MoveLineDown
 " nmap <m-K> <Plug>MoveLineUp
 
@@ -964,15 +999,18 @@ nmap <silent> ]w :lnext<cr>
 nmap <silent> [e :cprev<cr>
 nmap <silent> ]e :cnext<cr>
 
-" window navigation - to learn!
-" nmap <silent> [w <c-w>p
-" nmap <silent> ]w <c-w><c-w>
-" nmap <silent> [c <c-w>c
 
-nnoremap <leader>lk <c-w>c 
-nnoremap dc <c-w>c 
-" close the win below - using this?
-nnoremap <leader>kj <c-w>j<c-w>c 
+" ---- Window control ----
+" nnoremap dc <c-w>c 
+" close the win below
+nnoremap <c-w>d <c-w>j<c-w>c 
+nnoremap <c-w>- 7<c-w>-
+nnoremap <c-w>+ 7<c-w>+
+nnoremap <c-w>a 7<c-w>+
+nnoremap <c-w>> 4<c-w>>
+nnoremap <c-w>< 4<c-w><
+
+" ---- Window control ----
 
 
 " Join line below with current line
@@ -986,13 +1024,6 @@ inoremap <m-j> <cr>
 
 " insert: alt - k: delete line up
 " inoremap <m-k> <esc>kJi
-
-
-
-
-" Visual mode Region expanding
-" vmap v <Plug>(expand_region_expand)
-" vmap <C-v> <Plug>(expand_region_shrink)
 
 
 " Move to beginning and end of line + related operations
@@ -1083,18 +1114,26 @@ nnoremap D "_d
 
 
 
-
+" ------- Folding --------
 " Toggle folding
 nnoremap z<space> za
 " zfaf => fold clojure form
 
+" What actions automatically open folds?
+set foldopen="undo"
+" set foldopen="block,hor,mark,percent,quickfix,search,tag,undo"
+set foldtext=MyFoldText()
+function! MyFoldText()
+  let line = getline(v:foldstart)
+  " let sub  = substitute(line, '/\*\|\*/\|{{{\d\=', '', 'g')
+  return line
+endfunction
+" ------- Folding --------
+
 
 " Format/indent outer clojure form
-nmap <leader>e =aF<c-o>
-
-" Format align clojure
-" :Cljfmt
-let g:clj_fmt_autosave = 0
+" nmap <leader>e =aF<c-o>
+" free mapping
 
 
 " Comment line or selection
@@ -1116,10 +1155,6 @@ nnoremap <leader>_ $a<space><esc>82a-<esc>d82<bar>^
 " nnoremap <leader>reg :registers 
 
 "  --------------------------------------------------------
-" Simple mark remap and jump back
-nnoremap <leader>mk m`
-nnoremap <leader>mm ``
-
 "
 " Using marks
 " Jump across buffers
@@ -1152,8 +1187,20 @@ nnoremap 't 'T
 " nmap <C-space><C-j> ']
 " nmap <C-space><C-h> '[
 
-nnoremap <c-space><c-j> :<C-U>call signature#mark#Goto("next", "spot", "global")<CR>
-nnoremap <c-space><c-h> :<C-U>call signature#mark#Goto("prev", "spot", "global")<CR>
+" Markers/Marks
+" nnoremap <c-space><c-j> :<C-U>call signature#mark#Goto("next", "spot", "global")<CR>
+" nnoremap <c-space><c-h> :<C-U>call signature#mark#Goto("prev", "spot", "global")<CR>
+" Free mapping!
+nnoremap ]a :<C-U>call signature#mark#Goto("next", "spot", "global")<CR>
+nnoremap [a :<C-U>call signature#mark#Goto("prev", "spot", "global")<CR>
+
+" Navigate this using ]w and [w to naviaget loclist /("warnings")
+" can alternaivly also navigate with [a ]a
+nmap <leader>mm :SignatureListGlobalMarks<cr><c-w>k
+nmap <leader>om :CtrlPMark<cr>
+" ctrlp-mark plugin useful?
+
+" to learn: m` marks and `` jumps back to this!!
 
 let g:signaturemap = {
       \ 'leader'             :  "m",
@@ -1184,15 +1231,44 @@ let g:SignatureIncludeMarks = 'ABCDEFGHI'
 
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
 
+let g:sneak#label = 1
+" let g:sneak#clear_syntax = 1
+
+nmap f <Plug>Sneak_s
+nmap F <Plug>Sneak_S
+" visual-mode
+xmap f <Plug>Sneak_s
+xmap F <Plug>Sneak_S
+" operator-pending-mode
+omap f <Plug>Sneak_s
+omap F <Plug>Sneak_S
+
+" 1-character enhanced 't'
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+" visual-mode
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+" operator-pending-mode
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
+
+
+autocmd ColorScheme * hi! link SneakScope Normal
+" autocmd ColorScheme * hi! Sneak guifg=green guibg=orange
+autocmd ColorScheme * hi! link Sneak Cursor
+
+colorscheme molokai
+
 
 " ------------------------------------------------------
 
 " Movement mappings
 "
 " Insight parantheses
-onoremap p i(
-onoremap b /return<cr>
-onoremap in( :<c-u>normal! f(vi(<cr>
+" onoremap p i(
+" onoremap b /return<cr>
+" onoremap in( :<c-u>normal! f(vi(<cr>
 
 " ------------------------------------------------------
 " omni complete
@@ -1299,13 +1375,6 @@ nnoremap <leader><F7><F7> :ColorToggle<cr>
 nnoremap <leader><F7><F8> :ColorContrast<cr>
 nnoremap <leader><F7><F9> :ColorSwapFgBg<cr>
 
-" Marks
-" highlight MarkWord1 ctermbg=Cyan ctermfg=Black guibg=#0F0F0F guifg=White
-
-" #1111AA
-" #FFFF80
-
-
 
 " Files and buffer  --------------------------------------------
 
@@ -1314,12 +1383,7 @@ nnoremap <leader><F7><F9> :ColorSwapFgBg<cr>
 let NERDTreeShowBookmarks = 1
 " let g:NERDTreeMapMenu = 'Mm'".. not working!?
 
-" nnoremap <leader>oO :NERDTreeToggle<cr>   
-" Mac
-" nnoremap <leader>o :NERDTreeToggle ~/Dropbox/Code1/<cr>   
-
 nnoremap <leader>oo :NERDTreeFind<cr>
-" nnoremap <leader>i :NERDTreeFind<cr>   
 
 nnoremap <leader>q :NERDTreeClose<cr>
 nnoremap <leader>oe :NERDTree-m<cr>
@@ -1397,8 +1461,8 @@ nnoremap <C-k> kkk
 vnoremap <C-j> jjj
 vnoremap <C-k> kkk
 
-nnoremap <C-H> {{j
-nnoremap <C-L> }}{j
+" nnoremap <C-H> {{j
+" nnoremap <C-L> }}{j
 
 nnoremap zh 7zh
 nnoremap zl 7zl
@@ -1436,9 +1500,6 @@ let @a = 'f ;a'
 " find space, repeat the find, linebreak
 " mapping:
 nmap <leader>fa m`22@a``
-
-" combine this? .. jump back to beginning does not work
-nmap <leader>fi <leader>ui<leader>fsl<leader>mm
 
 
 " ---------------------------------------------------------
@@ -1581,51 +1642,6 @@ nmap <leader>ypw "wyie
 
 " ----------------------------------------------
 
-
-" ----------------------------------------------
-" Bracket rainbow highlight
-" nnoremap <F3><F3> :call niji#highlight()<cr>
-" map <F2> cpp:ClojureHighlightReferences<cr>:call niji#highlight()<cr>:call niji#highlight()<cr>
-
-" disable
-let g:loaded_niji = 1
-" ----------------------------------------------
-
-
-" foldmethod:
-" let g:clojure_fold = 1
-
-
-
-" ----------------------------------------------
-" Find Docs and Online Info
-
-" Clojure docs online
-" -- temp disabled for purecript
-" nnoremap doo "gy:call ClojureDocsForCursorWord()<CR>
-" vnoremap doo "gy:call ClojureDocsForVisSel()<CR>
-
-" -- temp disabled for purecript
-" Get clojure doc from REPL
-" nnoremap doi :Doc     <C-r><C-w><cr>
-" nnoremap dou :FindDoc <C-r><C-w><cr>
-" show source
-" nmap dos ]d
-
-" -- temp disabled for purecript
-" Jump to definition/ navigate to reference code via REPL
-" nmap doj ]<C-d>
-" nmap <leader>dj ]<C-d>
-" nmap <leader>gd ]<C-d>
-" show in split
-" nmap dos <C-w>d
-" nmap <leader>gs <C-w>d
-
-" Just google
-" TODO: Mac compilience
-" nnoremap         doy "gy:call Google()<CR>
-" vnoremap <leader>doy "gy:call GoogleVisSel()<CR>
-
 " ----------------------------------------------
 " Go to next bracket
 " nnoremap <silent> H ?[\(\$\∷\>\→\[\{]<cr>
@@ -1664,18 +1680,6 @@ nmap <leader>dr :LinediffReset<cr>
 " augroup END
 
 
-function! CommentToggle()
-    let cword = expand("<cword>")
-    if cword == "_"
-      :normal xx
-    else
-      " add a clojure discard reader macro
-      execute ":normal! i#_\<esc>h"
-    endif
-endfunction
-
-
-
 nmap <leader>op :call OpenUrlUnderCursor()<CR>
 " vmap <leader>op :call OpenSelectedUrl()<CR>
 
@@ -1707,8 +1711,8 @@ nmap <leader>to :TagbarOpen j<cr>
 nmap to :TagbarOpen j<cr>
 nmap <leader>th :TagbarClose<cr>
 
-nmap <c-h> gklk<cr>
-nmap <c-l> gklj<cr>
+nmap <silent> <c-h> gklk<cr>
+nmap <silent> <c-l> gklj<cr>
 " --- Tagbar ----
 
 
@@ -2209,4 +2213,11 @@ function! PrevHunkAllBuffers()
   endwhile
 endfunction
 " ------- Git gutter ----------------------------------
+
+
+" To narrow down the issue, run Vim with a minimal configuration: >
+"     vim -u NORC -N +"let g:sneak#label=1" +":set runtimepath+=~/.vim/bundle/vim-sneak/" +":runtime plugin/sneak.vim"
+"
+" or Nvim: >
+"     nvim -u NORC +"let g:sneak#label=1" +":set runtimepath+=~/.local/share/nvim/bundle/vim-sneak/" +":runtime plugin/sneak.vim"
 
