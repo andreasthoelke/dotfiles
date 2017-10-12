@@ -86,7 +86,7 @@ Plug 'Shougo/vimproc.vim', {'do': 'make'}
 Plug 'Shougo/neocomplete.vim'
 
 " Plug 'eagletmt/neco-ghc', {'for': 'haskell'}
-Plug 'eagletmt/neco-ghc'
+" Plug 'eagletmt/neco-ghc'
 
 " Plug 'bitc/vim-hdevtools', {'for': 'haskell'}
 Plug 'bitc/vim-hdevtools'
@@ -397,7 +397,20 @@ nnoremap <leader>vim :e $MYVIMRC<cr>
 " source vim 
 nnoremap <leader>sv :so $MYVIMRC<cr>
 
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 
+let &t_SI = "\<Esc>]50;CursorShape=0\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+
+set termguicolors
+" set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+
+" set guicursor=n-v-c:block-iCursor,i-ci-ve:ver25,r-cr:hor20,o:hor50
+" 		  \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+" 		  \,sm:block-blinkwait175-blinkoff150-blinkon175
+
+set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
+" set guicursor=n:block-iCursor,i-ci-ve:ver100-blinkon400
 
 " --------------------------------------------------------------------------------
 " PURESCRIPT
@@ -729,10 +742,10 @@ nmap <silent> [c :call PrevHunkAllBuffers()<CR>
 "  let g:tagbar_vertical = 35
 " and the TagbarOpen, with should open it above intero
 
-hi NeomakeErrorSign   ctermfg=white
-hi NeomakeWarningSign ctermfg=white
-hi NeomakeIntoSign    ctermfg=white
-hi NeomakeMessageSign ctermfg=white
+" hi NeomakeErrorSign   ctermfg=white
+" hi NeomakeWarningSign ctermfg=white
+" hi NeomakeIntoSign    ctermfg=white
+" hi NeomakeMessageSign ctermfg=white
 
 augroup interoMaps
   au!
@@ -769,6 +782,7 @@ augroup interoMaps
   " Navigation
   " au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
   au FileType haskell nnoremap <silent> <leader>gd :InteroGoToDef<CR>
+  au FileType haskell nnoremap <silent> gd :InteroGoToDef<CR>
 
 augroup END
 
@@ -777,8 +791,9 @@ let g:intero_start_immediately = 0
 
 
 " TODO: when do I need this?
-" let g:haskellmode_completion_ghc = 1
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+let g:haskellmode_completion_ghc = 1
+" autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+" causes tag error?
 
 " autocmd BufWritePost *.hs GhcModCheckAndLintAsync
 
@@ -834,7 +849,7 @@ else " no gui
   endif
 endif
 
-let g:necoghc_enable_detailed_browse = 0
+" let g:necoghc_enable_detailed_browse = 0
 let g:haskell_tabular = 1
 
 vmap a= :Tabularize /=<CR>
@@ -874,32 +889,27 @@ au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 " Code formatting ------------------------
 
 " Hit enter to add a new line above or below the current line
-" nnoremap <Enter> o<Esc>
+nnoremap <c-Enter> i<cr><Esc>
+" nnoremap <CR> o<Esc>
 
 " Break line at cursor position
-" noremap L i<CR><Esc>
-" nnoremap <m-j> i<cr><Esc>l " not working!?
+nnoremap J i<CR><Esc>
+nnoremap L i <Esc>
+" free mapping 'H'!
+
+" Join line below with current line
+nnoremap <BS> J
+
+nnoremap <leader>L kJi<cr><esc>l
+
 
 " Insert one space
-" nnoremap <M-space> a <esc>
 " nnoremap <leader>L a <esc>
 " nnoremap <C-L> i <esc>l
 
-
-" nnoremap <S-L> :TagbarOpen j<cr>j<cr>
-" nnoremap <S-H> :TagbarOpen j<cr>k<cr>
-" nnoremap <S-L> <C-W><C-W>j<cr>
-" nnoremap <S-H> <C-W><C-W>k<cr>
-" TODO: linebreak, indent step, tagbar next/prev, tagbar win
-
-
-" delete mixture of Windows line endings and Unix ones showing: ^M
-" :%s/\r\(\n\)/\1/g
-
-
 " ---------------------------------------------------------
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
+vnoremap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
@@ -910,6 +920,7 @@ let g:easy_align_ignore_groups = ['Comment', 'String']
 " Insert line comment
 nmap <leader>s- i--------------------------------------------------------------------------------<esc>^
 nmap <leader>ml i--------------------------------------------------------------------------------<esc>^
+nmap gc-- i--------------------------------------------------------------------------------<esc>^
 
 
 " quickfix window and loclist window
@@ -932,15 +943,9 @@ nnoremap <c-w>< 4<c-w><
 " ---- Window control ----
 
 
-" Join line below with current line
-nnoremap <BS> J
 
 " LINE-NAVIGATION SUMMARY:
-" normal: strg - return: break line at cursor
 "
-" insert: alt - j: new line
-inoremap <m-j> <cr>
-
 " insert: alt - k: delete line up
 " inoremap <m-k> <esc>kJi
 
@@ -993,6 +998,25 @@ endfun
 
 
 nnoremap <leader>dcf :cd %:p:h<cr>
+
+" :py import vim, random; vim.current.line += str(random.randint(0, 99))
+"
+" ui0
+
+function! RandFnName()
+python << EOF
+import string
+import random
+import vim
+
+vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0 = undefined'
+EOF
+endfunction
+
+nmap <leader>uf :call RandFnName()<cr>2w
+" produces a (test) haskell function with a random name, e.g.:
+" cp0 = undefined
+
 
 " Replace ---------------------------------------------
 " Replace clojure elements and forms
@@ -1092,6 +1116,8 @@ nmap <leader>om :CtrlPMark<cr>
 " ctrlp-mark plugin useful?
 
 " to learn: m` marks and `` jumps back to this!!
+" ma, mb, mc .. to set!
+" 'a, 'b, 'c .. to jump!
 
 let g:signaturemap = {
       \ 'leader'             :  "m",
@@ -1166,7 +1192,13 @@ else
     set t_Co=256
 endif
 
-" set lazyredraw
+hi NeomakeErrorSign   ctermfg=white
+hi NeomakeWarningSign ctermfg=white
+hi NeomakeIntoSign    ctermfg=white
+hi NeomakeMessageSign ctermfg=white
+
+
+set lazyredraw
 
 " ---- Color ----
 
@@ -1792,7 +1824,6 @@ endfunction
 
 hi Directory guifg=#11C8D7 ctermfg=DarkMagenta
 
-nnoremap <CR> o<Esc>
 
 let g:easy_align_delimiters = {
 \ '>': { 'pattern': '>>\|=>\|>' },
