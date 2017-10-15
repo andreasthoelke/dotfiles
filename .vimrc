@@ -172,7 +172,9 @@ let g:airline_theme='simple'
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %{noscrollbar#statusline()}
 
-" Vim-session settings
+
+
+" ------- Vim-session settings ---------
 let g:session_autosave = 'yes'
 let g:session_autoload = 'yes'
 set sessionoptions+=folds
@@ -182,21 +184,6 @@ set sessionoptions-=blank
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
 
-
-" define what is saved/restored from ~/.local/share/nvim/shada/main.shada 
-set shada="!,'100,<50,s10,h,f0"
-
-" Restore view settings
-" set viewoptions=cursor,folds
-" set viewdir=$HOME/.vim_view//
-" au BufWritePost,BufLeave,WinLeave ?* mkview
-" au BufWinEnter ?* silent loadview
-
-" Vim-shell fullscreen options
-" let g:shell_fullscreen_always_on_top = 0
-" let g:shell_fullscreen_items = "mT"
-
-" set undodir="C:\Users\Andreas\SkyDrive\Code\5\_undo" --
 set undofile
 " set noundofile
 " set undodir="~/vimfiles/undo/" 
@@ -205,11 +192,6 @@ set undodir=~/vimtmp/undo,.
 " set nobackup
 " set nowritebackup
 
-" this is optional. Folder are in 
-" set backupdir=~/vimtmp/tmp,.
-" set directory=~/vimtmp/tmp,.
-
-
 " Restore view settings
 set viewoptions=cursor,folds
 " set viewdir=$HOME/.vim_view//
@@ -217,24 +199,41 @@ set viewdir=~/vimtmp/view//
 " au BufWritePost,BufLeave,WinLeave ?* mkview
 " au BufWritePost ?* mkview
 " au BufWinEnter ?* silent loadview
+" ------- Vim-session settings ---------
 
-" Vim-shell fullscreen options
-" let g:shell_fullscreen_always_on_top = 0
-" let g:shell_fullscreen_items = "mT"
+
+" ------- Shared Data persistence ---------
+command! ShadaClear :call ClearShada()
+function! ClearShada()
+    exec "!rm" . ' ~/.local/share/nvim/shada/main.shada'
+endfunction
+
+command! ShadaLoad :call LoadShada()
+function! LoadShada()
+    exec ':e /.local/share/nvim/shada/main.shada'
+endfunction
+
+" define what is saved/restored from ~/.local/share/nvim/shada/main.shada 
+set shada='10,f1,<10,h
+" only save marks of 10 files, save global marks and only 10 lines in registers
+" see: *21.3*	Remembering information; ShaDa
+
+" set shada="!,'100,<50,s10,h,f0"
+" f0 disables global marks
+" uncomment this line to ignore marks on load! (Markers, Marks persisting)
+" TODO: as there is a bug that causes that marks can't be deleted, one could just
+" delete the shada file to delete the marks
+" ------- Shared Data persistence ---------
 
 
 " --------------------------------------------------------------------------------
 " Font, color style
-" Mac
-if has('gui_running')
+" if has('gui_running')
 	" set guifont=InconsolataForPowerline:h15
-	set guifont=Inconsolata-g:h12
+	" set guifont=Inconsolata-g:h12
+  " Effect?
 	" set guifont=Menlo:h12
 	" set guifont=Source_Code_Pro:h12
-
-else
-endif
-
 
 " How to change colors in the colorscheme?
 " Open vimfiles/colors/molokai
@@ -422,15 +421,9 @@ nnoremap <Leader>st :PSCIDEtype<CR>
 nnoremap <Leader>at :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>h
 " nnoremap tw :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>h
 
-" nnoremap tw :call InsertTypeAnnotation()<cr>jh
-nnoremap tw :call InsertTypeAnnotation()<cr>
-nnoremap ti :call ImportIdentifier()<cr>
 nnoremap tr :PSCIDEend<cr>
 
-nnoremap tt <Plug>InteroGenericType
-vnoremap tt <Plug>InteroGenericType
-" nnoremap tt :call SlimeType()<cr>
-" vnoremap tt :call SlimeTypeVisSel()<cr>
+
 
 nnoremap <Leader>sii :PSCIDEimportIdentifier<CR>
 nnoremap <Leader>sai :PSCIDEaddImportQualifications<CR>
@@ -518,6 +511,7 @@ let g:slime_target = "tmux"
 
 
 nnoremap <Leader>kk :call ReplTopFnRL()<cr>
+nnoremap geri :call ReplTopFnRLInsert()<cr>
 
 " run selection
 vnoremap <Leader>kk :call ReplVisSel()<cr>
@@ -527,6 +521,7 @@ nnoremap <Leader>kl :call ReplComLine()<cr>
 
 " reload module
 nnoremap <Leader>kr :call ReplReload()<cr>
+nnoremap ar :call ReplReload()<cr>
 
 " nnoremap tr :call TraceTopLevelValue()<cr>
 nnoremap ta :call TraceTopLevelValue()<cr>
@@ -614,6 +609,9 @@ function! TraceTopLevelValue()
     endif
 endfun
 
+function! ReplTopFnRLInsert()
+    call InsertEvalRes()
+endfun
 
 function! ReplTopFnRL()
     call ReplReload()
@@ -747,44 +745,81 @@ nmap <silent> [c :call PrevHunkAllBuffers()<CR>
 " hi NeomakeIntoSign    ctermfg=white
 " hi NeomakeMessageSign ctermfg=white
 
-augroup interoMaps
-  au!
-  " Maps for intero. 
 
-  " Background process and window management
-  au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
-  au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
+" Maps for intero. 
+nnoremap <silent> <leader>is :InteroStart<CR>
+nnoremap <silent> <leader>ik :InteroKill<CR>
+nnoremap <silent> <leader>io :InteroOpen<CR>
+nnoremap <silent> <leader>ih :InteroHide<CR>
+nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
+nnoremap <silent>         gd :InteroGoToDef<CR>
 
-  " Open intero/GHCi split horizontally
-  au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
-  " au FileType haskell nnoremap <silent> <leader>ioo :TagbarOpen fj<cr>:InteroOpen<CR><C-W>H50<C-W>
-  " Open intero/GHCi split vertically
-  " au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
-  " au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H25<C-W>
-  au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
+" Type inserts
+nnoremap tt :InteroInstTypeInsert<cr>
+vnoremap tt :InteroInstTypeInsert<cr>
+nnoremap tg :InteroGenTypeInsert<cr>
+vnoremap tg :InteroGenTypeInsert<cr>
+nnoremap ti :InteroInfoInsert<cr>
+vnoremap ti :InteroInfoInsert<cr>
 
-  " Reloading (pick one)
-  " Automatically reload on save
-  " au BufWritePost *.hs InteroReload
-  " Manually save and reload
-  " au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
+nnoremap gei :call InsertEvalRes()<cr>
 
-  " Load individual modules
-  au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
-  au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
 
-  " Type-related information
-  " Heads up! These next two differ from the rest.
-  " au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
-  " au FileType haskell map <silent> <leader>T <Plug>InteroType
-  " au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
+" TODO: this doesn't work with ranges/vis-selection
+" vnoremap tat :call InsertInstType()<cr>
+" vnoremap tag :call InsertGenType()<cr>
 
-  " Navigation
-  " au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
-  au FileType haskell nnoremap <silent> <leader>gd :InteroGoToDef<CR>
-  au FileType haskell nnoremap <silent> gd :InteroGoToDef<CR>
 
-augroup END
+" nnoremap tw :call InsertTypeAnnotation()<cr>jh
+nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
+" nnoremap ti :call ImportIdentifier()<cr>
+
+" nnoremap tt :call SlimeType()<cr>
+" vnoremap tt :call SlimeTypeVisSel()<cr>
+
+" just for testing - not sure when this might be useful
+nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
+
+
+
+" augroup interoMaps
+"   au!
+"   " Maps for intero. 
+"
+"   " Background process and window management
+"   au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
+"   au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
+"
+"   " Open intero/GHCi split horizontally
+"   au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
+"   " au FileType haskell nnoremap <silent> <leader>ioo :TagbarOpen fj<cr>:InteroOpen<CR><C-W>H50<C-W>
+"   " Open intero/GHCi split vertically
+"   " au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
+"   " au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H25<C-W>
+"   au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
+"
+"   " Reloading (pick one)
+"   " Automatically reload on save
+"   " au BufWritePost *.hs InteroReload
+"   " Manually save and reload
+"   " au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
+"
+"   " Load individual modules
+"   au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
+"   au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
+"
+"   " Type-related information
+"   " Heads up! These next two differ from the rest.
+"   " au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
+"   au FileType haskell map <silent> <leader>T <Plug>InteroType
+"   " au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
+"
+"   " Navigation
+"   " au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
+"   au FileType haskell nnoremap <silent> <leader>gd :InteroGoToDef<CR>
+"   au FileType haskell nnoremap <silent> gd :InteroGoToDef<CR>
+"
+" augroup END
 
 " Intero starts automatically. Set this if you'd like to prevent that.
 let g:intero_start_immediately = 0
@@ -825,12 +860,12 @@ endfunction
 " map <silent> tw :w<CR>:GhcModTypeInsert<CR>:call PurescriptUnicode()<cr>h
 " TODO: activate this together with purescript!
 
-map <silent> ts :GhcModSplitFunCase<CR>
-map <silent> tq :w<CR>:GhcModType<CR>
-map <silent> te :GhcModTypeClear<CR>
-
-map <silent> ty :w<CR>:GhcModCheck<CR>
-map <silent> tu :w<CR>:GhcModLint<CR>
+" map <silent> ts :GhcModSplitFunCase<CR>
+" map <silent> tq :w<CR>:GhcModType<CR>
+" map <silent> te :GhcModTypeClear<CR>
+"
+" map <silent> ty :w<CR>:GhcModCheck<CR>
+" map <silent> tu :w<CR>:GhcModLint<CR>
 
 
 " Reload
@@ -882,15 +917,15 @@ au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 " --------------------------------------------------------------------------------
 
-
-
+" free mapping <c-Backspace>
+" TODO: find (and break line?) at → and ∷ 
 
 " ------------------------------------------------------
 " Code formatting ------------------------
 
 " Hit enter to add a new line above or below the current line
-nnoremap <c-Enter> i<cr><Esc>
-" nnoremap <CR> o<Esc>
+" nnoremap <c-Enter> i<cr><Esc>
+nnoremap <CR> o<Esc>
 
 " Break line at cursor position
 nnoremap J i<CR><Esc>
@@ -999,9 +1034,11 @@ endfun
 
 nnoremap <leader>dcf :cd %:p:h<cr>
 
-" :py import vim, random; vim.current.line += str(random.randint(0, 99))
-"
-" ui0
+" -------------------------------------------------------------------------------- 
+nmap <leader>uf :call RandFnName()<cr>2w
+" produces a (test) haskell function with a random name, e.g.:
+" cp0 = undefined
+
 
 function! RandFnName()
 python << EOF
@@ -1012,23 +1049,24 @@ import vim
 vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0 = undefined'
 EOF
 endfunction
+" -------------------------------------------------------------------------------- 
 
-nmap <leader>uf :call RandFnName()<cr>2w
-" produces a (test) haskell function with a random name, e.g.:
-" cp0 = undefined
 
 
 " Replace ---------------------------------------------
-" Replace clojure elements and forms
 " nmap <leader>re "_die"0P`[
 " nmap <leader>re ve"0pb
-nmap <leader>re "_die"0Pb
-nmap <leader>rf "_daf"0PB
+" nmap <leader>re "_die"0Pb
+" nmap <leader>rf "_daf"0PB
+
+" Replace inner word
+nmap <leader>rw "_diw"0Pb
+nmap yrw "_diw"0Pb
+" Register, black hole, delete, inner word, paste from yank register, go to beginning
 
 " Replace words
-nmap <leader>rw "_diw"0Pb
-nmap <leader>rW "_diW"0PB
-" Register, black hole, delete, inner Big Word, paste from yank register, go to
+" nmap <leader>rw "_diw"0Pb
+" nmap <leader>rW "_diW"0PB
 " beginning of pasted text.
 
 " Replace rest of the line
@@ -1059,6 +1097,9 @@ endfunction
 " Comment line or selection
 " nmap <leader>gf gcc
 nmap <leader>ge gcc
+nmap dc gc
+vmap dc gc
+
 " comment form
 nmap coaf gcaf
 nmap coo :call CommentToggle()<CR>
@@ -1265,17 +1306,17 @@ vnoremap // y/<C-R>"<CR>
 
 " Silver searcher
 " --------------------------------------------------------------------------------
-vnoremap <leader>d/ "gy :Ag "<C-R>g" .
-nnoremap <leader>d/ "gyw :Ag "<C-R>g" .
-vnoremap <leader>db/ "gy :AgBuffer "<C-R>g"
-nnoremap <leader>db/ "gyw :AgBuffer "<C-R>g"
+" vnoremap <leader>d/ "gy :Ag "<C-R>g" .
+" nnoremap <leader>d/ "gyw :Ag "<C-R>g" .
+" vnoremap <leader>db/ "gy :AgBuffer "<C-R>g"
+" nnoremap <leader>db/ "gyw :AgBuffer "<C-R>g"
 " :Ab "\b<C-R><C-W>\b" . 
 
 let g:ag_highlight=1
 
 
 " --------------------------------------------------------------------------------
-nnoremap <silent> <leader>df :set nohlsearch<cr>
+" nnoremap <silent> <leader>df :set nohlsearch<cr>
 nnoremap <silent> <leader><leader> :set nohlsearch<cr>
 
 "Find clojure functions 
