@@ -90,6 +90,7 @@ Plug 'Shougo/neocomplete.vim'
 
 " Plug 'bitc/vim-hdevtools', {'for': 'haskell'}
 Plug 'bitc/vim-hdevtools'
+Plug 'dan-t/vim-hsimport' 
 
 " Plug 'neovimhaskell/haskell-vim', {'for': 'haskell'}
 Plug 'neovimhaskell/haskell-vim'
@@ -99,11 +100,14 @@ Plug 'kana/vim-textobj-user'
 Plug 'gilligan/vim-textobj-haskell'
 " requires python
 
-Plug 'jaspervdj/stylish-haskell'
+" Plug 'jaspervdj/stylish-haskell'
+" using the code below
 Plug 'w0rp/ale'
 
 Plug 'neomake/neomake'
 Plug 'parsonsmatt/intero-neovim'
+
+Plug 'https://github.com/Twinside/vim-hoogle'
 
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'garbas/vim-snipmate'
@@ -214,7 +218,7 @@ function! LoadShada()
 endfunction
 
 " define what is saved/restored from ~/.local/share/nvim/shada/main.shada 
-set shada='10,f1,<10,h
+" set shada=",'10,f1,<10,h
 " only save marks of 10 files, save global marks and only 10 lines in registers
 " see: *21.3*	Remembering information; ShaDa
 
@@ -334,16 +338,29 @@ nnoremap cuc :%s/::/<c-k>::/e<cr>
 nnoremap cua :%s/->/<c-k>->/e<cr>
 nnoremap cub :%s/<-/<c-k><-/e<cr>
 nnoremap cud :%s/=>/<c-k>=>/e<cr>
+
+vnoremap <leader>bu :s/\%V→/-><cr>:s/\%V∷/::<cr>:s/\%V⇒/=><cr>
+vnoremap <leader>bi :s/\%V->/→<cr>:s/\%V::/∷<cr>:s/\%V=>/⇒<cr>
+
+
 " nnoremap cue :%s/<=/<c-k><=/e<cr>
 " TODO: could do the reverse replacement to revert back to non-unicode
 " also: what to do with 'greater-than-or-qual'?
-
-nnoremap cuq i<cr><Esc>
 
 " Replace all purescript unicode characters
 noremap <leader>cu :call PurescriptUnicode()<cr>
 fun! PurescriptUnicode()
   normal cufcuccuacubcudcue 
+endfun
+
+nnoremap <silent> - :call FindArrow()<cr>
+fun! FindArrow()
+  exec "silent normal! /→\\|⇒\\|∷\<cr>"
+endfun
+
+nnoremap <silent> _ :call FindArrowB()<cr>
+fun! FindArrowB()
+  exec "silent normal! ?→\\|⇒\\|∷\<cr>"
 endfun
 
 " noremap <leader>ci /<c-k>-><cr>
@@ -363,8 +380,28 @@ endfun
 "   let ab = append(lineNum, "hii")
 " endfun
 
+
+" format hoogle output from
+" Prelude print ∷ Show a ⇒ a → IO ()
+" to
+" -- Prelude 
+" print ∷ Show a ⇒ a → IO ()
+let @o = 'f Jki-- jk9jj'
+" align the type-signature with EasyAlign
+let @p = 'gaap '
+
+let g:hoogle_search_buf_size = 21
+
+fun! Hsimp(module, symbol)
+  call hsimport#imp_symbol(a:module, a:symbol)
+endfun
+
+noremap <leader>ci :call StylishHaskell()<cr>
+
+
 noremap <leader>ssp :set syntax=purescript<cr>
 
+" free mapping: <c-g> - currently show the current filename
 
 " could also do this with a macro!
 " let @c = 'cufcuccuacub'
@@ -521,7 +558,7 @@ nnoremap <Leader>kl :call ReplComLine()<cr>
 
 " reload module
 nnoremap <Leader>kr :call ReplReload()<cr>
-nnoremap ar :call ReplReload()<cr>
+nnoremap dr :call ReplReload()<cr>
 
 " nnoremap tr :call TraceTopLevelValue()<cr>
 nnoremap ta :call TraceTopLevelValue()<cr>
@@ -699,7 +736,7 @@ endfun
 " HASKELL
 
 setlocal formatprg=stylish-haskell
-
+" use <motion>gq
 
 " --- ALE --- 
 " let g:hindent_on_save = 0
@@ -1098,7 +1135,7 @@ endfunction
 " nmap <leader>gf gcc
 nmap <leader>ge gcc
 nmap dc gc
-vmap dc gc
+vmap ac gc
 
 " comment form
 nmap coaf gcaf
@@ -1192,14 +1229,23 @@ let g:SignatureIncludeMarks = 'ABCDEFGHI'
 let g:sneak#label = 1
 " let g:sneak#clear_syntax = 1
 
-nmap f <Plug>Sneak_s
-nmap F <Plug>Sneak_S
+nmap <leader>s <Plug>Sneak_s
+nmap <leader>S <Plug>Sneak_S
 " visual-mode
-xmap f <Plug>Sneak_s
-xmap F <Plug>Sneak_S
+xmap <leader>s <Plug>Sneak_s
+xmap <leader>S <Plug>Sneak_S
 " operator-pending-mode
-omap f <Plug>Sneak_s
-omap F <Plug>Sneak_S
+omap <leader>s <Plug>Sneak_s
+omap <leader>S <Plug>Sneak_S
+
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+" visual-mode
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+" operator-pending-mode
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
 
 " 1-character enhanced 't'
 nmap t <Plug>Sneak_t
@@ -1477,6 +1523,7 @@ endfunc
 " you can now run the macro by typing @d
 " ---------------------------------------------------------
 
+ 
 
 " Delete-CUT element and black hole delete the space after it, to
 " be able to paste the cut element
@@ -1552,17 +1599,21 @@ nmap <leader>go :Gstatus<cr>
 nmap <leader>gs :Gstatus<cr>
 
 
-nmap gsg :call GoogleSearch("word")<cr>
-vmap gsg :call GoogleSearch("visSel")<cr>
-nmap gsd :call DocsForCursorWord()<cr>
-vmap gsd :call DocsForVisSel()<cr>
-nmap gsh :call GithubSearch("word")<cr>
-vmap gsh :call GithubSearch("visSel")<cr>
+nmap <silent> gsg :call GoogleSearch("word")<cr>
+vmap <silent> gsg :call GoogleSearch("visSel")<cr>
 
-nmap gsf :call GrepSearch("word", "file")<cr>
-vmap gsf :call GrepSearch("visSel", "file")<cr>
-nmap gsb :call GrepSearch("word", "buffers")<cr>
-vmap gsb :call GrepSearch("visSel", "buffers")<cr>
+nmap <silent> gsh :call DocsForCursorWord()<cr>
+vmap <silent> gsh :call DocsForVisSel()<cr>
+nmap <silent> gsd :call HoogleForCursorWord()<cr>
+vmap <silent> gsd :call HoogleForVisSel()<cr>
+
+nmap <silent> gsi :call GithubSearch("word")<cr>
+vmap <silent> gsi :call GithubSearch("visSel")<cr>
+
+nmap <silent> gsf :call GrepSearch("word", "file")<cr>
+vmap <silent> gsf :call GrepSearch("visSel", "file")<cr>
+nmap <silent> gsb :call GrepSearch("word", "buffers")<cr>
+vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 
 command! -nargs=1 Find  :Grepper -side -query <args>
 command! -nargs=1 Findb :Grepper -side -buffers -query <args>
@@ -1648,11 +1699,37 @@ fun! DocsForVisSel()
     if IsPurs()
       let url = 'https://pursuit.purescript.org\/search\?q\=' . enckw
     else
-      let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . enckw
-      " let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw 
+      " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . enckw
+      let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw 
     endif
     let comm = 'silent !open ' . url
     exec comm
+endfun
+
+fun! HoogleForCursorWord()
+    let g:originFile = expand('%')
+    let keyw = expand("<cword>")
+    let comm = 'silent Hoogle ' . keyw
+    exec comm
+    exec 'w!'
+    wincmd j
+endfun
+
+
+fun! HoogleForVisSel()
+    exec 'silent! s/\%V→/->'
+    exec 'silent! s/\%V∷/::'
+    exec 'silent! s/\%V⇒/=>'
+    let keyw = Get_visual_selection()
+    " exec 'silent! s/\%V->/→'
+    " exec 'silent! s/\%V::/∷'
+    " exec 'silent! s/\%V=>/⇒'
+    " use undo instead to prevent adding this to the undo list!
+    exec 'u'
+    let comm = 'silent Hoogle ' . keyw
+    exec comm
+    exec 'w!'
+    wincmd j
 endfun
 
 
@@ -2013,6 +2090,33 @@ function! PrevHunkAllBuffers()
   endwhile
 endfunction
 " ------- Git gutter ----------------------------------
+
+
+" ------- Formatting Imports ----------------------------------
+let g:stylish_haskell_command = 'stylish-haskell'
+
+function! s:OverwriteBuffer(output)
+  let winview = winsaveview()
+  silent! undojoin
+  normal! gg"_dG
+  call append(0, split(a:output, '\v\n'))
+  normal! G"_dd
+  call winrestview(winview)
+endfunction
+
+function! StylishHaskell()
+  let output = system(g:stylish_haskell_command . " " . bufname("%"))
+  let errors = matchstr(output, '\(Language\.Haskell\.Stylish\.Parse\.parseModule:[^\x0]*\)')
+  if v:shell_error != 0
+    " echom output
+  elseif empty(errors)
+    call s:OverwriteBuffer(output)
+    write
+  else
+    " echom errors
+  endif
+endfunction
+" ------- Formatting Imports ----------------------------------
 
 
 " To narrow down the issue, run Vim with a minimal configuration: >
