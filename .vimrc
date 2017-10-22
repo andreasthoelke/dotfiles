@@ -33,17 +33,13 @@ Plug 'xolox/vim-session'
 " Restore folding
 Plug 'vim-scripts/restore_view.vim'
 " Plug 'Twinside/vim-haskellFold'
-
+Plug 'https://github.com/dbakker/vim-projectroot' 
 " Plug 'xolox/vim-shell'
 " iTerm2 integration
 Plug 'sjl/vitality.vim'
 
 Plug 'tomasr/molokai'
 
-" General
-Plug 'guns/vim-clojure-static'
-
-" Plug 'pangloss/vim-javascript'
 Plug 'jelera/vim-javascript-syntax'
 
 " Code navigation
@@ -54,7 +50,6 @@ Plug 'romgrk/vim-sneak', { 'branch': 'use-matchadd' }
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'junegunn/vim-easy-align'
-Plug 'venantius/vim-cljfmt'
 Plug 'godlygeek/tabular'
 Plug 'tomtom/tcomment_vim'
 Plug 'kana/vim-textobj-fold'
@@ -82,17 +77,12 @@ Plug 'eagletmt/ghcmod-vim', {'for': 'haskell'}
 
 Plug 'Shougo/vimproc.vim', {'do': 'make'}
 
-" Plug 'Shougo/neocomplete.vim', {'for': 'haskell'}
-Plug 'Shougo/neocomplete.vim'
-
-" Plug 'eagletmt/neco-ghc', {'for': 'haskell'}
 " Plug 'eagletmt/neco-ghc'
-
-" Plug 'bitc/vim-hdevtools', {'for': 'haskell'}
-Plug 'bitc/vim-hdevtools'
+" Plug 'bitc/vim-hdevtools'
+" crashes vim on :HdevtoolsType command
+"
 Plug 'dan-t/vim-hsimport' 
 
-" Plug 'neovimhaskell/haskell-vim', {'for': 'haskell'}
 Plug 'neovimhaskell/haskell-vim'
 " Plug 'alx741/vim-hindent'
 
@@ -103,15 +93,16 @@ Plug 'gilligan/vim-textobj-haskell'
 " Plug 'jaspervdj/stylish-haskell'
 " using the code below
 Plug 'w0rp/ale'
+Plug 'mpickering/hlint-refactor-vim'
 
 Plug 'neomake/neomake'
 Plug 'parsonsmatt/intero-neovim'
 
-Plug 'https://github.com/Twinside/vim-hoogle'
+Plug 'Twinside/vim-hoogle'
 
-" Plug 'Valloric/YouCompleteMe'
-" Plug 'garbas/vim-snipmate'
-Plug 'ervandew/supertab'
+" Plug 'ervandew/supertab'
+" did not work with omnicomplete so far
+"
 Plug 'mhinz/vim-grepper'
 
 Plug 'majutsushi/tagbar'
@@ -124,12 +115,14 @@ call plug#end()
 " set omnifunc=syntaxcomplete#Complete
 
 
-let $PATH .= (":" . $HOME . "/.cabal/bin")
-let $PATH .= (":" . "/Users/andreas.thoelke/.local/bin")
+" let $PATH .= (":" . $HOME . "/.cabal/bin")
+" let $PATH .= (":" . "/Users/andreas.thoelke/.local/bin")
 
 " let g:python2_host_prog = '/usr/local/bin/python'
 let g:python2_host_prog = '/Users/andreas.thoelke/Library/Python/2.7' 
 let g:python3_host_prog = '/usr/local/bin/python3'
+" strangely Pyhon 3 is installed here:
+" /Library/Frameworks/Python.framework/Versions/3.6
 
 
 " uncomment this to disable Python support
@@ -140,6 +133,25 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
 
 
+
+" ---- Color ----
+colorscheme molokai
+
+set nocompatible
+set background=dark
+set laststatus=2
+set number
+
+if has("termguicolors")
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    set termguicolors
+else
+    set t_Co=256
+endif
+
+set lazyredraw
+
+" ---- Color ----
 
 set selection=inclusive
 
@@ -153,29 +165,20 @@ set mouse=a
 " Set this to the name of your terminal that supports mouse codes.
 " Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
 " set ttymouse=xterm2
-
-
 set guioptions-=T
 set guioptions-=m
 set guioptions-=r
 set guioptions-=L
-
-
 " disable sounds
 set noerrorbells
 set novisualbell
 set t_vb=
 
 
-" Plugin settings
-
 " Airline settings
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t:r'
 let g:airline_theme='simple'
-
-" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %{noscrollbar#statusline()}
-
 
 
 " ------- Vim-session settings ---------
@@ -205,7 +208,6 @@ set viewdir=~/vimtmp/view//
 " au BufWinEnter ?* silent loadview
 " ------- Vim-session settings ---------
 
-
 " ------- Shared Data persistence ---------
 command! ShadaClear :call ClearShada()
 function! ClearShada()
@@ -214,11 +216,11 @@ endfunction
 
 command! ShadaLoad :call LoadShada()
 function! LoadShada()
-    exec ':e /.local/share/nvim/shada/main.shada'
+    exec       ':e ~/.local/share/nvim/shada/main.shada'
 endfunction
 
 " define what is saved/restored from ~/.local/share/nvim/shada/main.shada 
-" set shada=",'10,f1,<10,h
+set shada=",'10,f1,<10,h
 " only save marks of 10 files, save global marks and only 10 lines in registers
 " see: *21.3*	Remembering information; ShaDa
 
@@ -231,14 +233,7 @@ endfunction
 
 
 " --------------------------------------------------------------------------------
-" Font, color style
-" if has('gui_running')
-	" set guifont=InconsolataForPowerline:h15
-	" set guifont=Inconsolata-g:h12
-  " Effect?
-	" set guifont=Menlo:h12
-	" set guifont=Source_Code_Pro:h12
-
+" Style/ Color
 " How to change colors in the colorscheme?
 " Open vimfiles/colors/molokai
 " hit <leader><f7><f7> to view the colors (optional)
@@ -254,12 +249,7 @@ set numberwidth=5
 
 highlight FoldColumn guibg=gray10 guifg=gray20
 hi        LineNr     guibg=gray10 guifg=gray15 
-" highlight Folded     guibg=gray6  guifg=grey60
-" highlight Folded     guifg=grey30
-" hi        Folded     guifg=#465457 guibg=#000000
-" hi        Folded     guifg=#4B5B61 guibg=#0B0B0B gui=bold
 hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
-
 
 " Various settings
 set ignorecase
@@ -270,7 +260,6 @@ set encoding=utf-8
 " set backspace=indent,eol,start
 
 set ts=2 sts=2 sw=2 expandtab
-
 
 set smartcase
 
@@ -283,10 +272,15 @@ set hidden
 set nowrap
 set textwidth=0 wrapmargin=0
 
+" activate line wrapping for a window:
+command! -nargs=* Wrap set wrap linebreak nolist
+
 set noswapfile
 " set cursorline
 
-set autochdir
+" set autochdir
+" CAREFUL! this sets the current working directory the the current file on
+" every buffer change!!
 
 " set wildmode=list:longest
 set wildmenu
@@ -301,11 +295,8 @@ set laststatus=2
 
 set splitbelow
 set splitright
-set nolist
-
 
 " Various mappings ----------------------------------------------
-
 " exit neovim terminal mode
 if has('nvim')
   tnoremap jk <C-\><C-n>
@@ -398,32 +389,17 @@ endfun
 
 noremap <leader>ci :call StylishHaskell()<cr>
 
+setlocal formatprg=stylish-haskell
+" use <motion>gq
+" .. but not working properly, e.g. messing up line breaks
+
 
 noremap <leader>ssp :set syntax=purescript<cr>
 
 " free mapping: <c-g> - currently show the current filename
 
-" could also do this with a macro!
-" let @c = 'cufcuccuacub'
-" nmap <leader>cc @c
 
-" doesn't work: how to use substitute on the whole file?
-" fun! PUC()
-"   substitute(%, "forall", "kitten", "g")
-" endfun
-
-
-" inoremap ` -
-" cnoremap ` -
-
-" Tests
-" nmap <leader>5 <Plug>(sexp_capture_next_element)
-" nnoremap <leader>kl :echo 'test8'<cr>
-" nnoremap <F4> :echo "test"<cr>
-
-" getfile split vertically file under cursor
-" nmap <buffer> sf :vertical wincmd f<CR>
-
+" ------- General --------------------------------------------------------------
 " save!
 nnoremap <leader>w :w!<cr>
 " nnoremap <silent><leader>w :up<cr>
@@ -433,20 +409,26 @@ nnoremap <leader>vim :e $MYVIMRC<cr>
 " source vim 
 nnoremap <leader>sv :so $MYVIMRC<cr>
 
+" nnoremap <leader>zsh :e ~/.zshrc<cr>
+command! Zshrc   :e ~/.zshrc
+command! ZshOhMy :e ~/.oh-my-zsh/oh-my-zsh.sh
+command! Vimrc   :e ~/.vimrc
+
+" Insert the $PATH shell variable
+command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
+
+
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 
 let &t_SI = "\<Esc>]50;CursorShape=0\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 set termguicolors
-" set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
-
-" set guicursor=n-v-c:block-iCursor,i-ci-ve:ver25,r-cr:hor20,o:hor50
-" 		  \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
-" 		  \,sm:block-blinkwait175-blinkoff150-blinkon175
-
 set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
-" set guicursor=n:block-iCursor,i-ci-ve:ver100-blinkon400
+
+" ------- General --------------------------------------------------------------
+
+
 
 " --------------------------------------------------------------------------------
 " PURESCRIPT
@@ -482,64 +464,6 @@ nnoremap <Leader>slo :PSCIDEload<CR>
 
 " nnoremap goo :PSCIDEpursuit<CR>
 
-" --------------------------------------------------------------------------------
-" --------------------------------------------------------------------------------
-" Some test-funtions:
-
-" fun! Ac1()
-"   let resu = append( line('.') - 1, '" zwei' )
-"   return 'result: ' . resu
-" endfun
-"
-" fun! Ac2()
-"   let fnames = system('ls')
-"   let resu = append( line('.') - 1, fnames )
-"   return 'result: ' . resu
-" endfun
-"
-" fun! Ac3()
-"   let resu = system('wc -c', "abcdefg")
-"   let rv = append( line('.') - 1, resu )
-"   return 'result: ' . resu
-" endfun
-"
-" function! PursClientVisSel()
-"     let visSel = Get_visual_selection()
-"     exec 'SlimeSend1 purs ide client'
-"     exec 'SlimeSend1 ' . visSel
-" endfun
-"
-" function! PursClientVisSel2()
-"     let visSel = Get_visual_selection()
-"     let resu = system('purs ide client', visSel)
-"     let rv = append( line('.') - 1, resu )
-"     return 'result: ' . resu
-" endfun
-"
-" function! PursClientVisSel3()
-"     let resu = s:mysystem('pulp psci', ":q" )
-"     let rv = append( line('.') - 1, resu )
-"     return 'result: ' . resu
-" endfun
-"
-" function! PursClientVisSel4()
-"     let visSel = Get_visual_selection()
-"     let enc = s:jsonEncode( visSel )
-"     let resu = system('purs ide client', enc)
-"     let rv = append( line('.') - 1, resu )
-"     return 'result: ' . resu
-" endfun
-"
-"
-" nmap dr :echo Ac3()<cr>
-" vmap <leader>kh :call PursClientVisSel2()<cr>
-"
-"
-" function! s:mysystem(a, b)
-"   return system(a:a, a:b . "\n")
-" endfunction
-
-" --------------------------------------------------------------------------------
 " --------------------------------------------------------------------------------
 
 
@@ -730,25 +654,64 @@ function! PsciEval()
 
     exec 'SlimeSend1 ' . functionName
 endfun
-
-
 " --------------------------------------------------------------------------------
 " HASKELL
 
-setlocal formatprg=stylish-haskell
-" use <motion>gq
 
-" --- ALE --- 
+" ------- ALE ------- 
 " let g:hindent_on_save = 0
+" let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint', 'hdevtools']}
 let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint']}
+" let g:ale_linters = {'haskell': ['hlint']}
+" let g:ale_linters = {'haskell': ['ghc']}
 let g:ale_lint_on_text_changed = 'normal'
 let g:ale_lint_on_insert_leave = 1
 let g:ale_enabled = 0
 " let g:ale_set_quickfix = 1
 let g:ale_emit_conflict_warnings = 0
 nmap <leader>aa :ALEToggle<cr>
-" --- ALE --- 
 
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
+
+let g:airline#extensions#ale#enabled = 0
+" needed?
+
+" Configure Hline/Ale warnings!
+command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
+
+" ------- ALE ------- 
+
+
+" ------- Neomake ------- 
+" Neomake does the same as Ale
+" While Hlint (and stack-ghc-mod?) uses Ale for signs in the signcolumn, 
+" Intero uses Neomake to show error and ghc warnings
+hi NeomakeErrorSign   ctermfg=white
+hi NeomakeWarningSign ctermfg=white
+hi NeomakeIntoSign    ctermfg=white
+hi NeomakeMessageSign ctermfg=white
+
+command! SignsClear :sign unplace *
+" Neomake defaults
+" let g:neomake_error_sign = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
+" let g:neomake_warning_sign = {
+"    \   'text': '⚠',
+"    \   'texthl': 'NeomakeWarningSign',
+"    \ }
+" let g:neomake_message_sign = {
+"     \   'text': '➤',
+"     \   'texthl': 'NeomakeMessageSign',
+"     \ }
+" let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
+" ------- Neomake ------- 
+
+
+" Hdevtools is not yet needed, using Intero instead
+" currently it crashes vim on :HdevtoolsType command
+" set shell=bash\ -i
+" let g:hdevtools_options = '-g-fdefer-type-errors -g-isrc -g-Wall'
+" let g:syntastic_haskell_hdevtools_args = g:hdevtools_options
 
 " --- GitGutter --- 
 nmap <leader>gg :GitGutterToggle<cr>
@@ -772,19 +735,10 @@ nmap <silent> [c :call PrevHunkAllBuffers()<CR>
 " --- GitGutter --- 
 
 
-" TODO: automatic Intero+Tagbar setup
-" launch Intero on the right, go the it's window, resize it to width x, then
-"  let g:tagbar_vertical = 35
-" and the TagbarOpen, with should open it above intero
-
-" hi NeomakeErrorSign   ctermfg=white
-" hi NeomakeWarningSign ctermfg=white
-" hi NeomakeIntoSign    ctermfg=white
-" hi NeomakeMessageSign ctermfg=white
-
 
 " Maps for intero. 
 nnoremap <silent> <leader>is :InteroStart<CR>
+nnoremap <silent> <leader>isc :SignsClear<CR>
 nnoremap <silent> <leader>ik :InteroKill<CR>
 nnoremap <silent> <leader>io :InteroOpen<CR>
 nnoremap <silent> <leader>ih :InteroHide<CR>
@@ -801,7 +755,6 @@ vnoremap ti :InteroInfoInsert<cr>
 
 nnoremap gei :call InsertEvalRes()<cr>
 
-
 " TODO: this doesn't work with ranges/vis-selection
 " vnoremap tat :call InsertInstType()<cr>
 " vnoremap tag :call InsertGenType()<cr>
@@ -816,8 +769,6 @@ nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
 
 " just for testing - not sure when this might be useful
 nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
-
-
 
 " augroup interoMaps
 "   au!
@@ -860,7 +811,10 @@ nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 
 " Intero starts automatically. Set this if you'd like to prevent that.
 let g:intero_start_immediately = 0
-
+" let g:intero_use_neomake = 0
+" This show ghi warnings as opposed to hlint warnings:
+let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
+" https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
 
 " TODO: when do I need this?
 let g:haskellmode_completion_ghc = 1
@@ -911,16 +865,6 @@ endfunction
 " map <silent> ty :call GHC_ShowType(1)<CR>
 
 
-let g:SuperTabDefaultCompletionType = '<c-x><c-o>'
-
-if has("gui_running")
-  imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
-else " no gui
-  if has("unix")
-    inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
-  endif
-endif
-
 " let g:necoghc_enable_detailed_browse = 0
 let g:haskell_tabular = 1
 
@@ -950,8 +894,6 @@ let g:haskell_indent_guard = 2
 
 " --------------------------------------------------------------------------------
 
-au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
-au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 " --------------------------------------------------------------------------------
 
 " free mapping <c-Backspace>
@@ -1062,14 +1004,18 @@ inoremap \fp <C-R>=getcwd()<CR>
 " TIP: To insert the RETURN VAL OF ANY VIM FUNCTION into insert position:
 " - hit: 'i', then '<strg>r', then '=', then 'SomeTest1("Hi!")'<cr>
 " TIP: can also do i<strg>r=system('ls')<cr>  try this:
-nmap <leader>dcg i<c-r>=system('ls')<cr><esc>
+nmap     <leader>dcg i<c-r>=system('ls')<cr><esc>
+nnoremap <leader>ls  i<c-r>=system('ls -a')<cr><esc>
+nnoremap <leader>ds  i<c-r>=system('
+nnoremap <leader>iwd i<c-r>=system('pwd')<cr><esc>
 
 fun! SomeTest1( ar1 )
   return "Some arg: " . a:ar1
 endfun
 
+" echo &ft
+" TIP: return filetype as literal string, e.g. 'haskell', instead of 'hs'
 
-nnoremap <leader>dcf :cd %:p:h<cr>
 
 " -------------------------------------------------------------------------------- 
 nmap <leader>uf :call RandFnName()<cr>2w
@@ -1262,32 +1208,7 @@ autocmd ColorScheme * hi! link SneakScope Normal
 " autocmd ColorScheme * hi! Sneak guifg=green guibg=orange
 autocmd ColorScheme * hi! link Sneak Cursor
 
-
-" ---- Color ----
-
-colorscheme molokai
-
-set nocompatible
-set background=dark
-set laststatus=2
-set number
-
-if has("termguicolors")
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-    set termguicolors
-else
-    set t_Co=256
-endif
-
-hi NeomakeErrorSign   ctermfg=white
-hi NeomakeWarningSign ctermfg=white
-hi NeomakeIntoSign    ctermfg=white
-hi NeomakeMessageSign ctermfg=white
-
-
-set lazyredraw
-
-" ---- Color ----
+hi! link Sneak Cursor
 
 
 
@@ -1322,9 +1243,6 @@ inoremap <C-j> <C-n>
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
-" let g:SuperTabClosePreviewOnPopupClose = 1
-" YouCompleteMe plugin has a g:ycm_autoclose_preview_window_after_insertion 
-" let g:ycm_semantic_triggers = {'haskell' : ['.']}
 " ------------------------------------------------------
 
 
@@ -1421,8 +1339,44 @@ let NERDTreeQuitOnOpen=1
 
 " Tips:
 " use CC to reset tree to current dir
+" use ∷vnew to create a new buffer in a vertical window-split
+" use <c-w>< to resize the window
 
 
+"  --- Project Root --------------------------------------------
+"
+" open file relative to project-root
+nnoremap <expr> <leader>ep ':e '.projectroot#guess().'/'
+
+" remove/delete a file relative to project-root
+nnoremap <expr> <leader>df ':!rm '.projectroot#guess().'/'
+
+command! Del :call delete(expand('%')) | bdelete! 
+
+" Change current working directory~
+" Manually using |ProjectRootCD|: >
+    " :ProjectRootCD
+
+" With a mapping: >
+nnoremap <leader>dp :ProjectRootCD<cr>
+
+" set to current file path
+nnoremap <leader>dcf :cd %:p:h<cr>
+
+" Automatically whenever you open a buffer: >
+
+function! <SID>AutoProjectRootCD()
+  try
+    if &ft != 'help'
+      ProjectRootCD
+    endif
+  catch
+    " Silently ignore invalid buffers
+  endtry
+endfunction
+
+autocmd BufEnter * call <SID>AutoProjectRootCD()
+"  ----------------------------------------------------------
 
 
 "  ----------------------------------------------------------
@@ -1555,8 +1509,7 @@ vnoremap <leader>op "gy:call OpenSelectedUrl()<CR>
 
 
 fun! OpenITerm()
-    let _ = Setcwd()
-    let path = getcwd()
+    let path = projectroot#guess()
     exec 'silent !open -a iTerm ' . path
 endfun
 " this works: :silent !open -a iTerm Documents/purescript 
@@ -1913,31 +1866,6 @@ function! ExampleFor()
   echo "off"
 endfunction
 
-nmap <leader>7 :call Setcwd()<cr>
-
-command! Setcwd :call Setcwd()
-command! Setd :call Setcwd()
-
-function! Setcwd()
-   let cph = expand('%:p:h', 1)
-   if cph =~ '^.\+://' | retu | en
-   for mkr in ['.git/', '.hg/', '.svn/', '.bzr/', '_darcs/', '.vimprojects', 'project.clj']
-     let wd = call('find'.(mkr =~ '/$' ? 'dir' : 'file'), [mkr, cph.';'])
-     if wd != '' | let &acd = 0 | brea | en
-   endfo
-   echo fnameescape(wd == '' ? cph : substitute(wd, mkr.'$', '.', '')) 
-   exe 'lc!' fnameescape(wd == '' ? cph : substitute(wd, mkr.'$', '.', ''))
-endfunction
-
-function! GetProjectRoot()
-   let cph = expand('%:p:h', 1)
-   if cph =~ '^.\+://' | retu | en
-   for mkr in ['.git/', '.hg/', '.svn/', '.bzr/', '_darcs/', '.vimprojects', 'project.clj']
-     let wd = call('find'.(mkr =~ '/$' ? 'dir' : 'file'), [mkr, cph.';'])
-     if wd != '' | let &acd = 0 | brea | en
-   endfo
-   return fnameescape(wd == '' ? cph : substitute(wd, mkr.'$', '.', '')) 
-endfunction
 
 
 hi Directory guifg=#11C8D7 ctermfg=DarkMagenta
@@ -2094,7 +2022,7 @@ endfunction
 
 " ------- Formatting Imports ----------------------------------
 let g:stylish_haskell_command = 'stylish-haskell'
-
+" taken from stylish-haskell plugin
 function! s:OverwriteBuffer(output)
   let winview = winsaveview()
   silent! undojoin
@@ -2108,12 +2036,12 @@ function! StylishHaskell()
   let output = system(g:stylish_haskell_command . " " . bufname("%"))
   let errors = matchstr(output, '\(Language\.Haskell\.Stylish\.Parse\.parseModule:[^\x0]*\)')
   if v:shell_error != 0
-    " echom output
+    echom output
   elseif empty(errors)
     call s:OverwriteBuffer(output)
     write
   else
-    " echom errors
+    echom errors
   endif
 endfunction
 " ------- Formatting Imports ----------------------------------
