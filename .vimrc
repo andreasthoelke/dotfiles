@@ -18,6 +18,10 @@ Plug 'rking/ag.vim'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+" fullscreen mode
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+
 " Plug 'bling/vim-bufferline'
 
 Plug 'Valloric/ListToggle' 
@@ -184,6 +188,7 @@ let g:airline_theme='simple'
 " ------- Vim-session settings ---------
 let g:session_autosave = 'yes'
 let g:session_autoload = 'yes'
+" let g:session_default_overwrite = 1
 set sessionoptions+=folds
 set sessionoptions-=help
 set sessionoptions-=options
@@ -206,6 +211,10 @@ set viewdir=~/vimtmp/view//
 " au BufWritePost,BufLeave,WinLeave ?* mkview
 " au BufWritePost ?* mkview
 " au BufWinEnter ?* silent loadview
+
+" Load locked session after a vim crash
+command! SessionLoadLocked OpenSession!
+
 " ------- Vim-session settings ---------
 
 " ------- Shared Data persistence ---------
@@ -322,7 +331,8 @@ inoremap => <c-k>=>
 " inoremap <= <c-k><=
 inoremap forall <c-k>FA
 
-" Unicode mappings
+" UNICODE:
+" To type a unicode char, in insert-mode type "<c-k>a:"
 " nnoremap cuc :%s/::/<c-k>::/g<cr>:%s/forall/<c-k>FA/g<cr>
 nnoremap cuf :%s/forall/<c-k>FA/e<cr>
 nnoremap cuc :%s/::/<c-k>::/e<cr>
@@ -371,6 +381,27 @@ endfun
 "   let ab = append(lineNum, "hii")
 " endfun
 
+" HOOGLE INCLUDE NEW LIBS:
+" "hoogle generate base lense" will download and install only the base and
+" lense libs. 
+" open ":e hoogle-defaults" from the root of the project folder, add/delete
+" libs, then <backspace> in first line to have everything in one row, and
+" copy-paste into terminal
+" https://github.com/ndmitchell/hoogle/blob/master/docs/Install.md
+
+let g:hoogle_search_buf_size = 21
+
+" ALIGNING COLUMS OF HASKELL SIGS: 
+" run: :browse Data.List.Split in GHCi and copy into a vim buffer
+"
+" align right to ∷ with padding 1:
+" '<,'>Tabularize /::/r1c1l1
+" move lines that contain "Splitter" to the bottom of the file!
+" g/Splitter/m$
+" move lines with two occurences of "Splitter" to the bottom
+" g/Splitter.*Splitter/m$
+" move lines with "Eq" to line 22!
+" '<,'>g/Eq/m22
 
 " format hoogle output from
 " Prelude print ∷ Show a ⇒ a → IO ()
@@ -381,7 +412,6 @@ let @o = 'f Jki-- jk9jj'
 " align the type-signature with EasyAlign
 let @p = 'gaap '
 
-let g:hoogle_search_buf_size = 21
 
 fun! Hsimp(module, symbol)
   call hsimport#imp_symbol(a:module, a:symbol)
@@ -409,10 +439,13 @@ nnoremap <leader>vim :e $MYVIMRC<cr>
 " source vim 
 nnoremap <leader>sv :so $MYVIMRC<cr>
 
+nnoremap <leader>cab :e *.cabal<cr>
+
 " nnoremap <leader>zsh :e ~/.zshrc<cr>
 command! Zshrc   :e ~/.zshrc
 command! ZshOhMy :e ~/.oh-my-zsh/oh-my-zsh.sh
 command! Vimrc   :e ~/.vimrc
+command! Cabal   :e *.cabal
 
 " Insert the $PATH shell variable
 command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
@@ -479,6 +512,7 @@ vnoremap <Leader>kk :call ReplVisSel()<cr>
 
 " run (commented) function call with many args
 nnoremap <Leader>kl :call ReplComLine()<cr>
+nnoremap gec        :call ReplComLine()<cr>
 
 " reload module
 nnoremap <Leader>kr :call ReplReload()<cr>
@@ -512,6 +546,21 @@ function! ReplComLine()
       exec 'SlimeSend1 ' . fnCallString 
     endif
 endfun
+
+function! ReplComLineInsert()
+    let lineList = split( getline( line(".") ) )
+    if lineList[0] != '--'
+      call InsertEvalRes()
+      return
+    endif
+    let fnCallString = ListToHsFnCall(lineList) 
+    if has('nvim')
+      call InsertEvalExpressionRes(fnCallString)
+    else
+      exec 'SlimeSend1 ' . fnCallString 
+    endif
+endfun
+
 
 function! TraceComLine()
     let lineList = split( getline( line(".") ) )
@@ -571,8 +620,10 @@ function! TraceTopLevelValue()
 endfun
 
 function! ReplTopFnRLInsert()
+    " ?? TODO: drop this
     call InsertEvalRes()
 endfun
+
 
 function! ReplTopFnRL()
     call ReplReload()
@@ -737,8 +788,8 @@ nmap <silent> [c :call PrevHunkAllBuffers()<CR>
 
 
 " Maps for intero. 
-nnoremap <silent> <leader>is :InteroStart<CR>
-nnoremap <silent> <leader>isc :SignsClear<CR>
+" nnoremap <silent> <leader>is :InteroStart<CR>
+" nnoremap <silent> <leader>isc :SignsClear<CR>
 nnoremap <silent> <leader>ik :InteroKill<CR>
 nnoremap <silent> <leader>io :InteroOpen<CR>
 nnoremap <silent> <leader>ih :InteroHide<CR>
@@ -753,12 +804,15 @@ vnoremap tg :InteroGenTypeInsert<cr>
 nnoremap ti :InteroInfoInsert<cr>
 vnoremap ti :InteroInfoInsert<cr>
 
-nnoremap gei :call InsertEvalRes()<cr>
+nnoremap gel :call InsertEvalRes()<cr>
+nnoremap gei :call ReplComLineInsert()<cr>
 
 " TODO: this doesn't work with ranges/vis-selection
 " vnoremap tat :call InsertInstType()<cr>
 " vnoremap tag :call InsertGenType()<cr>
-
+" should work like in GHCi:
+" Prelude Control.Monad.Except> :t ExceptT . fmap Right
+" ExceptT . fmap Right :: Functor m => m a -> ExceptT e m a
 
 " nnoremap tw :call InsertTypeAnnotation()<cr>jh
 nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
@@ -813,7 +867,9 @@ nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 let g:intero_start_immediately = 0
 " let g:intero_use_neomake = 0
 " This show ghi warnings as opposed to hlint warnings:
-let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
+" TODO: toggle warnings without restart vim!
+let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
+" let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 " https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
 
 " TODO: when do I need this?
@@ -833,6 +889,20 @@ let g:haskellmode_completion_ghc = 1
 "     echo "No errors found"
 "   endif
 " endfunction
+"
+" VIM COMMANDHISTORY:
+" 'q:'
+
+" GHCI: 
+" use :m -<module name> to unload modules
+" use :m to go to only Prelude
+" edit ghci.conf to set 
+" DEFAULT IMPORTS:
+" e ~/.ghc/ghci.conf
+" ERROR:
+" currently with the file it never stops loading..?
+" also in .cabal file there is "Exposed modules", which can be multible
+" modules that are loaded into ghci on startup.
 
 " let g:ghcmod_open_quickfix_function = 'GhcModQuickFix'
 function! GhcModQuickFix()
@@ -868,9 +938,27 @@ endfunction
 " let g:necoghc_enable_detailed_browse = 0
 let g:haskell_tabular = 1
 
-vmap a= :Tabularize /=<CR>
-vmap a; :Tabularize /::<CR>
-vmap a- :Tabularize /-><CR>
+" vmap a= :Tabularize /=<CR>
+" vmap a; :Tabularize /::<CR>
+" vmap a- :Tabularize /-><CR>
+
+" vmap <leader>ta :Tabularize /∷\|→\|⇒/<cr>
+vmap <leader>ta :Tabu /∷\\|→\\|⇒/<cr>
+" note: to insert "\" into command line it needs to be escaped like "\\"
+
+
+" EXTRACT SIGNATURES: ------------------------------------------------------------
+" 1.copy/extract function signatures to the end of the file
+nnoremap <leader>exs :g/∷.*→/t$<cr>
+vnoremap <leader>exs :g/∷.*→/t$<cr>
+nnoremap <leader>exg :g/∷.*⇒/t$<cr>
+" 2. visual select the signatures
+" 3. move only the generic sign out of the block
+vnoremap <leader>exg :g/∷.*⇒/m$<cr>
+" 4. visual select blocks and <leader>ta to tabularize the sigs 
+command! ExtractSigs :g/∷.*→/t$
+command! ExtractGenSigs :g/∷.*⇒/t$
+" --------------------------------------------------------------------------------
 
 " HASKELL
 " --------------------------------------------------------------------------------
@@ -932,9 +1020,9 @@ let g:easy_align_ignore_groups = ['Comment', 'String']
 
 
 " Insert line comment
-nmap <leader>s- i--------------------------------------------------------------------------------<esc>^
-nmap <leader>ml i--------------------------------------------------------------------------------<esc>^
-nmap gc-- i--------------------------------------------------------------------------------<esc>^
+nmap <leader>mll i----------------------------------------------------------------------------------<esc>^
+" Fill line with dashes 
+nnoremap <leader>mlk $a<space><esc>82a-<esc>d82<bar>^
 
 
 " quickfix window and loclist window
@@ -1017,10 +1105,26 @@ endfun
 " TIP: return filetype as literal string, e.g. 'haskell', instead of 'hs'
 
 
-" -------------------------------------------------------------------------------- 
+
+" TEST FUNCTIONS: ----------------------------------------------------------------
+" "unique functions"
 nmap <leader>uf :call RandFnName()<cr>2w
 " produces a (test) haskell function with a random name, e.g.:
 " cp0 = undefined
+" "unique symbol"
+nmap <leader>us :call RandSymbol()<cr>
+
+" "function expand": expand a symbol name to a function stub
+nmap <leader>ef A :: String<esc>^ywo<esc>PA= undefined<esc>b
+" nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
+
+nmap <leader>uef <leader>us<leader>ef
+
+" "index symbol" append postfix index to function name
+nmap <leader>if ea09jea0^k
+
+nmap <leader><c-a> jk^
+nmap <leader><c-x> <c-x>j<c-x>k^
 
 
 function! RandFnName()
@@ -1032,6 +1136,17 @@ import vim
 vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0 = undefined'
 EOF
 endfunction
+
+function! RandSymbol()
+python << EOF
+import string
+import random
+import vim
+
+vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0'
+EOF
+endfunction
+
 " -------------------------------------------------------------------------------- 
 
 
@@ -1089,8 +1204,6 @@ nmap coo :call CommentToggle()<CR>
 vmap <leader>ge gc
 
 
-" Fill line with dashes 
-nnoremap <leader>_ $a<space><esc>82a-<esc>d82<bar>^
 
 
 "  --------------------------------------------------------
@@ -1175,14 +1288,14 @@ let g:SignatureIncludeMarks = 'ABCDEFGHI'
 let g:sneak#label = 1
 " let g:sneak#clear_syntax = 1
 
-nmap <leader>s <Plug>Sneak_s
-nmap <leader>S <Plug>Sneak_S
+nmap <leader>f <Plug>Sneak_s
+nmap <leader>F <Plug>Sneak_S
 " visual-mode
-xmap <leader>s <Plug>Sneak_s
-xmap <leader>S <Plug>Sneak_S
+xmap <leader>f <Plug>Sneak_s
+xmap <leader>F <Plug>Sneak_S
 " operator-pending-mode
-omap <leader>s <Plug>Sneak_s
-omap <leader>S <Plug>Sneak_S
+omap <leader>f <Plug>Sneak_s
+omap <leader>F <Plug>Sneak_S
 
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
@@ -1297,6 +1410,7 @@ nnoremap <silent> N N
 " Search next: 
 nnoremap <silent> <leader>n :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 
+" Important color/highlighy setting - sometimes gets overwritten
 hi Search guibg=#3E3E3E guifg=#DDDDDD
 hi Visual guibg=#3E3E3E gui=none
 
@@ -1351,7 +1465,7 @@ nnoremap <expr> <leader>ep ':e '.projectroot#guess().'/'
 " remove/delete a file relative to project-root
 nnoremap <expr> <leader>df ':!rm '.projectroot#guess().'/'
 
-command! Del :call delete(expand('%')) | bdelete! 
+command! DelFile :call delete(expand('%')) | bdelete! 
 
 " Change current working directory~
 " Manually using |ProjectRootCD|: >
@@ -1376,6 +1490,9 @@ function! <SID>AutoProjectRootCD()
 endfunction
 
 autocmd BufEnter * call <SID>AutoProjectRootCD()
+
+autocmd BufEnter *.hs set syntax=purescript
+
 "  ----------------------------------------------------------
 
 
@@ -1483,8 +1600,6 @@ endfunc
 " be able to paste the cut element
 nmap de die"_dl
 
-nmap <leader>spy \wspy<esc>(
-
 
 
 " Diffing --------------------------------------------------------
@@ -1537,6 +1652,29 @@ nmap <silent> <c-l> gklj<cr>
 " --- Tagbar ----
 
 
+" ---- GOYO - LIMELIGHT -----------------------------------------------------------------------
+function! s:goyo_enter()
+  set scrolloff=13
+  Limelight
+  hi Search guibg=#3E3E3E guifg=#DDDDDD
+  hi Visual guibg=#3E3E3E gui=none
+endfunction
+
+function! s:goyo_leave()
+  set scrolloff=13
+  Limelight!
+  hi Search guibg=#3E3E3E guifg=#DDDDDD
+  hi Visual guibg=#3E3E3E gui=none
+endfunction
+
+" Number of preceding/following paragraphs to include (default: 0)
+let g:limelight_paragraph_span = 1
+let g:limelight_default_coefficient = 0.8
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" ---- GOYO - LIMELIGHT -----------------------------------------------------------------------
+
 
 " --- quickfix & loclist ----
 " let g:lt_location_list_toggle_map = 'gll'
@@ -1548,7 +1686,7 @@ let g:lt_quickfix_list_toggle_map = '<leader>qq'
 nmap <leader>oq :CtrlPQuickfix<cr>
 " --- quickfix & loclist ----
 
-nmap <leader>go :Gstatus<cr>
+nmap <leader>go :Goyo<cr>
 nmap <leader>gs :Gstatus<cr>
 
 
@@ -1763,22 +1901,6 @@ endfun
 fun! GetExtension()
     let extension = expand("%:e")
     return extension
-endfun
-
-
-fun! ClojureDocsForCursorWord()
-    let keyw = expand("<cword>")
-    let url = "https://clojuredocs.org/clojure.core/" . keyw
-    let path = "C:/Program Files (x86)/Google/Chrome/Application/"
-    exec 'silent !"' . path . 'chrome.exe" ' . url
-endfun
-
-
-fun! ClojureDocsForVisSel()
-    let keyw = EncodeURL(@g)
-    let url = "https://clojuredocs.org/clojure.core/" . keyw
-    let path = "C:/Program Files (x86)/Google/Chrome/Application/"
-    exec 'silent !"' . path . 'chrome.exe" ' . url
 endfun
 
 
