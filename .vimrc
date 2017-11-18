@@ -144,7 +144,6 @@ colorscheme molokai
 set nocompatible
 set background=dark
 set laststatus=2
-set number
 
 if has("termguicolors")
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -255,12 +254,15 @@ set shada=",'10,f1,<10,h
 " Left margin aesthetics
 set foldcolumn=2
 set numberwidth=5
+set number
+
 
 highlight FoldColumn guibg=gray10 guifg=gray20
 hi        LineNr     guibg=gray10 guifg=gray15 
 hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
 
 " Various settings
+set cmdheight=2
 set ignorecase
 set autoindent
 set smartindent
@@ -275,7 +277,6 @@ set smartcase
 set gdefault
 set incsearch
 set showmatch
-set number
 set linebreak
 set hidden
 set nowrap
@@ -354,15 +355,36 @@ fun! PurescriptUnicode()
   normal cufcuccuacubcudcue 
 endfun
 
-nnoremap <silent> - :call FindArrow()<cr>
+nnoremap <silent> - :call FindArrow()<cr>w
 fun! FindArrow()
   exec "silent normal! /→\\|⇒\\|∷\<cr>"
 endfun
 
-nnoremap <silent> _ :call FindArrowB()<cr>
+nnoremap <silent> _ :call FindArrowB()<cr>w
 fun! FindArrowB()
   exec "silent normal! ?→\\|⇒\\|∷\<cr>"
 endfun
+
+nnoremap <silent> ( :call ParagPrev()<cr>
+fun! ParagPrev()
+  let startLineNum = line('.')
+  exec "silent normal! {w"
+  if line('.') == startLineNum
+    exec "silent normal! {{w"
+  endif
+endfun
+
+nnoremap <silent> ) :call ParagNext()<cr>
+fun! ParagNext()
+  exec "silent normal! }"
+  call JumpNextNonEmptyLine()
+endfun
+
+
+fun! JumpNextNonEmptyLine()
+  call search('^.\+')
+endfun
+
 
 " noremap <leader>ci /<c-k>-><cr>
 " noremap <leader>ci /<c-k>::<cr>
@@ -380,6 +402,8 @@ endfun
 "   " echo indentPos
 "   let ab = append(lineNum, "hii")
 " endfun
+
+
 
 " HOOGLE INCLUDE NEW LIBS:
 " "hoogle generate base lense" will download and install only the base and
@@ -1114,9 +1138,14 @@ nmap <leader>uf :call RandFnName()<cr>2w
 " "unique symbol"
 nmap <leader>us :call RandSymbol()<cr>
 
-" "function expand": expand a symbol name to a function stub
+" "expand function": expand a symbol name to a function stub
 nmap <leader>ef A :: String<esc>^ywo<esc>PA= undefined<esc>b
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
+
+" "expand undefined": expand a signature to a function stub
+nmap <leader>eu yiwo<esc>PA = undefined<esc>b
+" nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
+
 
 nmap <leader>uef <leader>us<leader>ef
 
@@ -1170,7 +1199,7 @@ nmap yrw "_diw"0Pb
 " Replace rest of the line
 nmap <leader>r0 "_d$"0p`[
 
-" Make deleting to black hole register easier. Todo: do I need this?
+" Make deleting to black hole register easier!
 nnoremap D "_d
 
 
@@ -1453,7 +1482,7 @@ let NERDTreeQuitOnOpen=1
 
 " Tips:
 " use CC to reset tree to current dir
-" use ∷vnew to create a new buffer in a vertical window-split
+" use :vnew to create a new buffer in a vertical window-split
 " use <c-w>< to resize the window
 
 
