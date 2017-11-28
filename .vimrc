@@ -284,6 +284,7 @@ set textwidth=0 wrapmargin=0
 
 " activate line wrapping for a window:
 command! -nargs=* Wrap set wrap linebreak nolist
+" use `gq<motion` or gqq to merely wrap a range/line
 
 set noswapfile
 " set cursorline
@@ -340,9 +341,10 @@ nnoremap cuc :%s/::/<c-k>::/e<cr>
 nnoremap cua :%s/->/<c-k>->/e<cr>
 nnoremap cub :%s/<-/<c-k><-/e<cr>
 nnoremap cud :%s/=>/<c-k>=>/e<cr>
-
 vnoremap <leader>bu :s/\%V→/-><cr>:s/\%V∷/::<cr>:s/\%V⇒/=><cr>
 vnoremap <leader>bi :s/\%V->/→<cr>:s/\%V::/∷<cr>:s/\%V=>/⇒<cr>
+
+" Alternative for bind? ⤜ or »= or >>= or ≥ 
 
 
 " nnoremap cue :%s/<=/<c-k><=/e<cr>
@@ -355,6 +357,8 @@ fun! PurescriptUnicode()
   normal cufcuccuacubcudcue 
 endfun
 
+
+" move in haskell function signature ---------------------------------------------
 nnoremap <silent> - :call FindArrow()<cr>w
 fun! FindArrow()
   exec "silent normal! /→\\|⇒\\|∷\<cr>"
@@ -365,6 +369,24 @@ fun! FindArrowB()
   exec "silent normal! ?→\\|⇒\\|∷\<cr>"
 endfun
 
+
+" move to next paragraph/fn ------------------------------------------------------
+nnoremap <silent> <c-l> :call ParagNext()<cr>
+vnoremap <silent> <c-l> }
+nnoremap <silent> ) :call ParagNext()<cr>
+fun! ParagNext()
+  exec "silent normal! }"
+  call JumpNextNonEmptyLine()
+endfun
+
+fun! JumpNextNonEmptyLine()
+  call search('^.\+')
+endfun
+
+
+" move to previous paragraph/fn
+nnoremap <silent> <c-h> :call ParagPrev()<cr>
+vnoremap <silent> <c-h> {k$
 nnoremap <silent> ( :call ParagPrev()<cr>
 fun! ParagPrev()
   let startLineNum = line('.')
@@ -373,17 +395,7 @@ fun! ParagPrev()
     exec "silent normal! {{w"
   endif
 endfun
-
-nnoremap <silent> ) :call ParagNext()<cr>
-fun! ParagNext()
-  exec "silent normal! }"
-  call JumpNextNonEmptyLine()
-endfun
-
-
-fun! JumpNextNonEmptyLine()
-  call search('^.\+')
-endfun
+" --------------------------------------------------------------------------------
 
 
 " noremap <leader>ci /<c-k>-><cr>
@@ -654,10 +666,11 @@ function! ReplTopFnRL()
     let functionName = get( split( getline( line(".") ) ), 0 )
     " exec 'SlimeSend1 ' . functionName
     " exec 'InteroSend ' . functionName
-    if has('nvim')
-      exec 'InteroSend ' . functionName
-    else
+    " if has('nvim')
+    if IsPurs()
       exec 'SlimeSend1 ' . functionName 
+    else
+      exec 'InteroSend ' . functionName
     endif
 endfun
 
@@ -848,44 +861,6 @@ nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
 " just for testing - not sure when this might be useful
 nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 
-" augroup interoMaps
-"   au!
-"   " Maps for intero. 
-"
-"   " Background process and window management
-"   au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
-"   au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
-"
-"   " Open intero/GHCi split horizontally
-"   au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
-"   " au FileType haskell nnoremap <silent> <leader>ioo :TagbarOpen fj<cr>:InteroOpen<CR><C-W>H50<C-W>
-"   " Open intero/GHCi split vertically
-"   " au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
-"   " au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H25<C-W>
-"   au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
-"
-"   " Reloading (pick one)
-"   " Automatically reload on save
-"   " au BufWritePost *.hs InteroReload
-"   " Manually save and reload
-"   " au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
-"
-"   " Load individual modules
-"   au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
-"   au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
-"
-"   " Type-related information
-"   " Heads up! These next two differ from the rest.
-"   " au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
-"   au FileType haskell map <silent> <leader>T <Plug>InteroType
-"   " au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
-"
-"   " Navigation
-"   " au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
-"   au FileType haskell nnoremap <silent> <leader>gd :InteroGoToDef<CR>
-"   au FileType haskell nnoremap <silent> gd :InteroGoToDef<CR>
-"
-" augroup END
 
 " Intero starts automatically. Set this if you'd like to prevent that.
 let g:intero_start_immediately = 0
@@ -1065,9 +1040,7 @@ nnoremap <c-w>+ 7<c-w>+
 nnoremap <c-w>a 7<c-w>+
 nnoremap <c-w>> 4<c-w>>
 nnoremap <c-w>< 4<c-w><
-
 " ---- Window control ----
-
 
 
 " LINE-NAVIGATION SUMMARY:
@@ -1127,7 +1100,7 @@ endfun
 
 " echo &ft
 " TIP: return filetype as literal string, e.g. 'haskell', instead of 'hs'
-
+" TIP: create a directory: `:! mkdir src/modules`
 
 
 " TEST FUNCTIONS: ----------------------------------------------------------------
@@ -1141,6 +1114,9 @@ nmap <leader>us :call RandSymbol()<cr>
 " "expand function": expand a symbol name to a function stub
 nmap <leader>ef A :: String<esc>^ywo<esc>PA= undefined<esc>b
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
+
+" "expand signature": expand a signature to a function stub
+nmap <leader>es ^ywo<esc>PA= undefined<esc>b
 
 " "expand undefined": expand a signature to a function stub
 nmap <leader>eu yiwo<esc>PA = undefined<esc>b
@@ -1676,8 +1652,8 @@ nmap <leader>to :TagbarOpen j<cr>
 nmap to :TagbarOpen j<cr>
 nmap <leader>th :TagbarClose<cr>
 
-nmap <silent> <c-h> gklk<cr>
-nmap <silent> <c-l> gklj<cr>
+" nmap <silent> <c-h> gklk<cr>
+" nmap <silent> <c-l> gklj<cr>
 " --- Tagbar ----
 
 
