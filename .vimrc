@@ -110,6 +110,7 @@ Plug 'Twinside/vim-hoogle'
 Plug 'mhinz/vim-grepper'
 
 Plug 'majutsushi/tagbar'
+Plug 'vimlab/split-term.vim'
 " there is a Haskell integration, but it does not work :Tag.. not.. 
 
 
@@ -308,13 +309,22 @@ set splitbelow
 set splitright
 
 " Various mappings ----------------------------------------------
-" exit neovim terminal mode
+
+" NEOVIM TERMINAL MODE
 if has('nvim')
   tnoremap jk <C-\><C-n>
+
+  " jump window up from terminal mode
+  tnoremap <c-w>k <C-\><C-n><c-w>k
+  tnoremap <c-\>x <C-\><C-n>:bw!<cr>
+  nnoremap <c-\>x <C-\><C-n>:bw!<cr>
 endif
 
+command! Restart call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
+
+
 " windows should not be kept at equal size
-set noea
+set noequalalways
 
 
 let mapleader=" "
@@ -468,6 +478,7 @@ noremap <leader>ssp :set syntax=purescript<cr>
 " ------- General --------------------------------------------------------------
 " save!
 nnoremap <leader>w :w!<cr>
+nnoremap gw :w!<cr>
 " nnoremap <silent><leader>w :up<cr>
 
 " edit vim 
@@ -497,41 +508,43 @@ set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
 
 " ------- General --------------------------------------------------------------
 
-
+let g:psc_ide_log_level = 3
 
 " --------------------------------------------------------------------------------
 " PURESCRIPT
 
-command! Reset :PSCIDEend
+" nmap <leader>xn :<C-U>call PSCIDEtype(PSCIDEgetKeyword(), v:true)<CR>
+" nmap <leader>xn :<C-U>call PSCIDEaddTypeAnnotation(matchstr(getline(line(".")), '^\s*\zs\k\+\ze'))<CR>
+" nm <buffer> <silent> <leader>s :<C-U>call PSCIDEapplySuggestion()<CR>
+" nm <buffer> <silent> <leader>a :<C-U>call PSCIDEaddTypeAnnotation()<CR>
+" nm <buffer> <silent> <leader>i :<C-U>call PSCIDEimportIdentifier(PSCIDEgetKeyword())<CR>
+" nm <buffer> <silent> <leader>r :<C-U>call PSCIDEload()<CR>
+" -- nm <buffer> <silent> <leader>gsd :<C-U>call PSCIDEpursuit(PSCIDEgetKeyword())<CR>
+" nm <buffer> <silent> <leader>C :<C-U>call PSCIDEcaseSplit("!")<CR>
+" nm <buffer> <silent> <leader>f :<C-U>call PSCIDEaddClause("")<CR>
+" nm <buffer> <silent> <leader>qa :<C-U>call PSCIDEaddImportQualifications()<CR>
+" nm <buffer> <silent> ]d :<C-U>call PSCIDEgoToDefinition("", PSCIDEgetKeyword())<CR>
 
-nnoremap <Leader>st :PSCIDEtype<CR>
-" nnoremap <Leader>at :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>
-nnoremap <Leader>at :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>h
-" nnoremap tw :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>h
 
-nnoremap tr :PSCIDEend<cr>
-
-
-
-nnoremap <Leader>sii :PSCIDEimportIdentifier<CR>
-nnoremap <Leader>sai :PSCIDEaddImportQualifications<CR>
-nnoremap <Leader>sri :PSCIDEremoveImportQualifications<CR>
-nnoremap <Leader>sas :PSCIDEapplySuggestion<CR>
-
-" nnoremap <Leader>sgd :PSCIDEgoToDefinition<CR>
-" nnoremap <Leader>gd :PSCIDEgoToDefinition<CR>
-
-" function template
-nnoremap <Leader>sac :PSCIDEaddClause<CR>
-
-nnoremap <Leader>sp :PSCIDEpursuit<CR>
-nnoremap doo :PSCIDEpursuit<CR>
-
-nnoremap <Leader>scw :PSCIDEcwd<CR>
-nnoremap <Leader>sli :PSCIDElist<CR>
-nnoremap <Leader>slo :PSCIDEload<CR>
-
-" nnoremap goo :PSCIDEpursuit<CR>
+" command! Reset :PSCIDEend
+" nnoremap <Leader>st :PSCIDEtype<CR>
+" " nnoremap <Leader>at :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>
+" nnoremap <Leader>at :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>h
+" " nnoremap tw :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>h
+" nnoremap tr :PSCIDEend<cr>
+" nnoremap <Leader>sii :PSCIDEimportIdentifier<CR>
+" nnoremap <Leader>sai :PSCIDEaddImportQualifications<CR>
+" nnoremap <Leader>sri :PSCIDEremoveImportQualifications<CR>
+" nnoremap <Leader>sas :PSCIDEapplySuggestion<CR>
+" " nnoremap <Leader>sgd :PSCIDEgoToDefinition<CR>
+" " nnoremap <Leader>gd :PSCIDEgoToDefinition<CR>
+" " function template
+" nnoremap <Leader>sac :PSCIDEaddClause<CR>
+" nnoremap <Leader>sp :PSCIDEpursuit<CR>
+" nnoremap doo :PSCIDEpursuit<CR>
+" nnoremap <Leader>scw :PSCIDEcwd<CR>
+" nnoremap <Leader>sli :PSCIDElist<CR>
+" nnoremap <Leader>slo :PSCIDEload<CR>
 
 " --------------------------------------------------------------------------------
 
@@ -576,10 +589,10 @@ endfun
 function! ReplComLine()
     let lineList = split( getline( line(".") ) )
     let fnCallString = ListToHsFnCall(lineList) 
-    if has('nvim')
-      exec 'InteroSend ' . fnCallString
-    else
+    if IsPurs()
       exec 'SlimeSend1 ' . fnCallString 
+    else
+      exec 'InteroSend ' . fnCallString
     endif
 endfun
 
@@ -669,6 +682,7 @@ function! ReplTopFnRL()
     " if has('nvim')
     if IsPurs()
       exec 'SlimeSend1 ' . functionName 
+      " call Prebuild()
     else
       exec 'InteroSend ' . functionName
     endif
@@ -681,8 +695,9 @@ function! ReplReload()
     let modulename = GetModuleName() 
     exec ':up'
     if IsPurs()
-      exec 'SlimeSend1 :r'
-      exec 'SlimeSend1 import ' . modulename
+      exec ':Prebuild'
+      " exec 'SlimeSend1 :r'
+      " exec 'SlimeSend1 import ' . modulename
       " exec 'SlimeSend1 import Helpers'
     else
       if has('nvim')
@@ -698,7 +713,8 @@ endfun
 function! InsertTypeAnnotation()
     " exec ':up'
     if IsPurs()
-      exec ':PSCIDEaddTypeAnnotation'
+      " exec ':PSCIDEaddTypeAnnotation'
+      call PSCIDEaddTypeAnnotation(matchstr(getline(line(".")), '^\s*\zs\k\+\ze'))
     else
       if has('nvim')
         exec ':InteroTypeInsert'
@@ -1101,8 +1117,56 @@ endfun
 " echo &ft
 " TIP: return filetype as literal string, e.g. 'haskell', instead of 'hs'
 " TIP: create a directory: `:! mkdir src/modules`
-
-
+" TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
+" past last command: ":p
+" redirect command echo text to register: :redir @t, then pt, later :redir end
+" run any command with ':!{cmd}' or use <C-z> to suspend nvim, then run 'fg'
+" to bring nvim back to the foreground
+" change terminal cursor colors: highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
+" TIP: :new creates a new buffer, ":read !cat /etc/shells" → append output of
+" the command to the current buffer at cursor positon.
+" run a date/time loop in the shell: "terminal while true; do date; sleep 1; done
+" TIP: The expression register reads-in an arbitary expression into the p-register or insert-mode:
+" "<c-r>=v:version<cr>" will insert the vim-version in insert-mode, "=v:version<cr> will allow to 'p'/'P' in normal mode
+" :let, :let g:, :let b:<cr> lists global-, or buffer-variables
+" example: ":let test12=123<cr>" and then in insert mode: <c-r>=test12<cr> will paste "123"
+" TIP: look through OS-environment variables: ":echo $" and then TAB
+"      example: paste environment variable: "i<c-r>=$SHELL" → /bin/zsh
+" TIP: write an environment variable: ":let $TEST12"
+"
+"
+"
+" SHELL, E-MACS MAPPINGS
+" beginning-of-line (C-a)
+" Move to the start of the current line.
+"
+" end-of-line (C-e)
+" Move to the end of the line.
+"
+" forward-char (C-f)
+" Move forward a character.
+"
+" backward-char (C-b)
+" Move back a character.
+"
+" forward-word (M-f)
+" Move forward to the end of the next word. Words are composed of letters and digits.
+"
+" backward-word (M-b)
+" Move back to the start of the current or previous word. Words are composed of letters and digits.
+"
+" shell-forward-word ()
+" Move forward to the end of the next word. Words are delimited by non-quoted shell metacharacters.
+"
+" shell-backward-word ()
+" Move back to the start of the current or previous word. Words are delimited by non-quoted shell metacharacters.
+"
+" clear-screen (C-l)
+" Clear the screen and redraw the current line, leaving the current line at the top of the screen.
+"
+" redraw-current-line ()
+" Refresh the current line. By default, this is unbound.
+"
 " TEST FUNCTIONS: ----------------------------------------------------------------
 " "unique functions"
 nmap <leader>uf :call RandFnName()<cr>2w
@@ -1480,7 +1544,7 @@ command! DelFile :call delete(expand('%')) | bdelete!
 nnoremap <leader>dp :ProjectRootCD<cr>
 
 " set to current file path
-nnoremap <leader>dcf :cd %:p:h<cr>
+nnoremap <silent><leader>dcf :cd %:p:h<cr>
 
 " Automatically whenever you open a buffer: >
 
@@ -1494,7 +1558,8 @@ function! <SID>AutoProjectRootCD()
   endtry
 endfunction
 
-autocmd BufEnter * call <SID>AutoProjectRootCD()
+" hmm, defaults to ~/ if no project is found .. TODO?
+" autocmd BufEnter * call <SID>AutoProjectRootCD()
 
 autocmd BufEnter *.hs set syntax=purescript
 
@@ -1641,9 +1706,20 @@ fun! GoogleSearchStr()
     return url
 endfun
 
-nmap glt :call OpenITerm()<cr>
+
+" ----------------------------------------------------------------------------------
+"  Launching external apps
+command! ITerm :call OpenITerm()
+nmap gli :call OpenITerm()<cr>
+
+command! Finder :call OpenFinder()
 nmap glf :call OpenFinder()<cr>
+
+command! Browser :call OpenCurrentFileInSystemEditor()
 nmap gle :call OpenCurrentFileInSystemEditor()<cr>
+" ----------------------------------------------------------------------------------
+
+nmap glt :20Term<cr>
 
 
 " --- Tagbar ----
@@ -1804,11 +1880,15 @@ endfun
 
 fun! HoogleForCursorWord()
     let g:originFile = expand('%')
-    let keyw = expand("<cword>")
-    let comm = 'silent Hoogle ' . keyw
-    exec comm
-    exec 'w!'
-    wincmd j
+    if IsPurs()
+      call PSCIDEpursuit(PSCIDEgetKeyword())
+    else
+      let keyw = expand("<cword>")
+      let comm = 'silent Hoogle ' . keyw
+      exec comm
+      exec 'w!'
+      wincmd j
+    endif
 endfun
 
 
