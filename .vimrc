@@ -650,7 +650,7 @@ function! ReplComLineInsert()
       exec 'SlimeSend1 ' . fnCallString 
     endif
 endfun
-
+" stillhere!
 
 function! TraceComLine()
     let lineList = split( getline( line(".") ) )
