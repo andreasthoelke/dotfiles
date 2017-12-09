@@ -45,6 +45,7 @@ Plug 'sjl/vitality.vim'
 Plug 'tomasr/molokai'
 
 Plug 'jelera/vim-javascript-syntax'
+Plug 'leafgarland/typescript-vim' 
 
 " Code navigation
 " Plug 'justinmk/vim-sneak'
@@ -95,11 +96,11 @@ Plug 'gilligan/vim-textobj-haskell'
 " requires python
 
 " Plug 'jaspervdj/stylish-haskell'
-" using the code below
 Plug 'w0rp/ale'
 Plug 'mpickering/hlint-refactor-vim'
-
 Plug 'neomake/neomake'
+Plug 'vim-syntastic/syntastic'
+
 Plug 'parsonsmatt/intero-neovim'
 
 Plug 'Twinside/vim-hoogle'
@@ -110,11 +111,16 @@ Plug 'Twinside/vim-hoogle'
 Plug 'mhinz/vim-grepper'
 
 Plug 'majutsushi/tagbar'
-Plug 'vimlab/split-term.vim'
 " there is a Haskell integration, but it does not work :Tag.. not.. 
+
+Plug 'vimlab/split-term.vim'
+Plug 'tpope/vim-dispatch'
+Plug 'radenling/vim-dispatch-neovim'
 
 
 call plug#end()
+" ----------------------------------------------------------------------------------
+
 
 
 " set omnifunc=syntaxcomplete#Complete
@@ -469,9 +475,6 @@ setlocal formatprg=stylish-haskell
 " use <motion>gq
 " .. but not working properly, e.g. messing up line breaks
 
-
-noremap <leader>ssp :set syntax=purescript<cr>
-
 " free mapping: <c-g> - currently show the current filename
 
 
@@ -481,10 +484,46 @@ nnoremap <leader>w :w!<cr>
 nnoremap gw :w!<cr>
 " nnoremap <silent><leader>w :up<cr>
 
-" edit vim 
+
+" EDIT VIM SCRIPT ---------------------------------------------------------------------
 nnoremap <leader>vim :e $MYVIMRC<cr>
 " source vim 
 nnoremap <leader>sv :so $MYVIMRC<cr>
+
+" source the current file
+nmap <silent><leader>su :w<CR>:so %<CR>
+
+" source the following paragraph/lines
+nnoremap <leader>sf y}:@"<cr>
+
+" TIP: Range example function
+function! SourceRange() range
+  let tmpsofile = tempname()
+  call writefile(getline(a:firstline, a:lastline), l:tmpsofile)
+  execute "source " . l:tmpsofile
+  call delete(l:tmpsofile)
+endfunction
+
+" Source a range
+command! -range Source <line1>,<line2>call SourceRange()
+
+" Run a VimScript function and insert the returned result below the paragraph
+nnoremap <leader>sh wwy$}i<c-r>=<c-r>"<cr><esc>{w
+
+" Run a VimScript snippet (til end of the line) and insert the returned result!
+nnoremap <leader>sy y$o<c-r>=<c-r>"<cr><esc>
+
+" Run a VimScript snippet (til end of the line) and echo the result in the
+" command line
+nnoremap <leader>sx y$:echom <c-r>"<cr>
+
+
+" EDIT VIM SCRIPT ---------------------------------------------------------------------
+
+
+" paste the current file path
+nnoremap <leader>sf i<c-r>=expand("%:p")<cr><esc>^
+" free mapping?
 
 nnoremap <leader>cab :e *.cabal<cr>
 
@@ -508,7 +547,9 @@ set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
 
 " ------- General --------------------------------------------------------------
 
-let g:psc_ide_log_level = 3
+" let g:psc_ide_log_level = 3
+
+
 
 " --------------------------------------------------------------------------------
 " PURESCRIPT
@@ -765,7 +806,8 @@ endfun
 " ------- ALE ------- 
 " let g:hindent_on_save = 0
 " let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint', 'hdevtools']}
-let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint']}
+let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint'], 
+                    \'javascript': ['eslint'],}
 " let g:ale_linters = {'haskell': ['hlint']}
 " let g:ale_linters = {'haskell': ['ghc']}
 let g:ale_lint_on_text_changed = 'normal'
@@ -775,8 +817,23 @@ let g:ale_enabled = 0
 let g:ale_emit_conflict_warnings = 0
 nmap <leader>aa :ALEToggle<cr>
 
-let g:ale_sign_error = '✖'
+" let g:ale_sign_error = '✖'
 let g:ale_sign_warning = '⚠'
+let g:ale_sign_error = '•'
+
+
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
+\}
+
+" let g:ale_set_highlights = 0
+" hi link ALEErrorSign    Error
+" hi link ALEWarningSign  Warning
+" highlight clear ALEErrorSign
+" highlight clear ALEWarningSign
+
+" otherwise the bg-color looks off
+hi AleErrorSign   ctermfg=white
 
 let g:airline#extensions#ale#enabled = 0
 " needed?
@@ -784,8 +841,47 @@ let g:airline#extensions#ale#enabled = 0
 " Configure Hline/Ale warnings!
 command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
 
+" quickfix window and loclist window
+nmap <silent> [w :lprev<cr>
+nmap <silent> ]w :lnext<cr>
+nmap <silent> [e :cprev<cr>
+nmap <silent> ]e :cnext<cr>
+
+" Mappings in the style of unimpaired-next
+" nmap <silent> [W <Plug>(ale_first)
+" nmap <silent> [w <Plug>(ale_previous)
+" nmap <silent> ]w <Plug>(ale_next)
+" nmap <silent> ]W <Plug>(ale_last)
+
+
 " ------- ALE ------- 
 
+" ------- SYNTASIC ------- 
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+let g:psc_ide_syntastic_mode = 1
+
+hi SyntasticErrorSign   ctermfg=white
+hi SpellBad term=reverse ctermbg=darkgreen
+
+let g:syntastic_error_symbol = "•"
+let g:syntastic_style_error_symbol = "⚠"
+let g:syntastic_warning_symbol = "⚠"
+let g:syntastic_style_warning_symbol = "⚠"
+
+nmap <leader>ss :SyntasticToggle<cr>
+nmap <leader>sc :SyntasticCheck<cr>
+nmap <leader>sr :SyntasticReset<cr>
+
+" turn off initially
+" ------- SYNTASIC ------- 
 
 " ------- Neomake ------- 
 " Neomake does the same as Ale
@@ -1040,12 +1136,6 @@ nmap <leader>mll i--------------------------------------------------------------
 nnoremap <leader>mlk $a<space><esc>82a-<esc>d82<bar>^
 
 
-" quickfix window and loclist window
-nmap <silent> [w :lprev<cr>
-nmap <silent> ]w :lnext<cr>
-nmap <silent> [e :cprev<cr>
-nmap <silent> ]e :cnext<cr>
-
 
 " ---- Window control ----
 " nnoremap dc <c-w>c 
@@ -1065,16 +1155,16 @@ nnoremap <c-w>< 4<c-w><
 " inoremap <m-k> <esc>kJi
 
 " Move to beginning and end of line + related operations
-nmap 9 ^
-omap 9 ^
-vmap 9 ^
-nmap y9 y^
-nmap d9 d^
-nmap c9 c^
+" nmap 9 ^
+" omap 9 ^
+" vmap 9 ^
+" nmap y9 y^
+" nmap d9 d^
+" nmap c9 c^
 
-nmap 0 g_
-omap 0 g_
-vmap 0 g_
+" nmap 0 g_
+" omap 0 g_
+" vmap 0 g_
 
 " ------------------------------------------------------
 " Paste and delete -------------------------------------
@@ -1133,8 +1223,12 @@ endfun
 " TIP: look through OS-environment variables: ":echo $" and then TAB
 "      example: paste environment variable: "i<c-r>=$SHELL" → /bin/zsh
 " TIP: write an environment variable: ":let $TEST12"
-"
-"
+" TIP: git config --global core.editor "nvim"
+"      lookup: "cat ~/.gitconfig"
+" TIP: ad-hock environment variable: in terminal: "export test44=$PATH:~/Documents" this appends another dir to the PATH
+" TIP: use (%) current file name in shell: ":!cat %"
+" TIP: use 'find' to get full path and then 'gf': terminal: "find $PWD" and then "gf" on the the absolute path
+" if expressions: echo (v:true ? 'yes' : 'no') -- echo (v:false ? 'yes' : 'no')
 "
 " SHELL, E-MACS MAPPINGS
 " beginning-of-line (C-a)
@@ -1465,14 +1559,6 @@ let g:ag_highlight=1
 " nnoremap <silent> <leader>df :set nohlsearch<cr>
 nnoremap <silent> <leader><leader> :set nohlsearch<cr>
 
-"Find clojure functions 
-" vnoremap <leader>/ :set hlsearch<cr>:noh<cr>/\vdefn 
-" nnoremap <leader>/ :set hlsearch<cr>:noh<cr>/\vdefn 
-
-"Find clojure lib usage 
-" vnoremap <leader>dl/ :set hlsearch<cr>:noh<cr>/\v"<C-R>g"\/
-" nnoremap <leader>l/ "gyiw :set hlsearch<cr>:noh<cr>/\v<C-R>g\/<cr>
-
 nnoremap <silent> n n
 nnoremap <silent> N N
 
@@ -1515,6 +1601,7 @@ let NERDTreeShowBookmarks = 1
 " let g:NERDTreeMapMenu = 'Mm'".. not working!?
 
 nnoremap <leader>oo :NERDTreeFind<cr>
+nnoremap go :NERDTreeFind<cr>
 
 nnoremap <leader>q :NERDTreeClose<cr>
 nnoremap <leader>oe :NERDTree-m<cr>
@@ -1541,11 +1628,11 @@ command! DelFile :call delete(expand('%')) | bdelete!
     " :ProjectRootCD
 
 " With a mapping: >
-nnoremap <leader>dp :ProjectRootCD<cr>
+nnoremap <silent><leader>dp :ProjectRootCD<cr>
 
 " set to current file path
-nnoremap <silent><leader>dcf :cd %:p:h<cr>
-
+nnoremap <leader>dcf :cd %:p:h<cr>:pwd<cr>
+" nnoremap <c-g> :echo 
 " Automatically whenever you open a buffer: >
 
 function! <SID>AutoProjectRootCD()
@@ -1561,7 +1648,21 @@ endfunction
 " hmm, defaults to ~/ if no project is found .. TODO?
 " autocmd BufEnter * call <SID>AutoProjectRootCD()
 
+" controversion, but trying this out
+" set path +=/**
+
 autocmd BufEnter *.hs set syntax=purescript
+" ----------------------------------------------------------------------------------
+
+" if exists(":CompilerSet") != 2
+"   command -nargs=* CompilerSet setlocal <args>
+" endif
+"
+" let current_compiler = "typescript"
+" CompilerSet makeprg=tsc\ $*\ --outDir\ build\ %
+" CompilerSet errorformat=%+A\ %#%f\ %#(%l\\\,%c):\ %m,%C%m
+
+
 
 "  ----------------------------------------------------------
 
@@ -1719,7 +1820,7 @@ command! Browser :call OpenCurrentFileInSystemEditor()
 nmap gle :call OpenCurrentFileInSystemEditor()<cr>
 " ----------------------------------------------------------------------------------
 
-nmap glt :20Term<cr>
+nmap <silent> glt :20Term<cr>
 
 
 " --- Tagbar ----
@@ -1987,7 +2088,7 @@ fun! GetExtension()
     let extension = expand("%:e")
     return extension
 endfun
-
+" vim
 
 fun! EncodeChar(char) 
    if a:char == '%' 
