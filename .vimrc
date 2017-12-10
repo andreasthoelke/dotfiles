@@ -323,6 +323,8 @@ if has('nvim')
   " jump window up from terminal mode
   tnoremap <c-w>k <C-\><C-n><c-w>k
   tnoremap <c-\>x <C-\><C-n>:bw!<cr>
+  tnoremap <c-w>c <C-\><C-n>:bw!<cr>
+  " TODO: or just hide the buffer/close the window?
   nnoremap <c-\>x <C-\><C-n>:bw!<cr>
 endif
 
@@ -488,7 +490,7 @@ nnoremap gw :w!<cr>
 " EDIT VIM SCRIPT ---------------------------------------------------------------------
 nnoremap <leader>vim :e $MYVIMRC<cr>
 " source vim 
-nnoremap <leader>sv :so $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " source the current file
 nmap <silent><leader>su :w<CR>:so %<CR>
@@ -589,6 +591,19 @@ set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
 
 " --------------------------------------------------------------------------------
 
+" INTERO WORKFLOW:
+"
+"   <leader>io to open intero
+"   <leader>il to load the module
+"           dr to type-check the file
+"           qq to show errors
+"           ]e to jump to next error
+"
+"   tt or tw or tg to insert type
+"   gei to insert return val → works also on commented lines 
+"   <leader>kk run it in the vim-terminal mode:
+"                            use i to type and c-\ c-n to leave insert mode
+
 
 " Vim Slime → Tmux
 let g:slime_target = "tmux"
@@ -629,7 +644,7 @@ endfun
 
 function! ReplComLine()
     let lineList = split( getline( line(".") ) )
-    let fnCallString = ListToHsFnCall(lineList) 
+    let fnCallString = ListToHsFnCall(lineList[1:]) 
     if IsPurs()
       exec 'SlimeSend1 ' . fnCallString 
     else
@@ -638,23 +653,52 @@ function! ReplComLine()
 endfun
 
 function! ReplComLineInsert()
-    let lineList = split( getline( line(".") ) )
-    if lineList[0] != '--'
-      call InsertEvalRes()
+    let l:lineList = split( getline( line(".") ) )
+
+    if or(l:lineList[1] == '=', l:lineList[1] == '∷')
+    " JUST A PLAIN SYMBOL UNDER THE CURSOR ---------------------------------------
+      if IsPurs()
+        call PursEval( expand('<cword>') )
+      else
+        call InsertEvalRes()
+      endif
+      return
+      " stops here. TODO: refactor
+
+    elseif l:lineList[0] == '--'
+      " A COMMENTED LINE ---------------------------------------------------------
+      let l:fnCallString = ListToHsFnCall(l:lineList[1:]) 
+      if has('nvim')
+        if IsPurs()
+          call PursEval( l:fnCallString )
+        else
+          call InsertEvalExpressionRes(l:fnCallString)
+        endif
+      else
+        exec 'SlimeSend1 ' . l:fnCallString 
+      endif
+
+    else
+    " USE THE WHOLE/PLAIN EXPRESSION! --------------------------------------------
+      if IsPurs()
+        call PursEval( ListToHsFnCall(l:lineList) )
+      else
+        " TODO
+      endif
       return
     endif
-    let fnCallString = ListToHsFnCall(lineList) 
-    if has('nvim')
-      call InsertEvalExpressionRes(fnCallString)
-    else
-      exec 'SlimeSend1 ' . fnCallString 
-    endif
 endfun
-" stillhere!
+
+" TODO: Intero has these custom functions:
+" InsertInstType
+" InsertGenType
+" InsertEvalRes
+" InsertEvalExpressionRes
+" TODO: make proper API
 
 function! TraceComLine()
     let lineList = split( getline( line(".") ) )
-    let fnCallString = ListToHsFnCall(lineList) 
+    let fnCallString = ListToHsFnCall(lineList[1:]) 
 
     let functionName = get( split( getline( line(".") - 1 ) ), 0 )
 
@@ -662,25 +706,24 @@ function! TraceComLine()
 endfun
 
 function! ListToHsFnCall(stlist)
-  let fncall = ""
-  let stListCropped = a:stlist[1:]
+  let l:fncall = ""
 
-  for nextItem in stListCropped
-    let fncall = fncall . " " . nextItem
+  for nextItem in a:stlist
+    let l:fncall = l:fncall . " " . nextItem
   endfor
-  return fncall
+  return l:fncall
   " echo fncall
 endfun
 
 function! ReplVisSel()
-    let visSel = Get_visual_selection()
+    let l:visSel = Get_visual_selection()
     " exec 'SlimeSend1 ' . visSel
-    exec 'InteroSend ' . visSel
+    exec 'InteroSend ' . l:visSel
 endfun
 
 function! Tester1()
-    let visSel = getline
-    exec 'SlimeSend1 ' . visSel
+    let l:visSel = getline
+    exec 'SlimeSend1 ' . l:visSel
     " echo visSel
 endfun
 
@@ -737,6 +780,9 @@ function! ReplReload()
     exec ':up'
     if IsPurs()
       exec ':Prebuild'
+      call PursEval(':r')
+      call PursEval('import ' . modulename)
+      call PursEval('import Helpers')
       " exec 'SlimeSend1 :r'
       " exec 'SlimeSend1 import ' . modulename
       " exec 'SlimeSend1 import Helpers'
@@ -1788,7 +1834,7 @@ nmap <leader>dr :LinediffReset<cr>
 
 
 
-nmap <leader>op :call OpenUrlUnderCursor()<CR>
+" nmap <leader>op :call OpenUrlUnderCursor()<CR>
 " vmap <leader>op :call OpenSelectedUrl()<CR>
 
 vnoremap <leader>op "gy:call OpenSelectedUrl()<CR>
@@ -1821,6 +1867,10 @@ nmap gle :call OpenCurrentFileInSystemEditor()<cr>
 " ----------------------------------------------------------------------------------
 
 nmap <silent> glt :20Term<cr>
+
+" Terminal util functions
+source /Users/andreas.thoelke/.vim/utils/termin1.vim
+
 
 
 " --- Tagbar ----
