@@ -1,4 +1,5 @@
 " purescript requires?
+"
 " syntax on
 " filetype off
 filetype plugin indent on
@@ -24,20 +25,22 @@ Plug 'junegunn/limelight.vim'
 
 " Plug 'bling/vim-bufferline'
 
-Plug 'Valloric/ListToggle' 
+Plug 'Valloric/ListToggle'
 Plug 'kshenoy/vim-signature'
 Plug 'mattn/ctrlp-mark'
 Plug 'airblade/vim-gitgutter'
 
 Plug 'AndrewRadev/linediff.vim'
 
-" Vim session & shell
+" VIM SESSION SHELL:
+" Plug 'tpope/vim-obsession'
 Plug 'xolox/vim-misc'
+Plug 'kopischke/vim-stay'
 Plug 'xolox/vim-session'
 " Restore folding
-Plug 'vim-scripts/restore_view.vim'
+" Plug 'vim-scripts/restore_view.vim'
 " Plug 'Twinside/vim-haskellFold'
-Plug 'https://github.com/dbakker/vim-projectroot' 
+Plug 'https://github.com/dbakker/vim-projectroot'
 " Plug 'xolox/vim-shell'
 " iTerm2 integration
 Plug 'sjl/vitality.vim'
@@ -45,7 +48,7 @@ Plug 'sjl/vitality.vim'
 Plug 'tomasr/molokai'
 
 Plug 'jelera/vim-javascript-syntax'
-Plug 'leafgarland/typescript-vim' 
+Plug 'leafgarland/typescript-vim'
 
 " Code navigation
 " Plug 'justinmk/vim-sneak'
@@ -60,8 +63,8 @@ Plug 'tomtom/tcomment_vim'
 Plug 'kana/vim-textobj-fold'
 Plug 'matze/vim-move'
 
-Plug 'chrisbra/Colorizer' 
-Plug 'KabbAmine/vCoolor.vim' 
+Plug 'chrisbra/Colorizer'
+Plug 'KabbAmine/vCoolor.vim'
 
 Plug 'yosiat/oceanic-next-vim'
 
@@ -86,7 +89,7 @@ Plug 'Shougo/vimproc.vim', {'do': 'make'}
 " Plug 'bitc/vim-hdevtools'
 " crashes vim on :HdevtoolsType command
 "
-Plug 'dan-t/vim-hsimport' 
+Plug 'dan-t/vim-hsimport'
 
 Plug 'neovimhaskell/haskell-vim'
 " Plug 'alx741/vim-hindent'
@@ -111,7 +114,7 @@ Plug 'Twinside/vim-hoogle'
 Plug 'mhinz/vim-grepper'
 
 Plug 'majutsushi/tagbar'
-" there is a Haskell integration, but it does not work :Tag.. not.. 
+" there is a Haskell integration, but it does not work :Tag.. not..
 
 Plug 'vimlab/split-term.vim'
 Plug 'tpope/vim-dispatch'
@@ -130,7 +133,7 @@ call plug#end()
 " let $PATH .= (":" . "/Users/andreas.thoelke/.local/bin")
 
 " let g:python2_host_prog = '/usr/local/bin/python'
-let g:python2_host_prog = '/Users/andreas.thoelke/Library/Python/2.7' 
+let g:python2_host_prog = '/Users/andreas.thoelke/Library/Python/2.7'
 let g:python3_host_prog = '/usr/local/bin/python3'
 " strangely Pyhon 3 is installed here:
 " /Library/Frameworks/Python.framework/Versions/3.6
@@ -189,12 +192,34 @@ set t_vb=
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t:r'
 let g:airline_theme='simple'
+let g:airline_exclude_preview = 0
+" abbriviates vim-mode (e.g. "Normal" to "N")
+let g:airline_mode_map = {
+      \ '__' : '-',
+      \ 'n'  : 'n',
+      \ 'i'  : 'i',
+      \ 'R'  : 'r',
+      \ 'c'  : 'c',
+      \ 'v'  : 'v',
+      \ 'V'  : 'v',
+      \ '' : 'v',
+      \ 's'  : 's',
+      \ 'S'  : 's',
+      \ '' : 's',
+      \ }
+let g:airline_highlighting_cache = 0
+let g:airline_section_a = '%-0.18{getcwd()}'
+let g:airline_section_b = '%<%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+let g:airline_section_c = ''
+let g:airline_section_x = ''
+let g:airline_section_y = "%{airline#util#wrap(airline#extensions#hunks#get_hunks(),0)}%{airline#util#wrap(airline#extensions#branch#get_head(),0)}"
 
+" Session: -----------------------------------------------------------------------------
 
 " ------- Vim-session settings ---------
 let g:session_autosave = 'yes'
 let g:session_autoload = 'yes'
-" let g:session_default_overwrite = 1
+let g:session_command_aliases = 1
 set sessionoptions+=folds
 set sessionoptions-=help
 set sessionoptions-=options
@@ -202,16 +227,30 @@ set sessionoptions-=blank
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
 
+" Prevent mkview to save and restore the cwd per file! This uses the command API of the vim-stay plugin.
+augroup stay_no_lcd
+  autocmd!
+  if exists(':tcd') == 2
+    autocmd User BufStaySavePre  if haslocaldir() | let w:lcd = getcwd() | exe 'cd '.fnameescape(getcwd(-1, -1)) | endif
+  else
+    autocmd User BufStaySavePre  if haslocaldir() | let w:lcd = getcwd() | cd - | cd - | endif
+  endif
+  autocmd User BufStaySavePost if exists('w:lcd') | execute 'lcd' fnameescape(w:lcd) | unlet w:lcd | endif
+augroup END
+
+
 set undofile
 " set noundofile
-" set undodir="~/vimfiles/undo/" 
+" set undodir="~/vimfiles/undo/"
 set undodir=~/vimtmp/undo,.
 
 " set nobackup
 " set nowritebackup
 
 " Restore view settings
-set viewoptions=cursor,folds
+" set viewoptions=cursor,folds
+set viewoptions=cursor,folds,slash,unix
+
 " set viewdir=$HOME/.vim_view//
 set viewdir=~/vimtmp/view//
 " au BufWritePost,BufLeave,WinLeave ?* mkview
@@ -234,7 +273,7 @@ function! LoadShada()
     exec       ':e ~/.local/share/nvim/shada/main.shada'
 endfunction
 
-" define what is saved/restored from ~/.local/share/nvim/shada/main.shada 
+" define what is saved/restored from ~/.local/share/nvim/shada/main.shada
 set shada=",'10,f1,<10,h
 " only save marks of 10 files, save global marks and only 10 lines in registers
 " see: *21.3*	Remembering information; ShaDa
@@ -245,6 +284,9 @@ set shada=",'10,f1,<10,h
 " TODO: as there is a bug that causes that marks can't be deleted, one could just
 " delete the shada file to delete the marks
 " ------- Shared Data persistence ---------
+
+
+" Session: ----------------------------------------------------------------------------
 
 
 " --------------------------------------------------------------------------------
@@ -265,7 +307,7 @@ set number
 
 
 highlight FoldColumn guibg=gray10 guifg=gray20
-hi        LineNr     guibg=gray10 guifg=gray15 
+hi        LineNr     guibg=gray10 guifg=gray15
 hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
 
 " Various settings
@@ -316,19 +358,9 @@ set splitright
 
 " Various mappings ----------------------------------------------
 
-" NEOVIM TERMINAL MODE
-if has('nvim')
-  tnoremap jk <C-\><C-n>
 
-  " jump window up from terminal mode
-  tnoremap <c-w>k <C-\><C-n><c-w>k
-  tnoremap <c-\>x <C-\><C-n>:bw!<cr>
-  tnoremap <c-w>c <C-\><C-n>:bw!<cr>
-  " TODO: or just hide the buffer/close the window?
-  nnoremap <c-\>x <C-\><C-n>:bw!<cr>
-endif
-
-command! Restart call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
+" TIP: ---------------------------------------------------------------------------
+" Python: install from git repo: "pip3 install -e ." in repo, "pip3 list" to confirm
 
 
 " windows should not be kept at equal size
@@ -362,7 +394,7 @@ nnoremap cud :%s/=>/<c-k>=>/e<cr>
 vnoremap <leader>bu :s/\%V→/-><cr>:s/\%V∷/::<cr>:s/\%V⇒/=><cr>
 vnoremap <leader>bi :s/\%V->/→<cr>:s/\%V::/∷<cr>:s/\%V=>/⇒<cr>
 
-" Alternative for bind? ⤜ or »= or >>= or ≥ 
+" Alternative for bind? ⤜ or »= or >>= or ≥
 
 
 " nnoremap cue :%s/<=/<c-k><=/e<cr>
@@ -372,7 +404,7 @@ vnoremap <leader>bi :s/\%V->/→<cr>:s/\%V::/∷<cr>:s/\%V=>/⇒<cr>
 " Replace all purescript unicode characters
 noremap <leader>cu :call PurescriptUnicode()<cr>
 fun! PurescriptUnicode()
-  normal cufcuccuacubcudcue 
+  normal cufcuccuacubcudcue
 endfun
 
 
@@ -437,7 +469,7 @@ endfun
 
 " HOOGLE INCLUDE NEW LIBS:
 " "hoogle generate base lense" will download and install only the base and
-" lense libs. 
+" lense libs.
 " open ":e hoogle-defaults" from the root of the project folder, add/delete
 " libs, then <backspace> in first line to have everything in one row, and
 " copy-paste into terminal
@@ -445,7 +477,7 @@ endfun
 
 let g:hoogle_search_buf_size = 21
 
-" ALIGNING COLUMS OF HASKELL SIGS: 
+" ALIGNING COLUMS OF HASKELL SIGS:
 " run: :browse Data.List.Split in GHCi and copy into a vim buffer
 "
 " align right to ∷ with padding 1:
@@ -460,7 +492,7 @@ let g:hoogle_search_buf_size = 21
 " format hoogle output from
 " Prelude print ∷ Show a ⇒ a → IO ()
 " to
-" -- Prelude 
+" -- Prelude
 " print ∷ Show a ⇒ a → IO ()
 let @o = 'f Jki-- jk9jj'
 " align the type-signature with EasyAlign
@@ -489,7 +521,7 @@ nnoremap gw :w!<cr>
 
 " EDIT VIM SCRIPT ---------------------------------------------------------------------
 nnoremap <leader>vim :e $MYVIMRC<cr>
-" source vim 
+" source vim
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " source the current file
@@ -552,7 +584,6 @@ set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
 " let g:psc_ide_log_level = 3
 
 
-
 " --------------------------------------------------------------------------------
 " PURESCRIPT
 
@@ -600,13 +631,19 @@ set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
 "           ]e to jump to next error
 "
 "   tt or tw or tg to insert type
-"   gei to insert return val → works also on commented lines 
+"   gei to insert return val → works also on commented lines
 "   <leader>kk run it in the vim-terminal mode:
 "                            use i to type and c-\ c-n to leave insert mode
 
 
 " Vim Slime → Tmux
 let g:slime_target = "tmux"
+
+
+nnoremap gap :Papply<cr>:call PurescriptUnicode()<cr>
+" TODO: currently :Papply indents the current line by one char.
+
+nnoremap gip :Pimport<cr>
 
 
 nnoremap <Leader>kk :call ReplTopFnRL()<cr>
@@ -628,27 +665,43 @@ nnoremap ta :call TraceTopLevelValue()<cr>
 " nnoremap tf :call TraceComLine()<cr>
 
 
+function! GotoDefinition()
+    if IsPurs()
+      exec 'Pgoto'
+    else
+      exec 'InteroGoToDef'
+    endif
+endfun
+
 
 function! SlimeType()
     let keyw = expand("<cword>")
-    let callString = ':t ' . keyw 
-    exec 'SlimeSend1 ' . callString 
+    let callString = ':t ' . keyw
+    exec 'SlimeSend1 ' . callString
 endfun
 
 function! SlimeTypeVisSel()
-    let keyw = Get_visual_selection() 
+    let keyw = Get_visual_selection()
     " let enckw = UrlEncode(keyw)
-    let callString = ':t ' . keyw 
-    exec 'SlimeSend1 ' . callString 
+    let callString = ':t ' . keyw
+    exec 'SlimeSend1 ' . callString
 endfun
 
 function! ReplComLine()
     let lineList = split( getline( line(".") ) )
-    let fnCallString = ListToHsFnCall(lineList[1:]) 
+    let fnCallString = ListToHsFnCall(lineList[1:])
     if IsPurs()
-      exec 'SlimeSend1 ' . fnCallString 
+      exec 'SlimeSend1 ' . fnCallString
     else
       exec 'InteroSend ' . fnCallString
+    endif
+endfun
+
+function! TypeInsert( keyword)
+    if IsPurs()
+      call PursType( a:keyword )
+    else
+      exec 'InteroInstTypeInsert'
     endif
 endfun
 
@@ -667,7 +720,7 @@ function! ReplComLineInsert()
 
     elseif l:lineList[0] == '--'
       " A COMMENTED LINE ---------------------------------------------------------
-      let l:fnCallString = ListToHsFnCall(l:lineList[1:]) 
+      let l:fnCallString = ListToHsFnCall(l:lineList[1:])
       if has('nvim')
         if IsPurs()
           call PursEval( l:fnCallString )
@@ -675,13 +728,14 @@ function! ReplComLineInsert()
           call InsertEvalExpressionRes(l:fnCallString)
         endif
       else
-        exec 'SlimeSend1 ' . l:fnCallString 
+        exec 'SlimeSend1 ' . l:fnCallString
       endif
 
     else
     " USE THE WHOLE/PLAIN EXPRESSION! --------------------------------------------
       if IsPurs()
-        call PursEval( ListToHsFnCall(l:lineList) )
+        " call PursEval( ListToHsFnCall(l:lineList) )
+        call PursEval( getline( line(".") ) )
       else
         " TODO
       endif
@@ -698,11 +752,11 @@ endfun
 
 function! TraceComLine()
     let lineList = split( getline( line(".") ) )
-    let fnCallString = ListToHsFnCall(lineList[1:]) 
+    let fnCallString = ListToHsFnCall(lineList[1:])
 
     let functionName = get( split( getline( line(".") - 1 ) ), 0 )
 
-    exec 'SlimeSend1 trace $ ' . functionName . '' . fnCallString 
+    exec 'SlimeSend1 trace $ ' . functionName . '' . fnCallString
 endfun
 
 function! ListToHsFnCall(stlist)
@@ -765,7 +819,7 @@ function! ReplTopFnRL()
     " exec 'InteroSend ' . functionName
     " if has('nvim')
     if IsPurs()
-      exec 'SlimeSend1 ' . functionName 
+      exec 'SlimeSend1 ' . functionName
       " call Prebuild()
     else
       exec 'InteroSend ' . functionName
@@ -776,13 +830,15 @@ endfun
 " nmap <leader>ip :SlimeSend1 import Prelude<cr>
 
 function! ReplReload()
-    let modulename = GetModuleName() 
+    let modulename = GetModuleName()
     exec ':up'
     if IsPurs()
+      " TODO: is this needed? what does it do?
+      call purescript#ide#utils#update()
       exec ':Prebuild'
       call PursEval(':r')
       call PursEval('import ' . modulename)
-      call PursEval('import Helpers')
+      " call PursEval('import Helpers')
       " exec 'SlimeSend1 :r'
       " exec 'SlimeSend1 import ' . modulename
       " exec 'SlimeSend1 import Helpers'
@@ -809,7 +865,7 @@ function! InsertTypeAnnotation()
         exec ':GhcModTypeInsert'
       endif
     endif
-    call PurescriptUnicode()
+    " call PurescriptUnicode()
 endfun
 
 function! ImportIdentifier()
@@ -821,7 +877,7 @@ function! ImportIdentifier()
 endfun
 
 function! PsciReload()
-    let modulename = GetModuleName() 
+    let modulename = GetModuleName()
     exec ':w'
     exec 'SlimeSend1 :r'
     exec 'SlimeSend1 import ' . modulename
@@ -832,9 +888,9 @@ endfun
 
 function! PsciEval()
     let functionName = get( split( getline( line(".") ) ), 0 )
-    let modulename = GetModuleName() 
+    let modulename = GetModuleName()
     " exec ':w'
-    " writing the buffer here will crash vim 
+    " writing the buffer here will crash vim
     exec 'SlimeSend1 :r'
 
     if IsPurs()
@@ -849,10 +905,10 @@ endfun
 " HASKELL
 
 
-" ------- ALE ------- 
+" ------- ALE -------
 " let g:hindent_on_save = 0
 " let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint', 'hdevtools']}
-let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint'], 
+let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint'],
                     \'javascript': ['eslint'],}
 " let g:ale_linters = {'haskell': ['hlint']}
 " let g:ale_linters = {'haskell': ['ghc']}
@@ -900,9 +956,9 @@ nmap <silent> ]e :cnext<cr>
 " nmap <silent> ]W <Plug>(ale_last)
 
 
-" ------- ALE ------- 
+" ------- ALE -------
 
-" ------- SYNTASIC ------- 
+" ------- SYNTASIC -------
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -927,11 +983,11 @@ nmap <leader>sc :SyntasticCheck<cr>
 nmap <leader>sr :SyntasticReset<cr>
 
 " turn off initially
-" ------- SYNTASIC ------- 
+" ------- SYNTASIC -------
 
-" ------- Neomake ------- 
+" ------- Neomake -------
 " Neomake does the same as Ale
-" While Hlint (and stack-ghc-mod?) uses Ale for signs in the signcolumn, 
+" While Hlint (and stack-ghc-mod?) uses Ale for signs in the signcolumn,
 " Intero uses Neomake to show error and ghc warnings
 hi NeomakeErrorSign   ctermfg=white
 hi NeomakeWarningSign ctermfg=white
@@ -950,7 +1006,7 @@ command! SignsClear :sign unplace *
 "     \   'texthl': 'NeomakeMessageSign',
 "     \ }
 " let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
-" ------- Neomake ------- 
+" ------- Neomake -------
 
 
 " Hdevtools is not yet needed, using Intero instead
@@ -959,7 +1015,7 @@ command! SignsClear :sign unplace *
 " let g:hdevtools_options = '-g-fdefer-type-errors -g-isrc -g-Wall'
 " let g:syntastic_haskell_hdevtools_args = g:hdevtools_options
 
-" --- GitGutter --- 
+" --- GitGutter ---
 nmap <leader>gg :GitGutterToggle<cr>
 
 nmap ]h <Plug>GitGutterNextHunk
@@ -978,22 +1034,23 @@ let g:gitgutter_eager = 0
 let g:gitgutter_enabled = 0
 nmap <silent> ]c :call NextHunkAllBuffers()<CR>
 nmap <silent> [c :call PrevHunkAllBuffers()<CR>
-" --- GitGutter --- 
+" --- GitGutter ---
 
 
 
-" Maps for intero. 
+" Maps for intero.
 " nnoremap <silent> <leader>is :InteroStart<CR>
 " nnoremap <silent> <leader>isc :SignsClear<CR>
 nnoremap <silent> <leader>ik :InteroKill<CR>
 nnoremap <silent> <leader>io :InteroOpen<CR>
 nnoremap <silent> <leader>ih :InteroHide<CR>
 nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
-nnoremap <silent>         gd :InteroGoToDef<CR>
+nnoremap <silent>         gd :call GotoDefinition()<CR>
+nnoremap <silent>         ]d :call GotoDefinition()<CR>
 
 " Type inserts
-nnoremap tt :InteroInstTypeInsert<cr>
-vnoremap tt :InteroInstTypeInsert<cr>
+nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
+vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
 nnoremap tg :InteroGenTypeInsert<cr>
 vnoremap tg :InteroGenTypeInsert<cr>
 nnoremap ti :InteroInfoInsert<cr>
@@ -1001,6 +1058,8 @@ vnoremap ti :InteroInfoInsert<cr>
 
 nnoremap gel :call InsertEvalRes()<cr>
 nnoremap gei :call ReplComLineInsert()<cr>
+nnoremap gep :call PursEval( getline( line('.') ) )<cr>
+vnoremap gep :call PursEval( Get_visual_selection() )<cr>
 
 " TODO: this doesn't work with ranges/vis-selection
 " vnoremap tat :call InsertInstType()<cr>
@@ -1050,10 +1109,10 @@ let g:haskellmode_completion_ghc = 1
 " VIM COMMANDHISTORY:
 " 'q:'
 
-" GHCI: 
+" GHCI:
 " use :m -<module name> to unload modules
 " use :m to go to only Prelude
-" edit ghci.conf to set 
+" edit ghci.conf to set
 " DEFAULT IMPORTS:
 " e ~/.ghc/ghci.conf
 " ERROR:
@@ -1112,7 +1171,7 @@ nnoremap <leader>exg :g/∷.*⇒/t$<cr>
 " 2. visual select the signatures
 " 3. move only the generic sign out of the block
 vnoremap <leader>exg :g/∷.*⇒/m$<cr>
-" 4. visual select blocks and <leader>ta to tabularize the sigs 
+" 4. visual select blocks and <leader>ta to tabularize the sigs
 command! ExtractSigs :g/∷.*→/t$
 command! ExtractGenSigs :g/∷.*⇒/t$
 " --------------------------------------------------------------------------------
@@ -1142,7 +1201,7 @@ let g:haskell_indent_guard = 2
 " --------------------------------------------------------------------------------
 
 " free mapping <c-Backspace>
-" TODO: find (and break line?) at → and ∷ 
+" TODO: find (and break line?) at → and ∷
 
 " ------------------------------------------------------
 " Code formatting ------------------------
@@ -1171,22 +1230,22 @@ nnoremap <leader>L kJi<cr><esc>l
 vnoremap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+" nmap ga <Plug>(EasyAlign)
 
-let g:easy_align_ignore_groups = ['Comment', 'String'] 
+let g:easy_align_ignore_groups = ['Comment', 'String']
 
 
 " Insert line comment
 nmap <leader>mll i----------------------------------------------------------------------------------<esc>^
-" Fill line with dashes 
+" Fill line with dashes
 nnoremap <leader>mlk $a<space><esc>82a-<esc>d82<bar>^
 
 
 
 " ---- Window control ----
-" nnoremap dc <c-w>c 
+" nnoremap dc <c-w>c
 " close the win below
-nnoremap <c-w>d <c-w>j<c-w>c 
+nnoremap <c-w>d <c-w>j<c-w>c
 nnoremap <c-w>- 7<c-w>-
 nnoremap <c-w>+ 7<c-w>+
 nnoremap <c-w>a 7<c-w>+
@@ -1225,14 +1284,14 @@ nmap <leader><c-p> "+P
 " nnoremap <leader>vv "+P
 nnoremap <leader>vv "+P:call PurescriptUnicode()<cr>h
 
-" copy fomr clipboard
+" copy from clipboard
 nnoremap <leader>y "+y
 vnoremap <leader>y "+y
 
-" Paste to Command line 
+" Paste to Command line
 nmap <leader><m-p> :<c-r>"
 " <c-r>"
- 
+
 
 " SOME TOOLS FUNTIONS, TIPS
 " in insert mode, the key sequence backslash f p will insert the current working directory
@@ -1247,14 +1306,16 @@ nnoremap <leader>ds  i<c-r>=system('
 nnoremap <leader>iwd i<c-r>=system('pwd')<cr><esc>
 
 fun! SomeTest1( ar1 )
+  echo "out: " . a:ar1
   return "Some arg: " . a:ar1
 endfun
 
 " echo &ft
 " TIP: return filetype as literal string, e.g. 'haskell', instead of 'hs'
 " TIP: create a directory: `:! mkdir src/modules`
+" TIP: use :substitute command: "%s/exports./var /" replaces "exports.jsvar1 = function" with "var jsvar1 = function" in the whole file!
 " TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
-" past last command: ":p
+" paste last command: ":p
 " redirect command echo text to register: :redir @t, then pt, later :redir end
 " run any command with ':!{cmd}' or use <C-z> to suspend nvim, then run 'fg'
 " to bring nvim back to the foreground
@@ -1275,6 +1336,12 @@ endfun
 " TIP: use (%) current file name in shell: ":!cat %"
 " TIP: use 'find' to get full path and then 'gf': terminal: "find $PWD" and then "gf" on the the absolute path
 " if expressions: echo (v:true ? 'yes' : 'no') -- echo (v:false ? 'yes' : 'no')
+" TIP: set the cursor pos: let cursor = getcurpos(), call cursor(cursor[1], startColumn - 1)
+" TIP: "<C-z>" to suspend nvim and get back to the terminal. then run "fg" to
+" get back to nvim.
+" TODO: delete long space between words: "elldw" example: ^ord            next
+" TIP: remove trailing whitespace: ":%s/\s\+$//e"
+"
 "
 " SHELL, E-MACS MAPPINGS
 " beginning-of-line (C-a)
@@ -1356,7 +1423,7 @@ vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range
 EOF
 endfunction
 
-" -------------------------------------------------------------------------------- 
+" --------------------------------------------------------------------------------
 
 
 
@@ -1551,7 +1618,7 @@ hi! link Sneak Cursor
 " navigate the list by using j and k
 inoremap <C-j> <C-n>
 " inoremap <C-k> <C-p>
-  
+
 " open suggestions
 " imap <Tab> <C-P>
 
@@ -1577,7 +1644,7 @@ nnoremap <M-/> /
 vnoremap // y/<C-R>"<CR>
 
 " Todo: aboth yanks the sel and pasts the register!
-" nnoremap <leader>/ :Ab "\b<C-R><C-W>\b" . 
+" nnoremap <leader>/ :Ab "\b<C-R><C-W>\b" .
 " vnoremap <leader>/ "gy :Ag "<C-R>g" .
 " nnoremap <leader>/ "gyw :Ag "<C-R>g" .
 
@@ -1588,7 +1655,7 @@ vnoremap // y/<C-R>"<CR>
 " leader d/ to search in folder
 " just // to search for that exact text! in the current buffer
 "   then go to other buffer and hit leader n again to continue search!
-" leader n to select the element uder the cursor - and then leader(shift) n 
+" leader n to select the element uder the cursor - and then leader(shift) n
 
 " Silver searcher
 " --------------------------------------------------------------------------------
@@ -1596,7 +1663,7 @@ vnoremap // y/<C-R>"<CR>
 " nnoremap <leader>d/ "gyw :Ag "<C-R>g" .
 " vnoremap <leader>db/ "gy :AgBuffer "<C-R>g"
 " nnoremap <leader>db/ "gyw :AgBuffer "<C-R>g"
-" :Ab "\b<C-R><C-W>\b" . 
+" :Ab "\b<C-R><C-W>\b" .
 
 let g:ag_highlight=1
 
@@ -1608,7 +1675,7 @@ nnoremap <silent> <leader><leader> :set nohlsearch<cr>
 nnoremap <silent> n n
 nnoremap <silent> N N
 
-" Search next: 
+" Search next:
 nnoremap <silent> <leader>n :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 
 " Important color/highlighy setting - sometimes gets overwritten
@@ -1667,18 +1734,22 @@ nnoremap <expr> <leader>ep ':e '.projectroot#guess().'/'
 " remove/delete a file relative to project-root
 nnoremap <expr> <leader>df ':!rm '.projectroot#guess().'/'
 
-command! DelFile :call delete(expand('%')) | bdelete! 
+command! DelFile :call delete(expand('%')) | bdelete!
 
 " Change current working directory~
 " Manually using |ProjectRootCD|: >
     " :ProjectRootCD
 
+"test dlpr, stop output on buffer-change
+
 " With a mapping: >
-nnoremap <silent><leader>dp :ProjectRootCD<cr>
+nnoremap <silent><leader>dpr  :ProjectRootCD<cr>
+nnoremap <leader>dlpr :lcd '.projectroot#guess().'<cr>
 
 " set to current file path
 nnoremap <leader>dcf :cd %:p:h<cr>:pwd<cr>
-" nnoremap <c-g> :echo 
+nnoremap <leader>dclf :lcd %:p:h<cr>:pwd<cr>
+" nnoremap <c-g> :echo
 " Automatically whenever you open a buffer: >
 
 function! <SID>AutoProjectRootCD()
@@ -1697,7 +1768,7 @@ endfunction
 " controversion, but trying this out
 " set path +=/**
 
-autocmd BufEnter *.hs set syntax=purescript
+" autocmd BufEnter *.hs set syntax=purescript
 " ----------------------------------------------------------------------------------
 
 " if exists(":CompilerSet") != 2
@@ -1761,11 +1832,12 @@ nnoremap <silent> <c-f> :bn<cr>
 " Close buffer!
 " nnoremap <M-c> :bd<cr>
 " nnoremap <M-C> :bd!<cr>
+" free mapping
 " nnoremap <leader>x :bd<cr>
-nnoremap <leader>x :b#\|bd #<cr>
-nnoremap <leader>lj :bd<cr>
-nnoremap <leader>X :bd!<cr>
-" Mac needs these characters ç Ç for option key mappings 
+" nnoremap <leader>x :b#\|bd #<cr>
+" nnoremap <leader>lj :bd<cr>
+nnoremap <leader>x :bd!<cr>
+" Mac needs these characters ç Ç for option key mappings
 " nnoremap ç :bd<cr>
 " nnoremap Ç :bd!<cr>
 
@@ -1801,17 +1873,17 @@ endfunc
 " Record it into the register t: qt---q
 " show the t register :reg t
 " paste the t register :put t or "tp
-" edit the text, keep wired characters 'f,lli' 
+" edit the text, keep wired characters 'f,lli'
 " then visually select the macro characters f,lli and type "dy to yank it
 " into the d register
-" alternativly you can v-select the following let statement 
+" alternativly you can v-select the following let statement
 " let @s = 'f,lli\'
-" type y, then deselect and then 
+" type y, then deselect and then
 " paste it into the command line with <leader><alt>p and return
 " you can now run the macro by typing @d
 " ---------------------------------------------------------
 
- 
+
 
 " Delete-CUT element and black hole delete the space after it, to
 " be able to paste the cut element
@@ -1844,7 +1916,7 @@ fun! OpenITerm()
     let path = projectroot#guess()
     exec 'silent !open -a iTerm ' . path
 endfun
-" this works: :silent !open -a iTerm Documents/purescript 
+" this works: :silent !open -a iTerm Documents/purescript
 
 
 fun! GoogleSearchStr()
@@ -1900,7 +1972,7 @@ function! s:goyo_leave()
 endfunction
 
 " Number of preceding/following paragraphs to include (default: 0)
-let g:limelight_paragraph_span = 1
+let g:limelight_paragraph_span = 2
 let g:limelight_default_coefficient = 0.8
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
@@ -1997,7 +2069,7 @@ fun! Google()
 endfun
 
 fun! GoogleVisSel()
-    let keyw = Get_visual_selection() 
+    let keyw = Get_visual_selection()
     let enckw = UrlEncode(keyw)
     let url = 'http://www.google.de\#q\=' . enckw
     let comm = 'silent !open ' . url
@@ -2010,7 +2082,7 @@ fun! DocsForCursorWord()
       let url = 'https://pursuit.purescript.org\/search\?q\=' . keyw
     else
       " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . keyw
-      let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . keyw 
+      let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . keyw
     endif
     let comm = 'silent !open ' . url
     exec comm
@@ -2023,7 +2095,7 @@ fun! DocsForVisSel()
       let url = 'https://pursuit.purescript.org\/search\?q\=' . enckw
     else
       " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . enckw
-      let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw 
+      let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw
     endif
     let comm = 'silent !open ' . url
     exec comm
@@ -2073,7 +2145,7 @@ fun! Docs(searchSt)
       let url = 'https://pursuit.purescript.org\/search\?q\=' . enckw
     else
       " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . enckw
-      let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw 
+      let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw
     endif
     let comm = 'silent !open ' . url
     exec comm
@@ -2089,7 +2161,7 @@ endfun
 fun! Docsh(searchSt)
     let enckw = UrlEncode(a:searchSt)
     " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . enckw
-    let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw 
+    let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw
     let comm = 'silent !open ' . url
     exec comm
 endfun
@@ -2126,7 +2198,7 @@ endfun
 
 fun! IsPurs()
     let extension = expand("%:e")
-    " echom expand("%:e") 
+    " echom expand("%:e")
     if extension == "purs"
       return 1
     else
@@ -2140,25 +2212,25 @@ fun! GetExtension()
 endfun
 " vim
 
-fun! EncodeChar(char) 
-   if a:char == '%' 
-       return '%%' 
-   elseif a:char == ' ' 
-       return '+' 
-   else 
-       " Taken from eval.txt 
-       let n = char2nr(a:char) 
-       let r = '' 
-       while n 
-           let r = '0123456789ABCDEF'[n % 16] . r 
-           let n = n / 16 
-       endwhile 
-       return '%'. r 
-   endif 
-endf 
+fun! EncodeChar(char)
+   if a:char == '%'
+       return '%%'
+   elseif a:char == ' '
+       return '+'
+   else
+       " Taken from eval.txt
+       let n = char2nr(a:char)
+       let r = ''
+       while n
+           let r = '0123456789ABCDEF'[n % 16] . r
+           let n = n / 16
+       endwhile
+       return '%'. r
+   endif
+endf
 
-fun! EncodeURL(url) 
-   return substitute(a:url, '\([^a-zA-Z0-9_.-]\)', '\=EncodeChar(submatch(1))', 'g') 
+fun! EncodeURL(url)
+   return substitute(a:url, '\([^a-zA-Z0-9_.-]\)', '\=EncodeChar(submatch(1))', 'g')
 endf
 
 " URL encode a string. ie. Percent-encode (actually backslash!) characters as necessary.
@@ -2308,7 +2380,7 @@ fun! s:jsonEncode(thing, ...)
     return a:thing
   elseif type(a:thing) == type([])
     return '['.join(map(copy(a:thing), "s:jsonEncode(v:val)"),",").']'
-    return 
+    return
   elseif string(a:thing) == string(s:jsonNULL())
     return "null"
   elseif string(a:thing) == string(s:jsonTrue())
