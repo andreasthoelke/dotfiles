@@ -1,14 +1,8 @@
-" purescript requires?
-"
-" syntax on
-" filetype off
 filetype plugin indent on
 
 " vim-plug:
 call plug#begin('~/.vim/plugged')
 
-" File manager
-" Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'scrooloose/nerdtree'
 Plug 'kien/ctrlp.vim'
 
@@ -1095,37 +1089,8 @@ let g:easy_align_ignore_groups = ['Comment', 'String']
 nmap <leader>mll i----------------------------------------------------------------------------------<esc>^
 " Fill line with dashes
 nnoremap <leader>mlk $a<space><esc>82a-<esc>d82<bar>^
+" TODO: this somehow stops working!?
 
-
-
-" ---- Window control ----
-" nnoremap dc <c-w>c
-" close the win below
-nnoremap <c-w>d <c-w>j<c-w>c
-nnoremap <c-w>- 7<c-w>-
-nnoremap <c-w>+ 7<c-w>+
-nnoremap <c-w>a 7<c-w>+
-nnoremap <c-w>> 4<c-w>>
-nnoremap <c-w>< 4<c-w><
-" ---- Window control ----
-
-
-" LINE-NAVIGATION SUMMARY:
-"
-" insert: alt - k: delete line up
-" inoremap <m-k> <esc>kJi
-
-" Move to beginning and end of line + related operations
-" nmap 9 ^
-" omap 9 ^
-" vmap 9 ^
-" nmap y9 y^
-" nmap d9 d^
-" nmap c9 c^
-
-" nmap 0 g_
-" omap 0 g_
-" vmap 0 g_
 
 " ------------------------------------------------------
 " Paste and delete -------------------------------------
@@ -1200,7 +1165,7 @@ endfun
 " TIP: remove trailing whitespace: ":%s/\s\+$//e"
 "
 "
-" SHELL, E-MACS MAPPINGS
+" SHELL, EMACS MAPPINGS
 " beginning-of-line (C-a)
 " Move to the start of the current line.
 "
@@ -1213,23 +1178,10 @@ endfun
 " backward-char (C-b)
 " Move back a character.
 "
-" forward-word (M-f)
-" Move forward to the end of the next word. Words are composed of letters and digits.
-"
-" backward-word (M-b)
-" Move back to the start of the current or previous word. Words are composed of letters and digits.
-"
-" shell-forward-word ()
-" Move forward to the end of the next word. Words are delimited by non-quoted shell metacharacters.
-"
-" shell-backward-word ()
-" Move back to the start of the current or previous word. Words are delimited by non-quoted shell metacharacters.
-"
-" clear-screen (C-l)
-" Clear the screen and redraw the current line, leaving the current line at the top of the screen.
-"
-" redraw-current-line ()
-" Refresh the current line. By default, this is unbound.
+" Tip: Link local repo to github remote repo:
+" "git remote add origin https://github.com/andreasthoelke/dotfiles.git", 
+" "git push -u origin master" `-u` add upstream tracking(!?)
+" "git pull --rebase origin" pull in changes from remote, put all local cahnges on top of it.
 "
 " TEST FUNCTIONS: ----------------------------------------------------------------
 " "unique functions"
