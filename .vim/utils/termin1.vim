@@ -142,7 +142,6 @@ command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
          \ echom jobstart("bower install --save purescript-" . <q-args> . " && pulp build", Cbs1)
 
 
-
 " nnoremap <leader>sx y$:echom <c-r>"<cr>
 
 "com! -buffer -nargs=* -complete=custom,PSCIDEcompleteIdentifier
@@ -159,26 +158,6 @@ command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
 " jobstart("pulp repl", Cbs1)
 " 3. check that the returned int is 7
 " ----------------------------------------------------------------------------------
-
-
-
-" let repl1 = jobstart(['pulp repl'], s:callbacks)
-
-" let job1 = jobstart(['bash'], extend({'shell': 'shell 1'}, s:callbacks))
-" let job2 = jobstart(['bash', '-c', 'for i in {1..10}; do echo hello $i!; sleep 0; done'], extend({'shell': 'shell 2'}, s:callbacks))
-
-
-" Description of what happens:
-"   - Two bash shells are spawned by |jobstart()| with their stdin/stdout/stderr
-"     streams connected to nvim.
-"   - The first shell is idle, waiting to read commands from its stdin.
-"   - The second shell is started with -c which executes the command (a for-loop
-"     printing 0 through 9) and then exits.
-"   - `OnEvent()` callback is passed to |jobstart()| to handle various job
-"     events. It displays stdout/stderr data received from the shells.
-
-
-
 
 
 
