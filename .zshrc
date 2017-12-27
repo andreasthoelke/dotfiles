@@ -4,43 +4,7 @@
 path+=('/Users/andreas.thoelke/.local/bin')
 path+=('/Users/andreas.thoelke/Library/Python/3.6/bin')
 
-# :/Users/andreas.thoelke/.local/bin
-# :/Users/andreas.thoelke/Library/Python/3.6/bin
-# :/Users/andreas.thoelke/.cargo/bin
-# :/Library/Frameworks/Python.framework/Versions/3.6/bin
-# :/usr/local/bin
-# :/usr/bin
-# :/bin
-# :/usr/sbin
-# :/sbin
-
-# export PATH=$HOME:/Users/andreas.thoelke/Documents/purescript/purescript/scripts:$PATH
-# zsh:1: no such file or directory
-# : /Library/Frameworks/Python.framework/Versions/3.6/bin
-# :/usr/local/bin
-# :/usr/bin
-# :/bin
-# :/usr/sbin
-# :/sbin
-# :/Users/andreas.thoelke/.cabal/bin
-# :/Users/andreas.thoelke/.local/bin
-# zsh:1: no such file or directory: /Library/Frameworks/Python.framework/Versions/3.6/bin
-# :/usr/local/bin
-# :/usr/bin
-# :/bin
-# :/usr/sbin
-# :/sbin
-# :/Users/andreas.thoelke/.cabal/bin
-# :/Users/andreas.thoelke/.local/bin
-# zsh:1: no such file or directory: /Library/Frameworks/Python.framework/Versions/3.6/bin
-# :/usr/local/bin
-# :/usr/bin
-# :/bin
-# :/usr/sbin
-# :/sbin
-
-
-# Path to your oh-my-zsh installation.
+# Path to oh-my-zsh installation.
 export ZSH=/Users/andreas.thoelke/.oh-my-zsh
 
 export PROJ=/Users/andreas.thoelke/Documents/Haskell/4/
@@ -55,6 +19,20 @@ export VIMCONFIG=~/.vim
 export VIMDATA=~/vimtmp
 
 # alias hdevtools='stack exec --no-ghc-package-path --package hdevtools hdevtools -- '
+
+
+# Neovim Remote: ---------------------------------------------------------
+alias vi="nvr -l "
+# when in terminal mode, use neo-vim-remote to open file in the host
+# nvim instance in the previously acitve window.
+
+alias nvim="NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim"
+# set an environment variable to nvim's default unix address, 
+# so neo-vim-remote can send it messages.
+
+alias vicd='nvr -c "cd $(pwd) | pwd"'
+# Neovim Remote: ---------------------------------------------------------
+
 
 NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
@@ -140,15 +118,6 @@ source $ZSH/oh-my-zsh.sh
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 
-alias vi="nvr -l "
-# when in terminal mode, use neo-vim-remote to open file in the host
-# nvim instance in the previously acitve window.
-
-alias nvim="NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim"
-# set an environment variable to nvim's default unix address, 
-# so neo-vim-remote can send it messages.
-
-alias vicd='nvr -c "cd $(pwd) | pwd"'
 
 function chpwd() {
     emulate -L zsh
