@@ -4,7 +4,7 @@
 " "mkdir test1" && "cd test1" && "pulp init" && "nvim Main.purs"
 " ":PursRepl" will start a pulp repl terminal session
 " "gw" saving refeshes syntasic
-" "dr" rebuilds syntasic and :r to pulp repl + imports 
+" "dr" rebuilds syntasic and :r to pulp repl + imports
 " "gei" works on commented expression, toplevel functions and just
 " expression (until the end of the line)
 " "gsd" and "gsh" for Pursuit
@@ -27,7 +27,7 @@
 " file :paste
 " … withError Nothing  err = Left err
 " … withError (Just a) _   = Right a
-" … ^D 
+" … ^D
 " TODO: make a queue of caller/command ids: put e.g. "type-insert" into the queue when
 " jobsend is issued. then in OnEv1 read (and delete) the last command id and
 " use it to apply a specific parsing of the returned data.
@@ -38,11 +38,23 @@
 
 " source "/Users/andreas.thoelke/.vim/utils/termin1.vim"
 
+" INTERO WORKFLOW:
+"
+"   <leader>io to open intero
+"   <leader>il to load the module
+"           dr to type-check the file
+"           qq to show errors
+"           ]e to jump to next error
+"
+"   tt or tw or tg to insert type
+"   gei to insert return val → works also on commented lines
+"   <leader>kk run it in the vim-terminal mode:
+"                            use i to type and c-\ c-n to leave insert mode
 
 
 " NEOVIM TERMINAL MODE: ----------------------------------------------------------
 if has('nvim')
-  " nnoremap <leader>af ipwd<cr><C-\><C-n>kyy:cd <c-r>"<cr> 
+  " nnoremap <leader>af ipwd<cr><C-\><C-n>kyy:cd <c-r>"<cr>
   nnoremap <leader>af ipwd<cr><C-\><C-n>yy
   nnoremap <leader>ag :cd <c-r>"<cr>
 
@@ -50,10 +62,10 @@ if has('nvim')
 
   " jump window up from terminal mode
   tnoremap <c-w>k <C-\><C-n><c-w>k
-  tnoremap <c-\>x <C-\><C-n>:bw!<cr>
+  tnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
   tnoremap <c-w>c <C-\><C-n>:bw!<cr>
   " TODO: or just hide the buffer/close the window?
-  nnoremap <c-\>x <C-\><C-n>:bw!<cr>
+  nnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
 endif
 
 command! Restart call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
@@ -66,7 +78,7 @@ command! Restart call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
 " https://github.com/mhinz/neovim-remote
 " parametrising a vim-command (examples):
 "    echo "echo 'hi'" | nvr -c -
-"    nvr -c "cd $(pwd) | pwd" 
+"    nvr -c "cd $(pwd) | pwd"
 " --------------------------------------------------------------------------------
 
 
@@ -75,7 +87,7 @@ function! OnEv1(job_id, data, event) dict
   normal }k
 
   "TODO: echoe a:data, if =~ '>' → filter out these lines
-  
+
   if a:event == 'stdout'
     " call append(line('.'), a:data[0])
     if a:data[0] =~ 'Error'
@@ -123,10 +135,10 @@ command! PursRepl :let PursReplID = jobstart("pulp repl", Cbs1)
 
 
 
-" INSTALLING A PACKAGE REQUIRES: 
+" INSTALLING A PACKAGE REQUIRES:
 " "bower install --save <packagename> | pulp build"
-command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier 
-         \ PursInstall 
+command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
+         \ PursInstall
          \ echom jobstart("bower install --save purescript-" . <q-args> . " && pulp build", Cbs1)
 
 

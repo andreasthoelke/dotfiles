@@ -148,20 +148,9 @@ let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
 
 
 
-" ---- Color ----
-colorscheme molokai
 
-set nocompatible
-set background=dark
-set laststatus=2
 
-if has("termguicolors")
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-    set termguicolors
-else
-    set t_Co=256
-endif
-
+" Other Settings:  ---------------------------------------------------------------
 set lazyredraw
 
 " ---- Color ----
@@ -188,7 +177,7 @@ set novisualbell
 set t_vb=
 
 
-" Airline settings
+" Airline Settings: --------------------------------------------------------------
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t:r'
 let g:airline_theme='simple'
@@ -213,8 +202,27 @@ let g:airline_section_b = '%<%f%m %#__accent_red#%{airline#util#wrap(airline#par
 let g:airline_section_c = ''
 let g:airline_section_x = ''
 let g:airline_section_y = "%{airline#util#wrap(airline#extensions#hunks#get_hunks(),0)}%{airline#util#wrap(airline#extensions#branch#get_head(),0)}"
+let g:airline_detect_whitespace=0
 
-" Session: -----------------------------------------------------------------------------
+
+" Messages: ----------------------------------------------------------------------
+set shortmess+="mW"
+
+augroup bufenter
+  " NOTE: autocmd! clears all autocmds in this group before defining them again. Otherwise the commands would fire twice and cause vim to slow down!!
+  autocmd!
+  " surpress the filename/info message that is shown in the shell on
+  " buffer-change
+  " autocmd BufWinEnter * call feedkeys("\<C-\>\<C-n>:\<CR>", 'n')
+  " does this print the ":"??
+  autocmd BufWinEnter * call feedkeys("\<C-\>\<C-n>:\<C-c>", 'n')
+  " ok, this is really a hack: it exits a (potentially) terminal mode, then
+  " goes to the shell and cancels any visible message. TODO: how can one
+  " prevent that messages are printed in the first place?
+augroup END
+
+
+" Session: -----------------------------------------------------------------------
 
 " ------- Vim-session settings ---------
 let g:session_autosave = 'yes'
@@ -288,6 +296,20 @@ set shada=",'10,f1,<10,h
 
 " Session: ----------------------------------------------------------------------------
 
+
+" Color:  ------------------------------------------------------------------------
+colorscheme molokai
+
+set nocompatible
+set background=dark
+set laststatus=2
+
+if has("termguicolors")
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    set termguicolors
+else
+    set t_Co=256
+endif
 
 " --------------------------------------------------------------------------------
 " Style/ Color
@@ -512,14 +534,13 @@ setlocal formatprg=stylish-haskell
 " free mapping: <c-g> - currently show the current filename
 
 
-" ------- General --------------------------------------------------------------
-" save!
+" General: --------------------------------------------------------------
 nnoremap <leader>w :w!<cr>
 nnoremap gw :w!<cr>
 " nnoremap <silent><leader>w :up<cr>
 
 
-" EDIT VIM SCRIPT ---------------------------------------------------------------------
+" EDIT VIM SCRIPT: ---------------------------------------------------------------------
 nnoremap <leader>vim :e $MYVIMRC<cr>
 " source vim
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -550,9 +571,8 @@ nnoremap <leader>sy y$o<c-r>=<c-r>"<cr><esc>
 " Run a VimScript snippet (til end of the line) and echo the result in the
 " command line
 nnoremap <leader>sx y$:echom <c-r>"<cr>
+" EDIT VIM SCRIPT: ---------------------------------------------------------------------
 
-
-" EDIT VIM SCRIPT ---------------------------------------------------------------------
 
 
 " paste the current file path
@@ -560,6 +580,7 @@ nnoremap <leader>sf i<c-r>=expand("%:p")<cr><esc>^
 " free mapping?
 
 nnoremap <leader>cab :e *.cabal<cr>
+
 
 " nnoremap <leader>zsh :e ~/.zshrc<cr>
 command! Zshrc   :e ~/.zshrc
@@ -581,88 +602,6 @@ set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
 
 " ------- General --------------------------------------------------------------
 
-" let g:psc_ide_log_level = 3
-
-
-" --------------------------------------------------------------------------------
-" PURESCRIPT
-
-" nmap <leader>xn :<C-U>call PSCIDEtype(PSCIDEgetKeyword(), v:true)<CR>
-" nmap <leader>xn :<C-U>call PSCIDEaddTypeAnnotation(matchstr(getline(line(".")), '^\s*\zs\k\+\ze'))<CR>
-" nm <buffer> <silent> <leader>s :<C-U>call PSCIDEapplySuggestion()<CR>
-" nm <buffer> <silent> <leader>a :<C-U>call PSCIDEaddTypeAnnotation()<CR>
-" nm <buffer> <silent> <leader>i :<C-U>call PSCIDEimportIdentifier(PSCIDEgetKeyword())<CR>
-" nm <buffer> <silent> <leader>r :<C-U>call PSCIDEload()<CR>
-" -- nm <buffer> <silent> <leader>gsd :<C-U>call PSCIDEpursuit(PSCIDEgetKeyword())<CR>
-" nm <buffer> <silent> <leader>C :<C-U>call PSCIDEcaseSplit("!")<CR>
-" nm <buffer> <silent> <leader>f :<C-U>call PSCIDEaddClause("")<CR>
-" nm <buffer> <silent> <leader>qa :<C-U>call PSCIDEaddImportQualifications()<CR>
-" nm <buffer> <silent> ]d :<C-U>call PSCIDEgoToDefinition("", PSCIDEgetKeyword())<CR>
-
-
-" command! Reset :PSCIDEend
-" nnoremap <Leader>st :PSCIDEtype<CR>
-" " nnoremap <Leader>at :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>
-" nnoremap <Leader>at :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>h
-" " nnoremap tw :PSCIDEaddTypeAnnotation<CR>:call PurescriptUnicode()<cr>h
-" nnoremap tr :PSCIDEend<cr>
-" nnoremap <Leader>sii :PSCIDEimportIdentifier<CR>
-" nnoremap <Leader>sai :PSCIDEaddImportQualifications<CR>
-" nnoremap <Leader>sri :PSCIDEremoveImportQualifications<CR>
-" nnoremap <Leader>sas :PSCIDEapplySuggestion<CR>
-" " nnoremap <Leader>sgd :PSCIDEgoToDefinition<CR>
-" " nnoremap <Leader>gd :PSCIDEgoToDefinition<CR>
-" " function template
-" nnoremap <Leader>sac :PSCIDEaddClause<CR>
-" nnoremap <Leader>sp :PSCIDEpursuit<CR>
-" nnoremap doo :PSCIDEpursuit<CR>
-" nnoremap <Leader>scw :PSCIDEcwd<CR>
-" nnoremap <Leader>sli :PSCIDElist<CR>
-" nnoremap <Leader>slo :PSCIDEload<CR>
-
-" --------------------------------------------------------------------------------
-
-" INTERO WORKFLOW:
-"
-"   <leader>io to open intero
-"   <leader>il to load the module
-"           dr to type-check the file
-"           qq to show errors
-"           ]e to jump to next error
-"
-"   tt or tw or tg to insert type
-"   gei to insert return val → works also on commented lines
-"   <leader>kk run it in the vim-terminal mode:
-"                            use i to type and c-\ c-n to leave insert mode
-
-
-" Vim Slime → Tmux
-let g:slime_target = "tmux"
-
-
-nnoremap gap :Papply<cr>:call PurescriptUnicode()<cr>
-" TODO: currently :Papply indents the current line by one char.
-
-nnoremap gip :Pimport<cr>
-
-
-nnoremap <Leader>kk :call ReplTopFnRL()<cr>
-nnoremap geri :call ReplTopFnRLInsert()<cr>
-
-" run selection
-vnoremap <Leader>kk :call ReplVisSel()<cr>
-
-" run (commented) function call with many args
-nnoremap <Leader>kl :call ReplComLine()<cr>
-nnoremap gec        :call ReplComLine()<cr>
-
-" reload module
-nnoremap <Leader>kr :call ReplReload()<cr>
-nnoremap dr :call ReplReload()<cr>
-
-" nnoremap tr :call TraceTopLevelValue()<cr>
-nnoremap ta :call TraceTopLevelValue()<cr>
-" nnoremap tf :call TraceComLine()<cr>
 
 
 function! GotoDefinition()
@@ -670,30 +609,6 @@ function! GotoDefinition()
       exec 'Pgoto'
     else
       exec 'InteroGoToDef'
-    endif
-endfun
-
-
-function! SlimeType()
-    let keyw = expand("<cword>")
-    let callString = ':t ' . keyw
-    exec 'SlimeSend1 ' . callString
-endfun
-
-function! SlimeTypeVisSel()
-    let keyw = Get_visual_selection()
-    " let enckw = UrlEncode(keyw)
-    let callString = ':t ' . keyw
-    exec 'SlimeSend1 ' . callString
-endfun
-
-function! ReplComLine()
-    let lineList = split( getline( line(".") ) )
-    let fnCallString = ListToHsFnCall(lineList[1:])
-    if IsPurs()
-      exec 'SlimeSend1 ' . fnCallString
-    else
-      exec 'InteroSend ' . fnCallString
     endif
 endfun
 
@@ -705,43 +620,32 @@ function! TypeInsert( keyword)
     endif
 endfun
 
-function! ReplComLineInsert()
-    let l:lineList = split( getline( line(".") ) )
+function! ReplEvalExpr_Insert( exprStr )
+  if IsPurs()
+    call PursEval( a:exprStr )
+  else
+    call InsertEvalExpressionRes( a:exprStr )
+  endif
+endfun
 
-    if or(l:lineList[1] == '=', l:lineList[1] == '∷')
-    " JUST A PLAIN SYMBOL UNDER THE CURSOR ---------------------------------------
-      if IsPurs()
-        call PursEval( expand('<cword>') )
-      else
-        call InsertEvalRes()
-      endif
-      return
-      " stops here. TODO: refactor
+" Get a (repl-) evaluable expression-string from a (line-) string
+function! ExtractEvalExpFromLineStr( lineStr )
+    let l:lineList = split( a:lineStr )
 
-    elseif l:lineList[0] == '--'
-      " A COMMENTED LINE ---------------------------------------------------------
-      let l:fnCallString = ListToHsFnCall(l:lineList[1:])
-      if has('nvim')
-        if IsPurs()
-          call PursEval( l:fnCallString )
-        else
-          call InsertEvalExpressionRes(l:fnCallString)
-        endif
-      else
-        exec 'SlimeSend1 ' . l:fnCallString
-      endif
+    if l:lineList[0] == '--'
+      " it's a commented line
+      " → use the second word onwards 
+      return join( l:lineList[1:], ' ')
 
+    elseif l:lineList[1] == '='
+      " it's a declaration
+      " → use the third word onwards
+      return join( l:lineList[2:], ' ')
     else
-    " USE THE WHOLE/PLAIN EXPRESSION! --------------------------------------------
-      if IsPurs()
-        " call PursEval( ListToHsFnCall(l:lineList) )
-        call PursEval( getline( line(".") ) )
-      else
-        " TODO
-      endif
-      return
+      echoe 'Could not extract an expression!'
     endif
 endfun
+
 
 " TODO: Intero has these custom functions:
 " InsertInstType
@@ -750,15 +654,8 @@ endfun
 " InsertEvalExpressionRes
 " TODO: make proper API
 
-function! TraceComLine()
-    let lineList = split( getline( line(".") ) )
-    let fnCallString = ListToHsFnCall(lineList[1:])
 
-    let functionName = get( split( getline( line(".") - 1 ) ), 0 )
-
-    exec 'SlimeSend1 trace $ ' . functionName . '' . fnCallString
-endfun
-
+" Todo: use join( list, ' ' )
 function! ListToHsFnCall(stlist)
   let l:fncall = ""
 
@@ -767,18 +664,6 @@ function! ListToHsFnCall(stlist)
   endfor
   return l:fncall
   " echo fncall
-endfun
-
-function! ReplVisSel()
-    let l:visSel = Get_visual_selection()
-    " exec 'SlimeSend1 ' . visSel
-    exec 'InteroSend ' . l:visSel
-endfun
-
-function! Tester1()
-    let l:visSel = getline
-    exec 'SlimeSend1 ' . l:visSel
-    " echo visSel
 endfun
 
 function! GetModuleName()
@@ -796,38 +681,6 @@ function! GetModuleName()
   return moduleName
 endfun
 
-
-function! TraceTopLevelValue()
-    let functionName = get( split( getline( line(".") ) ), 0 )
-    if functionName == "--"
-      call TraceComLine()
-    else
-      exec 'SlimeSend1 trace ' . functionName
-    endif
-endfun
-
-function! ReplTopFnRLInsert()
-    " ?? TODO: drop this
-    call InsertEvalRes()
-endfun
-
-
-function! ReplTopFnRL()
-    call ReplReload()
-    let functionName = get( split( getline( line(".") ) ), 0 )
-    " exec 'SlimeSend1 ' . functionName
-    " exec 'InteroSend ' . functionName
-    " if has('nvim')
-    if IsPurs()
-      exec 'SlimeSend1 ' . functionName
-      " call Prebuild()
-    else
-      exec 'InteroSend ' . functionName
-    endif
-endfun
-
-" nmap <leader>ih :SlimeSend1 import Helpers<cr>
-" nmap <leader>ip :SlimeSend1 import Prelude<cr>
 
 function! ReplReload()
     let modulename = GetModuleName()
@@ -849,7 +702,6 @@ function! ReplReload()
         exec 'SlimeSend1 :r'
         exec 'SlimeSend1 :l ' . modulename
       endif
-
     endif
 endfun
 
@@ -886,26 +738,8 @@ function! PsciReload()
     " :l is for haskell / ghci
 endfun
 
-function! PsciEval()
-    let functionName = get( split( getline( line(".") ) ), 0 )
-    let modulename = GetModuleName()
-    " exec ':w'
-    " writing the buffer here will crash vim
-    exec 'SlimeSend1 :r'
 
-    if IsPurs()
-      exec 'SlimeSend1 import ' . modulename
-    else
-      exec 'SlimeSend1 :l ' . modulename
-    endif
-
-    exec 'SlimeSend1 ' . functionName
-endfun
-" --------------------------------------------------------------------------------
-" HASKELL
-
-
-" ------- ALE -------
+" ALE: --------------------------------------------------------
 " let g:hindent_on_save = 0
 " let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint', 'hdevtools']}
 let g:ale_linters = {'haskell': ['stack-ghc-mod', 'hlint'],
@@ -954,11 +788,10 @@ nmap <silent> ]e :cnext<cr>
 " nmap <silent> [w <Plug>(ale_previous)
 " nmap <silent> ]w <Plug>(ale_next)
 " nmap <silent> ]W <Plug>(ale_last)
+" ALE: --------------------------------------------------------
 
 
-" ------- ALE -------
-
-" ------- SYNTASIC -------
+" SYNTASIC: ---------------------------------------------------
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -983,9 +816,10 @@ nmap <leader>sc :SyntasticCheck<cr>
 nmap <leader>sr :SyntasticReset<cr>
 
 " turn off initially
-" ------- SYNTASIC -------
+" SYNTASIC: ---------------------------------------------------
 
-" ------- Neomake -------
+
+" Neomake: ----------------------------------------------------
 " Neomake does the same as Ale
 " While Hlint (and stack-ghc-mod?) uses Ale for signs in the signcolumn,
 " Intero uses Neomake to show error and ghc warnings
@@ -1006,7 +840,7 @@ command! SignsClear :sign unplace *
 "     \   'texthl': 'NeomakeMessageSign',
 "     \ }
 " let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
-" ------- Neomake -------
+" Neomake: ----------------------------------------------------
 
 
 " Hdevtools is not yet needed, using Intero instead
@@ -1015,7 +849,7 @@ command! SignsClear :sign unplace *
 " let g:hdevtools_options = '-g-fdefer-type-errors -g-isrc -g-Wall'
 " let g:syntastic_haskell_hdevtools_args = g:hdevtools_options
 
-" --- GitGutter ---
+" GitGutter: -------------------------------------------------------
 nmap <leader>gg :GitGutterToggle<cr>
 
 nmap ]h <Plug>GitGutterNextHunk
@@ -1034,51 +868,9 @@ let g:gitgutter_eager = 0
 let g:gitgutter_enabled = 0
 nmap <silent> ]c :call NextHunkAllBuffers()<CR>
 nmap <silent> [c :call PrevHunkAllBuffers()<CR>
-" --- GitGutter ---
+" GitGutter: -------------------------------------------------------
 
-
-
-" Maps for intero.
-" nnoremap <silent> <leader>is :InteroStart<CR>
-" nnoremap <silent> <leader>isc :SignsClear<CR>
-nnoremap <silent> <leader>ik :InteroKill<CR>
-nnoremap <silent> <leader>io :InteroOpen<CR>
-nnoremap <silent> <leader>ih :InteroHide<CR>
-nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
-nnoremap <silent>         gd :call GotoDefinition()<CR>
-nnoremap <silent>         ]d :call GotoDefinition()<CR>
-
-" Type inserts
-nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
-vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
-nnoremap tg :InteroGenTypeInsert<cr>
-vnoremap tg :InteroGenTypeInsert<cr>
-nnoremap ti :InteroInfoInsert<cr>
-vnoremap ti :InteroInfoInsert<cr>
-
-nnoremap gel :call InsertEvalRes()<cr>
-nnoremap gei :call ReplComLineInsert()<cr>
-nnoremap gep :call PursEval( getline( line('.') ) )<cr>
-vnoremap gep :call PursEval( Get_visual_selection() )<cr>
-
-" TODO: this doesn't work with ranges/vis-selection
-" vnoremap tat :call InsertInstType()<cr>
-" vnoremap tag :call InsertGenType()<cr>
-" should work like in GHCi:
-" Prelude Control.Monad.Except> :t ExceptT . fmap Right
-" ExceptT . fmap Right :: Functor m => m a -> ExceptT e m a
-
-" nnoremap tw :call InsertTypeAnnotation()<cr>jh
-nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
-" nnoremap ti :call ImportIdentifier()<cr>
-
-" nnoremap tt :call SlimeType()<cr>
-" vnoremap tt :call SlimeTypeVisSel()<cr>
-
-" just for testing - not sure when this might be useful
-nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
-
-
+" Intero: -----------------------------------------------------------
 " Intero starts automatically. Set this if you'd like to prevent that.
 let g:intero_start_immediately = 0
 " let g:intero_use_neomake = 0
@@ -1105,6 +897,88 @@ let g:haskellmode_completion_ghc = 1
 "     echo "No errors found"
 "   endif
 " endfunction
+
+" Maps for intero.
+" nnoremap <silent> <leader>is :InteroStart<CR>
+" nnoremap <silent> <leader>isc :SignsClear<CR>
+" Todo: unify this with purs?
+nnoremap <silent> <leader>ik :InteroKill<CR>
+nnoremap <silent> <leader>io :InteroOpen<CR>
+nnoremap <silent> <leader>ih :InteroHide<CR>
+nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
+nnoremap <silent>         gd :call GotoDefinition()<CR>
+nnoremap <silent>         ]d :call GotoDefinition()<CR>
+" Intero: -----------------------------------------------------------
+
+" New Haskell And Purescript Maps: ------------------------------------------------------
+
+" Type Inserts: ----------------------------------------------------
+nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
+vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
+nnoremap tg :InteroGenTypeInsert<cr>
+vnoremap tg :InteroGenTypeInsert<cr>
+nnoremap ti :InteroInfoInsert<cr>
+vnoremap ti :InteroInfoInsert<cr>
+
+nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
+" Type Inserts: ----------------------------------------------------
+
+
+" Repl Eval Insert: ------------------------------------------------
+" Evaluate a string in the Repl (purs or ghci) and insert the result of the evaluation
+" gei → expr after -- (comment)
+"       expr after =
+"       selection
+" gel → entire line
+" gew → keyword
+" (cursor-column is only significant for gew)
+
+" Extract a (repl-) evaluable expression-string from current line
+nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
+vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
+
+" Evaluate the entire line 
+nnoremap gel :call ReplEvalExpr_Insert( getline('.') )<cr>
+
+" Eval the current keyword
+nnoremap gew :call ReplEvalExpr_Insert( PSCIDEgetKeyword() )<cr>
+" Repl Eval Insert: ------------------------------------------------
+
+
+nnoremap gap :Papply<cr>:call PurescriptUnicode()<cr>
+" TODO: currently :Papply indents the current line by one char.
+
+nnoremap gip :Pimport<cr>
+
+
+
+" just for testing - not sure when this might be useful
+nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
+" alternative to PSCIDEgetKeyword()
+
+" New Haskell And Purescript Maps: ------------------------------------------------------
+
+" Old Intero Maps: ------------------------------------------------------------------
+nnoremap <Leader>kk :call ReplTopFnRL()<cr>
+nnoremap geri :call ReplTopFnRLInsert()<cr>
+
+" run selection
+vnoremap <Leader>kk :call ReplVisSel()<cr>
+
+" run (commented) function call with many args
+nnoremap <Leader>kl :call ReplComLine()<cr>
+nnoremap gec        :call ReplComLine()<cr>
+
+" reload module
+nnoremap <Leader>kr :call ReplReload()<cr>
+nnoremap dr :call ReplReload()<cr>
+
+" nnoremap tr :call TraceTopLevelValue()<cr>
+nnoremap ta :call TraceTopLevelValue()<cr>
+" nnoremap tf :call TraceComLine()<cr>
+" Old Intero Maps: ------------------------------------------------------------------
+
+
 "
 " VIM COMMANDHISTORY:
 " 'q:'
@@ -1131,24 +1005,6 @@ function! GhcModQuickFix()
   " for FuzzyFinder
   ":FufQuickfix
 endfunction
-
-
-" ghc-mod
-" map <silent> tw :w<CR>:GhcModTypeInsert<CR>:call PurescriptUnicode()<cr>h
-" TODO: activate this together with purescript!
-
-" map <silent> ts :GhcModSplitFunCase<CR>
-" map <silent> tq :w<CR>:GhcModType<CR>
-" map <silent> te :GhcModTypeClear<CR>
-"
-" map <silent> ty :w<CR>:GhcModCheck<CR>
-" map <silent> tu :w<CR>:GhcModLint<CR>
-
-
-" Reload
-" map <silent> tu :call GHC_BrowseAll()<CR>
-" " Type Lookup
-" map <silent> ty :call GHC_ShowType(1)<CR>
 
 
 " let g:necoghc_enable_detailed_browse = 0
@@ -1337,6 +1193,7 @@ endfun
 " TIP: use 'find' to get full path and then 'gf': terminal: "find $PWD" and then "gf" on the the absolute path
 " if expressions: echo (v:true ? 'yes' : 'no') -- echo (v:false ? 'yes' : 'no')
 " TIP: set the cursor pos: let cursor = getcurpos(), call cursor(cursor[1], startColumn - 1)
+"      also: line('.') and col('.') get row and column num
 " TIP: "<C-z>" to suspend nvim and get back to the terminal. then run "fg" to
 " get back to nvim.
 " TODO: delete long space between words: "elldw" example: ^ord            next
@@ -1592,10 +1449,12 @@ xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
-
-autocmd ColorScheme * hi! link SneakScope Normal
-" autocmd ColorScheme * hi! Sneak guifg=green guibg=orange
-autocmd ColorScheme * hi! link Sneak Cursor
+augroup colsneak
+  autocmd!
+  autocmd ColorScheme * hi! link SneakScope Normal
+  " autocmd ColorScheme * hi! Sneak guifg=green guibg=orange
+  autocmd ColorScheme * hi! link Sneak Cursor
+augroup END
 
 hi! link Sneak Cursor
 
@@ -1629,8 +1488,14 @@ inoremap <C-j> <C-n>
 " If you prefer the Omni-Completion tip window to close when a selection is
 " made, these lines close it on movement in insert mode or when leaving
 " insert mode
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+
+augroup cursleave
+  autocmd!
+  autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+  autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+augroup END
+
 
 " ------------------------------------------------------
 
@@ -1710,10 +1575,10 @@ nnoremap <leader><F7><F9> :ColorSwapFgBg<cr>
 
 "  ----------------------------------------------------------
 " NERDTree  --------------------------------------------------
-let NERDTreeShowBookmarks = 1
+let NERDTreeShowBookmarks = 0
 " let g:NERDTreeMapMenu = 'Mm'".. not working!?
 
-nnoremap <leader>oo :NERDTreeFind<cr>
+" nnoremap <leader>oo :NERDTreeFind<cr>
 nnoremap go :NERDTreeFind<cr>
 
 nnoremap <leader>q :NERDTreeClose<cr>
@@ -1740,11 +1605,16 @@ command! DelFile :call delete(expand('%')) | bdelete!
 " Manually using |ProjectRootCD|: >
     " :ProjectRootCD
 
-"test dlpr, stop output on buffer-change
 
+"
 " With a mapping: >
-nnoremap <silent><leader>dpr  :ProjectRootCD<cr>
-nnoremap <leader>dlpr :lcd '.projectroot#guess().'<cr>
+" nnoremap <silent><leader>dpr  :ProjectRootCD<cr>
+nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "\n"
+nnoremap <expr>dpr ":lcd " . projectroot#guess() . "\n"
+
+" expression mapping example:
+" nnoremap <expr> GG ":echom ".screencol()."\n"
+" nnoremap <silent> GG :echom screencol()<CR>
 
 " set to current file path
 nnoremap <leader>dcf :cd %:p:h<cr>:pwd<cr>
@@ -1836,7 +1706,10 @@ nnoremap <silent> <c-f> :bn<cr>
 " nnoremap <leader>x :bd<cr>
 " nnoremap <leader>x :b#\|bd #<cr>
 " nnoremap <leader>lj :bd<cr>
-nnoremap <leader>x :bd!<cr>
+" nnoremap <silent><leader>x :bd!<cr>
+nnoremap gx :bd!<cr>
+" Note: this overwites NetrwBrowseX
+
 " Mac needs these characters ç Ç for option key mappings
 " nnoremap ç :bd<cr>
 " nnoremap Ç :bd!<cr>
@@ -1936,6 +1809,7 @@ nmap glf :call OpenFinder()<cr>
 
 command! Browser :call OpenCurrentFileInSystemEditor()
 nmap gle :call OpenCurrentFileInSystemEditor()<cr>
+" Tip: alternatively just ":!open $"!
 " ----------------------------------------------------------------------------------
 
 nmap <silent> glt :20Term<cr>
@@ -1975,8 +1849,12 @@ endfunction
 let g:limelight_paragraph_span = 2
 let g:limelight_default_coefficient = 0.8
 
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+augroup goyo
+  autocmd!
+  autocmd! User GoyoEnter nested call <SID>goyo_enter()
+  autocmd! User GoyoLeave nested call <SID>goyo_leave()
+augroup END
+
 " ---- GOYO - LIMELIGHT -----------------------------------------------------------------------
 
 
@@ -2271,6 +2149,11 @@ function! CharacterRequiresUrlEncoding(character)
     endif
     return 1
 endfunction
+
+function! GetStringTillEndOfLine()
+  return strpart( getline('.'), col('.') - 1 )
+endfunction
+
 
 function! Get_visual_selection()
   " Why is this not a built-in Vim script function?!
