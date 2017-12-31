@@ -10,7 +10,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'mileszs/ack.vim'
 Plug 'rking/ag.vim'
 
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " fullscreen mode
@@ -142,8 +142,6 @@ let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
 
 
 
-
-
 " Other Settings:  ---------------------------------------------------------------
 set lazyredraw
 
@@ -173,6 +171,9 @@ set t_vb=
 
 " Airline Settings: --------------------------------------------------------------
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#hunks#enabled = 1
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline_inactive_collapse=0
 let g:airline#extensions#tabline#fnamemod = ':t:r'
 let g:airline_theme='simple'
 let g:airline_exclude_preview = 0
@@ -191,12 +192,14 @@ let g:airline_mode_map = {
       \ '' : 's',
       \ }
 let g:airline_highlighting_cache = 0
+let g:airline_detect_modified=0
 let g:airline_section_a = '%-0.18{getcwd()}'
-let g:airline_section_b = '%<%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+" let g:airline_section_b = '%<%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+let g:airline_section_b = '%<%f %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+" removed the modified flag 'm' here!
 let g:airline_section_c = ''
 let g:airline_section_x = ''
 let g:airline_section_y = "%{airline#util#wrap(airline#extensions#hunks#get_hunks(),0)}%{airline#util#wrap(airline#extensions#branch#get_head(),0)}"
-let g:airline_detect_whitespace=0
 
 
 " Messages: ----------------------------------------------------------------------
@@ -339,7 +342,8 @@ set ts=2 sts=2 sw=2 expandtab
 
 set smartcase
 
-set gdefault
+" Note: this inverts what 'g' does in substitute!! avoid this
+" set gdefault
 set incsearch
 set showmatch
 set linebreak
@@ -372,6 +376,19 @@ set laststatus=2
 set splitbelow
 set splitright
 
+" ---- Window control ----
+" nnoremap dc <c-w>c 
+" close the win below
+nnoremap <c-w>d <c-w>j<c-w>c 
+nnoremap <c-w>t :TagbarToggle<cr>
+nnoremap <c-w>- 7<c-w>-
+nnoremap <c-w>+ 7<c-w>+
+nnoremap <c-w>a 7<c-w>+
+nnoremap <c-w>> 4<c-w>>
+nnoremap <c-w>< 4<c-w><
+" ---- Window control ----
+
+
 " Various mappings ----------------------------------------------
 
 
@@ -402,13 +419,13 @@ inoremap forall <c-k>FA
 " UNICODE:
 " To type a unicode char, in insert-mode type "<c-k>a:"
 " nnoremap cuc :%s/::/<c-k>::/g<cr>:%s/forall/<c-k>FA/g<cr>
-nnoremap cuf :%s/forall/<c-k>FA/e<cr>
-nnoremap cuc :%s/::/<c-k>::/e<cr>
-nnoremap cua :%s/->/<c-k>->/e<cr>
-nnoremap cub :%s/<-/<c-k><-/e<cr>
-nnoremap cud :%s/=>/<c-k>=>/e<cr>
-vnoremap <leader>bu :s/\%V→/-><cr>:s/\%V∷/::<cr>:s/\%V⇒/=><cr>
-vnoremap <leader>bi :s/\%V->/→<cr>:s/\%V::/∷<cr>:s/\%V=>/⇒<cr>
+nnoremap cuf :%s/forall/<c-k>FA/ge<cr>
+nnoremap cuc :%s/::/<c-k>::/ge<cr>
+nnoremap cua :%s/->/<c-k>->/ge<cr>
+nnoremap cub :%s/<-/<c-k><-/ge<cr>
+nnoremap cud :%s/=>/<c-k>=>/ge<cr>
+vnoremap <leader>bu :s/\%V→/->/ge<cr>:s/\%V∷/::/ge<cr>:s/\%V⇒/=>/ge<cr>
+vnoremap <leader>bi :s/\%V->/→/ge<cr>:s/\%V::/∷/ge<cr>:s/\%V=>/⇒/ge<cr>
 
 " Alternative for bind? ⤜ or »= or >>= or ≥
 
@@ -423,6 +440,23 @@ fun! PurescriptUnicode()
   normal cufcuccuacubcudcue
 endfun
 
+
+" Movement:  ---------------------------------------------------------------------
+" TODO: move to a function with something like `?`. (`gf` or `<leader>F` do something else)
+
+nnoremap $ g_
+onoremap $ g_
+vnoremap $ g_
+
+nnoremap 0 g_
+onoremap 0 g_
+vnoremap 0 g_
+
+nnoremap ( ^
+onoremap ( ^
+vnoremap ( ^
+
+" `)` is a free mapping!
 
 " move in haskell function signature ---------------------------------------------
 nnoremap <silent> - :call FindArrow()<cr>w
@@ -439,7 +473,7 @@ endfun
 " move to next paragraph/fn ------------------------------------------------------
 nnoremap <silent> <c-l> :call ParagNext()<cr>
 vnoremap <silent> <c-l> }
-nnoremap <silent> ) :call ParagNext()<cr>
+" nnoremap <silent> ) :call ParagNext()<cr>
 fun! ParagNext()
   exec "silent normal! }"
   call JumpNextNonEmptyLine()
@@ -453,7 +487,7 @@ endfun
 " move to previous paragraph/fn
 nnoremap <silent> <c-h> :call ParagPrev()<cr>
 vnoremap <silent> <c-h> {k$
-nnoremap <silent> ( :call ParagPrev()<cr>
+" nnoremap <silent> ( :call ParagPrev()<cr>
 fun! ParagPrev()
   let startLineNum = line('.')
   exec "silent normal! {w"
@@ -462,7 +496,34 @@ fun! ParagPrev()
   endif
 endfun
 " --------------------------------------------------------------------------------
+" Movement:  ---------------------------------------------------------------------
 
+
+" Tip: Free mapping and use of partial command maps
+nnoremap ,b :ls<CR>:buffer<Space>
+" Tip: insert mode map: Go to normal-mode for just one command:
+" :inoremap <F5> <C-O>:call MyVimFunc()<CR>
+
+
+nmap <leader>ccu "td}:call TransfTRegAndAppend( function('StripNewlinesAndMultispaces') )<cr>k
+
+
+" Apply 'fn' to the 't'/temp and append the result after the current line
+function! TransfTRegAndAppend ( fn )
+  call append( line('.') - 1, a:fn( @t ))
+endfun
+" Testfn: Use of TransfTRegAndAppend with higher order function
+nmap <leader>cci "tdd:call TransfTRegAndAppend( function('toupper') )<cr>
+
+function! StripNewlinesAndMultispaces( str )
+  " 1. delete all newlines:
+ let l:str1 = substitute(  a:str,  '\n',  '', 'ge' )
+ " 2. replace sections/words that have more than one space (regex: ' \+') with one space
+ let l:str2 = substitute( l:str1, ' \+', ' ', 'ge' )
+ return l:str2
+ " the same in one 's' command:
+  " exec 's/\n//ge | s/ \+/ /ge'
+endfun
 
 " noremap <leader>ci /<c-k>-><cr>
 " noremap <leader>ci /<c-k>::<cr>
@@ -510,9 +571,18 @@ let g:hoogle_search_buf_size = 21
 " to
 " -- Prelude
 " print ∷ Show a ⇒ a → IO ()
-let @o = 'f Jki-- jk9jj'
+let @o = 'f Jki-- jk^jj'
 " align the type-signature with EasyAlign
 let @p = 'gaap '
+
+" used in hoogle.vim: (!) (TODO: refactor this)
+" if a:args != ' --info'
+"   normal gg
+"   normal 10@o
+"   normal gg
+"   normal @p
+" endif
+
 
 
 fun! Hsimp(module, symbol)
@@ -529,8 +599,8 @@ setlocal formatprg=stylish-haskell
 
 
 " General: --------------------------------------------------------------
-nnoremap <leader>w :w!<cr>
-nnoremap gw :w!<cr>
+" nnoremap <leader>w :w!<cr>
+nnoremap gw :w<cr>
 " nnoremap <silent><leader>w :up<cr>
 
 
@@ -678,7 +748,7 @@ endfun
 
 function! ReplReload()
     let modulename = GetModuleName()
-    exec ':up'
+    " exec ':up'
     if IsPurs()
       " TODO: is this needed? what does it do?
       call purescript#ide#utils#update()
@@ -744,6 +814,7 @@ let g:ale_lint_on_text_changed = 'normal'
 let g:ale_lint_on_insert_leave = 1
 let g:ale_enabled = 0
 " let g:ale_set_quickfix = 1
+" Note: Ale sets the loclist, not the quickfix-list!
 let g:ale_emit_conflict_warnings = 0
 nmap <leader>aa :ALEToggle<cr>
 
@@ -765,7 +836,7 @@ let g:ale_fixers = {
 " otherwise the bg-color looks off
 hi AleErrorSign   ctermfg=white
 
-let g:airline#extensions#ale#enabled = 0
+" let g:airline#extensions#ale#enabled = 1
 " needed?
 
 " Configure Hline/Ale warnings!
@@ -776,6 +847,7 @@ nmap <silent> [w :lprev<cr>
 nmap <silent> ]w :lnext<cr>
 nmap <silent> [e :cprev<cr>
 nmap <silent> ]e :cnext<cr>
+
 
 " Mappings in the style of unimpaired-next
 " nmap <silent> [W <Plug>(ale_first)
@@ -789,10 +861,15 @@ nmap <silent> ]e :cnext<cr>
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+" airline /statusline config
+
+" Deactivate Syntasic for haskell dev in favour of Ale
+let g:syntastic_haskell_checkers = []
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 0
+" turn off initially
 let g:syntastic_check_on_wq = 0
 
 let g:psc_ide_syntastic_mode = 1
@@ -809,7 +886,6 @@ nmap <leader>ss :SyntasticToggle<cr>
 nmap <leader>sc :SyntasticCheck<cr>
 nmap <leader>sr :SyntasticReset<cr>
 
-" turn off initially
 " SYNTASIC: ---------------------------------------------------
 
 
@@ -920,7 +996,7 @@ nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
 
 " Repl Eval Insert: ------------------------------------------------
 " Evaluate a string in the Repl (purs or ghci) and insert the result of the evaluation
-" gei → expr after -- (comment)
+" gee → expr after -- (comment)
 "       expr after =
 "       selection
 " gel → entire line
@@ -930,17 +1006,21 @@ nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
 " Extract a (repl-) evaluable expression-string from current line
 nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
 vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
+nmap gee gei
+vmap gee gei
 
 " Evaluate the entire line 
 nnoremap gel :call ReplEvalExpr_Insert( getline('.') )<cr>
 
 " Eval the current keyword
-nnoremap gew :call ReplEvalExpr_Insert( PSCIDEgetKeyword() )<cr>
+" nnoremap gew :call ReplEvalExpr_Insert( PSCIDEgetKeyword() )<cr>
+nnoremap gew :call ReplEvalExpr_Insert( expand("<cword>") )<cr>
 " Repl Eval Insert: ------------------------------------------------
 
 
 nnoremap gap :Papply<cr>:call PurescriptUnicode()<cr>
-" TODO: currently :Papply indents the current line by one char.
+" TODO: currently :Papply indents the current line by one char.  same for haskell?
+" Note: Note that "ga" is mapped by easy align an used in marcros/mappings
 
 nnoremap gip :Pimport<cr>
 
@@ -1080,7 +1160,7 @@ nnoremap <leader>L kJi<cr><esc>l
 vnoremap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-" nmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 
 let g:easy_align_ignore_groups = ['Comment', 'String']
 
@@ -1206,7 +1286,7 @@ nmap <leader>eu yiwo<esc>PA = undefined<esc>b
 nmap <leader>uef <leader>us<leader>ef
 
 " "index symbol" append postfix index to function name
-nmap <leader>if ea09jea0^k
+nmap <leader>if ea0^jea0^k
 
 nmap <leader><c-a> jk^
 nmap <leader><c-x> <c-x>j<c-x>k^
@@ -1255,7 +1335,7 @@ nmap yrw "_diw"0Pb
 " Replace rest of the line
 nmap <leader>r0 "_d$"0p`[
 
-" Make deleting to black hole register easier!
+" Make deleting to black hole register easier?
 nnoremap D "_d
 
 
@@ -1278,16 +1358,11 @@ endfunction
 " ------- Folding --------
 
 " Comment line or selection
-" nmap <leader>gf gcc
-nmap <leader>ge gcc
 nmap dc gc
-vmap ac gc
+nmap dco gcc
 
-" comment form
+" comment form??
 nmap coaf gcaf
-nmap coo :call CommentToggle()<CR>
-vmap <leader>ge gc
-
 
 
 
@@ -1590,7 +1665,7 @@ endfunction
 " controversion, but trying this out
 " set path +=/**
 
-" autocmd BufEnter *.hs set syntax=purescript
+autocmd BufEnter *.hs set syntax=purescript
 " ----------------------------------------------------------------------------------
 
 " if exists(":CompilerSet") != 2
@@ -1731,12 +1806,6 @@ nmap <leader>dr :LinediffReset<cr>
 
 
 
-" nmap <leader>op :call OpenUrlUnderCursor()<CR>
-" vmap <leader>op :call OpenSelectedUrl()<CR>
-
-vnoremap <leader>op "gy:call OpenSelectedUrl()<CR>
-
-
 fun! OpenITerm()
     let path = projectroot#guess()
     exec 'silent !open -a iTerm ' . path
@@ -1772,7 +1841,7 @@ source /Users/andreas.thoelke/.vim/utils/termin1.vim
 
 
 " --- Tagbar ----
-nmap gkl :TagbarOpen j<cr>
+" nmap gkl :TagbarOpen j<cr>
 nmap <leader>to :TagbarOpen j<cr>
 nmap to :TagbarOpen j<cr>
 nmap <leader>th :TagbarClose<cr>
@@ -1932,14 +2001,15 @@ fun! DocsForVisSel()
 endfun
 
 fun! HoogleForCursorWord()
-    let g:originFile = expand('%')
+    " let g:originFile = expand('%')
+    " why did I use this? turns out this or 'w!' crashes vim!
     if IsPurs()
       call PSCIDEpursuit(PSCIDEgetKeyword())
     else
       let keyw = expand("<cword>")
-      let comm = 'silent Hoogle ' . keyw
+      let comm = 'Hoogle ' . keyw
       exec comm
-      exec 'w!'
+      " exec 'w!'
       wincmd j
     endif
 endfun
@@ -1957,7 +2027,7 @@ fun! HoogleForVisSel()
     exec 'u'
     let comm = 'silent Hoogle ' . keyw
     exec comm
-    exec 'w!'
+    " exec 'w!'
     wincmd j
 endfun
 
@@ -2164,13 +2234,43 @@ let g:easy_align_delimiters = {
 
 " highlight TagbarHighlight guifg=Green ctermfg=Green
 highlight default link TagbarHighlight  Cursor
+" how quickly tagbar (and vim in general!) refreshes (from file?)
 set updatetime=500
 let g:tagbar_sort = 0
 
 " set tags=tags;/,codex.tags;/
+" TODO: run ctags manually? how would tags work for purescript
+" ctags -f - --format=2 --excmd=pattern --extra= --fields=nksaSmt myfile
 
 if executable('lushtags')
     let g:tagbar_type_haskell = {
+        \ 'ctagsbin' : 'lushtags',
+        \ 'ctagsargs' : '--ignore-parse-error --',
+        \ 'kinds' : [
+            \ 'm:module:0',
+            \ 'e:exports:1',
+            \ 'i:imports:1',
+            \ 't:declarations:0',
+            \ 'd:declarations:1',
+            \ 'n:declarations:1',
+            \ 'f:functions:0',
+            \ 'c:constructors:0'
+        \ ],
+        \ 'sro' : '.',
+        \ 'kind2scope' : {
+            \ 'd' : 'data',
+            \ 'n' : 'newtype',
+            \ 'c' : 'constructor',
+            \ 't' : 'type'
+        \ },
+        \ 'scope2kind' : {
+            \ 'data' : 'd',
+            \ 'newtype' : 'n',
+            \ 'constructor' : 'c',
+            \ 'type' : 't'
+        \ }
+    \ }
+    let g:tagbar_type_purescript = {
         \ 'ctagsbin' : 'lushtags',
         \ 'ctagsargs' : '--ignore-parse-error --',
         \ 'kinds' : [

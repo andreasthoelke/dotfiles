@@ -1,5 +1,4 @@
 
-
 " PURESCRIPT WORKFLOW:
 " "mkdir test1" && "cd test1" && "pulp init" && "nvim Main.purs"
 " ":PursRepl" will start a pulp repl terminal session
@@ -36,6 +35,9 @@
 " TODO: What does Purscript project folder require so vim sets the working
 " folder correctly? .DS_Store, .purs-repl, .git/??:
 
+" TODO: use call PSCIDEListImports and send import statements to repl one by
+" one to have the same symbols available in the repl as in the module.
+
 " source "/Users/andreas.thoelke/.vim/utils/termin1.vim"
 
 " INTERO WORKFLOW:
@@ -50,6 +52,25 @@
 "   gei to insert return val → works also on commented lines
 "   <leader>kk run it in the vim-terminal mode:
 "                            use i to type and c-\ c-n to leave insert mode
+
+" Ale: -------------------------------------------------------------------------------
+" shows the underlined warning (Data.Char)
+" and the listing in the loclist
+" navigation via ]w [w
+" Updates live/no safe required
+" Does not require intero running
+" This will be hlint based + errors!? For Hlint config use :Hlint… command
+"
+" Neomake: ---------------------------------------------------------------------------
+" shows the intero (ghci) warnings
+" /requires intero to run. Requires a “dr” /reload to update
+" Example screenshot in Evernote shows “-Wunused-imports warning
+" Warnings show in quickfix-list: navigate via ]e [e
+" Configured via intero_ghci_options:
+" let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
+"
+" <leader>oq opens all warnings? (how to exclude .vimrc warnings?)
+
 
 
 " NEOVIM TERMINAL MODE: ----------------------------------------------------------
