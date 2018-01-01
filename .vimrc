@@ -40,6 +40,7 @@ Plug 'https://github.com/dbakker/vim-projectroot'
 Plug 'sjl/vitality.vim'
 
 Plug 'tomasr/molokai'
+Plug 'dim13/smyck.vim'
 
 Plug 'jelera/vim-javascript-syntax'
 Plug 'leafgarland/typescript-vim'
@@ -171,6 +172,7 @@ set t_vb=
 
 " Airline Settings: --------------------------------------------------------------
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline_inactive_collapse=0
@@ -441,7 +443,7 @@ fun! PurescriptUnicode()
 endfun
 
 
-" Movement:  ---------------------------------------------------------------------
+" Movement Navigation:  ---------------------------------------------------------------------
 " TODO: move to a function with something like `?`. (`gf` or `<leader>F` do something else)
 
 nnoremap $ g_
@@ -459,16 +461,21 @@ vnoremap ( ^
 " `)` is a free mapping!
 
 " move in haskell function signature ---------------------------------------------
-nnoremap <silent> - :call FindArrow()<cr>w
-fun! FindArrow()
-  exec "silent normal! /→\\|⇒\\|∷\<cr>"
-endfun
+" nnoremap <silent> - :call FindArrow()<cr>w
+" fun! FindArrow()
+"   exec "silent normal! /→\\|⇒\\|∷\<cr>"
+" endfun
 
-nnoremap <silent> _ :call FindArrowB()<cr>w
-fun! FindArrowB()
-  exec "silent normal! ?→\\|⇒\\|∷\<cr>"
-endfun
+" nnoremap <silent> _ :call FindArrowB()<cr>w
+" fun! FindArrowB()
+"   exec "silent normal! ?→\\|⇒\\|∷\<cr>"
+" endfun
 
+" nnoremap <silent> - ?[\(\$\∷\.\⇒\>\→\[\{]<cr>
+" nnoremap <silent> ) /[\(\$\∷\.\⇒\<\→\[\{\#]<cr>
+
+nnoremap <silent> - ?[\(\∷\.\⇒\→\[\{]<cr>
+nnoremap <silent> ) /[\(\∷\.\⇒\→\[\{\#]<cr>
 
 " move to next paragraph/fn ------------------------------------------------------
 nnoremap <silent> <c-l> :call ParagNext()<cr>
@@ -495,8 +502,10 @@ fun! ParagPrev()
     exec "silent normal! {{w"
   endif
 endfun
-" --------------------------------------------------------------------------------
-" Movement:  ---------------------------------------------------------------------
+
+
+" Movement Naviagation:  ---------------------------------------------------------------------
+
 
 
 " Tip: Free mapping and use of partial command maps
@@ -505,42 +514,7 @@ nnoremap ,b :ls<CR>:buffer<Space>
 " :inoremap <F5> <C-O>:call MyVimFunc()<CR>
 
 
-nmap <leader>ccu "td}:call TransfTRegAndAppend( function('StripNewlinesAndMultispaces') )<cr>k
 
-
-" Apply 'fn' to the 't'/temp and append the result after the current line
-function! TransfTRegAndAppend ( fn )
-  call append( line('.') - 1, a:fn( @t ))
-endfun
-" Testfn: Use of TransfTRegAndAppend with higher order function
-nmap <leader>cci "tdd:call TransfTRegAndAppend( function('toupper') )<cr>
-
-function! StripNewlinesAndMultispaces( str )
-  " 1. delete all newlines:
- let l:str1 = substitute(  a:str,  '\n',  '', 'ge' )
- " 2. replace sections/words that have more than one space (regex: ' \+') with one space
- let l:str2 = substitute( l:str1, ' \+', ' ', 'ge' )
- return l:str2
- " the same in one 's' command:
-  " exec 's/\n//ge | s/ \+/ /ge'
-endfun
-
-" noremap <leader>ci /<c-k>-><cr>
-" noremap <leader>ci /<c-k>::<cr>
-" noremap <leader>ci :call FormatSign()<cr>
-"
-" " TODO: format haskell/purescript functions signature!!
-" fun! FormatSign()
-"   exec "normal! /∷\<cr>"
-"   let indentPos = col('.')
-"   let lineNum = line('.')
-"   exec "normal! /→\<cr>"
-"   normal cuq
-"
-"   " exec "insert <cr>"
-"   " echo indentPos
-"   let ab = append(lineNum, "hii")
-" endfun
 
 
 
@@ -1263,7 +1237,8 @@ endfun
 " "git push -u origin master" `-u` add upstream tracking(!?)
 " "git pull --rebase origin" pull in changes from remote, put all local cahnges on top of it.
 "
-" TEST FUNCTIONS: ----------------------------------------------------------------
+"
+" HASKELL PURESCRIPT TEST FUNCTIONS: ----------------------------------------------------------------
 " "unique functions"
 nmap <leader>uf :call RandFnName()<cr>2w
 " produces a (test) haskell function with a random name, e.g.:
@@ -1312,11 +1287,54 @@ vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range
 EOF
 endfunction
 
-" --------------------------------------------------------------------------------
+
+" Reduce a paragraph (purs repl type output) to one line, deleting 2+ space seperations between words
+nmap <leader>ccu "td}:call TransfTRegAndAppend( function('StripNewlinesAndMultispaces') )<cr>k
+
+" Get the type of do-binds by producing a type error:
+nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>"tp^
+
+
+" Apply 'fn' to the 't'/temp and append the result after the current line
+function! TransfTRegAndAppend ( fn )
+  call append( line('.') - 1, a:fn( @t ))
+endfun
+" Testfn: Use of TransfTRegAndAppend with higher order function
+nmap <leader>cci "tdd:call TransfTRegAndAppend( function('toupper') )<cr>
+
+function! StripNewlinesAndMultispaces( str )
+  " 1. delete all newlines:
+ let l:str1 = substitute(  a:str,  '\n',  '', 'ge' )
+ " 2. replace sections/words that have more than one space (regex: ' \+') with one space
+ let l:str2 = substitute( l:str1, ' \+', ' ', 'ge' )
+ return l:str2
+ " the same in one 's' command:
+  " exec 's/\n//ge | s/ \+/ /ge'
+endfun
+
+" noremap <leader>ci /<c-k>-><cr>
+" noremap <leader>ci /<c-k>::<cr>
+" noremap <leader>ci :call FormatSign()<cr>
+"
+" " TODO: format haskell/purescript functions signature!!
+" fun! FormatSign()
+"   exec "normal! /∷\<cr>"
+"   let indentPos = col('.')
+"   let lineNum = line('.')
+"   exec "normal! /→\<cr>"
+"   normal cuq
+"
+"   " exec "insert <cr>"
+"   " echo indentPos
+"   let ab = append(lineNum, "hii")
+" endfun
+"
+" HASKELL PURESCRIPT TEST FUNCTIONS: ----------------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------
 
 
 
-" Replace ---------------------------------------------
+" Replacing: ---------------------------------------------
 " nmap <leader>re "_die"0P`[
 " nmap <leader>re ve"0pb
 " nmap <leader>re "_die"0Pb
@@ -1324,7 +1342,8 @@ endfunction
 
 " Replace inner word
 nmap <leader>rw "_diw"0Pb
-nmap yrw "_diw"0Pb
+" nmap yrw "_diw"0Pb
+nmap yrw Pl"_dw
 " Register, black hole, delete, inner word, paste from yank register, go to beginning
 
 " Replace words
@@ -1337,11 +1356,11 @@ nmap <leader>r0 "_d$"0p`[
 
 " Make deleting to black hole register easier?
 nnoremap D "_d
+" Replacing: ---------------------------------------------
 
 
 
-
-" ------- Folding --------
+" Folding: ------------------------------------------------
 " Toggle folding
 nnoremap z<space> za
 " zfaf => fold clojure form
@@ -1355,7 +1374,9 @@ function! MyFoldText()
   " let sub  = substitute(line, '/\*\|\*/\|{{{\d\=', '', 'g')
   return line
 endfunction
-" ------- Folding --------
+
+" Folding: ------------------------------------------------
+
 
 " Comment line or selection
 nmap dc gc
@@ -1734,8 +1755,10 @@ nnoremap <silent> <c-f> :bn<cr>
 " nnoremap <leader>x :b#\|bd #<cr>
 " nnoremap <leader>lj :bd<cr>
 " nnoremap <silent><leader>x :bd!<cr>
-nnoremap gx :bd!<cr>
-" Note: this overwites NetrwBrowseX
+" nnoremap gx :bd!<cr>
+" " Note: this overwites NetrwBrowseX
+
+nnoremap gx :bp<bar>sp<bar>bn<bar>bd!<CR>
 
 " Mac needs these characters ç Ç for option key mappings
 " nnoremap ç :bd<cr>

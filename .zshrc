@@ -60,7 +60,12 @@ HYPHEN_INSENSITIVE="true"
 # DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
+
+function set-title(){
+  TITLE="\[\e]2;$*\a\]"
+  echo -e ${TITLE}
+}
 
 # Uncomment the following line to enable command auto-correction.
 ENABLE_CORRECTION="true"
