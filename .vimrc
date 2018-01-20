@@ -406,7 +406,9 @@ let mapleader=" "
 " let maplocalleader="\\"
 
 inoremap jk <esc>
-vnoremap <leader><leader> <esc>
+" vnoremap <leader><leader> <esc>
+" vnoremap ,<space> <esc>
+vnoremap g- <esc>
 
 " make '=' easier to type in haskell
 inoremap <c-\> =
@@ -547,7 +549,8 @@ let g:hoogle_search_buf_size = 21
 " print ∷ Show a ⇒ a → IO ()
 let @o = 'f Jki-- jk^jj'
 " align the type-signature with EasyAlign
-let @p = 'gaap '
+let @p = 'gcaap '
+" changed this from gaap to gcaap to have 'ga' as fee mapping
 
 " used in hoogle.vim: (!) (TODO: refactor this)
 " if a:args != ' --info'
@@ -644,6 +647,8 @@ set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
 
 function! GotoDefinition()
     if IsPurs()
+      normal m'
+    " add position to jumplist
       exec 'Pgoto'
     else
       exec 'InteroGoToDef'
@@ -992,12 +997,9 @@ nnoremap gew :call ReplEvalExpr_Insert( expand("<cword>") )<cr>
 " Repl Eval Insert: ------------------------------------------------
 
 
-nnoremap gap :Papply<cr>:call PurescriptUnicode()<cr>
+nnoremap dip :Pimport<cr>
+nnoremap dap :Papply<cr>:call PurescriptUnicode()<cr>
 " TODO: currently :Papply indents the current line by one char.  same for haskell?
-" Note: Note that "ga" is mapped by easy align an used in marcros/mappings
-
-nnoremap gip :Pimport<cr>
-
 
 
 " just for testing - not sure when this might be useful
@@ -1134,9 +1136,64 @@ nnoremap <leader>L kJi<cr><esc>l
 vnoremap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+" TODO: find alt mapping
+nmap <leader>ga <Plug>(EasyAlign)
 
 let g:easy_align_ignore_groups = ['Comment', 'String']
+
+" Align Example:
+" you can go from this: ..
+" data Drawing
+"   = Fill Shape FillStyle
+"   | Outline Shape OutlineStyle
+"   | Text Font Number Number FillStyle String
+"   | Rotate Number Drawing
+"   | Clipped Shape Drawing
+"   | WithShadow Shadow Drawing
+
+" .. to this:
+" data Drawing
+"   = Fill       Shape  FillStyle
+"   | Outline    Shape  OutlineStyle
+"   | Text       Font   Number Number FillStyle String
+"   | Rotate     Number Drawing
+"   | Clipped    Shape  Drawing
+"   | WithShadow Shadow Drawing
+" 1. uncomment this block first, then with the cursor on the second line:
+" 2. "<leader>ga}2 " aligns the rest of the block to the 2nd <space>, and then
+" 3. "<leader>ga}3 " to align to the 3rd <space> as well 
+
+" Align Example:
+" (using Tabularize or EasyAlign with regex)
+" you can go from this: ..
+" everywhere f = go
+"   where
+"   go (Many ds) = f (Many (map go ds))
+"   go (Scale s d) = f (Scale s (go d))
+"   go (Translate t d) = f (Translate t (go d))
+"   go (Rotate r d) = f (Rotate r (go d))
+"   go (Clipped s d) = f (Clipped s (go d))
+"   go (WithShadow s d) = f (WithShadow s (go d))
+"   go other = f other
+
+" .. to this:
+" everywhere f = go
+"   where
+"   go (Many ds)        = f (Many (map      go ds))
+"   go (Scale s d)      = f (Scale s (      go d))
+"   go (Translate t d)  = f (Translate t (  go d))
+"   go (Rotate r d)     = f (Rotate r (     go d))
+"   go (Clipped s d)    = f (Clipped s (    go d))
+"   go (WithShadow s d) = f (WithShadow s ( go d))
+"   go other            = f other
+" 1. select all lines starting with "go"
+" 2. ":Tabularize /=/" to align to `=`
+" 3. ":Tabularize /go/" to align to `go`
+" Also EasyAlign can align to words or other chars using regex like this:
+" "<,'>EasyAlign */go/"
+" "<,'>EasyAlign */(g/"
+" "<,'>EasyAlign */(go/"
+" "<,'>EasyAlign */(/"
 
 
 " Insert line comment
@@ -1218,7 +1275,6 @@ endfun
 " TODO: delete long space between words: "elldw" example: ^ord            next
 " TIP: remove trailing whitespace: ":%s/\s\+$//e"
 "
-"
 " SHELL, EMACS MAPPINGS
 " beginning-of-line (C-a)
 " Move to the start of the current line.
@@ -1237,6 +1293,7 @@ endfun
 " "git push -u origin master" `-u` add upstream tracking(!?)
 " "git pull --rebase origin" pull in changes from remote, put all local cahnges on top of it.
 "
+" copy a folder: cp -a /source/. /dest/
 "
 " HASKELL PURESCRIPT TEST FUNCTIONS: ----------------------------------------------------------------
 " "unique functions"
@@ -1583,13 +1640,18 @@ let g:ag_highlight=1
 
 " --------------------------------------------------------------------------------
 " nnoremap <silent> <leader>df :set nohlsearch<cr>
-nnoremap <silent> <leader><leader> :set nohlsearch<cr>
+" nnoremap <silent> <leader><leader> :set nohlsearch<cr>
+" nnoremap <silent> ,<space> :set nohlsearch<cr>
+" other mapping?
+
+
+" Search next:
+" nnoremap <silent> <leader>n :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+nnoremap <silent> ga :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+nnoremap <silent> g- :set nohlsearch<cr>
 
 nnoremap <silent> n n
 nnoremap <silent> N N
-
-" Search next:
-nnoremap <silent> <leader>n :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 
 " Important color/highlighy setting - sometimes gets overwritten
 hi Search guibg=#3E3E3E guifg=#DDDDDD
@@ -1607,19 +1669,19 @@ endif
 
 
 
-" Color features ----------------------------------
+" Color: ----------------------------------
 
 " Hex Color editor vCooler.vim
 let g:vcoolor_map = '<F7><F7>'
 " nnoremap <F7><F7> :VCoolor<cr>
 
 " Hex Color highlight - Colorizer Plugin
-nnoremap <leader><F7><F7> :ColorToggle<cr>
-nnoremap <leader><F7><F8> :ColorContrast<cr>
-nnoremap <leader><F7><F9> :ColorSwapFgBg<cr>
+" nnoremap <leader><F7><F7> :ColorToggle<cr>
+" nnoremap <leader><F7><F8> :ColorContrast<cr>
+" nnoremap <leader><F7><F9> :ColorSwapFgBg<cr>
 
 
-" Files and buffer  --------------------------------------------
+" Files Buffer:  --------------------------------------------
 
 "  ----------------------------------------------------------
 " NERDTree  --------------------------------------------------
@@ -1640,9 +1702,14 @@ let NERDTreeQuitOnOpen=1
 
 
 "  --- Project Root --------------------------------------------
+
+" let g:rootmarkers = ['.projectroot', 'package.json', 'bower.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
+let g:rootmarkers = ['.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
+
 "
 " open file relative to project-root
-nnoremap <expr> <leader>ep ':e '.projectroot#guess().'/'
+" nnoremap <expr> <leader>ep ':e '.projectroot#guess().'/'
+" well, not really needed?!
 
 " remove/delete a file relative to project-root
 nnoremap <expr> <leader>df ':!rm '.projectroot#guess().'/'
@@ -1657,7 +1724,7 @@ command! DelFile :call delete(expand('%')) | bdelete!
 "
 " With a mapping: >
 " nnoremap <silent><leader>dpr  :ProjectRootCD<cr>
-nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "\n"
+" nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "\n"
 nnoremap <expr>dpr ":lcd " . projectroot#guess() . "\n"
 
 " expression mapping example:
@@ -1758,6 +1825,7 @@ nnoremap <silent> <c-f> :bn<cr>
 " nnoremap gx :bd!<cr>
 " " Note: this overwites NetrwBrowseX
 
+" Prevent closing a window when closing a buffer
 nnoremap gx :bp<bar>sp<bar>bn<bar>bd!<CR>
 
 " Mac needs these characters ç Ç for option key mappings

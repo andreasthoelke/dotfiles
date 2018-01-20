@@ -85,16 +85,16 @@ hi clojureComment guifg=#6D7174
 " hi clojureBoolean guifg=#299A6A  
 " hi clojureConstant guifg=#508351  
 
-hi clojureRegexp guifg=#696969  
+" hi clojureRegexp guifg=#696969  
 
-hi clojureKeyword guifg=#2097EE
+" hi clojureKeyword guifg=#2097EE
 
 " hi clojureFunc guifg=#F08D24
 " hi clojureMacro guifg=#F0E624
 
 " Non function reference from REPL
-hi clojureVariable guifg=#8E69C9 
-hi clojureAnonArg guifg=#B01C1C
+" hi clojureVariable guifg=#8E69C9 
+" hi clojureAnonArg guifg=#B01C1C
 
 " hi clojureDefine guifg=#1AEAEA 
 " hi clojureSpecial guifg=#F0E624 gui=italic
@@ -159,7 +159,11 @@ hi Folded          guifg=#465457 guibg=#000000
 " hi Keyword        guifg=#88BB29
 " hi Keyword        guifg=#2C9E71
 hi Keyword        guifg=#2C9E71
-" Function is purescript sinature head and import symbol
+" hi purescriptKeyword guifg=#882C9E
+" hi purescriptClassName guifg=#882C9E
+" hi purescriptType guifg=#882C9E
+
+" Function is purescript signature head and import symbol
 hi Identifier      guifg=#FD971F
 hi Ignore          guifg=#808080 guibg=bg
 hi IncSearch       guifg=#C4BE89 guibg=#000000
@@ -211,7 +215,7 @@ hi Typedef         guifg=#66D9EF
 hi Type            guifg=#66D9EF               gui=none
 hi Underlined      guifg=#808080               gui=underline
 
-hi VertSplit       guifg=#808080 guibg=#080808 gui=bold
+hi VertSplit       guifg=#000000 guibg=#080808 gui=bold
 " hi VisualNOS                     guibg=#403D3D
 " hi Visual                        guibg=#403D3D
 hi WarningMsg      guifg=#FFFFFF guibg=#333333 gui=bold
@@ -233,6 +237,10 @@ else
    hi SpecialKey      guifg=#465457
 end
 
+set fillchars+=vert:│
+" hi VertSplit ctermbg=NONE guibg=NONE
+
+" Copied from https://github.com/dim13/smyck.vim ----------------------------------------------------------------------
 "
 " Support for 256-color terminal
 "
@@ -248,7 +256,8 @@ hi Structure            cterm=none ctermbg=none ctermfg=12          gui=none    
 hi Ignore               cterm=none ctermbg=none ctermfg=8           gui=none        guifg=bg
 hi Constant             cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
 hi PreProc              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
-hi Type                 cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
+" hi Type                 cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
+hi Type                 cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#72BCD6
 hi Statement            cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
 hi Special              cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#d7d7d7
 hi String               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
@@ -258,6 +267,11 @@ hi Symbol               cterm=none ctermbg=none ctermfg=9           gui=none    
 hi Method               cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
 hi Interpolation        cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#2EB5C1
 " hi Keyword        cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#2EB5C1
+
+
+" Code copied from: --------------------------------------------------------------------------
+" https://github.com/skielbasa/vim-material-monokai
+
 
 if ! exists("g:materialmonokai_gui_italic")
     let g:materialmonokai_gui_italic = 1
@@ -314,7 +328,8 @@ let s:lightblack  = { "gui": "#2D2E27", "cterm": "234" }
 let s:lightblack2 = { "gui": "#383a3e", "cterm": "236" }
 let s:darkblack   = { "gui": "#1F292D", "cterm": "233" }
 " let s:grey        = { "gui": "#3F565F", "cterm": "238" }
-let s:grey        = { "gui": "#516569", "cterm": "238" }
+" let s:grey        = { "gui": "#516569", "cterm": "238" }
+let s:grey        = { "gui": "#60777C", "cterm": "238" }
 " Used for comments. Derived this from aqua
 let s:lightgrey   = { "gui": "#575b61", "cterm": "241" }
 let s:darkgrey    = { "gui": "#232E33", "cterm": "236" }
@@ -322,7 +337,7 @@ let s:coolgrey    = { "gui": "#506E79", "cterm": "241" }
 
 let s:pink        = { "gui": "#FC3488", "cterm": "197" }
 let s:green       = { "gui": "#A6E22E", "cterm": "148" }
-" let s:aqua        = { "gui": "#66d9ef", "cterm": "81" }
+" let s:aqua        = { "gui": "#66D9EF", "cterm": "81" }
 let s:aqua        = { "gui": "#50D6EF", "cterm": "81" }
 " This is used for Keyword now - gave the aqua color 10% more saturation
 let s:blue        = { "gui": "#82B1FF", "cterm": "81" }

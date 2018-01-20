@@ -31,6 +31,8 @@ alias nvim="NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim"
 # so neo-vim-remote can send it messages.
 
 alias vicd='nvr -c "cd $(pwd) | pwd"'
+# From nvim terminal mode 'vicd' changes vim's current directory 
+# to the current dir in the terminal
 # Neovim Remote: ---------------------------------------------------------
 
 
