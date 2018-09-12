@@ -16,6 +16,10 @@
 " http://github.com/urso/dotrc/blob/master/vim/syntax/haskell.vim
 " ---------------------------------------------------------------------
 "
+"
+" TODO: show some colors e.g. for TODO: in purescript comments
+"       show syntax highlight in purescript comments
+"
 " Treat True and False specially, see the plugin referenced above
 let hs_highlight_boolean=1
 " highlight delims, see the plugin referenced above
