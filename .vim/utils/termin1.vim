@@ -109,6 +109,7 @@
 " INTERO HASKELL WORKFLOW:
 "
 "   <leader>io to open intero
+"   <leader>ih to hide the intero window
 "   <leader>il to load the module
 "           dr to type-check the file
 "           qq to show errors
@@ -129,6 +130,18 @@
 " use <leader>to and <leader>th to open and close "Tagbar" (a list of the the
 " top-level functions) hit return to jump to a functions, see the focus light
 " update in 500ms intervals.
+" Find A Typesignature In The Project: run ":Find 'Value → Parser'" also just "//" on the visual selection to search in the same buffer
+" Get the type of do-binds by producing a type error:
+" nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>"tp^
+" Import Haskell Identifiers Using Hoogle And Hsimport:
+" 1. Use "gsd" ("go search docs") on a missing identifier
+" 2. In the hoogle list of available identifiers, go to the line/version you
+" want to import and run <leader>ii to import the identifier (confirm the import
+" section of your source file has added the identifier)
+" See HoogleImportIdentifier in vimrc and
+" /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
+" also note the "HOOGLE INCLUDE NEW LIBS:" comment in vimrc
+
 
 " GHCID:
 " RELOAD WEBSERVER:
@@ -145,15 +158,6 @@
 " showing errors, ect.
 
 " Just run an app based on a mobule file: xstack runghc helloworld.hs"
-
-" Tip: hsimport now seems to work
-" <leader>ii in the Hoogle detailed info dialog should import the identifier,
-" see:
-" /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
-" this was previously not working currently
-" fun! HoogleLineJump() "{{{
-" this works:
-" call Hsimp("Control.Monad", "replicateM")
 
 
 " Ale: -------------------------------------------------------------------------------
@@ -180,6 +184,9 @@
 " Quick Vim Help: use "K" on work/string that's in the vim help, e.g. this
 " word: session_autoload
 " Temp Buffer: ":sp" ":e temp" 
+" Check Error Messages: quick error messages that occur on startup can be seen
+" with ":messages" command, and then copied, etc.
+" Question: how can I copy echoed text?
 
 
 " NEOVIM TERMINAL MODE: ----------------------------------------------------------
@@ -222,6 +229,7 @@ command! Restart call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
 "         modified:   .vim/colors/molokai.vim
 "         modified:   .vim/utils/termin1.vim
 "         modified:   .vimrc
+" You can use <c-j>, <c-k> to scroll and "q" to quit the view.
 " 3. Review changes to get an idea of a commit message. Use:
 " nmap <leader>gg :GitGutterToggle<cr>
 " nmap ]c <Plug>GitGutterNextHunk
@@ -236,6 +244,15 @@ command! Restart call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
 " ➜  ~ git:(master) ✗ git add .vim/colors/molokai.vim
 " (Note that fugitive :Gstatus does not work here somehow -
 " " it makes it much easier to stage/unstage files)
+" 6. After confirming with "git status" again, with the commit message in the yank register, create the 
+" following line in the terminal (enter "git commit -m '" then paste the yanked text.
+" git commit -m "Spell command, use Stackage seach, HaskellProjectName, haskell- git- vim- process documentation in termin1"
+" 7. Run "git push". Then the commit should show up here: "https://github.com/andreasthoelke/dotfiles/commits/master" 
+" For a new repo: Link local repo to github remote repo:
+" "git remote add origin https://github.com/andreasthoelke/dotfiles.git", 
+" "git push -u origin master" `-u` add upstream tracking(!?)
+" "git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
+
 
 function! OnEv1(job_id, data, event) dict
   normal }k

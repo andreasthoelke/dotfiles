@@ -84,6 +84,9 @@ Plug 'Shougo/vimproc.vim', {'do': 'make'}
 
 " Plug 'eagletmt/neco-ghc'
 " Plug 'bitc/vim-hdevtools'
+" still can't get it to work 9-2018
+" create a new project then run: "hdevtools check 'src/Lib.hs'" - runs
+" indefinetly
 " crashes vim on :HdevtoolsType command
 "
 Plug 'dan-t/vim-hsimport'
@@ -156,6 +159,9 @@ set lazyredraw
 " ---- Color ----
 
 set selection=inclusive
+
+" this allows to move the cursor where there is no actual chracter
+set virtualedit=all
 
 " Console integration
 " Send more characters for redraws
@@ -387,7 +393,10 @@ set nowrap
 set textwidth=0 wrapmargin=0
 
 " activate line wrapping for a window:
-command! -nargs=* Wrap set wrap linebreak nolist
+" command! -nargs=* Wrap set wrap linebreak nolist
+" Todo: do I want linebreak and nolist?
+" use "set wrap" and "set nowrap" instead?
+" command! -nargs=* Wrap set wrap linebreak nolist
 " use `gq<motion` or gqq to merely wrap a range/line
 
 set noswapfile
@@ -547,16 +556,10 @@ endfun
 
 " Movement Naviagation:  ---------------------------------------------------------------------
 
-
-
 " Tip: Free mapping and use of partial command maps
 nnoremap ,b :ls<CR>:buffer<Space>
 " Tip: insert mode map: Go to normal-mode for just one command:
 " :inoremap <F5> <C-O>:call MyVimFunc()<CR>
-
-
-
-
 
 
 " HOOGLE INCLUDE NEW LIBS:
@@ -566,8 +569,10 @@ nnoremap ,b :ls<CR>:buffer<Space>
 " libs, then <backspace> in first line to have everything in one row, and
 " copy-paste into terminal
 " https://github.com/ndmitchell/hoogle/blob/master/docs/Install.md
+" Todo: get hoogle libs from cabal file
 
-let g:hoogle_search_buf_size = 21
+let g:hoogle_search_buf_size = 15
+let g:hoogle_search_count = 20
 
 " ALIGNING COLUMS OF HASKELL SIGS:
 " run: :browse Data.List.Split in GHCi and copy into a vim buffer
@@ -599,9 +604,40 @@ let @p = 'gcaap '
 "   normal @p
 " endif
 
+" Import Haskell Identifiers Using Hoogle And Hsimport:
+" 1. Use "gsd" ("go search docs") on a missing identifier
+" 2. In the hoogle list of available identifiers, go to the line/version you
+" want to import and run <leader>ii to import the identifier (confirm the import
+" section of your source file has added the identifier)
+" See HoogleImportIdentifier in vimrc and
+" /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
+" also note the "HOOGLE INCLUDE NEW LIBS:" comment in vimrc
+fun! HoogleImportIdentifier() "{{{
+  let l:prev_line = getline(line('.') -1)
+  let l:cur_line  = getline('.')
+  let l:split_line_prev = split(l:prev_line)
+  let l:split_line      = split(l:cur_line)
+  call HoogleCloseSearch()
+  normal! <c-w>k
+  if &mod
+    echo "Please save before importing!"
+    return
+  endif
+  let l:imp1 = l:split_line[0]
+  let l:imp2 = l:split_line[1]
+  if l:imp2 == "data" || l:imp2 == "type" || l:imp2 == "class"
+    let l:imp2 = l:split_line[2]
+  endif
+  if l:imp2[0] == "("
+    let l:imp2 = StripString( l:imp2, "(" )
+    let l:imp2 = StripString( l:imp2, ")" )
+  endif
+  call Hsimp( l:imp1, l:imp2)
+  "update format of the import list
+  call StylishHaskell()
+endfunction "}}}
 
 " call Hsimp("Control.Monad", "replicateM")
-
 fun! Hsimp(module, symbol)
   call hsimport#imp_symbol(a:module, a:symbol)
 endfun
@@ -618,6 +654,8 @@ setlocal formatprg=stylish-haskell
 
 " free mapping: <c-g> - currently show the current filename
 
+" Show a Git diff of the current file
+command! Diff execute 'w !git diff --no-index % -'
 
 " General: --------------------------------------------------------------
 " nnoremap <leader>w :w!<cr>
@@ -889,6 +927,15 @@ nmap <silent> ]w :lnext<cr>
 nmap <silent> [e :cprev<cr>
 nmap <silent> ]e :cnext<cr>
 
+" go to the first error
+nnoremap gee :crewind<CR>
+
+" Example function moving cursor
+" same things can be done with ":cr"!
+function! GoToSelErrorLine()
+  call cursor( getqflist()[0].lnum, getqflist()[0].col)
+endfunction
+
 
 " Mappings in the style of unimpaired-next
 " nmap <silent> [W <Plug>(ale_first)
@@ -959,6 +1006,8 @@ let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 " set shell=bash\ -i
 " let g:hdevtools_options = '-g-fdefer-type-errors -g-isrc -g-Wall'
 " let g:syntastic_haskell_hdevtools_args = g:hdevtools_options
+" hdevtools type 'src/Aeson2.hs' 634 1
+
 
 " GitGutter: -------------------------------------------------------
 nmap <leader>gg :GitGutterToggle<cr>
@@ -1058,8 +1107,6 @@ nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
 " Extract a (repl-) evaluable expression-string from current line
 nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
 vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
-nmap gee gei
-vmap gee gei
 
 " Evaluate the entire line 
 nnoremap gel :call ReplEvalExpr_Insert( getline('.') )<cr>
@@ -1180,6 +1227,7 @@ let g:haskell_indent_guard = 2
 " --------------------------------------------------------------------------------
 
 " free mapping <c-Backspace>
+
 " TODO: find (and break line?) at → and ∷
 
 " ------------------------------------------------------
@@ -1319,10 +1367,15 @@ nnoremap <leader>iwd i<c-r>=system('pwd')<cr><esc>
 nnoremap <leader>fp i<c-r>=expand('%')<cr><esc>
 
 fun! SomeTest1( ar1 )
+  if a:ar1 == "abc"
+    return "stopping here!"
+  endif
   echo "out: " . a:ar1
   return "Some arg: " . a:ar1
 endfun
-
+" Some arg: hi!
+" stopping here!
+             
 " TIP: print the file type: ":echo &ft"
 " TIP: copy a past ex-command/vim-shell command: hit "q:" !
 " TIP: print last messages/errors: ":messages"
@@ -1458,6 +1511,11 @@ function! StripNewlinesAndMultispaces( str ) " 1. delete all newlines:
  " the same in one 's' command:
   " exec 's/\n//ge | s/ \+/ /ge'
 endfun
+
+function! StripString( original, stripThisString )
+ return substitute(  a:original, a:stripThisString, '', 'ge' )
+endfun
+
 
 " noremap <leader>ci /<c-k>-><cr>
 " noremap <leader>ci /<c-k>::<cr>
@@ -2220,6 +2278,7 @@ endfun
 
 
 fun! HoogleForVisSel()
+    let g:originFile = expand('%')
     exec 'silent! s/\%V→/->'
     exec 'silent! s/\%V∷/::'
     exec 'silent! s/\%V⇒/=>'
@@ -2228,8 +2287,9 @@ fun! HoogleForVisSel()
     " exec 'silent! s/\%V::/∷'
     " exec 'silent! s/\%V=>/⇒'
     " use undo instead to prevent adding this to the undo list!
-    exec 'u'
-    let comm = 'silent Hoogle ' . keyw
+    " exec 'u'
+    " let comm = 'silent Hoogle ' . keyw
+    let comm = 'Hoogle ' . keyw
     exec comm
     " exec 'w!'
     wincmd j
