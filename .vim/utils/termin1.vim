@@ -106,8 +106,7 @@
 
 " source "/Users/andreas.thoelke/.vim/utils/termin1.vim"
 
-" INTERO HASKELL WORKFLOW:
-"
+" HASKELL WORKFLOW:
 "   <leader>io to open intero
 "   <leader>ih to hide the intero window
 "   <leader>il to load the module
@@ -133,15 +132,15 @@
 " Find A Typesignature In The Project: run ":Find 'Value → Parser'" also just "//" on the visual selection to search in the same buffer
 " Get the type of do-binds by producing a type error:
 " nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>"tp^
+" Use Hoogle In Vim: "gsd" "go search docs" or "gsh" "go seach hoogle" on visual selection (including type signatures!)
+" or keyword to view the search results, then <c-]> on a specific line to see details. 
+" then "gsd" again on the keyword to go back to the overview. 
 " Import Haskell Identifiers Using Hoogle And Hsimport:
-" 1. Use "gsd" ("go search docs") on a missing identifier
-" 2. In the hoogle list of available identifiers, go to the line/version you
-" want to import and run <leader>ii to import the identifier (confirm the import
-" section of your source file has added the identifier)
-" See HoogleImportIdentifier in vimrc and
-" /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
+" 1. Use "gsd" ("go search docs") on a missing identifier or e.g. ":Hoogle replicateM"/ or "Hoogle (Applicative m) ⇒ Int → m a → m [a]"
+" 2. In the hoogle list of available identifiers, go to the line/version you want to import and 
+" run <leader>ii to import the identifier (confirm the import section of your source file has added the identifier)
+" See HoogleImportIdentifier in vimrc and /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
 " also note the "HOOGLE INCLUDE NEW LIBS:" comment in vimrc
-
 
 " GHCID:
 " RELOAD WEBSERVER:
@@ -179,7 +178,7 @@
 " <leader>oq opens all warnings? (how to exclude .vimrc warnings?)
 
 " VIM WORKFLOW:    
-" CTRLP: do "<leader>oj" and use <c-j>, <c-k> and fuzzy search to get to recent files
+" Open File With CTRLP: do "<leader>oj" and use <c-j>, <c-k> and fuzzy search to get to recent files
 " and open offers, changed hunks?
 " Quick Vim Help: use "K" on work/string that's in the vim help, e.g. this
 " word: session_autoload
@@ -187,6 +186,8 @@
 " Check Error Messages: quick error messages that occur on startup can be seen
 " with ":messages" command, and then copied, etc.
 " Question: how can I copy echoed text?
+" Open Url In Browser: "glb" "Go launch browser" on the visual selection of
+" the URL
 
 
 " NEOVIM TERMINAL MODE: ----------------------------------------------------------
@@ -247,7 +248,7 @@ command! Restart call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
 " 6. After confirming with "git status" again, with the commit message in the yank register, create the 
 " following line in the terminal (enter "git commit -m '" then paste the yanked text.
 " git commit -m "Spell command, use Stackage seach, HaskellProjectName, haskell- git- vim- process documentation in termin1"
-" 7. Run "git push". Then the commit should show up here: "https://github.com/andreasthoelke/dotfiles/commits/master" 
+" 7. Run "git push". Then the commit should show up here: "glb" on "https://github.com/andreasthoelke/dotfiles/commits/master" 
 " For a new repo: Link local repo to github remote repo:
 " "git remote add origin https://github.com/andreasthoelke/dotfiles.git", 
 " "git push -u origin master" `-u` add upstream tracking(!?)

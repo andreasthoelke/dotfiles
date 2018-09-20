@@ -387,10 +387,12 @@ set smartcase
 " set gdefault
 set incsearch
 set showmatch
-set linebreak
+" set linebreak
 set hidden
 set nowrap
-set textwidth=0 wrapmargin=0
+" wrapmargin=0
+" vim automatically breaks the line/starts a new line after 100 chars
+set textwidth=100
 
 " activate line wrapping for a window:
 " command! -nargs=* Wrap set wrap linebreak nolist
@@ -1915,7 +1917,32 @@ endfunction
 " controversion, but trying this out
 " set path +=/**
 
+" use purescript syntax on haskell buffers.
+" Todo: what's the proper way to do this?
 autocmd BufEnter *.hs set syntax=purescript
+
+" Refesh/force some style on the quickfix list:
+autocmd BufReadPost quickfix :call QuickfixRefeshStyle()
+" example: this also worked:
+" autocmd QuickFixCmdPost * :call WinDo( "set syntax=purescript" )
+
+function! QuickfixRefeshStyle()
+  exec 'set syntax=purescript'
+  exec 'setlocal modifiable'
+  exec 'call PurescriptUnicode()'
+  exec 'setlocal nomodifiable'
+endfunction
+
+" Just like windo, but restore the current window when done.
+function! WinDo(command)
+  let currwin=winnr()
+  execute 'windo ' . a:command
+  execute currwin . 'wincmd w'
+endfunction
+com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
+" Just like Windo, but disable all autocommands for super fast processing.
+com! -nargs=+ -complete=command Windofast noautocmd call WinDo(<q-args>)
+
 " ----------------------------------------------------------------------------------
 
 " if exists(":CompilerSet") != 2
@@ -2066,26 +2093,25 @@ endfun
 " this works: :silent !open -a iTerm Documents/purescript
 
 
-fun! GoogleSearchStr()
-    let keyw = expand("<cword>")
-    let url = 'http://www.google.de\#q\=' . keyw
-    return url
-endfun
 
 
 " ----------------------------------------------------------------------------------
 "  Launching external apps
+command! Browser :call OpenVisSel()
+vmap glb :call OpenVisSel()<cr>
+
 command! ITerm :call OpenITerm()
 nmap gli :call OpenITerm()<cr>
 
 command! Finder :call OpenFinder()
 nmap glf :call OpenFinder()<cr>
 
-command! Browser :call OpenCurrentFileInSystemEditor()
+command! Editor :call OpenCurrentFileInSystemEditor()
 nmap gle :call OpenCurrentFileInSystemEditor()<cr>
 " Tip: alternatively just ":!open $"!
 " ----------------------------------------------------------------------------------
 
+" open a terminal window
 nmap <silent> glt :20Term<cr>
 
 " Terminal util functions
@@ -2139,15 +2165,16 @@ augroup END
 " let g:lt_quickfix_list_toggle_map = '<leader>qq'
 " let g:lt_quickfix_list_toggle_map = '<leader>gq'
 
-nmap <leader>ll :lopen<cr>:Wrap<cr>
-nmap <leader>qq :copen<cr>:Wrap<cr>
+" nmap <leader>ll :lopen<cr>:Wrap<cr>
+nmap <leader>ll :lopen<cr>
+" nmap <leader>qq :copen<cr>
+" Todo: this get overwrittern on quickfix refesh:
+nmap <leader>qq :copen<cr>:set syntax=purescript<cr>
 
 nmap <leader>oq :CtrlPQuickfix<cr>
 " --- quickfix & loclist ----
 
-nmap <leader>go :Goyo<cr>
 nmap <leader>gs :Gstatus<cr>
-
 
 nmap <silent> gsg :call GoogleSearch("word")<cr>
 vmap <silent> gsg :call GoogleSearch("visSel")<cr>
@@ -2168,28 +2195,6 @@ vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 command! -nargs=1 Find  :Grepper -side -query <args>
 command! -nargs=1 Findb :Grepper -side -buffers -query <args>
 
-fun! GoogleSearch(selType)
-    if a:selType == "word"
-      let keyw = expand("<cword>")
-    else
-      let keyw = Get_visual_selection()
-    endif
-    let enckw = UrlEncode(keyw)
-
-    let extension = GetExtension()
-
-    if extension == "purs"
-      let lang = 'PureScript'
-    elseif extension == "hs"
-      let lang = 'Haskell'
-    else
-      let lang = ''
-    endif
-
-    let url = 'http://www.google.de\#q\=' . lang . '+' . enckw
-    let comm = 'silent !open ' . url
-    exec comm
-endfun
 
 fun! OpenFinder()
   exec 'silent !open .'
@@ -2218,6 +2223,11 @@ fun! GrepSearch(selType, mode)
     endif
 endfun
 
+fun! GoogleSearchStr()
+    let keyw = expand("<cword>")
+    let url = 'http://www.google.de\#q\=' . keyw
+    return url
+endfun
 
 fun! Google()
     let keyw = expand("<cword>")
@@ -2231,6 +2241,33 @@ fun! GoogleVisSel()
     let enckw = UrlEncode(keyw)
     let url = 'http://www.google.de\#q\=' . enckw
     let comm = 'silent !open ' . url
+    exec comm
+endfun
+
+fun! GoogleSearch(selType)
+    if a:selType == "word"
+      let keyw = expand("<cword>")
+    else
+      let keyw = Get_visual_selection()
+    endif
+    let enckw = UrlEncode(keyw)
+    let extension = GetExtension()
+    if extension == "purs"
+      let lang = 'PureScript'
+    elseif extension == "hs"
+      let lang = 'Haskell'
+    else
+      let lang = ''
+    endif
+    let url = 'http://www.google.de\#q\=' . lang . '+' . enckw
+    let comm = 'silent !open ' . url
+    exec comm
+endfun
+
+fun! OpenVisSel()
+    let keyw = Get_visual_selection()
+    let enckw = UrlEncode(keyw)
+    let comm = 'silent !open ' . enckw
     exec comm
 endfun
 
@@ -2275,7 +2312,6 @@ fun! HoogleForCursorWord()
       wincmd j
     endif
 endfun
-
 
 fun! HoogleForVisSel()
     let g:originFile = expand('%')
