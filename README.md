@@ -1,7 +1,7 @@
 # dotfiles
 VimScripts for Haskell &amp; Purescript dev
 
-!(https://github.com/andreasthoelke/dotfiles/blob/master/.vim/screenshots/ScreenShot1.png)
+![](https://github.com/andreasthoelke/dotfiles/blob/master/.vim/screenshots/ScreenShot1.png)
 
 ### Features:
 
