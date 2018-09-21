@@ -332,4 +332,20 @@ command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
 " ----------------------------------------------------------------------------------
 
 
+" DO THIS TO PUT A FILTERED ERROR LIST FROM NEOMAKE INTO A BUFFER:
+" 1. create an empty buffer:
+" :e temp2
+" 2. prevent automatic line breaks:
+" set textwidth?
+" set textwidth=400
+" 3. yank the filter code:
+" filter(getqflist(), 'v:val.type == "w"')
+" 4. Run and insert the result into the buffer:
+" i<c-r>=<c-r>"<cr>
+" insert mode, control + r, =, (then in the comman line:) (again!) control + r, ", return!
+
+" {'lnum': 8, 'bufnr': 2, 'col': 1, 'valid': 1, 'vcol': 0, 'nr': -1, 'type': 'w', 'pattern': '', 'text': '[-Wunused-imports]'}
+" {'lnum': 11, 'bufnr': 2, 'col': 1, 'valid': 1, 'vcol': 0, 'nr': -1, 'type': 'w', 'pattern': '', 'text': '[-Wunused-imports]'}
+" {'lnum': 16, 'bufnr': 2, 'col': 1, 'valid': 1, 'vcol': 0, 'nr': -1, 'type': 'w', 'pattern': '', 'text': '[-Wunused-imports]'}
+
 

@@ -988,6 +988,10 @@ hi NeomakeWarningSign ctermfg=white
 hi NeomakeIntoSign    ctermfg=white
 hi NeomakeMessageSign ctermfg=white
 
+" let g:neomake_open_list=2
+" let g:neomake_list_height=10
+
+
 command! SignsClear :sign unplace *
 " Neomake defaults
 let g:neomake_error_sign = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
@@ -1170,10 +1174,8 @@ nnoremap ta :call TraceTopLevelValue()<cr>
 function! GhcModQuickFix()
   " for unite.vim and unite-quickfix
   " :Unite -no-empty quickfix
-
   " for ctrlp
   :CtrlPQuickfix
-
   " for FuzzyFinder
   ":FufQuickfix
 endfunction
@@ -1922,16 +1924,29 @@ endfunction
 autocmd BufEnter *.hs set syntax=purescript
 
 " Refesh/force some style on the quickfix list:
-autocmd BufReadPost quickfix :call QuickfixRefeshStyle()
+"
+" autocmd BufReadPost quickfix :call QuickfixRefeshStyle()
 " example: this also worked:
 " autocmd QuickFixCmdPost * :call WinDo( "set syntax=purescript" )
+autocmd QuickFixCmdPost * :call QuickfixRefeshStyle()
 
 function! QuickfixRefeshStyle()
-  exec 'set syntax=purescript'
-  exec 'setlocal modifiable'
-  exec 'call PurescriptUnicode()'
-  exec 'setlocal nomodifiable'
+  if len( filter(getqflist(), 'v:val.type == "e"') ) > 0 
+    exec 'copen'
+    exec 'set syntax=purescript'
+    exec 'setlocal modifiable'
+    exec 'call PurescriptUnicode()'
+    exec 'setlocal nomodifiable'
+    wincmd p
+  else
+    exec 'cclose'
+  endif
 endfunction
+
+" num of 'valid' entries in quickfixlist: 
+" echo len(filter(getqflist(), 'v:val.valid'))
+
+
 
 " Just like windo, but restore the current window when done.
 function! WinDo(command)
