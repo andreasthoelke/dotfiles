@@ -19,7 +19,7 @@ The result of the evaluation is inserted below:
 See `ReplEvalExpr_Insert` in `.vimrc` and `PursEval` in `.vim/utils/termin1.vim`
 
 #### Import Haskell identifiers using Hoogle and Hsimport:
-1. Use `gsd` ("go search docs") on a missing identifier or e.g. `:Hoogle replicateM`/ or `:Hoogle (Applicative m) ⇒ Int → m a → m [a]`
+1. Use `gsd` ("go search docs") on a missing identifier or run (e.g.) `:Hoogle replicateM`/ or `:Hoogle (Applicative m) ⇒ Int → m a → m [a]`
 2. In the hoogle list of available identifiers (see screenshot above), go to the line/version you want to import and type `<leader>ii` to import the identifier, confirm the identifier has been added to the import section of your source file.
   
 See `HoogleImportIdentifier` in `.vimrc`
