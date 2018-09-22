@@ -7,7 +7,7 @@ VimScripts for Haskell &amp; Purescript dev
 
 #### Run Repl/Ghci function calls in the code buffer (Haskell & Purescript):
 
-In the screenshot/code example above run 'gei' ("go evaluate insert") on this line:
+In the screenshot/code example above run `gei` ("go evaluate insert") on this line:
 
 ```
 -- getDog14 andr1
@@ -20,7 +20,6 @@ The result of the evaluation is inserted below:
 
 #### Import Haskell identifiers using Hoogle and Hsimport:
 1. Use `gsd` ("go search docs") on a missing identifier or e.g. `:Hoogle replicateM`/ or `:Hoogle (Applicative m) ⇒ Int → m a → m [a]`
-2. In the hoogle list of available identifiers (see screenshot above), go to the line/version you want to import and 
-" type `<leader>ii` to import the identifier, confirm the identifier has been added to the import section of your source file.
+2. In the hoogle list of available identifiers (see screenshot above), go to the line/version you want to import and type `<leader>ii` to import the identifier, confirm the identifier has been added to the import section of your source file.
   
 (See `HoogleImportIdentifier` in `.vimrc`)
