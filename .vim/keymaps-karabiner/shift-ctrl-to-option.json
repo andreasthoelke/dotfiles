@@ -1,0 +1,46 @@
+{
+    "title": "Caps_Lock + Shift_R to Option",
+    "rules": [
+        {
+            "description": "Caps_Lock + Shift_R to Option",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "right_shift",
+                        "modifiers": {
+                            "mandatory": [
+                                "caps_lock"
+                            ]
+                        }
+                    },
+                    "to": {
+                        "modifiers": [
+                            "left_option"
+                        ]
+                    },
+                    "type": "basic"
+                }
+            ]
+        },
+        {
+            "description": "Caps_Lock + Shift_R to Option",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "right_shift",
+                        "modifiers": {
+                            "mandatory": [
+                                "caps_lock"
+                            ]
+                        }
+                    },
+                    // NOTE JSON breaks here:
+                    "to": <%= to([["left_control"]]) %>,
+                    // Map to multiple modifiers:
+                    "to": <%= to([["tab", ["left_command", "left_shift"]]]) %>
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}

@@ -3,10 +3,15 @@
 
 path+=('/Users/andreas.thoelke/.local/bin')
 path+=('/Users/andreas.thoelke/Library/Python/3.6/bin')
+path+=('/Users/andreas.thoelke/.cargo/bin')
 
-# Path to oh-my-zsh installation.
+# View man pages in vim:
+export MANPAGER="nvim -c 'set ft=man' -"
+
+# Path to oh-my-zsh installation. (why is this an env variable?)
 export ZSH=/Users/andreas.thoelke/.oh-my-zsh
 
+# TODO When is this used?
 export PROJ=/Users/andreas.thoelke/Documents/Haskell/4/
 
 export LANG=en_US.UTF-8
@@ -15,11 +20,17 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export TERM="xterm-256color"
 
+# Open `man` pages in Chrome (not in less):
+# export PAGER="col -b  | open -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome -f"
+# export PAGER="col -b  | open -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome -f"
+
 export VIMCONFIG=~/.vim
 export VIMDATA=~/vimtmp
 
 # alias hdevtools='stack exec --no-ghc-package-path --package hdevtools hdevtools -- '
 
+# Kitty is a terminal (similar to Alacritty)
+export KITTY_CONFIG_DIRECTORY="/Users/andreas.thoelke/.config/kitty"
 
 # Neovim Remote: ---------------------------------------------------------
 alias vi="nvr -l "
@@ -35,8 +46,12 @@ alias vicd='nvr -c "cd $(pwd) | pwd"'
 # to the current dir in the terminal
 # Neovim Remote: ---------------------------------------------------------
 
+alias svim='nvim -u ~/.SpaceVim/vimrc'
 
 NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
+# Shell prompt config created by promptline.vim
+source ~/.promptline.sh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -52,15 +67,6 @@ ZSH_THEME="robbyrussell"
 # sensitive completion must be off. _ and - will be interchangeable.
 HYPHEN_INSENSITIVE="true"
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
 # Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
 
@@ -75,16 +81,6 @@ ENABLE_CORRECTION="true"
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
@@ -92,44 +88,71 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-syntax-highlighting)
+
+plugins=(
+   git 
+   zsh-syntax-highlighting 
+   # fast-syntax-highlighting
+   hub
+   copyfile # "copyfile <filename>" to copy text of file into clipboard
+   web-search # "google ..", "wiki" "!w"
+   # zsh_reload # use "src" to reload .zshrc in all running shells
+   )
 
 source $ZSH/oh-my-zsh.sh
 
+
+
+
+
+
 # User configuration
 
-# export MANPATH="/usr/local/man:$MANPATH"
+# Activate vim bindings
+bindkey -v
 
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
-#
-# Example aliases
+
+alias sourcez="source ~/.zshrc"
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 
+# App aliases:
+# /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+
+alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
+# Tested examples: 
+# /Applications/Chromium.app/Contents/MacOS/Chromium --window-size=200,500 --window-position=0,20
+# chromium --window-size=800,400 --window-position=222,222
 
 function chpwd() {
     emulate -L zsh
     ls -a
 }
+
+# Use MacOS Preview app to view man pages:
+function pman() {
+    man -t ${@} | open -f -a /Applications/Preview.app/
+}
+
+# TIP: Quickly create and delete folders: "mkcd test2" - "rmcurdir"
+#      Or rather just the classic way: "mkdir test3 && cd $_", "echo "test" > test3", "rm *", "cd ..", "rmdir test3"
+# Make dir and change into it
+function mkcd ()
+{
+    mkdir -p -- "$1" &&
+      cd -P -- "$1"
+}
+
+alias rmcurdir='rmdir `pwd` && cd ..'
+
+
+
 
 
 
