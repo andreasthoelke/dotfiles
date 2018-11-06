@@ -77,41 +77,11 @@ set background=dark
 
 hi vimString guifg=#009900
 
-hi clojureSymbol guifg=#D7D7D7
-
 " darker comments are difficult to view in bright rooms ..
 " hi clojureComment guifg=#434547
 hi clojureComment guifg=#6D7174
 " colorscheme molokai
 
-" hi clojureString guifg=#167E6F  gui=italic
-" hi clojureNumber guifg=#167E6F  
-" hi clojureBoolean guifg=#299A6A  
-" hi clojureConstant guifg=#508351  
-
-" hi clojureRegexp guifg=#696969  
-
-" hi clojureKeyword guifg=#2097EE
-
-" hi clojureFunc guifg=#F08D24
-" hi clojureMacro guifg=#F0E624
-
-" Non function reference from REPL
-" hi clojureVariable guifg=#8E69C9 
-" hi clojureAnonArg guifg=#B01C1C
-
-" hi clojureDefine guifg=#1AEAEA 
-" hi clojureSpecial guifg=#F0E624 gui=italic
-" hi clojureCond guifg=#E8341C gui=italic
-" hi clojureRepeat guifg=#F0E624 gui=italic,bold
-
-" hi clojureMeta guifg=#E8341C
-" hi clojureDeref guifg=#E8341C
-" hi clojureDispatch guifg=#1AEAEA
-" hi clojureVarArg guifg=#E8341C
-" hi clojureQuote guifg=#E8341C
-
-"  gui=bold
 
 hi Boolean1         guifg=#8E69C9
 hi Boolean2         guifg=#ff6600
@@ -127,8 +97,6 @@ hi Boolean10         guifg=#F1E11D
 hi Boolean11         guifg=#F0E624
 hi Boolean12         guifg=#F08D24
 hi Boolean13         guifg=#8a5c8d  gui=italic
-
-
 
 
 hi Boolean         guifg=#AE81FF
@@ -233,6 +201,7 @@ else
    hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
    hi Comment         guifg=#7E8E91
    " hi CursorLine                    guibg=#293739
+   hi CursorLine                    guibg=#222525
    hi CursorLineNr    guifg=#FD971F               gui=none
    " hi CursorColumn                  guibg=#293739
    " hi ColorColumn                   guibg=#232526
