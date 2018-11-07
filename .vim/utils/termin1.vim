@@ -312,7 +312,6 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " --------------------------------------------------------------------------------
 
 " GIT WORKFLOW:  --------------------------------------------------------------------------
-" Make a git commit to dotfiles of .vimrc , etc to https://github.com/andreasthoelke/dotfiles  
 " Git Commit: (using Fugitive)
 " 1. "Gstatus" then use "-" to stage/unstage a changed file.
 " 2. Review Changes: "D" (diff) on the file to view what has changed compared to the last commit.
@@ -337,8 +336,7 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " nmap [c <Plug>GitGutterPrevHunk
 " you may use GitGutterUndoHunk (leader hr) to see what was changed
 " 4. Use a temp buffer to make notes for the commit message
-" 5. Run "git add .vimrc .vim/utils/termin1.vim .vim/colors/molokai.vim" (copy
-" paste this string? 
+" 5. Run "git add .vimrc .vim/utils/termin1.vim .vim/colors/molokai.vim" (copy paste this string? 
 " or alternatively:
 " ➜  ~ git:(master) ✗ git add .vimrc
 " ➜  ~ git:(master) ✗ git add .vim/utils/termin1.vim
@@ -351,7 +349,13 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " "git remote add origin https://github.com/andreasthoelke/dotfiles.git", 
 " "git push -u origin master" `-u` add upstream tracking(!?)
 " "git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
-"
+" -- TODO insert the branch merge example here!!
+
+
+" Three Statemanagement Mechanisms: Working Directory |>>| Staged Snapshot |>>| Commit History
+" Make a git commit to dotfiles of .vimrc , etc to https://github.com/andreasthoelke/dotfiles  
+
+
 " VIMIUM WORKFLOW:
 " "f" to open link, 
 " "<c-[>" to cancel
