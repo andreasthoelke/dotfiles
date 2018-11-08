@@ -313,6 +313,7 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 
 " GIT WORKFLOW:  --------------------------------------------------------------------------
 " Git Commit: (using Fugitive)
+" Make a git commit to dotfiles of .vimrc , etc to https://github.com/andreasthoelke/dotfiles  
 " 1. "Gstatus" then use "-" to stage/unstage a changed file.
 " 2. Review Changes: "D" (diff) on the file to view what has changed compared to the last commit.
 "      Use "]c" to navigate and "do" in the right split to revert/undo a changed 'hunk' (go back to what was is in the last commit)
@@ -336,11 +337,7 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " nmap [c <Plug>GitGutterPrevHunk
 " you may use GitGutterUndoHunk (leader hr) to see what was changed
 " 4. Use a temp buffer to make notes for the commit message
-" 5. Run "git add .vimrc .vim/utils/termin1.vim .vim/colors/molokai.vim" (copy paste this string? 
-" or alternatively:
-" ➜  ~ git:(master) ✗ git add .vimrc
-" ➜  ~ git:(master) ✗ git add .vim/utils/termin1.vim
-" ➜  ~ git:(master) ✗ git add .vim/colors/molokai.vim
+" 5. Run "git add .vimrc .vim/utils/termin1.vim .vim/colors/molokai.vim"
 " 6. After confirming with "git status" again, with the commit message in the yank register, create the 
 " following line in the terminal (enter "git commit -m '" then paste the yanked text.
 " git commit -m "Spell command, use Stackage seach, HaskellProjectName, haskell- git- vim- process documentation in termin1"
@@ -353,8 +350,16 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 
 
 " Three Statemanagement Mechanisms: Working Directory |>>| Staged Snapshot |>>| Commit History
-" Make a git commit to dotfiles of .vimrc , etc to https://github.com/andreasthoelke/dotfiles  
 
+" [alias]
+" 	co = checkout
+"   ci = commit
+"   st = status
+"   br = branch
+"   unstage = reset HEAD --
+"   last = log -1 HEAD
+"   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+"   visual = !gitk
 
 " VIMIUM WORKFLOW:
 " "f" to open link, 
