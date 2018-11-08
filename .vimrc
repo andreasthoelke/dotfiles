@@ -2230,6 +2230,7 @@ nnoremap <c-w>< 4<c-w><
 nnoremap <c-f> gt
 nnoremap <c-d> gT
 
+" Move tab commands are vim-repeatable
 map <localleader>t[ <Plug>TabmoveLeft
 map <localleader>t] <Plug>TabmoveRight
 map <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>TabmoveLeft")<cr>
