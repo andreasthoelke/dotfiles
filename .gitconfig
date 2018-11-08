@@ -14,7 +14,7 @@
   br = branch
   unstage = reset HEAD --
   last = log -1 HEAD
-  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  hist = log --pretty=format:\" %s%d | %ad | %h \" --graph --date=short
   visual = !gitk
 data=short
   type = cat-file -t
