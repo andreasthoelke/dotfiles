@@ -7,11 +7,16 @@
 # Ignore files and folders in the root
 /*
 
-# Recursively allow files under a specific folder
-# NOTE: This does not seem to work ..?
-# !/.vim/notes/**
+# Allow files under a specific folder
+!/.vim
+/.vim/*
+!/.vim/notes
+!/.vim/utils
 
-# Seems it's not seeded to list this, as one can just "git add -f <file>" as long as there are few files
-# !.gitignore
+# It seems it's not seeded to list individual files as one can just "git add -f <file>" as long as there are few files
+!.gitignore
+
+
+
 
 
