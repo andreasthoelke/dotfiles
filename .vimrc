@@ -2416,6 +2416,16 @@ command! Diff execute 'w !git diff --no-index % -'
 
 
 
+" Fugitive Gitv: -----------------------------------------------------------
+
+nnoremap <leader>gv :Gitv<cr>
+nnoremap <leader>gV :Gitv!<cr>
+
+nnoremap <leader>gs :Gstatus<cr>
+
+" Fugitive Gitv: -----------------------------------------------------------
+
+
 " ----------------------------------------------------------------------------------
 "  Launching external apps
 command! Browser :call OpenVisSel()
