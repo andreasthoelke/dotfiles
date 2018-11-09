@@ -16,7 +16,8 @@
     * `<c-w>n` `:new` below
     * `<c-w>N` `:vnew` left
   with existing buffer/file
-    * CtrlP `o` + `h/v`
+    * CtrlP `o` + `h/v` 
+    * TODO / Issue: above still does not force a split with exsisting buffer
 
 
 ### New vim-Tab

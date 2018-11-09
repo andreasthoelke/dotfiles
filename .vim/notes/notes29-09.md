@@ -560,6 +560,7 @@ terminate markdown segment
 sneak first result is not highlighted
 
 test gregsexton/gitv
+just did this!
 
 new register /copy paste plugin
 

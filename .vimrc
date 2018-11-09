@@ -22,7 +22,7 @@ Plug 'majutsushi/tagbar'
 " Git Integration: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'gregsexton/gitv'
+Plug 'gregsexton/gitv', {'on': ['Gitv']}
 
 Plug 'mileszs/ack.vim'
 " Search integration
