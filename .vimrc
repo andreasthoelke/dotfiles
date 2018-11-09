@@ -2423,6 +2423,11 @@ nnoremap <leader>gV :Gitv!<cr>
 
 nnoremap <leader>gs :Gstatus<cr>
 
+let g:Gitv_CustomMappings = {
+  \'update': 'r',
+\}
+
+
 " Fugitive Gitv: -----------------------------------------------------------
 
 
