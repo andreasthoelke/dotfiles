@@ -564,6 +564,8 @@ just did this!
 
 new register /copy paste plugin
 
+use augroup to allow safely reloading my vimrc. can use the `au!` patterns to first remove commands
+in of that group
 
 -------------
 

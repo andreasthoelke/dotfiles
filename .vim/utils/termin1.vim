@@ -351,6 +351,21 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 
 " Three Statemanagement Mechanisms: Working Directory |>>| Staged Snapshot |>>| Commit History
 
+" Staging To Git Index: -----------------------------------
+" Fugitive status: "<leader>gs", "<cr>" to view the file (nicely cancels the diff mode as well). 
+" "D" to get to diff mode.  Use ":Gwrite" on the working copy to stage the entire file. 
+" "u"/undo in the (left side) index version of the file will make the diff/difference appear again.  use "diffupdate" to update the diff
+" Use "Gwrite" from the index version of the file (left side of diff) to "OVERWRITE the working copy with what is currently in the index/stage (which may be what is in the commit)"
+" Alternatively you can "Gread" from the working copy to read from the index/stage and update the working copy to with it.
+" Staging Hunks Of Changes: With the cursor on a hunk on the right side of a diff (working copy) do
+" ":diffput" or "dp" to put the change to the diff-split left buffer (into the index/stage buffer). Now do
+" ":w" to write the index/stage buffer! Note that the file now shows up a "staged for commit" *and* as "unstaged change", as there are still changes in the file that are not staged.
+" also "diffget" or "do" ("optain") in the working copy will undo the hunk-change/ revert it back to what was is in the past commit.
+" "git diff" in the terminal compares the working copy with what is in the last commit .. vs. 
+" "git diff --cached" compared the working copy with what is in the current index/stage
+
+" Staging To Git Index: -----------------------------------
+
 " [alias]
 " 	co = checkout
 "   ci = commit

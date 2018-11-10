@@ -289,8 +289,8 @@ set shortmess+="mW"
 
 " Vim Sessions: -----------------------------------------------------------------------
 
-nnoremap <localleader>sd :OpenSession! default<cr>
-nnoremap <localleader>sl :OpenSession!<cr>
+nnoremap <leader>sd :OpenSession! default<cr>
+nnoremap <leader>sl :OpenSession!<cr>
 " Load locked session after a vim crash
 command! SessionLoadLocked OpenSession!
 command! SessionShowName echo xolox#session#find_current_session()
@@ -1151,6 +1151,8 @@ let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 
 
 " GitGutter: -------------------------------------------------------
+let g:gitgutter_map_keys = 0
+
 nmap <leader>gg :GitGutterToggle<cr>
 " Note: Gutter updates on save!
 
@@ -1735,6 +1737,10 @@ nnoremap D "_d
 
 
 " Folding Folds: ------------------------------------------------
+
+" Partially expand syntax and expression based folding (of markdown and gitv plugins)
+autocmd Syntax git set foldlevel=1
+autocmd FileType markdown set foldlevel=1
 
 nnoremap z<space> za
 nnoremap z] zo

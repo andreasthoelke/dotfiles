@@ -13,6 +13,7 @@
   st = status
   br = branch
   unstage = reset HEAD --
+  ap = add --patch
   last = log -1 HEAD
   hist = log --pretty=format:\" %s%d | %ad | %h \" --graph --date=short
   visual = !gitk
