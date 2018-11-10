@@ -368,6 +368,13 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " Use "c-w c" on the index/left split to get a proper working buffer back, after a Gdiff is reconciled and/or a commit finished with ":wq", 
 " Gitgutter signs update on save and relate to the last commit/ don't consider the index/stage
 " To update "Gstatus" preview window, you have to run the command again
+" "Gedit :%" to get the index/staged version of the current file into a (temp) buffer
+" "Gdiff" compares to the index/staged version of the current file. "Gwrite" on the index/stage/left
+" buffer will overwrte the changes in the working copy. Alternatively you could do "Gread" from the working tree/copy.
+" Gitgutter Stage Hunk: - "leader ha" "hunk add" stages a hunk, but the effect can not be seen in gitgutter.
+" Gitgutter Undo Hunk:  - "leader hr" rolls back the changed code segment to the *index/stage*, not to the last commit
+" Staging Partial Hunks: In the diff split on the working copy/right buffer, select a range of lines of a bigger hunk, then ":diffput" only these lines into the index/stage.
+
 
 " Staging To Git Index: -----------------------------------
 
