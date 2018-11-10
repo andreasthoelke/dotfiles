@@ -363,9 +363,11 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " also "diffget" or "do" ("optain") in the working copy will undo the hunk-change/ revert it back to what was is in the past commit.
 " "git diff" in the terminal compares the working copy with what is in the last commit .. vs. 
 " "git diff --cached" compared the working copy with what is in the current index/stage
-" "Gwrite" to just stages the current file. Basically "!git add %"
+" "Gwrite" to just stages the current file. Basically "!git add %". ":Git add %" works but requires the buffer wipe action to close the neovim terminal that is run.
 " Note: In Gstatus you can diff the index/stage to the prev commit. And in the "Changes not staged .." section you can diff the working copy against the index/stage.
-" 
+" Use "c-w c" on the index/left split to get a proper working buffer back, after a Gdiff is reconciled and/or a commit finished with ":wq", 
+" Gitgutter signs update on save and relate to the last commit/ don't consider the index/stage
+" To update "Gstatus" preview window, you have to run the command again
 
 " Staging To Git Index: -----------------------------------
 
