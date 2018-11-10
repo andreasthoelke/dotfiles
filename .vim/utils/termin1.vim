@@ -363,6 +363,9 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " also "diffget" or "do" ("optain") in the working copy will undo the hunk-change/ revert it back to what was is in the past commit.
 " "git diff" in the terminal compares the working copy with what is in the last commit .. vs. 
 " "git diff --cached" compared the working copy with what is in the current index/stage
+" "Gwrite" to just stages the current file. Basically "!git add %"
+" Note: In Gstatus you can diff the index/stage to the prev commit. And in the "Changes not staged .." section you can diff the working copy against the index/stage.
+" 
 
 " Staging To Git Index: -----------------------------------
 

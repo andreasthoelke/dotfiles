@@ -541,6 +541,10 @@ saving from ctrlP, or google "save all unsaved buffer .. (dangerous!)
 
 
 airline config to show buffername
+**
+
+
+**
 
 how are changes recorded in vim?
 
