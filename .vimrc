@@ -32,7 +32,7 @@ Plug 'rking/ag.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " Creates tmux colors e.g. at ".tmuxline.conf"
-" Plug 'edkolev/tmuxline.vim' 
+" Plug 'edkolev/tmuxline.vim'
 " This inserts unicode icons file-type into airline/bufferline, nerdtree and ctrlp!
 " Requires a patched font ("Nerd Font" e.g. "family: MesloLGLDZ Nerd Font") which is set in "alacritty.yaml" or "kitty.conf" or ITerm2 settings.
 Plug 'ryanoasis/vim-devicons'
@@ -82,8 +82,8 @@ Plug 'tpope/vim-repeat'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'elzr/vim-json'
 Plug 'leafgarland/typescript-vim'
-Plug 'mityu/vim-applescript'  
-Plug 'plasticboy/vim-markdown', {'for': 'markdown'} 
+Plug 'mityu/vim-applescript'
+Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'jszakmeister/markdown2ctags'
 " Tmux .config features
 Plug 'tmux-plugins/vim-tmux'
@@ -342,7 +342,7 @@ set viewdir=~/vimtmp/view//
 " au BufWritePost ?* mkview
 " au BufWinEnter ?* silent loadview
 
-" Local Plugin Patch: 
+" Local Plugin Patch:
 " ~/.vim/plugged/vim-session/autoload/xolox/session.vim modefied code: commented this line:
   " call xolox#session#save_qflist(a:commands)
 " to prevent "call setqflist([])" as this sometimes throws errors on session load.
@@ -352,7 +352,7 @@ set viewdir=~/vimtmp/view//
 
 " Shared Persistence: ---------
 command! ShadaClear :call ClearShada()
-abbrev sc ShadaClear 
+abbrev sc ShadaClear
 function! ClearShada()
     echo "Shada file deleted!"
     silent exec "!rm" . ' ~/.local/share/nvim/shada/main.shada'
@@ -554,7 +554,7 @@ nnoremap <leader>. @:
 " nnoremap , @:
 
 " Editing Past Commands: (usage example)
-" run "call SomeTest1( 'hithere4' )", do "q;www<c-a><cr>" to see "hithere5" echoed. 
+" run "call SomeTest1( 'hithere4' )", do "q;www<c-a><cr>" to see "hithere5" echoed.
 " "<cr>" in insert mode runs the command, no need for "<esc>"
 " you can "/" seach for past commands in the command history!
 " Enter Editing A Command: hit "<c-f>" in command mode!
@@ -678,9 +678,9 @@ endfun
 " set autoindent
 " set smartindent
 
-" How ">>" will indent lines 
-" set shiftwidth=2 
-" set shiftround 
+" How ">>" will indent lines
+" set shiftwidth=2
+" set shiftround
 
 nnoremap <leader>>> :call IndentToCursorH()<CR>
 " TODO: maybe make a mapping "dwkwj<leader>>>" to indent haskell binds:
@@ -688,8 +688,8 @@ nnoremap <leader>>> :call IndentToCursorH()<CR>
   "           ← decode (T.encodeUtf8 jsonTxt) ?? "Not a valid json!"
 "
 function! IndentToCursorH()
-  exec ("left " . (virtcol('.') - 1)) 
-  " exec ("left " . col('.')) 
+  exec ("left " . (virtcol('.') - 1))
+  " exec ("left " . col('.'))
 endfun
 
 " Indenting: -------------------------------------
@@ -803,7 +803,7 @@ nnoremap <leader>s} y}:@"<cr>
 " nnoremap <leader>ss yy:@"<cr>
 nnoremap <leader>ss "tyy:@t<cr>
 " free mappings? <leader>s..
-" TODO these map don't seem ideal. mnemonic not destinct enough? 
+" TODO these map don't seem ideal. mnemonic not destinct enough?
 command! SourceLine :normal yy:@"<cr>:echo 'Line sourced!'<cr>
 
 " Call Func: call the function name in cursor line, without args
@@ -843,7 +843,7 @@ command! Zshrc   :e ~/.zshrc
 command! ZshOhMy :e ~/.oh-my-zsh/oh-my-zsh.sh
 command! Vimrc   :e ~/.vimrc
 command! Cabal   :e *.cabal
-cabbrev cab Cabal 
+cabbrev cab Cabal
 
 " Insert the $PATH shell variable
 command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
@@ -858,7 +858,7 @@ command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
 " /Users/andreas.thoelke/.local/bin <<<<<< install executables HERE!!!
 " /Users/andreas.thoelke/Library/Python/3.6/bin
 
-" TIP: install locations for executables: 
+" TIP: install locations for executables:
 " /Users/andreas.thoelke/.local/bin
 
 " ignored? based on `:checkhealth`
@@ -914,7 +914,7 @@ function! ExtractEvalExpFromLineStr( lineStr )
 
     if l:lineList[0] == '--'
       " it's a commented line
-      " → use the second word onwards 
+      " → use the second word onwards
       return join( l:lineList[1:], ' ')
 
     elseif l:lineList[1] == '='
@@ -1233,7 +1233,7 @@ nnoremap <silent> <leader>gd :sp<CR>:call GotoDefinition()<CR>
 " Type Inserts: ----------------------------------------------------
 " nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
 nnoremap tt :call TypeInsert( )<cr>
-" vnoremap tt :call TypeInsert( Get_visual_selection() )<cr> 
+" vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
 " TODO: problem: PSCIDEgetKeyword only work when PSCIDE is started/ throws error with Haskell
 nnoremap tg :InteroGenTypeInsert<cr>
 vnoremap tg :InteroGenTypeInsert<cr>
@@ -1257,7 +1257,7 @@ nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
 " nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
 " vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
 
-" Evaluate the entire line 
+" Evaluate the entire line
 " nnoremap gel :call ReplEvalExpr_Insert( getline('.') )<cr>
 
 " Eval the current keyword
@@ -1437,7 +1437,7 @@ let g:easy_align_ignore_groups = ['Comment', 'String']
 "   | WithShadow Shadow Drawing
 " 1. uncomment this block first, then with the cursor on the second line:
 " 2. "<leader>ga}2 " aligns the rest of the block to the 2nd <space>, and then
-" 3. "<leader>ga}3 " to align to the 3rd <space> as well 
+" 3. "<leader>ga}3 " to align to the 3rd <space> as well
 
 " Align Example:
 " (using Tabularize or EasyAlign with regex)
@@ -1553,7 +1553,7 @@ endfun
 " stopping here!
              
 
-" TIP: print the file type: ":echo &ft" 
+" TIP: print the file type: ":echo &ft"
 " (returns filetype as literal string, e.g. 'haskell', instead of 'hs')
 " (note the system-variable expression type "&ft". This gets resolved to the file type)
 " TIP: copy a past ex-command/vim-shell command: hit "q:"
@@ -1586,6 +1586,7 @@ endfun
 " get back to nvim.
 " TODO: delete long space between words: "elldw" example: ^ord            next
 " TIP: remove trailing whitespace: ":%s/\s\+$//e"
+" Show trailing whitespace only after some text (ignores blank lines): /\S\zs\s\+$
 " TIP: use ":earlier" and ":later" to jump the ":undolist" back and forth in
 " *time* (disregarding branches of the undotree). use ":earlier 10m" or ".. 5h" to go back 10 minutes/ 5 hours
 " TIP: Vim-anywhere replacement: use: "alfred vim(mac vim)", edit text, then
@@ -1606,7 +1607,7 @@ endfun
 " Move back a character.
 "
 " Tip: Link local repo to github remote repo:
-" "git remote add origin https://github.com/andreasthoelke/dotfiles.git", 
+" "git remote add origin https://github.com/andreasthoelke/dotfiles.git",
 " "git push -u origin master" `-u` add upstream tracking(!?)
 " "git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
 "
@@ -1830,7 +1831,7 @@ nnoremap <leader>om :CtrlPMark<cr>
 
 let g:SignatureIncludeMarks = 'ABCDEFGHIJKLMN'
 
-" Note Issue: Deleted markers (with "m-") are currently recreated after (auto!) session save/load a temp fix is to "ShadaClear". 
+" Note Issue: Deleted markers (with "m-") are currently recreated after (auto!) session save/load a temp fix is to "ShadaClear".
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
 " command! DelMarks :delmarks ABCDEFGHIJKLMN
 
@@ -2058,7 +2059,7 @@ autocmd BufEnter *.hs set syntax=purescript
 autocmd QuickFixCmdPost * :call QuickfixRefeshStyle()
 
 function! QuickfixRefeshStyle()
-  if len( filter(getqflist(), 'v:val.type == "e"') ) > 0 
+  if len( filter(getqflist(), 'v:val.type == "e"') ) > 0
     exec 'copen'
     exec 'set syntax=purescript'
     exec 'setlocal modifiable'
@@ -2073,7 +2074,7 @@ endfunction
 " Demo Examples: this also worked:
 " autocmd BufReadPost quickfix :call QuickfixRefeshStyle()
 " autocmd QuickFixCmdPost * :call WinDo( "set syntax=purescript" )
-" num of 'valid' entries in quickfixlist: 
+" num of 'valid' entries in quickfixlist:
 " echo len(filter(getqflist(), 'v:val.valid'))
 
 " Quickfix List: -------------------------------------------------
@@ -2083,7 +2084,7 @@ endfunction
 " CTRLP:  --------------------------------------------------
 let g:ctrlp_cmd = 'CtrlPBuffer'
 
-" Don't list files fromm certain folders: 
+" Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\.git$\|\.cache$\|\.stack$\|\.stack-work$\|vimtmp\|undo\bower_components$\|dist$\|node_modules$\|project_files$\|test$',
     \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
@@ -2125,7 +2126,7 @@ let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
 let g:ctrlp_max_files = 2000
 let g:ctrlp_max_depth = 10
-let g:ctrlp_clear_cache_on_exit = 0 
+let g:ctrlp_clear_cache_on_exit = 0
 " --- quickfix & loclist ----
 
 " Demo function:
@@ -2172,7 +2173,7 @@ nnoremap <c-w>S :vs<cr>
 nnoremap <c-w>N :vnew<cr>
 " Note: the standard map "<c-w>s" & "<c-w>n" will split below
 
-" Resize: Using <c-./,> maps from Karabiner        
+" Resize: Using <c-./,> maps from Karabiner
 " Note: Can't Control-map non-alphanum chars like "."/period:
 " nnoremap <c-.> :exec "resize +4"<cr>
 nnoremap ≥ :vertical resize +4<cr>
@@ -2242,9 +2243,9 @@ map <localleader>t] <Plug>TabmoveRight
 map <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>TabmoveLeft")<cr>
 map <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>
 
-" zoom/duplicate the current buffer in a new tab 
-nnoremap <c-w>t :tabe %<cr> 
-nnoremap <c-w><c-t> :tabe %<cr> 
+" zoom/duplicate the current buffer in a new tab
+nnoremap <c-w>t :tabe %<cr><c-o>
+nnoremap <c-w><c-t> :tabe %<cr><c-o>
 
 " close tab and go to the previous window
 nnoremap <localleader>tc :call CloseTabGoToPrevious()<cr>
@@ -2541,7 +2542,7 @@ nmap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 
   
-" Seach Vim Help and fill the quickfix list with the results 
+" Seach Vim Help and fill the quickfix list with the results
 command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
 cnoreabbrev hg HelpGrep
 
@@ -2564,7 +2565,7 @@ command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
 runtime plugin/grepper.vim    " initialize g:grepper with default values
 let g:grepper.stop = 20
 
-autocmd! FileType GrepperSide 
+autocmd! FileType GrepperSide
   \  silent execute 'keeppatterns v#'.b:grepper_side.'#'
   \| set syntax=purescript
   \| silent normal! ggn
@@ -3209,11 +3210,11 @@ com! -nargs=+ -complete=command Windofast noautocmd call WinDo(<q-args>)
 command! JSONFormat exec "%!python -m json.tool"
 
 " Chrome Bookmarks: a simple big JSON file "Library/Application\ Support/Google/Chrome/Default/Bookmarks"
-command! ChromeBookmarks exec ":tabe Library/Application\ Support/Google/Chrome/Default/Bookmarks" 
+command! ChromeBookmarks exec ":tabe Library/Application\ Support/Google/Chrome/Default/Bookmarks"
 
 
 " Redirect Vim Messages: --------------------------------------------------------------
-" Code from https://stackoverflow.com/questions/2573021/how-to-redirect-ex-command-output-into-current-buffer-or-file 
+" Code from https://stackoverflow.com/questions/2573021/how-to-redirect-ex-command-output-into-current-buffer-or-file
 function! RedirMessages(msgcmd, destcmd)
   redir => message
   " Execute the specified Ex command, capturing any messages that it generates into the message variable.

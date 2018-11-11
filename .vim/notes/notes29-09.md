@@ -207,7 +207,7 @@ allow iTerm to launch at different loc
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
 
 " Sneak Quick Navigation Find: ------------------------------------------------
-set a differen Sneak next key?
+set a different Sneak next key? .. I think L and H are fine
 
 asana integration?
 send to time manager! (have regular interval events?)
@@ -228,8 +228,6 @@ align vim tips to after ":"
 
 
 send a key to switch desktop!
-
-
 
 " Todo: jobsend example!
 
@@ -292,8 +290,6 @@ what are sort of 'leader keys' with cound preceed other keys in sequences?
 - potential leading-sequence keys: q, [, ], 
 
 
-
-
 ## Karabiner
 
 ### Config path 
@@ -314,8 +310,6 @@ related object is **deleted** from the Karabiner.json file!
 
 ## Chromium
 " Closing The Window: End the terminal session? Use "call jobstop(s:markdown_job_id)"
-
-
 
 
 
@@ -559,12 +553,7 @@ ctrlp c-v should also allow opening it again - not just reveal
 
 --
 
-terminate markdown segment
-
-sneak first result is not highlighted
-
-test gregsexton/gitv
-just did this!
+terminate markdown segment with | ..?
 
 new register /copy paste plugin
 
