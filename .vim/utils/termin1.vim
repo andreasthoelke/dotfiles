@@ -375,8 +375,57 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " Gitgutter Undo Hunk:  - "leader hr" rolls back the changed code segment to the *index/stage*, not to the last commit
 " Staging Partial Hunks: In the diff split on the working copy/right buffer, select a range of lines of a bigger hunk, then ":diffput" only these lines into the index/stage.
 
-
-" Staging To Git Index: -----------------------------------
+" Git Reset: Git reset "overwrites" the tree trees:
+" 1. Move the branch HEAD via "--soft"
+" 2. Make Index look like HEAD "--mixed"
+" 3. Make Working Dir look like Index and HEAD "--hard"
+" From: https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
+" Undo Last Commit: - "git reset HEAD~1 --soft" moves the branch (the branch HEAD and the global HEAD) to a previous commit, without
+" changing the index/stage or the working directory. From there you can just "add" to index and commit again to e.g. refine the commit message.
+" "git reset HEAD~ [--mixed]" Moves HEAD to the previous commit/snapshot *and* "updates the index" with the content of that commit/snapshot!
+" So this additionally "unstages" the changes of the last commit. This is a rollback to before I ran all my "git add" and "git commit" commands.
+" "git reset --hard HEAD~" additionally undos all the work/changes in the working directory! It basically goes back to the state of the last commit *and* thows away everything that has been done (working dir changes, staging of those and commit) since then.
+" Reset Index To HEAD: - "git reset HEAD" (implies --mixed) updates/resets the index/stage with the content of the HEAD commit/snapshot
+" Copy File In HEAD Snapshot To Index: - "git reset --mixed HEAD file.txt" or simply "git reset file.txt" - 
+" it's basically unstaging that file. E.g. the opposite of "git add file.txt".
+" Commit An Old File Version Without Loosing Past Commits And Without Changing Working Dir: 
+" "git reset <commitID> -- file.txt" - this just copies that file version into the index (not the working dir!), then you can "commit" that index.
+" Patch Option: - "git add", "git reset" and "git checkout" accept the "--patch" option to stage/unstage/overwrite parts/hunks of a file/tree.
+" Squash Several Commits Into One: - "git reset --soft HEAD~2" will move the HEAD back to the last meaningful commit. 
+" But the working dir and Index are maintained and ready to be commited in one encompassing commit! The previous in-between commit can no longer be seen in the history.
+" Checkout Branch: is similar to "git reset --hard [branch]" - it moves HEAD to a commit and updates Index and Working dir.
+" However, "checkout" only updates (tries to "merge") unchanged files in the dir. Whereas "reset --hard" - "overwrites" files!
+" Update HEAD: .. also, "checkout" moves HEAD to *point to* (the current commit of/ BRANCH HEAD of) another branch, 
+" while "reset [branch]" will move the *branch* head (and the global HEAD) to a commit of that other branch!
+" Example : HEAD points to 'dev' branch. 
+" If we run "git reset master",    dev branch (current commit/branch HEAD) will be (pointing to) the same commit that master does!
+" If we run "git checkout master", the global HEAD will be moved to the branch HEAD of master. The Dev branch HEAD does not move.
+" Summary: → Checkout moves the global HEAD, Reset moves the branch HEAD.
+"          → Reset changes the branch HEAD (potentially including a commit from another branch) and moves the global HEAD to it.
+" Checkout File: - "git checkout [branch] -- file.txt" overwrites that file to the current working dir and writes it to the Index.
+" Who Does Reset And Checkout Affect: HEAD, Index, Workdir and is it WD Safe?
+" ┌────────────────────────────┬──────┬───────┬──────────┬──────────┐
+" │                            │  HEAD│  Index│  	Workdir│  WD Safe?│
+" ├────────────────────────────┼──────┼───────┼──────────┼──────────┤
+" │                Commit Level│      │       │          │          │
+" │     "reset --soft [commit]"│   REF│     NO│        NO│       YES│ only undo the commit, not staging or file changes
+" │            "reset [commit]"│   REF│    YES│        NO│       YES│ "reset HEAD~" undos the whole commit process (including staging)
+" │                            │      │       │          │          │ "reset master" let's you continue from the current state of the master branch
+" │     "reset --hard [commit]"│   REF│    YES│       YES│        NO│ complete overwrite
+" │         "checkout <commit>"│  HEAD│    YES│       YES│       YES│ will merge with workdir
+" │                  File Level│      │       │          │          │
+" │    "reset [commit] <paths>"│    NO│    YES│        NO│       YES│ only puts file into the index
+" │ "checkout [commit] <paths>"│    NO│    YES│       YES│        NO│ overwrite that file in the workdir!
+" └────────────────────────────┴──────┴───────┴──────────┴──────────┘
+" _, HEAD, Index,	Workdir, WD Safe?
+" Commit Level,,,,
+" reset --soft [commit], REF, NO, NO, YES
+" reset [commit], REF, YES, NO, YES
+" reset --hard [commit], REF, YES, YES, NO
+" checkout <commit>, HEAD, YES, YES, YES
+" File Level,,,,
+" reset [commit] <paths>, NO, YES, NO, YES
+" checkout [commit] <paths>, NO, YES, YES, NO
 
 " [alias]
 " 	co = checkout
