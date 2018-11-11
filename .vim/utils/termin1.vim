@@ -217,9 +217,13 @@
 " Navigate errors: "]s" - "[s", show suggestions: "z=", add to dictionary: "zg" undo "zug"
 " Go To Line: - ":123"!
 
-" Debugging: use "set verbose=1 to 15", start without plugins/vimrc: "nvim -u NONE", other vimrc: "nvim -u ~/.vim/bak/vimrc-22-09-2018.vim"
+" Debugging: use "set verbose=1 to 15", start without plugins/vimrc: "nvim -u NONE", 
+" other vimrc: "nvim -u ~/.vim/bak/vimrc-22-09-2018.vim"
 " Debug Test With Mini VIMRC One Plugin: - Start nvim loading vimrc from Gist!: nvim -Nu <(curl https://gist.githubusercontent.com/junegunn/6936bf79fedd3a079aeb1dd2f3c81ef5/raw/vimrc) "https://gist.githubusercontent.com/andreasthoelke/f223558ed5d89341c0f21c41868c92b0/raw/27028c93e046aa4a021fc97f8a59e60b774e0e38"
 " Logging Autocommands: - :set verbose=9 - set verbosefile=filename.txt - session_autosave_periodic - http://inlehmansterms.net/2014/10/31/debugging-vim/
+" set verbosefile=~/.vim/logs/autocmds112018-1.log
+" set verbosefile=''
+" Show Source Of Autocmds: - "verbose autocmd BufWritePost *"
 " Debug a function: ":debug call FunctionName(arg)"
 " Startup time: "nvim --startuptime ~/.vim/Logs/startup1.log" 
 " Repeatable Map Setup: e.g. repeat <leader>abb by typing "."! Example RepeatVim Setup:
@@ -312,8 +316,8 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " --------------------------------------------------------------------------------
 
 " GIT WORKFLOW:  --------------------------------------------------------------------------
-" Git Commit: (using Fugitive)
 " Make a git commit to dotfiles of .vimrc , etc to https://github.com/andreasthoelke/dotfiles  
+" Git Commit: (using Fugitive)
 " 1. "Gstatus" then use "-" to stage/unstage a changed file.
 " 2. Review Changes: "D" (diff) on the file to view what has changed compared to the last commit.
 "      Use "]c" to navigate and "do" in the right split to revert/undo a changed 'hunk' (go back to what was is in the last commit)
@@ -346,8 +350,57 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " "git remote add origin https://github.com/andreasthoelke/dotfiles.git", 
 " "git push -u origin master" `-u` add upstream tracking(!?)
 " "git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
-" -- TODO insert the branch merge example here!!
-
+" Git Branch Merge: In the following example "freatue1" is a "feature branch". the code for the feature
+" is just "feature1 implementation" here. After that feature is commited to the "freature1" branch first, it will then be merged into master.
+"  mkdir gitmerge2 && $_                                                             integ-term-changes
+"   gitmerge2  echo "base features" > file1                                          integ-term-changes
+"  git init                                                              integ-term-changes
+" Initialized empty Git repository in /Users/andreas.thoelke/Documents/temp/gitmerge2/.git/
+"  git add file1                                                                     master
+"  git commit -m "first commit"                                                      master
+" [master (root-commit) 5f02eef] first commit
+"  1 file changed, 1 insertion(+)
+"  create mode 100644 file1
+"  ⋯  Documents  temp  gitmerge2  git checkout -b feature1                                                          master
+" Switched to a new branch 'feature1'
+"  echo "feature1 implementation" >> file1                                  130   feature1
+"  cat file1                                                                       feature1
+" base features
+" feature1 implementation
+"  git status                                                                      feature1
+"  git add file1                                                                   feature1
+"  git commit -m "feature 1"                                                       feature1
+" [feature1 8674a08] feature 1
+"  1 file changed, 1 insertion(+)
+"  git checkout master                                                             feature1
+" Switched to branch 'master'
+"  cat file1                                                                         master
+" base features
+"  git merge feature1                                                                master
+" Updating 5f02eef..8674a08
+" Fast-forward
+"  file1 | 1 +
+"  1 file changed, 1 insertion(+)
+"  cat file1                                                                         master
+" base features
+" feature1 implementation
+" Looking At A Past Commit: Look at the previous commit (HEAD~1):
+"  ~  .vim  utils  "git checkout HEAD~1"                                                                   int-termin-changes
+" HEAD is now at f3858c5 Gig commit, preparing release
+"  ~  .vim  utils                                                                                                   f3858c5
+" This has now created a tempoary branch. I could persist any commits I make in this temp branch to a
+" new branch using git checkout -b <new-branch-name>
+" Note that HEAD detached at f3858c5
+" You can just go back to the previous HEAD by checking out the branch again:
+"  ~  .vim  utils  git checkout optim-11-2018-1                                                              130   f3858c5
+" Previous HEAD position was f3858c5 Gig commit, preparing release
+" Switched to branch 'optim-11-2018-1'
+"  ~  .vim  utils  git branch                                                                               optim-11-2018-1
+" "git branch" shows that the temp branch is gone.
+" Use Diff Before Add To Stage: - "git diff" 
+" Unstage: - "git reset HEAD" or "git reset HEAD <filename>"
+" Erease Delete The Last Commit: - "git reset HEAD~1" This will delete the commit entry but keep the current code (as unstaged changes in relation to the previous (now current) commit).
+" Git Undo: - "git reset HEAD~1 --hard" will additionally checkout the previous branch and update/overwrite the working dir files! This is basically a real "undo". Note you still have to reload the files in vim.
 
 " Three Statemanagement Mechanisms: Working Directory |>>| Staged Snapshot |>>| Commit History
 
@@ -414,7 +467,7 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " │     "reset --hard [commit]"│   REF│    YES│       YES│        NO│ complete overwrite
 " │         "checkout <commit>"│  HEAD│    YES│       YES│       YES│ will merge with workdir
 " │                  File Level│      │       │          │          │
-" │    "reset [commit] <paths>"│    NO│    YES│        NO│       YES│ only puts file into the index
+" │    "reset [commit] <paths>"│    NO│    YES│        NO│       YES│ only puts file into the index.  usecase: integrate file from another commit with working dir version of that file: A diff with the fetched index let's you "dp" hunks from the working dir into the index.
 " │ "checkout [commit] <paths>"│    NO│    YES│       YES│        NO│ overwrite that file in the workdir!
 " └────────────────────────────┴──────┴───────┴──────────┴──────────┘
 " _, HEAD, Index,	Workdir, WD Safe?
@@ -965,7 +1018,7 @@ endfunction
 " same things can be done with ":cr"!
 
 " Autocommands Events: ----------------------------
-" Give a preview window local setttings on WinEnter:
+" Give a preview window local settings on WinEnter:
 " Note: the use of "if" in one line!
 augroup PreviewAutocmds
   autocmd!
