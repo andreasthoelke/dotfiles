@@ -467,7 +467,7 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " │     "reset --hard [commit]"│   REF│    YES│       YES│        NO│ complete overwrite
 " │         "checkout <commit>"│  HEAD│    YES│       YES│       YES│ will merge with workdir
 " │                  File Level│      │       │          │          │
-" │    "reset [commit] <paths>"│    NO│    YES│        NO│       YES│ only puts file into the index.  usecase: integrate file from another commit with working dir version of that file: A diff with the fetched index let's you "dp" hunks from the working dir into the index.
+" │    "reset [commit] <paths>"│    NO│    YES│        NO│       YES│ only puts file into the index. usecase: integrate file from another commit with working dir version of that file: A diff with the fetched index let's you "dp" hunks from the working dir into the index.
 " │ "checkout [commit] <paths>"│    NO│    YES│       YES│        NO│ overwrite that file in the workdir!
 " └────────────────────────────┴──────┴───────┴──────────┴──────────┘
 " _, HEAD, Index,	Workdir, WD Safe?
