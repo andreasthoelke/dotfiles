@@ -293,14 +293,15 @@ if has('nvim')
   nnoremap <leader>af ipwd<cr><C-\><C-n>yy
   nnoremap <leader>ag :cd <c-r>"<cr>
 
-  tnoremap jk <C-\><C-n>
-
   " jump window up from terminal mode
   tnoremap <c-w>k <C-\><C-n><c-w>k
+  " jump window down from terminal mode
+  tnoremap <c-w>j <C-\><C-n><c-w>j
+  " Wipe the terminal buffer
   tnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
-  tnoremap <c-w>c <C-\><C-n>:bw!<cr>
-  " TODO: or just hide the buffer/close the window?
   nnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
+  tnoremap <c-w>c <C-\><C-n>:bw!<cr>
+  " TODO use this?
   nnoremap <localleader>bw <C-\><C-n>:bw!<cr>
 endif
 
@@ -480,11 +481,13 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " reset [commit] <paths>, NO, YES, NO, YES
 " checkout [commit] <paths>, NO, YES, YES, NO
 
-" Stash: - "git stash" takes working dir and Index, then performs "git reset --hard"
+" Git Stash: - "git stash" takes working dir and Index, then performs "git reset --hard"
 " "stash list", "stach apply", "git stash apply stash@{1}", "git stash save “Your stash message”" (note these strange quotes here)
 " "git stash" then "git checkout -b new-branch HEAD~3"   # head back in time!  
 " "git apply" to a modified working dir shows merge conflicts. An easy way to test stashed changes is 
 " "git stash branch <brname>". It creates a new branch, checks out the commit you were on, reapplies stashed work there and drops the stach
+" Git Tags: - "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tab>" to checkout a commit based on the related tag!
+" "git tagls" to view. "git push --tags" to push tags to remote
 
 " [alias]
 " 	co = checkout

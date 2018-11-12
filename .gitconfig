@@ -14,6 +14,8 @@
   br = branch
   unstage = reset HEAD --
   ap = add --patch
+  tl = tag -l -n5
+  tagls = tag -l -n5
   last = log -1 HEAD
   hist = log --pretty=format:\" %s%d | %ad | %h \" --graph --date=short
   visual = !gitk

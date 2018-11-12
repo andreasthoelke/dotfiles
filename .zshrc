@@ -107,7 +107,7 @@ source $ZSH/oh-my-zsh.sh
 # User configuration --------------------------------------------------
 
 # Activate vim bindings
-bindkey -v
+# bindkey -v
 
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,

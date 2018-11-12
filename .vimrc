@@ -491,7 +491,7 @@ set hidden
 set nowrap
 " wrapmargin=0
 " vim automatically breaks the line/starts a new line after 100 chars
-set textwidth=100
+set textwidth=120
 
 " activate line wrapping for a window:
 " command! -nargs=* Wrap set wrap linebreak nolist
