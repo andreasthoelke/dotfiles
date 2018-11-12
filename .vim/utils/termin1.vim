@@ -480,11 +480,18 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " reset [commit] <paths>, NO, YES, NO, YES
 " checkout [commit] <paths>, NO, YES, YES, NO
 
+" Stash: - "git stash" takes working dir and Index, then performs "git reset --hard"
+" "stash list", "stach apply", "git stash apply stash@{1}", "git stash save “Your stash message”" (note these strange quotes here)
+" "git stash" then "git checkout -b new-branch HEAD~3"   # head back in time!  
+" "git apply" to a modified working dir shows merge conflicts. An easy way to test stashed changes is 
+" "git stash branch <brname>". It creates a new branch, checks out the commit you were on, reapplies stashed work there and drops the stach
+
 " [alias]
 " 	co = checkout
 "   ci = commit
 "   st = status
 "   br = branch
+"   ap = add --patch
 "   unstage = reset HEAD --
 "   last = log -1 HEAD
 "   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
