@@ -276,7 +276,7 @@
 " Move Reference Of File Into Current Dir: - "ln subfolder/another/myfile.c" - now has "myfile.c" in the current dir.
 " Append To File: - "echo 'next line ..' >> linkname". NOTE: "echo 'i deleted all!' > linkname" deletes the previous content of the file!
 " Search In Filenames: - "ls -la ~/ | grep vim" 
-" View STDOUT STDIN In Vim: - "grep 'vim' ~/.vimrc | nvim -" or "nvim <(ls -la)" (process substitution)
+" View Pipe STDOUT STDIN In Vim: - "grep 'vim' ~/.vimrc | nvim -" or "nvim <(ls -la)" (process substitution)
 
 
 " Shell WORKFLOW: ----------------------------------------------------------------------    
@@ -676,9 +676,46 @@ nnoremap <leader>ccl :CopyAndQuit<cr>
 
 
 " ----------------------------------------------------------------------------------
-" helpers from https://github.com/jeromedalbert/dotfiles/blob/master/.vim/init.vim 
-" TODO: test these!
 
+" Tested Terminal Examples:
+" ":sp term://zsh"
+" echo termopen('zsh')
+" echo chansend(3,['ls', 'date', ''])
+" let g:testvar2 = system( "date" ) | echo g:testvar2
+
+" Launch a terminal in split: ":DemoTermArgs npm search purescript"
+command! -nargs=* DemoTermArgs split | resize 20 | terminal <args>
+" Quotes args example: ":DemoQ eins zwei" note no quotes are needed!
+command! -nargs=* DemoQArgs echo split(<q-args>)
+
+" new | resize 20 | let g:latest_term_id = termopen('zsh') | call chansend( g:latest_term_id,['ls', ''] )
+
+command! -nargs=* T new | resize 20 | let g:latest_term_id = termopen('zsh') | call chansend( g:latest_term_id, [<q-args>, ''] )
+
+command! -nargs=* Ts call chansend( g:latest_term_id, [<q-args>, ''] )
+
+" source a JS function in a running node repl
+" send visual selection chars as command and replace the selection with the return val.
+" - or should this rather append after a "⇒"?
+
+" Open Terminal buffer in horizontal split
+command! -count -nargs=* Term call Term(<q-args>, <count>)
+fun! Term(args, count)
+  let cmd = "split "
+  let cmd = a:count ? a:count . cmd : cmd
+  if a:args == ""
+    let cmd = cmd . 'term://zsh'
+  else
+    let cmd = cmd . 'term://' . a:args . "&& zsh"
+  " Note that only "&& zsh" allows to use the terminal after the first command has finished.
+  endif
+  exec cmd
+  exe 'startinsert'
+  call OnTermOpen()
+endf
+
+
+" helpers from https://github.com/jeromedalbert/dotfiles/blob/master/.vim/init.vim 
 if has('nvim')
   augroup on_display_events
     autocmd!
@@ -686,10 +723,18 @@ if has('nvim')
   augroup end
 endif
 
+" chansend()
+
+augroup onTTest
+  autocmd!
+  autocmd TermOpen * let g:aabb = b:term_title
+augroup end
+
 function! OnTermOpen()
   if &buftype != 'terminal' | return | endif
   setlocal nonumber norelativenumber colorcolumn=
   nnoremap <silent><buffer> G G{}
+  tnoremap <buffer> <Esc> <C-\><C-n> 
 endfunction
 
 command! -range=0 FocusSelection call FocusSelection(<count>)

@@ -153,8 +153,8 @@ Plug 'Twinside/vim-hoogle'
 "
 Plug 'mhinz/vim-grepper'
 
-
-Plug 'vimlab/split-term.vim'
+" Just a default split command
+" Plug 'vimlab/split-term.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'radenling/vim-dispatch-neovim'
 
@@ -2306,6 +2306,7 @@ nnoremap <leader>bd :bd!<cr>
 " General Leader Cmd Shortcut Maps: ---------------------------------
 
 nnoremap <localleader>qa :qa<cr>
+nnoremap <localleader>qq :q<cr>
 
 " nnoremap gw :w<cr>
 nnoremap <localleader>w :w<cr>
@@ -2462,7 +2463,7 @@ command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 " ----------------------------------------------------------------------------------
 
 " open a terminal window
-nmap <silent> glt :20Term<cr>
+nmap <silent> glt :below 20Term<cr>
 
 " Terminal util functions
 " and lots of documentations (TODO refactor this)

@@ -560,6 +560,12 @@ new register /copy paste plugin
 use augroup to allow safely reloading my vimrc. can use the `au!` patterns to first remove commands
 in of that group
 
+config save a grep search through all info sources for:
+  * vim notes
+  * vim code
+  * haskell code examples
+  * etc ..
+
 -------------
 
 
