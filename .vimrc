@@ -73,6 +73,8 @@ Plug 'https://github.com/dbakker/vim-projectroot'
 " Plug 'xolox/vim-shell'
 " iTerm2 integration
 Plug 'sjl/vitality.vim'
+" Visualizes undotree use: ":UndotreeShow"
+Plug 'mbbill/undotree'
 
 " Mappings: -----------------
 Plug 'tpope/vim-unimpaired'
@@ -87,6 +89,8 @@ Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'jszakmeister/markdown2ctags'
 " Tmux .config features
 Plug 'tmux-plugins/vim-tmux'
+" Allows listening to Tmux focus events to allow autoloading files changed outside vim
+Plug 'tmux-plugins/vim-tmux-focus-events'
 " Vimscript debugging
 Plug 'tpope/vim-scriptease'
 " This works, but not sure I need it often
@@ -183,33 +187,6 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
 " /Users/andreas.thoelke/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py
 let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
-
-
-
-" Other Settings:  ---------------------------------------------------------------
-set lazyredraw
-set selection=inclusive
-" this allows to move the cursor where there is no actual chracter
-set virtualedit=all
-" Console integration
-" Send more characters for redraws
-set ttyfast
-" Enable mouse use in all modes
-set mouse=a
-
-" Set this to the name of your terminal that supports mouse codes.
-" Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
-" set ttymouse=xterm2
-set guioptions-=T
-set guioptions-=m
-set guioptions-=r
-set guioptions-=L
-" disable sounds
-set noerrorbells
-set novisualbell
-" why this?
-set t_vb=
-" Other Settings:  ---------------------------------------------------------------
 
 
 " Airline Settings: --------------------------------------------------------------
@@ -380,6 +357,14 @@ endif
 
 " Vim Sessions: -----------------------------------------------------------------------
 
+" Undotree: ---------------------------------------------------------------------------
+let g:undotree_WindowLayout = 4
+" In after/plugin/zmaps \bc unimpaired:
+nnoremap you :UndotreeToggle<cr>
+
+" Undotree: ---------------------------------------------------------------------------
+
+
 " Fonts: -------------------------------------------------------------------------
 
 " Set Font Props in Alacritty or ITerm2. This is Used for MacVim only:
@@ -471,7 +456,7 @@ hi link jsonCommentError				Error
 " Style Colors: ----------------------------
 
 
-" Various Settings: ------------------------
+" General Settings: ------------------------
 set cmdheight=2
 set ignorecase
 set fileencoding=utf-8
@@ -500,6 +485,9 @@ set textwidth=120
 " command! -nargs=* Wrap set wrap linebreak nolist
 " use `gq<motion` or gqq to merely wrap a range/line
 
+" Auto load files that have changed outside of vim! (only when there are no unsaved changes!). This requires requires
+" tmux focus events "FocusGained".
+set autoread
 
 set noswapfile
 if has('nvim')
@@ -521,6 +509,30 @@ endif
 set wildmenu
 set wildmode=full
 
+set lazyredraw
+set selection=inclusive
+" this allows to move the cursor where there is no actual chracter
+set virtualedit=all
+" Console integration
+" Send more characters for redraws
+set ttyfast
+" Enable mouse use in all modes
+set mouse=a
+
+" Set this to the name of your terminal that supports mouse codes.
+" Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
+" set ttymouse=xterm2
+set guioptions-=T
+set guioptions-=m
+set guioptions-=r
+set guioptions-=L
+" disable sounds
+set noerrorbells
+set novisualbell
+" why this?
+set t_vb=
+
+" General Settings: ------------------------
 
 
 

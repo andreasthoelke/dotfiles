@@ -487,7 +487,7 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " "git apply" to a modified working dir shows merge conflicts. An easy way to test stashed changes is 
 " "git stash branch <brname>". It creates a new branch, checks out the commit you were on, reapplies stashed work there and drops the stach
 " Git Tags: - "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tab>" to checkout a commit based on the related tag!
-" "git tagls" to view. "git push --tags" to push tags to remote
+" "git tagls" to view. "git push --tags" to push tags to remote. "git tag -d v<tab>" to delete, then "git push -f --tags"
 
 " [alias]
 " 	co = checkout
