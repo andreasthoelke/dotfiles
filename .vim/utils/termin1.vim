@@ -249,13 +249,15 @@
 " Use "PlugDiff" to see what has been updated. Recreate a Plugin Snapshot, specifying commits: .vim/Plug-Snapshots/Snap-02-11-2018.vim
 " Diff Compare Files: - With two files side by side in a vertical split, use ":set scrollbind" to lock scrolling
 
-" "g," - "g-;"
+" Get String From Terminal: - ":echo system('ls')"
+
+" Substitute Replace Text: - ":s/zwei/xx/g" -  Examp text: eins zwei drei vier zwei acht
+" Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
+
+" TODO what is: "g," - "g-;"
 
 " VIM WORKFLOW: ----------------------------------------------------------------------    
 
-" one two three four five
-" Substitute Replace text: - ":s/zwei/xx/g" -  Examp text: eins zwei drei vier zwei acht
-" Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
 
 
 
@@ -482,10 +484,14 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " checkout [commit] <paths>, NO, YES, YES, NO
 
 " Git Stash: - "git stash" takes working dir and Index, then performs "git reset --hard"
-" "stash list", "stach apply", "git stash apply stash@{1}", "git stash save “Your stash message”" (note these strange quotes here)
-" "git stash" then "git checkout -b new-branch HEAD~3"   # head back in time!  
-" "git apply" to a modified working dir shows merge conflicts. An easy way to test stashed changes is 
+" "git stash save “Your stash message”" (note these strange quotes here)
+" "stach apply", "git stash apply stash@{1}",
+" examples: - "git stash" then "git checkout -b new-branch HEAD~3"   # head back in time!  
+" "git stash apply" to a modified working dir shows merge conflicts. An easy way to test stashed changes is 
 " "git stash branch <brname>". It creates a new branch, checks out the commit you were on, reapplies stashed work there and drops the stach
+" Alternative: - "git commit -a -m 'stash'" to save my work and "git reset HEAD~1"
+" View Stash Content: - "stash list", "stash show" and "git stash show -p stash@{2}"
+" "git stash list --pretty=format:%gd" or "gitk --reflog"
 " Git Tags: - "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tab>" to checkout a commit based on the related tag!
 " "git tagls" to view. "git push --tags" to push tags to remote. "git tag -d v<tab>" to delete, then "git push -f --tags"
 
@@ -723,12 +729,7 @@ if has('nvim')
   augroup end
 endif
 
-" chansend()
 
-augroup onTTest
-  autocmd!
-  autocmd TermOpen * let g:aabb = b:term_title
-augroup end
 
 function! OnTermOpen()
   if &buftype != 'terminal' | return | endif

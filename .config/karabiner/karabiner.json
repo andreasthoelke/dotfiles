@@ -140,6 +140,30 @@
                 ]
               },
               {
+                "description": "Left Control + ; to Option + ; to open vim command history",
+                "manipulators": [
+                  {
+                    "type": "basic",
+                    "from": {
+                      "key_code": "semicolon",
+                      "modifiers": {
+                        "mandatory": [
+                          "left_control"
+                        ]
+                      }
+                    },
+                    "to": [
+                      {
+                        "key_code": "semicolon",
+                        "modifiers": [
+                          "left_option"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
                 "description": "Left Control + ' to toggle between next open app",
                 "manipulators": [
                   {

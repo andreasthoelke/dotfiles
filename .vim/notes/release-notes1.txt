@@ -1,3 +1,6 @@
 autoread and tmux focus events
 integrate General setting in vimrc
 undotree visualization plugin
+Whenever a new tab is created, set the tab-working dir accordingly
+Open command history with the cursor on the last command: Using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
+

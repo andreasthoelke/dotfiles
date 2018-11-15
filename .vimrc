@@ -24,8 +24,10 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv', {'on': ['Gitv']}
 
+" Search Integration: -----------------------------------------------
+" Currently using this via "Find"
+Plug 'mhinz/vim-grepper'
 Plug 'mileszs/ack.vim'
-" Search integration
 Plug 'rking/ag.vim'
 
 " Styling: -----------------------------------------------------------
@@ -155,8 +157,6 @@ Plug 'Twinside/vim-hoogle'
 " Plug 'ervandew/supertab'
 " did not work with omnicomplete so far
 "
-Plug 'mhinz/vim-grepper'
-
 " Just a default split command
 " Plug 'vimlab/split-term.vim'
 Plug 'tpope/vim-dispatch'
@@ -556,12 +556,27 @@ noremap ; :
 " semicolon ";" in normal mode is needed for Sneak "f<char1><char2>" and then next
 " works in visual mode as well!
 
+
 " Open command history with the cursor on the last command
-map q; q:k
+" nnoremap <c-\;> q:k
+" Note: - <c-;> and <c-+> are "unmappable" keys in vim! Therefore using:
+nnoremap … q:k
+" Using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
+
+" Previous map. This caused a delay in using "q" to quit e.g. Gstatus
+" nnoremap q; q:k
+
+" Issue: Using "q" as sort of a leader key in a custom mapping will delay plugin "q" = quit maps! e.b. in Gstats.
+" workaround may be to double/ "qq" or to "q<space" instead.
 " Issue: needs two c-c to exit?
 
+" This is supposed to "unmap" the native "q" map to record macros (i don't need this often), to allow me to double "qq"
+" to quit a plugin dialog instead of "q.." wait for timeout because I use "q.." as a sort of leader key (see ":map q")
+" nnoremap <silent> q :<cr>
+" This is sort of a black hole map. But not needed as I can currently live without 'q ..' leader key maps
+
 " Repeat last command
-" To Lear: use "@:"
+" To Learn: use "@:"
 nnoremap <leader>. @:
 " nnoremap , @:
 
@@ -1591,7 +1606,7 @@ endfun
 " TIP: ad-hock environment variable: in terminal: "export test44=$PATH:~/Documents" this appends another dir to the PATH
 " TIP: use (%) current file name in shell: ":!cat %"
 " TIP: use 'find' to get full path and then 'gf': terminal: "find $PWD" and then "gf" on the the absolute path
-" if expressions: echo (v:true ? 'yes' : 'no') -- echo (v:false ? 'yes' : 'no')
+" If Expressions: echo (v:true ? 'yes' : 'no') -- echo (v:false ? 'yes' : 'no')
 " TIP: set the cursor pos: let cursor = getcurpos(), call cursor(cursor[1], startColumn - 1)
 "      also: line('.') and col('.') get row and column num
 " TIP: "<C-z>" to suspend nvim and get back to the terminal. then run "fg" to
@@ -2035,7 +2050,23 @@ command! SpellEN :set spelllang=en
 " Show suggestion:
 nmap z<c-\> z=
 
+" Open file rel to current buffer dir
+map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 
+" TODO limit to nvim?
+" Whenever a new tab is created, set the tab-working dir accordingly
+if has('nvim')
+  autocmd TabNewEntered * call OnTabEnter(expand("<amatch>"))
+  func! OnTabEnter(path)
+    if isdirectory(a:path)
+      let dirname = a:path
+    else
+      " let dirname = fnamemodify(a:path, ":h")
+      let dirname = projectroot#guess( a:path )
+    endif
+    execute "tcd ". dirname
+  endfunc
+endif
 
 " Change Working Directory: ---------------
 nnoremap <expr>dpr ":tcd " . projectroot#guess() . "\n"
@@ -2302,7 +2333,7 @@ autocmd TabLeave * let g:lasttab = tabpagenr()
 " nnoremap <silent> ð :bp<cr>
 " Next/Prev navigation works via <c-shift-f> <c-shift-d> (Karabiner) <Option/Alt>f / <A-f> / <A-d>
 " Tip Option Alt Key Mappings: get these chars by typing <option+key> in insert mode
-
+                                                          
 " TODO this map isn't really used/appropriate?
 " Prevent closing a window when closing a buffer
 " nnoremap \X :bp<bar>sp<bar>bn<bar>bd!<CR>
@@ -2447,6 +2478,7 @@ let g:Gitv_CustomMappings = {
   \'update': 'r',
 \}
 
+" autocmd BufNewFile,BufRead fugitive://* set bufhidden=delete
 
 " Fugitive Gitv: -----------------------------------------------------------
 
@@ -2568,11 +2600,13 @@ fun! OpenCurrentFileInSystemEditor()
 endfun
 
 
+" Search: -----------------------------------
 " Vim Grepper: ------------------------------
 " command! -nargs=1 Find  :Grepper -side -query <args>
 command! -nargs=1 Find  :tabe % | Grepper -side -query <args>
-command! -nargs=1 Findb :tabe % |Grepper -side -buffers -query <args>
+command! -nargs=1 Findb :tabe % | Grepper -side -buffers -query <args>
 
+" This works pretty well. could reuse for other purposes
 command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
 
 runtime plugin/grepper.vim    " initialize g:grepper with default values
@@ -2580,13 +2614,17 @@ let g:grepper.stop = 20
 
 autocmd! FileType GrepperSide
   \  silent execute 'keeppatterns v#'.b:grepper_side.'#'
-  \| set syntax=purescript
+  " \| set syntax=purescript
+" TODO make this use the syntax of the (first?) buffer filetype
+  \| set syntax=vim
   \| silent normal! ggn
-" TODO make this use the syntax of the (first?) buffer
 
 " Note: This runs a search/selection that allows to apply the purescript syntax only to the selcted lines!
 " search pattern from ".b:grepper_side": \v^%(\>\>\>|\]\]\]) ([[:alnum:][:blank:]\/\-_.~]+):(\d+)
 
+" This does not seem needed? also not working?
+" nmap gs  <plug>(GrepperOperator)
+" xmap gs  <plug>(GrepperOperator)
 
 highlight GrepperSideFile gui=italic guifg=#C34371 guibg=#000000
 highlight Conceal         guifg=#FFFFFF guibg=#000000

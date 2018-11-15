@@ -15,6 +15,9 @@ jump to a tab by number. to avoid many c-f's
   * `q/` search history
   * `HelpGrep` to seach vim help (rename?)
 
+" This works pretty well. could reuse for other purposes
+command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
+
 
 ## Code Motions
   Sneak
@@ -297,7 +300,7 @@ what are sort of 'leader keys' with cound preceed other keys in sequences?
 
 ### Create a Karabiner complex modifications mapping
   1. Duplicate an object ({..}) in the `rules` array here: `~/.config/karabiner/karabiner.json`
-  2. Open the `Karabiner-Elements Preferences` MacOS app, open the `Log` tab.j
+  2. Open the `Karabiner-Elements Preferences` MacOS app, open the `Log` tab.
   3. Change and save the `rules` object. (Karabiner autoreloads this config file and shows error messages in the log window)
 
 Note: When a `Complex Modificatioin` is `remove`d in the Karabiner-Elements Preferences UI, the
