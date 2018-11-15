@@ -258,9 +258,6 @@
 
 " VIM WORKFLOW: ----------------------------------------------------------------------    
 
-
-
-
 " Shell WORKFLOW: ----------------------------------------------------------------------    
 " Suspending Background Jobs In Same Terminal: - "<c-z>" to suspend, in terminal: "fg" to bring it back. "jobs" to see all suspended jobs, "fg %2" to bring back second job, "kill %2" to kill it, "bg" to have it running in the background, "ps T" will show a "T" for stopped processes
 " Man Pages: - "man ranger" will now use nvim to show the man page, thanks to in .zshrc: export MANPAGER="nvim -c 'set ft=man' -"

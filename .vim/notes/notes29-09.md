@@ -444,7 +444,7 @@ JSON release image on desktop
   * syntax file: `.vim/plugged/vim-json/syntax/json.vim`
   * highlight colors are difined at `JSON colors` (seach tag)
 
-neovim remote open in running nvim
+> neovim remote open in running nvim
 also from ranger open-wi
 
 f naviage with ";"?! not possibe
@@ -453,6 +453,9 @@ c-s c-l is fast, but should it switch windows? tabs?
 c-s-w is awkward and should be consitent
 
 c-s J/K/L/H is pretty intuitive!
+
+> change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
+
 
 ## Github
 set up the vim-hub plugin

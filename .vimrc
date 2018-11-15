@@ -37,7 +37,7 @@ Plug 'vim-airline/vim-airline-themes'
 " Plug 'edkolev/tmuxline.vim'
 " This inserts unicode icons file-type into airline/bufferline, nerdtree and ctrlp!
 " Requires a patched font ("Nerd Font" e.g. "family: MesloLGLDZ Nerd Font") which is set in "alacritty.yaml" or "kitty.conf" or ITerm2 settings.
-Plug 'ryanoasis/vim-devicons'
+" Plug 'ryanoasis/vim-devicons'
 " Creates a (zsh) command prompt based on vim-airline style: ":PromptlineSnapshot ~/.promptline.sh airline" then in zsh: "source .promptline.sh"
 Plug 'edkolev/promptline.vim'
 
@@ -2479,6 +2479,9 @@ let g:Gitv_CustomMappings = {
 \}
 
 " autocmd BufNewFile,BufRead fugitive://* set bufhidden=delete
+
+" Disable neovim terminal when e.g. ":Git checkout master" (experimental)
+let g:fugitive_force_bang_command = 1
 
 " Fugitive Gitv: -----------------------------------------------------------
 
