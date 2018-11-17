@@ -455,7 +455,7 @@ c-s-w is awkward and should be consitent
 c-s J/K/L/H is pretty intuitive!
 
 > change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
-
+      some start Documents/PS/2/pux-todo/node_modules/anymatch
 
 ## Github
 set up the vim-hub plugin

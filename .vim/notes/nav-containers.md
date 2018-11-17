@@ -68,6 +68,27 @@
   2. **displayed**: in some window (or be hidden but still listed)
   3. **active**: displayed in the current window
 
+> Tab navigate the file system while in insert mode
+inoremap <Tab> <c-x><c-f>
+" In command mode use <c-d> and Tab
+  Example path: `Documents/PS/2/pux-todo/README.md`
+  this works nicely with <c-j/k/l> nav
+  ⇒ maybe mapping to produce, then copy and delete the path from insert/normal mode and past it to command?
+In command mode (see `:h cmdline-completion`) after `:e ` 
+ 1. `c-d` to show all options
+ 2. then (optionally) type a char or two
+ 3. then `c-n` (or `c-i` or Tab) and `c-p` to go back and forth through the options
+ (1.) `c-d` selects/locks-in the currently selected element and displays child options
+ ⇒ `c-d` - `c-p/n` in alternation
+ * `c-w` to delete a word back
+
+Navigate in scrollback history: 
+  * <c-p> to go back in command history, <c-n> to go forward in history.
+
+code auto completion: 
+  Vim Completes me (currently testing)
+  Youcomplete-me is sort of difficult to install?
+  alternative: https://github.com/ncm2/ncm2 or Shougo/deoplete.nvim
 
 ### List Buffers
   Create New (File)

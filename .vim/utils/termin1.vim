@@ -732,7 +732,7 @@ function! OnTermOpen()
   if &buftype != 'terminal' | return | endif
   setlocal nonumber norelativenumber colorcolumn=
   nnoremap <silent><buffer> G G{}
-  tnoremap <buffer> <Esc> <C-\><C-n> 
+  " tnoremap <buffer> <Esc> <C-\><C-n> 
 endfunction
 
 command! -range=0 FocusSelection call FocusSelection(<count>)

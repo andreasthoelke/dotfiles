@@ -15,6 +15,11 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'justinmk/vim-dirvish'
 " Plug 'rafaqz/ranger.vim'
 " test this!
+Plug 'vifm/neovim-vifm'
+Plug 'vifm/vifm.vim'
+
+" Completion: -------------------------------------
+Plug 'ajh17/VimCompletesMe'
 
 Plug 'majutsushi/tagbar'
 " there is a Haskell integration, but it does not work :Tag.. not..
@@ -87,8 +92,12 @@ Plug 'jelera/vim-javascript-syntax'
 Plug 'elzr/vim-json'
 Plug 'leafgarland/typescript-vim'
 Plug 'mityu/vim-applescript'
+
+" Markdown: -------------
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'jszakmeister/markdown2ctags'
+Plug 'rhysd/nyaovim-markdown-preview'
+
 " Tmux .config features
 Plug 'tmux-plugins/vim-tmux'
 " Allows listening to Tmux focus events to allow autoloading files changed outside vim
@@ -187,6 +196,23 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
 " /Users/andreas.thoelke/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py
 let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
+
+
+" Nayovim Markdown: ------------------------
+let g:markdown_preview_eager = 1
+let g:markdown_preview_auto = 0
+
+nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
+func! MarkdownPreviewToggle()
+  if exists( "g:markdown_preview_active" )
+    StopMarkdownPreview
+    unlet g:markdown_preview_active
+  else
+    StartMarkdownPreview
+    let g:markdown_preview_active = 1
+  endif
+endfunc
+" Nayovim Markdown: ------------------------
 
 
 " Airline Settings: --------------------------------------------------------------
@@ -501,13 +527,37 @@ endif
 "   au WinLeave * setlocal nocursorline
 " augroup END
 
+
 " set autochdir
 " CAREFUL! this sets the current working directory the the current file on
 " every buffer change!!
 
-" set wildmode=list:longest
+" TODO do I need all of these?
+set wildignorecase
+set smartcase
+set ignorecase
+set infercase
 set wildmenu
-set wildmode=full
+set wildmode=longest:list,full
+" set wildmode=longest,list
+" set wildmode=longest,full
+" set wildmode=list
+" set wildmode=longest:full
+" set wildmode=full
+" set wildmode=full,full
+set completeopt=menuone,preview
+" TODO test this
+" set wildmode=longest,list
+" set wildmode=longest:list
+
+" Tab navigate the file system while in insert mode
+" inoremap <Tab> <c-x><c-f>
+" In command mode use <c-d> and Tab
+
+cnoremap <C-t> <C-\>e(<SID>RemoveLastPathComponent())<CR>
+function! s:RemoveLastPathComponent()
+  return substitute(getcmdline(), '\%(\\ \|[\\/]\@!\f\)\+[\\/]\=$\|.$', '', '')
+endfunction
 
 set lazyredraw
 set selection=inclusive
@@ -2193,8 +2243,9 @@ autocmd FileType dirvish nnoremap <buffer><silent> <c-p> :CtrlP<cr>
 
 " Dirvish: --------------------------------------------------
 
-
-
+" Vifm: -----------------------------------------------------
+let g:vifmSplitWidth = 70
+let g:vifmFixWidth = 0
 
 " Windows Navigation: -----------------------------
 set splitbelow
