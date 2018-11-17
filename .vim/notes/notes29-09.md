@@ -315,7 +315,9 @@ related object is **deleted** from the Karabiner.json file!
 " Closing The Window: End the terminal session? Use "call jobstop(s:markdown_job_id)"
 
 
-
+## Popup Tooltip UI
+ * Hover over the following line and `localleader-gi`
+   /Users/andreas.thoelke/Pictures/download.jpeg
 
 
 

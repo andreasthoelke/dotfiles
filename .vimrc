@@ -36,8 +36,8 @@ Plug 'mileszs/ack.vim'
 Plug 'rking/ag.vim'
 
 " Styling: -----------------------------------------------------------
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 " Creates tmux colors e.g. at ".tmuxline.conf"
 " Plug 'edkolev/tmuxline.vim'
 " This inserts unicode icons file-type into airline/bufferline, nerdtree and ctrlp!
@@ -55,6 +55,9 @@ Plug 'cormacrelf/vim-colors-github'
 
 Plug 'chrisbra/Colorizer'
 Plug 'KabbAmine/vCoolor.vim'
+
+Plug 'rhysd/nyaovim-popup-tooltip'
+
 
 " Highlight
 " Plug 't9md/vim-quickhl'
@@ -198,11 +201,14 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
 
 
-" Nayovim Markdown: ------------------------
+" Nyaovim Markdown: ------------------------
 let g:markdown_preview_eager = 1
 let g:markdown_preview_auto = 0
 
 nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
+
+nnoremap <leader>abc :echo 'hii'<cr>
+
 func! MarkdownPreviewToggle()
   if exists( "g:markdown_preview_active" )
     StopMarkdownPreview
@@ -212,13 +218,18 @@ func! MarkdownPreviewToggle()
     let g:markdown_preview_active = 1
   endif
 endfunc
-" Nayovim Markdown: ------------------------
+" Nyaovim Markdown: ------------------------
+
+" Nyaovim Popup: ------------------------
+nmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
+vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
+" Nyaovim Popup: ------------------------
 
 
 " Airline Settings: --------------------------------------------------------------
 let g:airline_theme='simple'
 " Powerline fonts work but the > seperator doesn't seem expressive for tabs to status
-" let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 
 " Airline Extensions: ---
 let g:airline#extensions#tabline#enabled = 1
@@ -409,6 +420,7 @@ if has("gui_macvim")
 endif
 
 
+
 " Fonts: -------------------------------------------------------------------------
 
 
@@ -596,7 +608,12 @@ set noequalalways
 set nostartofline
 
 let mapleader=" "
-let maplocalleader="\\"
+" let mapleader = ","
+" let maplocalleader="\\"
+" let maplocalleader="<space>"
+
+nnoremap <leader>mmp :echo "aber"<cr>
+nnoremap <localleader>mmp :echo "nein"<cr>
 
 
 " COMMAND HISTORY: --------------------------------------------
@@ -1159,9 +1176,9 @@ command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
 
 
 " SYNTASIC: ---------------------------------------------------
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 " airline /statusline config
 
 " Deactivate Syntasic for haskell dev in favour of Ale
