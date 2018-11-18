@@ -212,8 +212,6 @@ let g:markdown_preview_auto = 0
 
 nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
 
-nnoremap <leader>abc :echo 'hii'<cr>
-
 func! MarkdownPreviewToggle()
   if exists( "g:markdown_preview_active" )
     StopMarkdownPreview
@@ -347,12 +345,14 @@ let session_autosave_periodic = 0
 "   autocmd User BufStaySavePost if exists('w:lcd') | execute 'lcd' fnameescape(w:lcd) | unlet w:lcd | endif
 " augroup END
 
-set undofile
-" set noundofile
-" set undodir="~/vimfiles/undo/"
+" Falls back to writing undo file into cwd if "vimtmp/undo" is not available(?)
 set undodir=~/vimtmp/undo,.
-" set nobackup
-" set nowritebackup
+" Just activates saving the undo history
+set undofile
+
+" Default undo steps
+" set undolevels=1000
+
 " Restore view settings
 set viewoptions=cursor,folds,slash,unix
 " set viewdir=$HOME/.vim_view//
@@ -611,9 +611,6 @@ set t_vb=
 " windows should not be kept at equal size
 set noequalalways
 set nostartofline
-
-nnoremap <leader>mmp :echo "aber"<cr>
-nnoremap <localleader>mmp :echo "nein"<cr>
 
 
 " COMMAND HISTORY: --------------------------------------------

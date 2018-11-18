@@ -19,6 +19,15 @@ jump to a tab by number. to avoid many c-f's
 command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
 
 
+## Undofile Shada
+
+  `:verbose e .config/alacritty/alacritty.yml" 491L, 18989C`
+    Reading ShaDa file "/Users/andreas.thoelke/.local/share/nvim/shada/main.shada" marks
+    Reading undo file: /Users/andreas.thoelke/vimtmp/undo/%Users%andreas.thoelke%.config%alacritty%alacritty.yml
+
+  TODO: Does vim resume undohistory after git-checkout?
+        git check in ShaDa and undo files?
+
 ## Code Motions
   Sneak
   * move to (2 chars): `f/F` <.><.> `:`/`H`
@@ -382,8 +391,9 @@ gitgutter and ale toggles as `yog/a`?
 have a quicklink/bookmarks drawer?
 
 ## Next:
-test out undo, line, dir(!) mode!! 
-can I finally navigate down in dir mode?
+test out Ctrlp undo, line, dir(!) mode!! 
+  can I finally navigate down in dir mode?
+
 insert
   sessionoptions=blank,buffers,curdir,folds,help,options,tabpages,winsize
 load/save tabed session
@@ -575,6 +585,11 @@ config save a grep search through all info sources for:
   * etc ..
 
 -------------
+
+  nyaovim fontsize
+  vifm: show last changed in hours vs size!
+
+-----------------------------------
 
 
 ## Styles
