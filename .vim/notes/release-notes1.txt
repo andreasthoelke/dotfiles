@@ -8,4 +8,6 @@ wildmode settings
 vim-completes-me
 vifm (testing two plugins)
 Nayovim Markdown
+autoload plugin
+Mundo undo-tree
 

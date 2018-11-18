@@ -311,6 +311,19 @@ set shortmess+="mW"
 
 " Persistence Saving: -----------------------------------------------------------------
 
+
+" Mundo: ----------------------
+let g:mundo_width = 50
+let g:mundo_preview_height = 35
+let g:mundo_right = 1
+let g:mundo_auto_preview_delay = 10
+let g:mundo_verbose_graph = 0
+let g:mundo_playback_delay = 200
+let g:mundo_mirror_graph = 0
+let g:mundo_inline_undo = 1
+let g:mundo_help = 1
+
+
 " Autosave: -------------------
 " Use "AutoSaveToggle" enable/disable
 let g:auto_save = 1  " enable AutoSave on Vim startup

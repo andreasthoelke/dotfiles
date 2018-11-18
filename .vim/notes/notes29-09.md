@@ -634,8 +634,8 @@ config save a grep search through all info sources for:
   * etc ..
 
 
-  Arbitary test headline
--------------
+  Current Todos
+-
 
   nyaovim fontsize, popup test, minibrowser
   vifm: show last changed in hours vs size!
@@ -653,7 +653,9 @@ config save a grep search through all info sources for:
 
     how can I use the `:read` command?
 
-
+  Select till end of the paragraph/sentence with vim-target
+  deal with directories in ctrlp
+    also create files in ctrlp
 
 
 
