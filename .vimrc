@@ -178,6 +178,11 @@ Plug 'radenling/vim-dispatch-neovim'
 call plug#end()
 " ----------------------------------------------------------------------------------
 
+" This needs to be set early in the vimrc, as the mappings below will refer to it!
+let mapleader="\<Space>"
+let maplocalleader="\\"
+
+
 set verbose=0
 
 " set omnifunc=syntaxcomplete#Complete
@@ -606,11 +611,6 @@ set t_vb=
 " windows should not be kept at equal size
 set noequalalways
 set nostartofline
-
-let mapleader=" "
-" let mapleader = ","
-" let maplocalleader="\\"
-" let maplocalleader="<space>"
 
 nnoremap <leader>mmp :echo "aber"<cr>
 nnoremap <localleader>mmp :echo "nein"<cr>
