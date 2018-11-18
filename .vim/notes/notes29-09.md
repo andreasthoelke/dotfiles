@@ -1,5 +1,54 @@
 ## Done
-jump to a tab by number. to avoid many c-f's
+
+
+## Styles
+reactive and test haskell-vim first
+this or the purescript one seems needed for:
+  NLKNguyen/papercolor-theme https://github.com/NLKNguyen/papercolor-theme
+  another one:
+  https://github.com/kamwitsta/flatwhite-vim
+
+font: Iosevka - for writing
+
+  * Commented segments in code, like: https://github.com/sdothum/dotfiles/blob/master/vim/.vim/config/buffer.vim
+  * Should be lined to Tags and Folds
+
+  * Scrollbar!? https://github.com/lornix/vim-scrollbar
+  * Marks and Registers: https://github.com/Yilin-Yang/vim-markbar
+
+## Textobjects
+https://github.com/wellle/targets.vim
+
+https://github.com/bkad/camelcasemotion
+  * do inner word selects! v3ie selects script_31337_path_and_[name_without_extension]_11
+
+https://github.com/coderifous/textobj-word-column.vim
+  * vicA - Append new text to a column
+
+  * `Haskell` function next/prev: http://silly-bytes.blogspot.com/2016/08/vim-haskell_11.html
+    au FileType haskell onoremap <silent> ia :<c-u>silent execute "normal! ?->\r:nohlsearch\rwvf-ge"<CR>
+    au FileType haskell onoremap <silent> aa :<c-u>silent execute "normal! ?->\r:nohlsearch\rhvEf-ge"<CR>
+    function! JumpHaskellFunction(reverse)
+        call search('\C[[:alnum:]]*\s*::', a:reverse ? 'bW' : 'W')
+    endfunction
+  * `Haskell` textobjects only has 'inner function': https://github.com/gilligan/vim-textobj-haskell/blob/master/plugin/textobj/haskell.vim
+
+additionals
+https://github.com/kana/vim-textobj-user/wiki
+
+
+
+## Splits
+  * https://github.com/wellle/visual-split.vim
+  * extend this to splitting out to (the top of) a right bar column
+
+
+## Email
+https://github.com/danchoi/vmail
+http://nosubstance.me/post/mutt-secret-sauce/
+
+
+
 
 ## Documentation Readme
   * using git tags and releases
@@ -26,7 +75,7 @@ command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
     Reading undo file: /Users/andreas.thoelke/vimtmp/undo/%Users%andreas.thoelke%.config%alacritty%alacritty.yml
 
   TODO: Does vim resume undohistory after git-checkout?
-        git check in ShaDa and undo files?
+        git check in ShaDa and undo files
 
 ## Code Motions
   Sneak
@@ -584,59 +633,27 @@ config save a grep search through all info sources for:
   * haskell code examples
   * etc ..
 
+
+  Arbitary test headline
 -------------
 
-  nyaovim fontsize
+  nyaovim fontsize, popup test, minibrowser
   vifm: show last changed in hours vs size!
+  Grepper: Test running in Haskell hello44 vs Homedir
+           How to quickly change dir the underlying shell?
+           How to get the current folder path into an ex-command?
 
------------------------------------
+  Minimal Tab/status line plugin (to test)
+  Buffer manager plugin
+  2 git plugins to test
 
+  The `Term` command allows running `history` and `node` repl
+  * set up callbacks
+  * chunk returned text events into visible list. - allows to refer to/ insert specific protions via register/ paste?
 
-## Styles
-reactive and test haskell-vim first
-this or the purescript one seems needed for:
-  NLKNguyen/papercolor-theme https://github.com/NLKNguyen/papercolor-theme
-  another one:
-  https://github.com/kamwitsta/flatwhite-vim
-
-font: Iosevka - for writing
-
-  * Commented segments in code, like: https://github.com/sdothum/dotfiles/blob/master/vim/.vim/config/buffer.vim
-  * Should be lined to Tags and Folds
-
-  * Scrollbar!? https://github.com/lornix/vim-scrollbar
-  * Marks and Registers: https://github.com/Yilin-Yang/vim-markbar
-
-## Textobjects
-https://github.com/wellle/targets.vim
-
-https://github.com/bkad/camelcasemotion
-  * do inner word selects! v3ie selects script_31337_path_and_[name_without_extension]_11
-
-https://github.com/coderifous/textobj-word-column.vim
-  * vicA - Append new text to a column
-
-  * `Haskell` function next/prev: http://silly-bytes.blogspot.com/2016/08/vim-haskell_11.html
-    au FileType haskell onoremap <silent> ia :<c-u>silent execute "normal! ?->\r:nohlsearch\rwvf-ge"<CR>
-    au FileType haskell onoremap <silent> aa :<c-u>silent execute "normal! ?->\r:nohlsearch\rhvEf-ge"<CR>
-    function! JumpHaskellFunction(reverse)
-        call search('\C[[:alnum:]]*\s*::', a:reverse ? 'bW' : 'W')
-    endfunction
-  * `Haskell` textobjects only has 'inner function': https://github.com/gilligan/vim-textobj-haskell/blob/master/plugin/textobj/haskell.vim
-
-additionals
-https://github.com/kana/vim-textobj-user/wiki
+    how can I use the `:read` command?
 
 
-
-## Splits
-  * https://github.com/wellle/visual-split.vim
-  * extend this to splitting out to (the top of) a right bar column
-
-
-## Email
-https://github.com/danchoi/vmail
-http://nosubstance.me/post/mutt-secret-sauce/
 
 
 

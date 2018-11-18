@@ -83,8 +83,13 @@ Plug 'https://github.com/dbakker/vim-projectroot'
 " Plug 'xolox/vim-shell'
 " iTerm2 integration
 Plug 'sjl/vitality.vim'
-" Visualizes undotree use: ":UndotreeShow"
-Plug 'mbbill/undotree'
+" Show undotree with inline diffs and search
+Plug 'simnalamburt/vim-mundo'
+" Alternative undotree visualizer that does not allow inline diffs and search
+" Plug 'mbbill/undotree'
+
+" Autosaves buffers on specific events
+Plug '907th/vim-auto-save'
 
 " Mappings: -----------------
 Plug 'tpope/vim-unimpaired'
@@ -304,6 +309,13 @@ let g:promptline_preset = {
 set shortmess+="mW"
 
 
+" Persistence Saving: -----------------------------------------------------------------
+
+" Autosave: -------------------
+" Use "AutoSaveToggle" enable/disable
+let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save_silent = 1  " do not display the auto-save notification
+
 " Vim Sessions: -----------------------------------------------------------------------
 
 nnoremap <leader>sd :OpenSession! default<cr>
@@ -399,12 +411,15 @@ endif
 
 " Vim Sessions: -----------------------------------------------------------------------
 
-" Undotree: ---------------------------------------------------------------------------
-let g:undotree_WindowLayout = 4
-" In after/plugin/zmaps \bc unimpaired:
-nnoremap you :UndotreeToggle<cr>
+" Undotree Mundo: ---------------------------------------------------------------------------
 
-" Undotree: ---------------------------------------------------------------------------
+
+" let g:undotree_WindowLayout = 4
+" let g:undotree_ShortIndicators = 1
+" In after/plugin/zmaps \bc unimpaired:
+" nnoremap you :UndotreeToggle<cr>
+
+" Undotree Mundo: ---------------------------------------------------------------------------
 
 
 " Fonts: -------------------------------------------------------------------------
@@ -427,7 +442,6 @@ endif
 
 
 " Fonts: -------------------------------------------------------------------------
-
 
 
 
@@ -2228,7 +2242,8 @@ let g:ctrlp_prompt_mappings = {
 " let g:ctrlp_extensions = ['dir', 'line']
 " let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript',
 "                          \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
-let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
+" let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
+let g:ctrlp_extensions = ['undo', 'line', 'changes']
 
 
 let g:ctrlp_max_files = 2000
