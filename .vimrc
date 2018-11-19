@@ -15,8 +15,8 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'justinmk/vim-dirvish'
 " Plug 'rafaqz/ranger.vim'
 " test this!
-Plug 'vifm/neovim-vifm'
-Plug 'vifm/vifm.vim'
+" Plug 'vifm/neovim-vifm'
+" Plug 'vifm/vifm.vim'
 
 " Completion: -------------------------------------
 Plug 'ajh17/VimCompletesMe'
@@ -308,6 +308,13 @@ let g:promptline_preset = {
 " avoid |hit enter| prompts
 set shortmess+="mW"
 
+autocmd! VimLeavePre * call VimLeaveCleanup()
+func! VimLeaveCleanup()
+  MundoShow " Briefly open Mundo in the current tab (closes it in other tabs) to then close it. Otherwise empty mundo buffers are open after restart.
+  MundoHide
+
+endfunc
+
 
 " Persistence Saving: -----------------------------------------------------------------
 
@@ -323,11 +330,17 @@ let g:mundo_mirror_graph = 0
 let g:mundo_inline_undo = 1
 let g:mundo_help = 1
 
+" some
+" other
+
+" else
 
 " Autosave: -------------------
 " Use "AutoSaveToggle" enable/disable
 let g:auto_save = 1  " enable AutoSave on Vim startup
-let g:auto_save_silent = 1  " do not display the auto-save notification
+" let g:auto_save_silent = 1  " do not display the auto-save notification
+" Note: Plugin will "set updatetime=200"
+" Autosave: -------------------
 
 " Vim Sessions: -----------------------------------------------------------------------
 
@@ -2562,6 +2575,8 @@ command! Diff execute 'w !git diff --no-index % -'
 
 " Fugitive Gitv: -----------------------------------------------------------
 
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
 nnoremap <leader>gv :Gitv<cr>
 nnoremap <leader>gV :Gitv!<cr>
 
@@ -2575,6 +2590,9 @@ let g:Gitv_CustomMappings = {
 
 " Disable neovim terminal when e.g. ":Git checkout master" (experimental)
 let g:fugitive_force_bang_command = 1
+
+" Deletes hidden fugitive buffers when I hide them?
+autocmd! BufReadPost fugitive://* set bufhidden=delete
 
 " Fugitive Gitv: -----------------------------------------------------------
 
@@ -3125,7 +3143,7 @@ let g:easy_align_delimiters = {
 
 " highlight TagbarHighlight guifg=Green ctermfg=Green
 highlight default link TagbarHighlight  Cursor
-" how quickly tagbar (and vim in gnyeneral!) refreshes (from file?)
+" how quickly tagbar (and vim in general!) refreshes (from file?)
 set updatetime=500
 let g:tagbar_sort = 0
 
