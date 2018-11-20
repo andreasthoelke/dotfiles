@@ -7,14 +7,9 @@ Plug 'junegunn/vim-plug'
 " This is probl. just to have the help/docs available
 
 " File Selectors Browsers: ------------------------------------------
-Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
-" Plug '/usr/local/opt/fzf'
-" Plug 'junegunn/fzf.vim'
-" Plug 'rafaqz/ranger.vim'
 Plug 'justinmk/vim-dirvish'
-" Plug 'rafaqz/ranger.vim'
-" test this!
+" test these
 " Plug 'vifm/neovim-vifm'
 " Plug 'vifm/vifm.vim'
 
@@ -116,7 +111,7 @@ Plug 'tpope/vim-scriptease'
 Plug 'chrisbra/csv.vim'
 
 " Code Navagation Editing: ---------------------------------------------
-Plug 'justinmk/vim-sneak'
+Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
 Plug 'tomtom/tcomment_vim'
@@ -312,7 +307,6 @@ autocmd! VimLeavePre * call VimLeaveCleanup()
 func! VimLeaveCleanup()
   MundoShow " Briefly open Mundo in the current tab (closes it in other tabs) to then close it. Otherwise empty mundo buffers are open after restart.
   MundoHide
-
 endfunc
 
 
@@ -338,7 +332,7 @@ let g:mundo_help = 1
 " Autosave: -------------------
 " Use "AutoSaveToggle" enable/disable
 let g:auto_save = 1  " enable AutoSave on Vim startup
-" let g:auto_save_silent = 1  " do not display the auto-save notification
+let g:auto_save_silent = 1  " do not display the auto-save notification
 " Note: Plugin will "set updatetime=200"
 " Autosave: -------------------
 
@@ -365,9 +359,8 @@ set sessionoptions+=curdir
 set sessionoptions+=tabpages
 set sessionoptions+=winsize
 set sessionoptions+=help
-set sessionoptions+=options
-" useful to maintain syntax setting?
-" NOTE: Restarting Vim usually creates a 'clean' environment, restoring all options may make this less predictable
+" Don't save hidden and unloaded buffers
+set sessionoptions-=buffers
 
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
@@ -545,6 +538,8 @@ set ignorecase
 set fileencoding=utf-8
 set encoding=utf-8
 " set backspace=indent,eol,start
+" TODO what does this do? see ':hg syntax enable'
+syntax enable
 
 set ts=2 sts=2 sw=2 expandtab
 
@@ -596,16 +591,9 @@ set ignorecase
 set infercase
 set wildmenu
 set wildmode=longest:list,full
-" set wildmode=longest,list
-" set wildmode=longest,full
-" set wildmode=list
+" Well behaved flat menu
 " set wildmode=longest:full
-" set wildmode=full
-" set wildmode=full,full
 set completeopt=menuone,preview
-" TODO test this
-" set wildmode=longest,list
-" set wildmode=longest:list
 
 " Tab navigate the file system while in insert mode
 " inoremap <Tab> <c-x><c-f>
@@ -719,8 +707,8 @@ nnoremap cue :%s/>=>/>#>/ge<cr>
 nnoremap cud :%s/=>/<c-k>=>/ge<cr>
 nnoremap cug :%s/>#>/>=>/ge<cr>
 " restore Kleisi!
-vnoremap <leader>bu :s/\%V→/->/ge<cr>:s/\%V∷/::/ge<cr>:s/\%V⇒/=>/ge<cr>
-vnoremap <leader>bi :s/\%V->/→/ge<cr>:s/\%V::/∷/ge<cr>:s/\%V=> /⇒ /ge<cr>
+" vnoremap <leader>bu :s/\%V→/->/ge<cr>:s/\%V∷/::/ge<cr>:s/\%V⇒/=>/ge<cr>
+" vnoremap <leader>bi :s/\%V->/→/ge<cr>:s/\%V::/∷/ge<cr>:s/\%V=> /⇒ /ge<cr>
 
 " Alternative for bind? ⤜ or »= or >>= or ≥
 
@@ -814,6 +802,7 @@ endfun
 " set shiftround
 
 nnoremap <leader>>> :call IndentToCursorH()<CR>
+nnoremap <leader><< :call IndentToCursorH()<CR>
 " TODO: maybe make a mapping "dwkwj<leader>>>" to indent haskell binds:
   " jsonValue ∷ Value
   "           ← decode (T.encodeUtf8 jsonTxt) ?? "Not a valid json!"
@@ -1408,26 +1397,11 @@ nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 
 " New Haskell And Purescript Maps: ------------------------------------------------------
 
-" Old Intero Maps: ------------------------------------------------------------------
-nnoremap <Leader>kk :call ReplTopFnRL()<cr>
-" nnoremap geri :call ReplTopFnRLInsert()<cr>
-
-" run selection
-vnoremap <Leader>kk :call ReplVisSel()<cr>
-
-" run (commented) function call with many args
-nnoremap <Leader>kl :call ReplComLine()<cr>
-" nnoremap gec        :call ReplComLine()<cr>
-
-" reload module
-nnoremap <Leader>kr :call ReplReload()<cr>
 nnoremap dr :call ReplReload()<cr>
 
 " nnoremap tr :call TraceTopLevelValue()<cr>
 nnoremap ta :call TraceTopLevelValue()<cr>
 " nnoremap tf :call TraceComLine()<cr>
-" Old Intero Maps: ------------------------------------------------------------------
-
 
 
 " GHCI:
@@ -1966,60 +1940,29 @@ let g:SignatureIncludeMarks = 'ABCDEFGHIJKLMN'
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
 " command! DelMarks :delmarks ABCDEFGHIJKLMN
 
-" Prefer global marks and make them quick to type
-" nnoremap ma mA
-" nnoremap mb mB
-" nnoremap mc mC
-" nnoremap md mD
-" nnoremap me mE
-" nnoremap 'a 'A
-" nnoremap 'b 'B
-" nnoremap 'c 'C
-" nnoremap 'd 'D
-" nnoremap 'e 'E
 
 " Markers Marks: ----------------------------------------------------------------
 
 
-" Sneak Code Navigation: ------------------------------------------------
-let g:sneak#label = 1
+" Easymotion Sneak Code Navigation: ------------------------------------------------
+nmap f <Plug>(easymotion-bd-f)
+nmap <localleader>w <Plug>(easymotion-w)
+nmap <localleader>b <Plug>(easymotion-b)
+nmap <localleader>j <Plug>(easymotion-j)
+nmap <localleader>k <Plug>(easymotion-k)
+" Search replacement (tryout)
+nmap / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+map L <Plug>(easymotion-next)
+map H <Plug>(easymotion-prev)
 
-map L <Plug>Sneak_;
-map H <Plug>Sneak_,
-
-let g:sneak#absolute_dir = 1 " 'L' alway navigates forward
-let g:sneak#use_ic_scs = 1 " 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
-let g:sneak#target_labels = "funqt/FGHLTUNRMQZ?0"
-
-nmap f <Plug>Sneak_s
-nmap F <Plug>Sneak_S
-" visual-mode
-xmap f <Plug>Sneak_s
-xmap F <Plug>Sneak_S
-" operator-pending-mode
-omap f <Plug>Sneak_s
-omap F <Plug>Sneak_S
-
-" 1-character enhanced 't'
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
-" visual-mode
-xmap t <Plug>Sneak_t
-xmap T <Plug>Sneak_T
-" operator-pending-mode
-omap t <Plug>Sneak_t
-omap T <Plug>Sneak_T
-
-augroup colsneak
-  autocmd!
-  autocmd ColorScheme * hi! link SneakScope Normal
-  " autocmd ColorScheme * hi! Sneak guifg=green guibg=orange
-  autocmd ColorScheme * hi! link Sneak Cursor
-augroup END
-
-hi! link Sneak Cursor
-
-" Sneak Code Navigation: ------------------------------------------------
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_do_shade = 0
+let g:EasyMotion_disable_two_key_combo = 0
+hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
+" Easymotion Sneak Code Navigation: ------------------------------------------------
 
 
 " ------------------------------------------------------
@@ -2037,13 +1980,15 @@ hi! link Sneak Cursor
 " Open omni menu and don't select the first entry
 " inoremap <C-space><C-space> <C-x><C-o><C-p>
 " navigate the list by using j and k
-inoremap <C-j> <C-n>
+" Free mapping in insert mode
+" inoremap <C-j> <C-n>
 " inoremap <C-k> <C-p>
 
 " open suggestions
 " imap <Tab> <C-P>
 
-" filetype plugin on
+" TODO Does this enable netrw?
+filetype plugin on
 " set omnifunc=syntaxcomplete#Complete
 " TODO: above line testen
 " insert mode <S-space> schliesst omni preview und fuegt space ein
@@ -2063,10 +2008,16 @@ inoremap <C-j> <C-n>
 " ------------------------------------------------------
 
 
-" Search and highlighting ---------------------------------
-nnoremap / :set hlsearch<cr>:noh<cr>/\v
-vnoremap / /\v
-nnoremap <M-/> /
+" Search: ---------------------------------
+
+" Search within subdirectories
+set path+=**
+" Also use *somecars to fuzzy the first part of the filename
+
+
+" nnoremap / :set hlsearch<cr>:noh<cr>/\v
+" vnoremap / /\v
+" nnoremap <M-/> /
 
 " Search visually selected text
 vnoremap // y/<C-R>"<CR>
@@ -2236,7 +2187,7 @@ let g:ctrlp_custom_ignore = {
     \ 'dir':  '\.git$\|\.cache$\|\.stack$\|\.stack-work$\|vimtmp\|undo\bower_components$\|dist$\|node_modules$\|project_files$\|test$',
     \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 " This needs a restart to take effect.
-
+  
 let g:ctrlp_root_markers = ['src/', '.gitignore', 'package.yaml', '.git/']
 let g:ctrlp_by_filename = 1
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:20,results:40'
@@ -2269,7 +2220,8 @@ let g:ctrlp_prompt_mappings = {
 " let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript',
 "                          \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
 " let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
-let g:ctrlp_extensions = ['undo', 'line', 'changes']
+" let g:ctrlp_extensions = ['undo', 'line', 'changes']
+let g:ctrlp_extensions = ['tag', 'line', 'changes']
 
 
 let g:ctrlp_max_files = 2000
@@ -2445,8 +2397,8 @@ autocmd TabLeave * let g:lasttab = tabpagenr()
 " nnoremap \X :bp<bar>sp<bar>bn<bar>bd!<CR>
 " some as: ?
 " nnoremap \X :bp | :sp | :bn | :bd!<CR>
-nnoremap <localleader>bd :bd<cr>
-nnoremap <leader>bd :bd!<cr>
+nnoremap <leader>bd :bd<cr>
+nnoremap <leader>bD :bd!<cr>
 
 " Buffers: -----------------------------------------
 
@@ -2458,7 +2410,7 @@ nnoremap <localleader>qa :qa<cr>
 nnoremap <localleader>qq :q<cr>
 
 " nnoremap gw :w<cr>
-nnoremap <localleader>w :w<cr>
+" nnoremap <localleader>w :w<cr>
 
 
 
@@ -2469,10 +2421,7 @@ nnoremap <localleader>w :w<cr>
 " General: ----------------------------------------------------------
 
 " Exit insert mode
-" inoremap jk <esc>l
-inoremap <c-[> <esc>l
-" Exit visual mode
-" vnoremap g- <esc>
+" inoremap <c-[> <esc>l
 
 " General: ----------------------------------------------------------
 

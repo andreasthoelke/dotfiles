@@ -62,6 +62,50 @@
   1. **created**: by saving the content of a buffer
   2. **loaded**: in a buffer
 
+  in insert mode:
+  `c-x c-f` to start filename browse mode!
+  `c-x c-n` for completion. what the difference to just `c-n`?
+  use `c-w` to delete a word at the prompt
+  use the `*` to get fuzzy suggestions NOTE/TODO: this isn't *on the fly* fuzzy/ while you type - but completion plugins have this.
+
+## Folders
+
+### Cmdline :find               
+  `:find a<tab>` (e.g. in Haskell project folder) allows to:
+  * Reach into subfolders (usind `set path+=**`, but this includes other folders)
+  * autocompl menu
+  * fuzzy complete (e.g. `:find *hs<c-i>` will show all haskell files)
+  (https://www.kwyse.com/posts/twid-vim-minimalism/)
+
+### Cmdline Menu: 
+  (with setting `set wildmode=longest:list,full`)
+  * `c-i` to start command line auto completion (or tab)
+  * looking at the grid displayed options:
+      * type the first char, then hit `c-i` again to expand the filtered options
+  * `c-n/p` will suffle through in horz menu
+
+
+
+### Dirvish
+  * `-` open / up/parent folder
+  * `q` close
+  * use 'filepath' of dirvish in command:
+    * `cd %` set working dir
+    * `edit %/foo.txt` create a file **TODO** how to save a temp/unsaved buffer by navigating to a folder, then `w #/filesname`
+    * `]f/[f` next/prev file through all sub folders!
+    * on a file name (which is a full file path under conceil):
+      * `gf` or `<cr>` to `:e ` that file
+      * `c-w f` to split view that file below
+    * `yy` the path, then:
+      * go to buffer and `:read <c-r>"` the content of the yanked path
+
+how about folders?
+  relation to files/buffer/tabs?
+  create/remove
+  ctrlP navigate
+
+
+
 ## Buffers
   States:
   1. **listed**: in the bufferlist (~in memory)
@@ -114,6 +158,8 @@ code auto completion:
 #### Load Open Buffer
   * **New Tab:** CtrlP `o` + `t` to load buffer into new tab (no matter if buffer is shown somewhere
 
+
+
 alternate between prev and current buffer: `:e #` `,`
 
   * `\tc` for tabc[lose]
@@ -159,9 +205,15 @@ use <c-o> open menu?
 ## Code navigation
 ### Tags
     * `:tags`
+        `set tags?`
+        `c-]` to nav, `c-t` to go back
+        
+
 ### Changes
     * `:changes`
     * back to last change (e.g. paste) `\`.`
+    * `g;` `g,` shuffle through changes
+
 ### Inserts
     * back to last insert
 ### Jumps

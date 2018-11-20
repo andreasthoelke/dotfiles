@@ -314,6 +314,9 @@ Ctrl+v: split current window vertically
   http://ctrlpvim.github.io/ctrlp.vim/
   `<c-\>` paste from <cword>, visual sel, etc
 
+when fuzzy typing to select a buffer in ctrlP, the filenate (not the folderpath) should be preferred
+
+
 use `du` mapping? 
 changed/hunks?
 
@@ -618,9 +621,44 @@ load list/lines into loclist preview window?
 
 ctrlp c-v should also allow opening it again - not just reveal
 
---
+---
+https://medium.com/@olegsmetanin/vim-recipes-ac65f75f26bf
+---
+
+" Deoplete: code completion tool
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Use TAB for code completion 
+Plug 'ervandew/supertab'
+" Enable deoplete at startup
+let g:deoplete#enable_at_startup = 1
+" Select from completion list with SHIFT-j/k
+inoremap <expr> <C-j> ("\<C-n>")
+inoremap <expr> <C-k> ("\<C-p>")
+
+" Go to definition in new split
+nnoremap <silent>fd <C-w>v<C-w>w :call feedkeys("gd")<CR>
+
+Plug 'junegunn/gv.vim'
+
+" CtrlP file, buffer, tag search
+let g:ctrlp_extensions = ['mixed', 'changes', 'quickfix']
+let g:ctrlp_cmd = 'call CallCtrlP()'
+" Search tags with Ctrl-i
+noremap <c-i> :CtrlPTag<CR>
+func! CallCtrlP()
+    if exists('s:called_ctrlp')
+        CtrlPLastMode
+    else
+        let s:called_ctrlp = 1
+        CtrlPMixed
+    endif
+endfunc
+
+---------------
 
 terminate markdown segment with | ..?
+
+when fuzzy typing to select a buffer in ctrlP, the filenate (not the folderpath) should be preferred
 
 new register /copy paste plugin
 
@@ -657,6 +695,9 @@ config save a grep search through all info sources for:
   deal with directories in ctrlp
     also create files in ctrlp
 
+mksession does not maintain cursor position in spits of one file
+
+  -------------------
 
 
 

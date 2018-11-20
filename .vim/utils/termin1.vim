@@ -214,7 +214,9 @@
 " View A Folder Env Variable: e.g. VIMRUNTIMEPATH Folder: - "i<c-r>=$VIM<tab><cr>" in buffer, then "<c-w>f" to open Nerdtree.  Or ":NERDTree $VIM<tabs>"
 
 " Spell Checking And Dictionaries: Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off
-" Navigate errors: "]s" - "[s", show suggestions: "z=", add to dictionary: "zg" undo "zug"
+" Navigate errors: "]s" - "[s", show suggestions: "z=", rather: "ea" to go to insert mode at the end of the word, then
+" "c-x s" to open suggestion menu! TODO prevent proposing capitalized suggestions.
+" add to dictionary: "zg" undo "zug"
 " Go To Line: - ":123"!
 
 " Debugging: Prefix ":verbose " to a command, e.g. ":verb e .vim/utils/termin1.vim" 
@@ -302,8 +304,6 @@ if has('nvim')
   tnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
   nnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
   tnoremap <c-w>c <C-\><C-n>:bw!<cr>
-  " TODO use this?
-  nnoremap <localleader>bw <C-\><C-n>:bw!<cr>
 endif
 
 command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
@@ -520,7 +520,7 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 " "<<" and ">>" to move tab!
 " Move Tab To Other Window: - "yy", <c-arrowKey> to move to other space/window, "P" to open a new tab for the copied URL in the new window.
 " Select Copy Paste Text: With source text area in view, hit "vc" and confirm 'carret mode' is active. use regular movements, 
-" hit "v" for visual selection mode, use "o" to switch to adapt the beginning of the selection. the
+" hit "v" for visual selection ode, use "o" to switch to adapt the beginning of the selection. the
 " "y" to copy. In VIM, do "*P to past the clipboard.
 " Google Search Copied Text: just hit "P" to search in a new Tab!
 
