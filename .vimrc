@@ -303,11 +303,12 @@ let g:promptline_preset = {
 " avoid |hit enter| prompts
 set shortmess+="mW"
 
-autocmd! VimLeavePre * call VimLeaveCleanup()
-func! VimLeaveCleanup()
-  MundoShow " Briefly open Mundo in the current tab (closes it in other tabs) to then close it. Otherwise empty mundo buffers are open after restart.
-  MundoHide
-endfunc
+" This is slow when exiting vim
+" autocmd! VimLeavePre * call VimLeaveCleanup()
+" func! VimLeaveCleanup()
+"   MundoShow " Briefly open Mundo in the current tab (closes it in other tabs) to then close it. Otherwise empty mundo buffers are open after restart.
+"   MundoHide
+" endfunc
 
 
 " Persistence Saving: -----------------------------------------------------------------
@@ -1940,29 +1941,45 @@ let g:SignatureIncludeMarks = 'ABCDEFGHIJKLMN'
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
 " command! DelMarks :delmarks ABCDEFGHIJKLMN
 
-
 " Markers Marks: ----------------------------------------------------------------
 
 
-" Easymotion Sneak Code Navigation: ------------------------------------------------
-nmap f <Plug>(easymotion-bd-f)
-nmap <localleader>w <Plug>(easymotion-w)
-nmap <localleader>b <Plug>(easymotion-b)
-nmap <localleader>j <Plug>(easymotion-j)
-nmap <localleader>k <Plug>(easymotion-k)
-" Search replacement (tryout)
+" Easymotion Code Navigation: ------------------------------------------------
+" Endhanced word and line motions
+map <localleader>w <Plug>(easymotion-w)
+map <localleader>b <Plug>(easymotion-b)
+map <localleader>j <Plug>(easymotion-j)
+map <localleader>k <Plug>(easymotion-k)
+map <localleader>l <Plug>(easymotion-lineforward)
+map <localleader>h <Plug>(easymotion-linebackward)
+" Jump to specific char within a word
+nmap f <Plug>(easymotion-overwin-f)
+xmap f <Plug>(easymotion-bd-f)
+omap f <Plug>(easymotion-bd-f)
+map t <Plug>(easymotion-tl)
+" Jump to typical spots
+map F <Plug>(easymotion-jumptoanywhere)
+" Search replacement
 nmap / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 map L <Plug>(easymotion-next)
 map H <Plug>(easymotion-prev)
 
 let g:EasyMotion_smartcase = 1
+let g:EasyMotion_use_smartsign_us = 1
 let g:EasyMotion_do_shade = 0
 let g:EasyMotion_disable_two_key_combo = 0
 hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
 hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionTarget2Second guifg=black guibg=white ctermfg=black ctermbg=white
 hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
-" Easymotion Sneak Code Navigation: ------------------------------------------------
+" let g:EasyMotion_re_anywhere = '\v' .
+"   \ '(<.|^$)' . '|' .
+"   \ '(.>|^$)' . '|' .
+"   \ '(\l)\zs(\u)' . '|' .
+"   \ '(_\zs.)' . '|' .
+"   \ '(#\zs.)'
+" Easymotion Code Navigation: ------------------------------------------------
 
 
 " ------------------------------------------------------

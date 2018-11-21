@@ -230,6 +230,13 @@
 " Show Source Of Autocmds: - "verbose autocmd BufWritePost *"
 " Debug a function: ":debug call FunctionName(arg)"
 " Startup time: "nvim --startuptime ~/.vim/Logs/startup1.log" 
+" Performance Profile: 
+" profile start profile.log
+" profile func *
+" profile file *
+"  At this point do slow actions
+" profile pause
+" noautocmd qall!
 " Repeatable Map Setup: e.g. repeat <leader>abb by typing "."! Example RepeatVim Setup:
 " nmap <Plug>Eins ieins<esc>:call repeat#set("\<Plug>Eins")<cr>
 " nmap <leader>abb <Plug>Eins

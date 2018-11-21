@@ -280,4 +280,29 @@ save and restore a session with windows and tabs
 
 ----------------------------------------------------
 
+# Tags
+document hasktags workflow:
+  in stack.yaml add this: `extra-deps: [hasktags-0.71.2]`
+
+Tag screenshot featuring ctrlp and tagbar:
+  ~/.vim/screenshots/tags-tagbar-haskell-ctrlp.png
+
+run python that script, does this have --help?
+produce ctags as a text file - where is this put?
+
+optimize and document in vim-worksteps progressively:
+  * generate `ctags` file
+ ~  .vim  notes  python ~/.vim/plugged/markdown2ctags/markdown2ctags.py notes29-09.md
+ (could just get to command history in terminal buffer - it now seems to be the same shell(zsh)
+ instance??!)
+  * ctrlP needed to be cced into that folder .vim/notes, to pick up the 'tags' file
+current termina questions. see screenshot:
+  how to get to command history how to copy this?
+  how to copy/edit/get into vim a command I ran?
+  same re the markdown2ctags.py --help output
+
+
+
+
+
 
