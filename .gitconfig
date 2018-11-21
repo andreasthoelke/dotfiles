@@ -1,5 +1,6 @@
 [core]
 	editor = nvim
+	excludesfile = /Users/andreas.thoelke/.gitignore_global
 [user]
 	name = Andreas Thoelke
 	email = andreas.thoelke@gmail.com
@@ -27,3 +28,9 @@ data=short
 
 
 
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
