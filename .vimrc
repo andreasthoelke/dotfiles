@@ -79,7 +79,8 @@ Plug 'https://github.com/dbakker/vim-projectroot'
 " iTerm2 integration
 Plug 'sjl/vitality.vim'
 " Show undotree with inline diffs and search
-Plug 'simnalamburt/vim-mundo'
+" Plug 'simnalamburt/vim-mundo'
+Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in display
 " Alternative undotree visualizer that does not allow inline diffs and search
 " Plug 'mbbill/undotree'
 
@@ -1950,6 +1951,7 @@ map <localleader>w <Plug>(easymotion-w)
 map <localleader>b <Plug>(easymotion-b)
 map <localleader>j <Plug>(easymotion-j)
 map <localleader>k <Plug>(easymotion-k)
+" Jump to typical spots
 map <localleader>l <Plug>(easymotion-lineforward)
 map <localleader>h <Plug>(easymotion-linebackward)
 " Jump to specific char within a word
@@ -1957,8 +1959,6 @@ nmap f <Plug>(easymotion-overwin-f)
 xmap f <Plug>(easymotion-bd-f)
 omap f <Plug>(easymotion-bd-f)
 map t <Plug>(easymotion-tl)
-" Jump to typical spots
-map F <Plug>(easymotion-jumptoanywhere)
 " Search replacement
 nmap / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
@@ -1969,6 +1969,7 @@ let g:EasyMotion_smartcase = 1
 let g:EasyMotion_use_smartsign_us = 1
 let g:EasyMotion_do_shade = 0
 let g:EasyMotion_disable_two_key_combo = 0
+let g:EasyMotion_verbose = 0
 hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
 hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
 hi EasyMotionTarget2Second guifg=black guibg=white ctermfg=black ctermbg=white

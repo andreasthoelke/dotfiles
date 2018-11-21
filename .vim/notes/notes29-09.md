@@ -654,6 +654,13 @@ config save a grep search through all info sources for:
   * haskell code examples
   * etc ..
 
+## Cleanup patched plugings
+* fork the original repo, pull it locally
+* run a diff with the version that i'm currently using
+* integrate what I have changed
+* push change to forked github repo
+* github will show changes from original repo, so I can merge them from time to time!!
+
 
   Current Todos
 -
@@ -675,10 +682,12 @@ config save a grep search through all info sources for:
     how can I use the `:read` command?
 
   Select till end of the paragraph/sentence with vim-target
+
   deal with directories in ctrlp
     also create files in ctrlp
 
-mksession does not maintain cursor position in spits of one file
+mksession does not maintain cursor position in splits of one file
+  → tested, and it now seems to work
 
   -------------------
 
