@@ -1,0 +1,22 @@
+
+
+# Ignore everything
+# *
+# But descend into directories (approach from https://jasonstitt.com/gitignore-whitelisting-patterns)
+# */
+# Ignore files and folders in the root
+/*
+
+# Allow files under a specific folder
+!/.vim
+/.vim/*
+!/.vim/notes
+!/.vim/utils
+
+# It seems it's not seeded to list individual files as one can just "git add -f <file>" as long as there are few files
+!.gitignore
+
+
+
+
+

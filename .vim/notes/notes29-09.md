@@ -1,5 +1,54 @@
 ## Done
-jump to a tab by number. to avoid many c-f's
+
+
+## Styles
+reactive and test haskell-vim first
+this or the purescript one seems needed for:
+  NLKNguyen/papercolor-theme https://github.com/NLKNguyen/papercolor-theme
+  another one:
+  https://github.com/kamwitsta/flatwhite-vim
+
+font: Iosevka - for writing
+
+  * Commented segments in code, like: https://github.com/sdothum/dotfiles/blob/master/vim/.vim/config/buffer.vim
+  * Should be lined to Tags and Folds
+
+  * Scrollbar!? https://github.com/lornix/vim-scrollbar
+  * Marks and Registers: https://github.com/Yilin-Yang/vim-markbar
+
+## Textobjects
+https://github.com/wellle/targets.vim
+
+https://github.com/bkad/camelcasemotion
+  * do inner word selects! v3ie selects script_31337_path_and_[name_without_extension]_11
+
+https://github.com/coderifous/textobj-word-column.vim
+  * vicA - Append new text to a column
+
+  * `Haskell` function next/prev: http://silly-bytes.blogspot.com/2016/08/vim-haskell_11.html
+    au FileType haskell onoremap <silent> ia :<c-u>silent execute "normal! ?->\r:nohlsearch\rwvf-ge"<CR>
+    au FileType haskell onoremap <silent> aa :<c-u>silent execute "normal! ?->\r:nohlsearch\rhvEf-ge"<CR>
+    function! JumpHaskellFunction(reverse)
+        call search('\C[[:alnum:]]*\s*::', a:reverse ? 'bW' : 'W')
+    endfunction
+  * `Haskell` textobjects only has 'inner function': https://github.com/gilligan/vim-textobj-haskell/blob/master/plugin/textobj/haskell.vim
+
+additionals
+https://github.com/kana/vim-textobj-user/wiki
+
+
+
+## Splits
+  * https://github.com/wellle/visual-split.vim
+  * extend this to splitting out to (the top of) a right bar column
+
+
+## Email
+https://github.com/danchoi/vmail
+http://nosubstance.me/post/mutt-secret-sauce/
+
+
+
 
 ## Documentation Readme
   * using git tags and releases
@@ -15,6 +64,18 @@ jump to a tab by number. to avoid many c-f's
   * `q/` search history
   * `HelpGrep` to seach vim help (rename?)
 
+" This works pretty well. could reuse for other purposes
+command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
+
+
+## Undofile Shada
+
+  `:verbose e .config/alacritty/alacritty.yml" 491L, 18989C`
+    Reading ShaDa file "/Users/andreas.thoelke/.local/share/nvim/shada/main.shada" marks
+    Reading undo file: /Users/andreas.thoelke/vimtmp/undo/%Users%andreas.thoelke%.config%alacritty%alacritty.yml
+
+  TODO: Does vim resume undohistory after git-checkout?
+        git check in ShaDa and undo files
 
 ## Code Motions
   Sneak
@@ -207,7 +268,7 @@ allow iTerm to launch at different loc
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
 
 " Sneak Quick Navigation Find: ------------------------------------------------
-set a differen Sneak next key?
+set a different Sneak next key? .. I think L and H are fine
 
 asana integration?
 send to time manager! (have regular interval events?)
@@ -228,8 +289,6 @@ align vim tips to after ":"
 
 
 send a key to switch desktop!
-
-
 
 " Todo: jobsend example!
 
@@ -254,6 +313,9 @@ Ctrl+v: split current window vertically
   submit `?` in CtrlP for more mapping help
   http://ctrlpvim.github.io/ctrlp.vim/
   `<c-\>` paste from <cword>, visual sel, etc
+
+when fuzzy typing to select a buffer in ctrlP, the filenate (not the folderpath) should be preferred
+
 
 use `du` mapping? 
 changed/hunks?
@@ -292,8 +354,6 @@ what are sort of 'leader keys' with cound preceed other keys in sequences?
 - potential leading-sequence keys: q, [, ], 
 
 
-
-
 ## Karabiner
 
 ### Config path 
@@ -301,7 +361,7 @@ what are sort of 'leader keys' with cound preceed other keys in sequences?
 
 ### Create a Karabiner complex modifications mapping
   1. Duplicate an object ({..}) in the `rules` array here: `~/.config/karabiner/karabiner.json`
-  2. Open the `Karabiner-Elements Preferences` MacOS app, open the `Log` tab.j
+  2. Open the `Karabiner-Elements Preferences` MacOS app, open the `Log` tab.
   3. Change and save the `rules` object. (Karabiner autoreloads this config file and shows error messages in the log window)
 
 Note: When a `Complex Modificatioin` is `remove`d in the Karabiner-Elements Preferences UI, the
@@ -316,9 +376,9 @@ related object is **deleted** from the Karabiner.json file!
 " Closing The Window: End the terminal session? Use "call jobstop(s:markdown_job_id)"
 
 
-
-
-
+## Popup Tooltip UI
+ * Hover over the following line and `localleader-gi`
+   /Users/andreas.thoelke/Pictures/download.jpeg
 
 
 
@@ -383,8 +443,9 @@ gitgutter and ale toggles as `yog/a`?
 have a quicklink/bookmarks drawer?
 
 ## Next:
-test out undo, line, dir(!) mode!! 
-can I finally navigate down in dir mode?
+test out Ctrlp undo, line, dir(!) mode!! 
+  can I finally navigate down in dir mode?
+
 insert
   sessionoptions=blank,buffers,curdir,folds,help,options,tabpages,winsize
 load/save tabed session
@@ -447,7 +508,7 @@ JSON release image on desktop
   * syntax file: `.vim/plugged/vim-json/syntax/json.vim`
   * highlight colors are difined at `JSON colors` (seach tag)
 
-neovim remote open in running nvim
+> neovim remote open in running nvim
 also from ranger open-wi
 
 f naviage with ";"?! not possibe
@@ -456,6 +517,9 @@ c-s c-l is fast, but should it switch windows? tabs?
 c-s-w is awkward and should be consitent
 
 c-s J/K/L/H is pretty intuitive!
+
+> change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
+      some start Documents/PS/2/pux-todo/node_modules/anymatch
 
 ## Github
 set up the vim-hub plugin
@@ -517,23 +581,6 @@ ctrlP typing in buffers selector refers to files name with preference
 what are buffertags?
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
-document hasktags workflow:
-  in stack.yaml add this: `extra-deps: [hasktags-0.71.2]`
-
-
-run python that script, does this have --help?
-produce ctags as a text file - where is this put?
-
-optimize and document in vim-worksteps progressively:
-  * generate `ctags` file
- ~  .vim  notes  python ~/.vim/plugged/markdown2ctags/markdown2ctags.py notes29-09.md
- (could just get to command history in terminal buffer - it now seems to be the same shell(zsh)
- instance??!)
-  * ctrlP needed to be cced into that folder .vim/notes, to pick up the 'tags' file
-current termina questions. see screenshot:
-  how to get to command history how to copy this?
-  how to copy/edit/get into vim a command I ran?
-  same re the markdown2ctags.py --help output
 
 quit vim map: <localleader>qa
 
@@ -541,6 +588,10 @@ saving from ctrlP, or google "save all unsaved buffer .. (dangerous!)
 
 
 airline config to show buffername
+**
+
+
+**
 
 how are changes recorded in vim?
 
@@ -553,9 +604,40 @@ load list/lines into loclist preview window?
 
 ctrlp c-v should also allow opening it again - not just reveal
 
---
+---
+https://medium.com/@olegsmetanin/vim-recipes-ac65f75f26bf
+---
 
-terminate markdown segment
+" Deoplete: code completion tool
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Use TAB for code completion 
+Plug 'ervandew/supertab'
+" Enable deoplete at startup
+let g:deoplete#enable_at_startup = 1
+" Select from completion list with SHIFT-j/k
+inoremap <expr> <C-j> ("\<C-n>")
+inoremap <expr> <C-k> ("\<C-p>")
+
+" Go to definition in new split
+nnoremap <silent>fd <C-w>v<C-w>w :call feedkeys("gd")<CR>
+
+Plug 'junegunn/gv.vim'
+
+" CtrlP file, buffer, tag search
+let g:ctrlp_extensions = ['mixed', 'changes', 'quickfix']
+let g:ctrlp_cmd = 'call CallCtrlP()'
+" Search tags with Ctrl-i
+noremap <c-i> :CtrlPTag<CR>
+func! CallCtrlP()
+    if exists('s:called_ctrlp')
+        CtrlPLastMode
+    else
+        let s:called_ctrlp = 1
+        CtrlPMixed
+    endif
+endfunc
+
+---------------
 
 sneak first result is not highlighted
 
@@ -563,56 +645,51 @@ test gregsexton/gitv
 
 new register /copy paste plugin
 
+use augroup to allow safely reloading my vimrc. can use the `au!` patterns to first remove commands
+in of that group
 
--------------
+config save a grep search through all info sources for:
+  * vim notes
+  * vim code
+  * haskell code examples
+  * etc ..
 
-
-## Styles
-reactive and test haskell-vim first
-this or the purescript one seems needed for:
-  NLKNguyen/papercolor-theme https://github.com/NLKNguyen/papercolor-theme
-  another one:
-  https://github.com/kamwitsta/flatwhite-vim
-
-font: Iosevka - for writing
-
-  * Commented segments in code, like: https://github.com/sdothum/dotfiles/blob/master/vim/.vim/config/buffer.vim
-  * Should be lined to Tags and Folds
-
-  * Scrollbar!? https://github.com/lornix/vim-scrollbar
-  * Marks and Registers: https://github.com/Yilin-Yang/vim-markbar
-
-## Textobjects
-https://github.com/wellle/targets.vim
-
-https://github.com/bkad/camelcasemotion
-  * do inner word selects! v3ie selects script_31337_path_and_[name_without_extension]_11
-
-https://github.com/coderifous/textobj-word-column.vim
-  * vicA - Append new text to a column
-
-  * `Haskell` function next/prev: http://silly-bytes.blogspot.com/2016/08/vim-haskell_11.html
-    au FileType haskell onoremap <silent> ia :<c-u>silent execute "normal! ?->\r:nohlsearch\rwvf-ge"<CR>
-    au FileType haskell onoremap <silent> aa :<c-u>silent execute "normal! ?->\r:nohlsearch\rhvEf-ge"<CR>
-    function! JumpHaskellFunction(reverse)
-        call search('\C[[:alnum:]]*\s*::', a:reverse ? 'bW' : 'W')
-    endfunction
-  * `Haskell` textobjects only has 'inner function': https://github.com/gilligan/vim-textobj-haskell/blob/master/plugin/textobj/haskell.vim
-
-additionals
-https://github.com/kana/vim-textobj-user/wiki
+## Cleanup patched plugings
+* fork the original repo, pull it locally
+* run a diff with the version that i'm currently using
+* integrate what I have changed
+* push change to forked github repo
+* github will show changes from original repo, so I can merge them from time to time!!
 
 
+  Current Todos
+-
 
-## Splits
-  * https://github.com/wellle/visual-split.vim
-  * extend this to splitting out to (the top of) a right bar column
+  nyaovim fontsize, popup test, minibrowser
+  vifm: show last changed in hours vs size!
+  Grepper: Test running in Haskell hello44 vs Homedir
+           How to quickly change dir the underlying shell?
+           How to get the current folder path into an ex-command?
 
+  Minimal Tab/status line plugin (to test)
+  Buffer manager plugin
+  2 git plugins to test
 
-## Email
-https://github.com/danchoi/vmail
-http://nosubstance.me/post/mutt-secret-sauce/
+  The `Term` command allows running `history` and `node` repl
+  * set up callbacks
+  * chunk returned text events into visible list. - allows to refer to/ insert specific protions via register/ paste?
 
+    how can I use the `:read` command?
+
+  Select till end of the paragraph/sentence with vim-target
+
+  deal with directories in ctrlp
+    also create files in ctrlp
+
+mksession does not maintain cursor position in splits of one file
+  → tested, and it now seems to work
+
+  -------------------
 
 
 

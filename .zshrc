@@ -104,13 +104,13 @@ source $ZSH/oh-my-zsh.sh
 
 
 
-
-
-# User configuration
+# User configuration --------------------------------------------------
 
 # Activate vim bindings
-bindkey -v
+# bindkey -v
 
+unsetopt correct_all
+unsetopt correct
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -129,6 +129,19 @@ alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
 # Tested examples: 
 # /Applications/Chromium.app/Contents/MacOS/Chromium --window-size=200,500 --window-position=0,20
 # chromium --window-size=800,400 --window-position=222,222
+
+# Git aliases: ---------------------------------------------------------
+alias gs='git status '
+alias ga='git add '
+alias gb='git branch '
+alias gc='git commit -m '
+alias gd='git diff'
+alias go='git checkout '
+alias gitk='gitk --all&'
+alias gitx='gitx --all'
+
+# Git aliases: ---------------------------------------------------------
+
 
 function chpwd() {
     emulate -L zsh

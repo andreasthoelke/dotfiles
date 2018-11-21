@@ -7,14 +7,14 @@ Plug 'junegunn/vim-plug'
 " This is probl. just to have the help/docs available
 
 " File Selectors Browsers: ------------------------------------------
-Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
-" Plug '/usr/local/opt/fzf'
-" Plug 'junegunn/fzf.vim'
-" Plug 'rafaqz/ranger.vim'
 Plug 'justinmk/vim-dirvish'
-" Plug 'rafaqz/ranger.vim'
-" test this!
+" test these
+" Plug 'vifm/neovim-vifm'
+" Plug 'vifm/vifm.vim'
+
+" Completion: -------------------------------------
+Plug 'ajh17/VimCompletesMe'
 
 Plug 'majutsushi/tagbar'
 " there is a Haskell integration, but it does not work :Tag.. not..
@@ -22,20 +22,23 @@ Plug 'majutsushi/tagbar'
 " Git Integration: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'gregsexton/gitv'
+Plug 'gregsexton/gitv', {'on': ['Gitv']}
 
+" Search Integration: -----------------------------------------------
+" Currently using this via "Find"
+Plug 'mhinz/vim-grepper'
 Plug 'mileszs/ack.vim'
 " Search integration
 Plug 'rking/ag.vim'
 
 " Styling: -----------------------------------------------------------
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 " Creates tmux colors e.g. at ".tmuxline.conf"
-" Plug 'edkolev/tmuxline.vim' 
+" Plug 'edkolev/tmuxline.vim'
 " This inserts unicode icons file-type into airline/bufferline, nerdtree and ctrlp!
 " Requires a patched font ("Nerd Font" e.g. "family: MesloLGLDZ Nerd Font") which is set in "alacritty.yaml" or "kitty.conf" or ITerm2 settings.
-Plug 'ryanoasis/vim-devicons'
+" Plug 'ryanoasis/vim-devicons'
 " Creates a (zsh) command prompt based on vim-airline style: ":PromptlineSnapshot ~/.promptline.sh airline" then in zsh: "source .promptline.sh"
 Plug 'edkolev/promptline.vim'
 
@@ -48,6 +51,9 @@ Plug 'cormacrelf/vim-colors-github'
 
 Plug 'chrisbra/Colorizer'
 Plug 'KabbAmine/vCoolor.vim'
+
+Plug 'rhysd/nyaovim-popup-tooltip'
+
 
 " Highlight
 " Plug 't9md/vim-quickhl'
@@ -73,6 +79,14 @@ Plug 'https://github.com/dbakker/vim-projectroot'
 " Plug 'xolox/vim-shell'
 " iTerm2 integration
 Plug 'sjl/vitality.vim'
+" Show undotree with inline diffs and search
+" Plug 'simnalamburt/vim-mundo'
+Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in display
+" Alternative undotree visualizer that does not allow inline diffs and search
+" Plug 'mbbill/undotree'
+
+" Autosaves buffers on specific events
+Plug '907th/vim-auto-save'
 
 " Mappings: -----------------
 Plug 'tpope/vim-unimpaired'
@@ -82,18 +96,24 @@ Plug 'tpope/vim-repeat'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'elzr/vim-json'
 Plug 'leafgarland/typescript-vim'
-Plug 'mityu/vim-applescript'  
-Plug 'plasticboy/vim-markdown', {'for': 'markdown'} 
+Plug 'mityu/vim-applescript'
+
+" Markdown: -------------
+Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'jszakmeister/markdown2ctags'
+Plug 'rhysd/nyaovim-markdown-preview'
+
 " Tmux .config features
 Plug 'tmux-plugins/vim-tmux'
+" Allows listening to Tmux focus events to allow autoloading files changed outside vim
+Plug 'tmux-plugins/vim-tmux-focus-events'
 " Vimscript debugging
 Plug 'tpope/vim-scriptease'
 " This works, but not sure I need it often
 Plug 'chrisbra/csv.vim'
 
 " Code Navagation Editing: ---------------------------------------------
-Plug 'justinmk/vim-sneak'
+Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
 Plug 'tomtom/tcomment_vim'
@@ -151,16 +171,19 @@ Plug 'Twinside/vim-hoogle'
 " Plug 'ervandew/supertab'
 " did not work with omnicomplete so far
 "
-Plug 'mhinz/vim-grepper'
-
-
-Plug 'vimlab/split-term.vim'
+" Just a default split command
+" Plug 'vimlab/split-term.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'radenling/vim-dispatch-neovim'
 
 
 call plug#end()
 " ----------------------------------------------------------------------------------
+
+" This needs to be set early in the vimrc, as the mappings below will refer to it!
+let mapleader="\<Space>"
+let maplocalleader="\\"
+
 
 set verbose=0
 
@@ -185,37 +208,33 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
 
 
+" Nyaovim Markdown: ------------------------
+let g:markdown_preview_eager = 1
+let g:markdown_preview_auto = 0
 
-" Other Settings:  ---------------------------------------------------------------
-set lazyredraw
-set selection=inclusive
-" this allows to move the cursor where there is no actual chracter
-set virtualedit=all
-" Console integration
-" Send more characters for redraws
-set ttyfast
-" Enable mouse use in all modes
-set mouse=a
+nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
 
-" Set this to the name of your terminal that supports mouse codes.
-" Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
-" set ttymouse=xterm2
-set guioptions-=T
-set guioptions-=m
-set guioptions-=r
-set guioptions-=L
-" disable sounds
-set noerrorbells
-set novisualbell
-" why this?
-set t_vb=
-" Other Settings:  ---------------------------------------------------------------
+func! MarkdownPreviewToggle()
+  if exists( "g:markdown_preview_active" )
+    StopMarkdownPreview
+    unlet g:markdown_preview_active
+  else
+    StartMarkdownPreview
+    let g:markdown_preview_active = 1
+  endif
+endfunc
+" Nyaovim Markdown: ------------------------
+
+" Nyaovim Popup: ------------------------
+nmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
+vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
+" Nyaovim Popup: ------------------------
 
 
 " Airline Settings: --------------------------------------------------------------
 let g:airline_theme='simple'
 " Powerline fonts work but the > seperator doesn't seem expressive for tabs to status
-" let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 
 " Airline Extensions: ---
 let g:airline#extensions#tabline#enabled = 1
@@ -286,11 +305,44 @@ let g:promptline_preset = {
 " avoid |hit enter| prompts
 set shortmess+="mW"
 
+" This is slow when exiting vim
+" autocmd! VimLeavePre * call VimLeaveCleanup()
+" func! VimLeaveCleanup()
+"   MundoShow " Briefly open Mundo in the current tab (closes it in other tabs) to then close it. Otherwise empty mundo buffers are open after restart.
+"   MundoHide
+" endfunc
+
+
+" Persistence Saving: -----------------------------------------------------------------
+
+
+" Mundo: ----------------------
+let g:mundo_width = 50
+let g:mundo_preview_height = 35
+let g:mundo_right = 1
+let g:mundo_auto_preview_delay = 10
+let g:mundo_verbose_graph = 0
+let g:mundo_playback_delay = 200
+let g:mundo_mirror_graph = 0
+let g:mundo_inline_undo = 1
+let g:mundo_help = 1
+
+" some
+" other
+
+" else
+
+" Autosave: -------------------
+" Use "AutoSaveToggle" enable/disable
+let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save_silent = 1  " do not display the auto-save notification
+" Note: Plugin will "set updatetime=200"
+" Autosave: -------------------
 
 " Vim Sessions: -----------------------------------------------------------------------
 
-nnoremap <localleader>sd :OpenSession! default<cr>
-nnoremap <localleader>sl :OpenSession!<cr>
+nnoremap <leader>sd :OpenSession! default<cr>
+nnoremap <leader>sl :OpenSession!<cr>
 " Load locked session after a vim crash
 command! SessionLoadLocked OpenSession!
 command! SessionShowName echo xolox#session#find_current_session()
@@ -310,9 +362,8 @@ set sessionoptions+=curdir
 set sessionoptions+=tabpages
 set sessionoptions+=winsize
 set sessionoptions+=help
-set sessionoptions+=options
-" useful to maintain syntax setting?
-" NOTE: Restarting Vim usually creates a 'clean' environment, restoring all options may make this less predictable
+" Don't save hidden and unloaded buffers
+set sessionoptions-=buffers
 
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
@@ -328,12 +379,14 @@ let session_autosave_periodic = 0
 "   autocmd User BufStaySavePost if exists('w:lcd') | execute 'lcd' fnameescape(w:lcd) | unlet w:lcd | endif
 " augroup END
 
-set undofile
-" set noundofile
-" set undodir="~/vimfiles/undo/"
+" Falls back to writing undo file into cwd if "vimtmp/undo" is not available(?)
 set undodir=~/vimtmp/undo,.
-" set nobackup
-" set nowritebackup
+" Just activates saving the undo history
+set undofile
+
+" Default undo steps
+" set undolevels=1000
+
 " Restore view settings
 set viewoptions=cursor,folds,slash,unix
 " set viewdir=$HOME/.vim_view//
@@ -342,7 +395,7 @@ set viewdir=~/vimtmp/view//
 " au BufWritePost ?* mkview
 " au BufWinEnter ?* silent loadview
 
-" Local Plugin Patch: 
+" Local Plugin Patch:
 " ~/.vim/plugged/vim-session/autoload/xolox/session.vim modefied code: commented this line:
   " call xolox#session#save_qflist(a:commands)
 " to prevent "call setqflist([])" as this sometimes throws errors on session load.
@@ -352,7 +405,7 @@ set viewdir=~/vimtmp/view//
 
 " Shared Persistence: ---------
 command! ShadaClear :call ClearShada()
-abbrev sc ShadaClear 
+abbrev sc ShadaClear
 function! ClearShada()
     echo "Shada file deleted!"
     silent exec "!rm" . ' ~/.local/share/nvim/shada/main.shada'
@@ -380,6 +433,17 @@ endif
 
 " Vim Sessions: -----------------------------------------------------------------------
 
+" Undotree Mundo: ---------------------------------------------------------------------------
+
+
+" let g:undotree_WindowLayout = 4
+" let g:undotree_ShortIndicators = 1
+" In after/plugin/zmaps \bc unimpaired:
+" nnoremap you :UndotreeToggle<cr>
+
+" Undotree Mundo: ---------------------------------------------------------------------------
+
+
 " Fonts: -------------------------------------------------------------------------
 
 " Set Font Props in Alacritty or ITerm2. This is Used for MacVim only:
@@ -398,8 +462,8 @@ if has("gui_macvim")
 endif
 
 
-" Fonts: -------------------------------------------------------------------------
 
+" Fonts: -------------------------------------------------------------------------
 
 
 
@@ -471,12 +535,14 @@ hi link jsonCommentError				Error
 " Style Colors: ----------------------------
 
 
-" Various Settings: ------------------------
+" General Settings: ------------------------
 set cmdheight=2
 set ignorecase
 set fileencoding=utf-8
 set encoding=utf-8
 " set backspace=indent,eol,start
+" TODO what does this do? see ':hg syntax enable'
+syntax enable
 
 set ts=2 sts=2 sw=2 expandtab
 
@@ -491,7 +557,7 @@ set hidden
 set nowrap
 " wrapmargin=0
 " vim automatically breaks the line/starts a new line after 100 chars
-set textwidth=100
+set textwidth=120
 
 " activate line wrapping for a window:
 " command! -nargs=* Wrap set wrap linebreak nolist
@@ -500,6 +566,9 @@ set textwidth=100
 " command! -nargs=* Wrap set wrap linebreak nolist
 " use `gq<motion` or gqq to merely wrap a range/line
 
+" Auto load files that have changed outside of vim! (only when there are no unsaved changes!). This requires requires
+" tmux focus events "FocusGained".
+set autoread
 
 set noswapfile
 if has('nvim')
@@ -513,14 +582,55 @@ endif
 "   au WinLeave * setlocal nocursorline
 " augroup END
 
+
 " set autochdir
 " CAREFUL! this sets the current working directory the the current file on
 " every buffer change!!
 
-" set wildmode=list:longest
+" TODO do I need all of these?
+set wildignorecase
+set smartcase
+set ignorecase
+set infercase
 set wildmenu
-set wildmode=full
+set wildmode=longest:list,full
+" Well behaved flat menu
+" set wildmode=longest:full
+set completeopt=menuone,preview
 
+" Tab navigate the file system while in insert mode
+" inoremap <Tab> <c-x><c-f>
+" In command mode use <c-d> and Tab
+
+cnoremap <C-t> <C-\>e(<SID>RemoveLastPathComponent())<CR>
+function! s:RemoveLastPathComponent()
+  return substitute(getcmdline(), '\%(\\ \|[\\/]\@!\f\)\+[\\/]\=$\|.$', '', '')
+endfunction
+
+set lazyredraw
+set selection=inclusive
+" this allows to move the cursor where there is no actual chracter
+set virtualedit=all
+" Console integration
+" Send more characters for redraws
+set ttyfast
+" Enable mouse use in all modes
+set mouse=a
+
+" Set this to the name of your terminal that supports mouse codes.
+" Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
+" set ttymouse=xterm2
+set guioptions-=T
+set guioptions-=m
+set guioptions-=r
+set guioptions-=L
+" disable sounds
+set noerrorbells
+set novisualbell
+" why this?
+set t_vb=
+
+" General Settings: ------------------------
 
 
 
@@ -533,9 +643,6 @@ set wildmode=full
 set noequalalways
 set nostartofline
 
-let mapleader=" "
-let maplocalleader="\\"
-
 
 " COMMAND HISTORY: --------------------------------------------
 " Type a command slightly more quickly:
@@ -544,17 +651,32 @@ noremap ; :
 " semicolon ";" in normal mode is needed for Sneak "f<char1><char2>" and then next
 " works in visual mode as well!
 
+
 " Open command history with the cursor on the last command
-map q; q:k
+" nnoremap <c-\;> q:k
+" Note: - <c-;> and <c-+> are "unmappable" keys in vim! Therefore using:
+nnoremap … q:k
+" Using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
+
+" Previous map. This caused a delay in using "q" to quit e.g. Gstatus
+" nnoremap q; q:k
+
+" Issue: Using "q" as sort of a leader key in a custom mapping will delay plugin "q" = quit maps! e.b. in Gstats.
+" workaround may be to double/ "qq" or to "q<space" instead.
 " Issue: needs two c-c to exit?
 
+" This is supposed to "unmap" the native "q" map to record macros (i don't need this often), to allow me to double "qq"
+" to quit a plugin dialog instead of "q.." wait for timeout because I use "q.." as a sort of leader key (see ":map q")
+" nnoremap <silent> q :<cr>
+" This is sort of a black hole map. But not needed as I can currently live without 'q ..' leader key maps
+
 " Repeat last command
-" To Lear: use "@:"
+" To Learn: use "@:"
 nnoremap <leader>. @:
 " nnoremap , @:
 
 " Editing Past Commands: (usage example)
-" run "call SomeTest1( 'hithere4' )", do "q;www<c-a><cr>" to see "hithere5" echoed. 
+" run "call SomeTest1( 'hithere4' )", do "q;www<c-a><cr>" to see "hithere5" echoed.
 " "<cr>" in insert mode runs the command, no need for "<esc>"
 " you can "/" seach for past commands in the command history!
 " Enter Editing A Command: hit "<c-f>" in command mode!
@@ -588,8 +710,8 @@ nnoremap cue :%s/>=>/>#>/ge<cr>
 nnoremap cud :%s/=>/<c-k>=>/ge<cr>
 nnoremap cug :%s/>#>/>=>/ge<cr>
 " restore Kleisi!
-vnoremap <leader>bu :s/\%V→/->/ge<cr>:s/\%V∷/::/ge<cr>:s/\%V⇒/=>/ge<cr>
-vnoremap <leader>bi :s/\%V->/→/ge<cr>:s/\%V::/∷/ge<cr>:s/\%V=> /⇒ /ge<cr>
+" vnoremap <leader>bu :s/\%V→/->/ge<cr>:s/\%V∷/::/ge<cr>:s/\%V⇒/=>/ge<cr>
+" vnoremap <leader>bi :s/\%V->/→/ge<cr>:s/\%V::/∷/ge<cr>:s/\%V=> /⇒ /ge<cr>
 
 " Alternative for bind? ⤜ or »= or >>= or ≥
 
@@ -678,18 +800,19 @@ endfun
 " set autoindent
 " set smartindent
 
-" How ">>" will indent lines 
-" set shiftwidth=2 
-" set shiftround 
+" How ">>" will indent lines
+" set shiftwidth=2
+" set shiftround
 
 nnoremap <leader>>> :call IndentToCursorH()<CR>
+nnoremap <leader><< :call IndentToCursorH()<CR>
 " TODO: maybe make a mapping "dwkwj<leader>>>" to indent haskell binds:
   " jsonValue ∷ Value
   "           ← decode (T.encodeUtf8 jsonTxt) ?? "Not a valid json!"
 "
 function! IndentToCursorH()
-  exec ("left " . (virtcol('.') - 1)) 
-  " exec ("left " . col('.')) 
+  exec ("left " . (virtcol('.') - 1))
+  " exec ("left " . col('.'))
 endfun
 
 " Indenting: -------------------------------------
@@ -803,7 +926,7 @@ nnoremap <leader>s} y}:@"<cr>
 " nnoremap <leader>ss yy:@"<cr>
 nnoremap <leader>ss "tyy:@t<cr>
 " free mappings? <leader>s..
-" TODO these map don't seem ideal. mnemonic not destinct enough? 
+" TODO these map don't seem ideal. mnemonic not destinct enough?
 command! SourceLine :normal yy:@"<cr>:echo 'Line sourced!'<cr>
 
 " Call Func: call the function name in cursor line, without args
@@ -832,6 +955,7 @@ nnoremap <leader>sx y$:echom <c-r>"<cr>
 
 " EDIT VIM SCRIPT: ---------------------------------------------------------------------
 
+" EDIT VIM SCRIPT: ---------------------------------------------------------------------
 
 " General: -----------------------------------------------------------------------------
 
@@ -843,7 +967,7 @@ command! Zshrc   :e ~/.zshrc
 command! ZshOhMy :e ~/.oh-my-zsh/oh-my-zsh.sh
 command! Vimrc   :e ~/.vimrc
 command! Cabal   :e *.cabal
-cabbrev cab Cabal 
+cabbrev cab Cabal
 
 " Insert the $PATH shell variable
 command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
@@ -858,7 +982,7 @@ command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
 " /Users/andreas.thoelke/.local/bin <<<<<< install executables HERE!!!
 " /Users/andreas.thoelke/Library/Python/3.6/bin
 
-" TIP: install locations for executables: 
+" TIP: install locations for executables:
 " /Users/andreas.thoelke/.local/bin
 
 " ignored? based on `:checkhealth`
@@ -914,7 +1038,7 @@ function! ExtractEvalExpFromLineStr( lineStr )
 
     if l:lineList[0] == '--'
       " it's a commented line
-      " → use the second word onwards 
+      " → use the second word onwards
       return join( l:lineList[1:], ' ')
 
     elseif l:lineList[1] == '='
@@ -1082,9 +1206,9 @@ command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
 
 
 " SYNTASIC: ---------------------------------------------------
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 " airline /statusline config
 
 " Deactivate Syntasic for haskell dev in favour of Ale
@@ -1151,6 +1275,8 @@ let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 
 
 " GitGutter: -------------------------------------------------------
+let g:gitgutter_map_keys = 0
+
 nmap <leader>gg :GitGutterToggle<cr>
 " Note: Gutter updates on save!
 
@@ -1231,7 +1357,7 @@ nnoremap <silent> <leader>gd :sp<CR>:call GotoDefinition()<CR>
 " Type Inserts: ----------------------------------------------------
 " nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
 nnoremap tt :call TypeInsert( )<cr>
-" vnoremap tt :call TypeInsert( Get_visual_selection() )<cr> 
+" vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
 " TODO: problem: PSCIDEgetKeyword only work when PSCIDE is started/ throws error with Haskell
 nnoremap tg :InteroGenTypeInsert<cr>
 vnoremap tg :InteroGenTypeInsert<cr>
@@ -1255,7 +1381,7 @@ nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
 " nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
 " vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
 
-" Evaluate the entire line 
+" Evaluate the entire line
 " nnoremap gel :call ReplEvalExpr_Insert( getline('.') )<cr>
 
 " Eval the current keyword
@@ -1275,26 +1401,11 @@ nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 
 " New Haskell And Purescript Maps: ------------------------------------------------------
 
-" Old Intero Maps: ------------------------------------------------------------------
-nnoremap <Leader>kk :call ReplTopFnRL()<cr>
-" nnoremap geri :call ReplTopFnRLInsert()<cr>
-
-" run selection
-vnoremap <Leader>kk :call ReplVisSel()<cr>
-
-" run (commented) function call with many args
-nnoremap <Leader>kl :call ReplComLine()<cr>
-" nnoremap gec        :call ReplComLine()<cr>
-
-" reload module
-nnoremap <Leader>kr :call ReplReload()<cr>
 nnoremap dr :call ReplReload()<cr>
 
 " nnoremap tr :call TraceTopLevelValue()<cr>
 nnoremap ta :call TraceTopLevelValue()<cr>
 " nnoremap tf :call TraceComLine()<cr>
-" Old Intero Maps: ------------------------------------------------------------------
-
 
 
 " GHCI:
@@ -1435,7 +1546,7 @@ let g:easy_align_ignore_groups = ['Comment', 'String']
 "   | WithShadow Shadow Drawing
 " 1. uncomment this block first, then with the cursor on the second line:
 " 2. "<leader>ga}2 " aligns the rest of the block to the 2nd <space>, and then
-" 3. "<leader>ga}3 " to align to the 3rd <space> as well 
+" 3. "<leader>ga}3 " to align to the 3rd <space> as well
 
 " Align Example:
 " (using Tabularize or EasyAlign with regex)
@@ -1551,7 +1662,7 @@ endfun
 " stopping here!
              
 
-" TIP: print the file type: ":echo &ft" 
+" TIP: print the file type: ":echo &ft"
 " (returns filetype as literal string, e.g. 'haskell', instead of 'hs')
 " (note the system-variable expression type "&ft". This gets resolved to the file type)
 " TIP: copy a past ex-command/vim-shell command: hit "q:"
@@ -1577,13 +1688,14 @@ endfun
 " TIP: ad-hock environment variable: in terminal: "export test44=$PATH:~/Documents" this appends another dir to the PATH
 " TIP: use (%) current file name in shell: ":!cat %"
 " TIP: use 'find' to get full path and then 'gf': terminal: "find $PWD" and then "gf" on the the absolute path
-" if expressions: echo (v:true ? 'yes' : 'no') -- echo (v:false ? 'yes' : 'no')
+" If Expressions: echo (v:true ? 'yes' : 'no') -- echo (v:false ? 'yes' : 'no')
 " TIP: set the cursor pos: let cursor = getcurpos(), call cursor(cursor[1], startColumn - 1)
 "      also: line('.') and col('.') get row and column num
 " TIP: "<C-z>" to suspend nvim and get back to the terminal. then run "fg" to
 " get back to nvim.
 " TODO: delete long space between words: "elldw" example: ^ord            next
 " TIP: remove trailing whitespace: ":%s/\s\+$//e"
+" Show trailing whitespace only after some text (ignores blank lines): /\S\zs\s\+$
 " TIP: use ":earlier" and ":later" to jump the ":undolist" back and forth in
 " *time* (disregarding branches of the undotree). use ":earlier 10m" or ".. 5h" to go back 10 minutes/ 5 hours
 " TIP: Vim-anywhere replacement: use: "alfred vim(mac vim)", edit text, then
@@ -1604,7 +1716,7 @@ endfun
 " Move back a character.
 "
 " Tip: Link local repo to github remote repo:
-" "git remote add origin https://github.com/andreasthoelke/dotfiles.git", 
+" "git remote add origin https://github.com/andreasthoelke/dotfiles.git",
 " "git push -u origin master" `-u` add upstream tracking(!?)
 " "git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
 "
@@ -1736,6 +1848,10 @@ nnoremap D "_d
 
 " Folding Folds: ------------------------------------------------
 
+" Partially expand syntax and expression based folding (of markdown and gitv plugins)
+autocmd Syntax git set foldlevel=1
+autocmd FileType markdown set foldlevel=1
+
 nnoremap z<space> za
 nnoremap z] zo
 nnoremap z[ zc
@@ -1824,64 +1940,49 @@ nnoremap <leader>om :CtrlPMark<cr>
 
 let g:SignatureIncludeMarks = 'ABCDEFGHIJKLMN'
 
-" Note Issue: Deleted markers (with "m-") are currently recreated after (auto!) session save/load a temp fix is to "ShadaClear". 
+" Note Issue: Deleted markers (with "m-") are currently recreated after (auto!) session save/load a temp fix is to "ShadaClear".
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
 " command! DelMarks :delmarks ABCDEFGHIJKLMN
-
-" Prefer global marks and make them quick to type
-" nnoremap ma mA
-" nnoremap mb mB
-" nnoremap mc mC
-" nnoremap md mD
-" nnoremap me mE
-" nnoremap 'a 'A
-" nnoremap 'b 'B
-" nnoremap 'c 'C
-" nnoremap 'd 'D
-" nnoremap 'e 'E
 
 " Markers Marks: ----------------------------------------------------------------
 
 
-" Sneak Code Navigation: ------------------------------------------------
-let g:sneak#label = 1
+" Easymotion Code Navigation: ------------------------------------------------
+" Endhanced word and line motions
+map <localleader>w <Plug>(easymotion-w)
+map <localleader>b <Plug>(easymotion-b)
+map <localleader>j <Plug>(easymotion-j)
+map <localleader>k <Plug>(easymotion-k)
+" Jump to typical spots
+map <localleader>l <Plug>(easymotion-lineforward)
+map <localleader>h <Plug>(easymotion-linebackward)
+" Jump to specific char within a word
+nmap f <Plug>(easymotion-overwin-f)
+xmap f <Plug>(easymotion-bd-f)
+omap f <Plug>(easymotion-bd-f)
+map t <Plug>(easymotion-tl)
+" Search replacement
+nmap / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+map L <Plug>(easymotion-next)
+map H <Plug>(easymotion-prev)
 
-map L <Plug>Sneak_;
-map H <Plug>Sneak_,
-
-let g:sneak#absolute_dir = 1 " 'L' alway navigates forward
-let g:sneak#use_ic_scs = 1 " 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
-let g:sneak#target_labels = "funqt/FGHLTUNRMQZ?0"
-
-nmap f <Plug>Sneak_s
-nmap F <Plug>Sneak_S
-" visual-mode
-xmap f <Plug>Sneak_s
-xmap F <Plug>Sneak_S
-" operator-pending-mode
-omap f <Plug>Sneak_s
-omap F <Plug>Sneak_S
-
-" 1-character enhanced 't'
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
-" visual-mode
-xmap t <Plug>Sneak_t
-xmap T <Plug>Sneak_T
-" operator-pending-mode
-omap t <Plug>Sneak_t
-omap T <Plug>Sneak_T
-
-augroup colsneak
-  autocmd!
-  autocmd ColorScheme * hi! link SneakScope Normal
-  " autocmd ColorScheme * hi! Sneak guifg=green guibg=orange
-  autocmd ColorScheme * hi! link Sneak Cursor
-augroup END
-
-hi! link Sneak Cursor
-
-" Sneak Code Navigation: ------------------------------------------------
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_use_smartsign_us = 1
+let g:EasyMotion_do_shade = 0
+let g:EasyMotion_disable_two_key_combo = 0
+let g:EasyMotion_verbose = 0
+hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionTarget2Second guifg=black guibg=white ctermfg=black ctermbg=white
+hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
+" let g:EasyMotion_re_anywhere = '\v' .
+"   \ '(<.|^$)' . '|' .
+"   \ '(.>|^$)' . '|' .
+"   \ '(\l)\zs(\u)' . '|' .
+"   \ '(_\zs.)' . '|' .
+"   \ '(#\zs.)'
+" Easymotion Code Navigation: ------------------------------------------------
 
 
 " ------------------------------------------------------
@@ -1899,13 +2000,15 @@ hi! link Sneak Cursor
 " Open omni menu and don't select the first entry
 " inoremap <C-space><C-space> <C-x><C-o><C-p>
 " navigate the list by using j and k
-inoremap <C-j> <C-n>
+" Free mapping in insert mode
+" inoremap <C-j> <C-n>
 " inoremap <C-k> <C-p>
 
 " open suggestions
 " imap <Tab> <C-P>
 
-" filetype plugin on
+" TODO Does this enable netrw?
+filetype plugin on
 " set omnifunc=syntaxcomplete#Complete
 " TODO: above line testen
 " insert mode <S-space> schliesst omni preview und fuegt space ein
@@ -1925,10 +2028,16 @@ inoremap <C-j> <C-n>
 " ------------------------------------------------------
 
 
-" Search and highlighting ---------------------------------
-nnoremap / :set hlsearch<cr>:noh<cr>/\v
-vnoremap / /\v
-nnoremap <M-/> /
+" Search: ---------------------------------
+
+" Search within subdirectories
+set path+=**
+" Also use *somecars to fuzzy the first part of the filename
+
+
+" nnoremap / :set hlsearch<cr>:noh<cr>/\v
+" vnoremap / /\v
+" nnoremap <M-/> /
 
 " Search visually selected text
 vnoremap // y/<C-R>"<CR>
@@ -2016,7 +2125,23 @@ command! SpellEN :set spelllang=en
 " Show suggestion:
 nmap z<c-\> z=
 
+" Open file rel to current buffer dir
+map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 
+" TODO limit to nvim?
+" Whenever a new tab is created, set the tab-working dir accordingly
+if has('nvim')
+  autocmd TabNewEntered * call OnTabEnter(expand("<amatch>"))
+  func! OnTabEnter(path)
+    if isdirectory(a:path)
+      let dirname = a:path
+    else
+      " let dirname = fnamemodify(a:path, ":h")
+      let dirname = projectroot#guess( a:path )
+    endif
+    execute "tcd ". dirname
+  endfunc
+endif
 
 " Change Working Directory: ---------------
 nnoremap <expr>dpr ":tcd " . projectroot#guess() . "\n"
@@ -2052,7 +2177,7 @@ autocmd BufEnter *.hs set syntax=purescript
 autocmd QuickFixCmdPost * :call QuickfixRefeshStyle()
 
 function! QuickfixRefeshStyle()
-  if len( filter(getqflist(), 'v:val.type == "e"') ) > 0 
+  if len( filter(getqflist(), 'v:val.type == "e"') ) > 0
     exec 'copen'
     exec 'set syntax=purescript'
     exec 'setlocal modifiable'
@@ -2067,7 +2192,7 @@ endfunction
 " Demo Examples: this also worked:
 " autocmd BufReadPost quickfix :call QuickfixRefeshStyle()
 " autocmd QuickFixCmdPost * :call WinDo( "set syntax=purescript" )
-" num of 'valid' entries in quickfixlist: 
+" num of 'valid' entries in quickfixlist:
 " echo len(filter(getqflist(), 'v:val.valid'))
 
 " Quickfix List: -------------------------------------------------
@@ -2077,12 +2202,12 @@ endfunction
 " CTRLP:  --------------------------------------------------
 let g:ctrlp_cmd = 'CtrlPBuffer'
 
-" Don't list files fromm certain folders: 
+" Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\.git$\|\.cache$\|\.stack$\|\.stack-work$\|vimtmp\|undo\bower_components$\|dist$\|node_modules$\|project_files$\|test$',
     \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 " This needs a restart to take effect.
-
+  
 let g:ctrlp_root_markers = ['src/', '.gitignore', 'package.yaml', '.git/']
 let g:ctrlp_by_filename = 1
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:20,results:40'
@@ -2114,12 +2239,14 @@ let g:ctrlp_prompt_mappings = {
 " let g:ctrlp_extensions = ['dir', 'line']
 " let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript',
 "                          \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
-let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
+" let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
+" let g:ctrlp_extensions = ['undo', 'line', 'changes']
+let g:ctrlp_extensions = ['tag', 'line', 'changes']
 
 
 let g:ctrlp_max_files = 2000
 let g:ctrlp_max_depth = 10
-let g:ctrlp_clear_cache_on_exit = 0 
+let g:ctrlp_clear_cache_on_exit = 0
 " --- quickfix & loclist ----
 
 " Demo function:
@@ -2143,8 +2270,9 @@ autocmd FileType dirvish nnoremap <buffer><silent> <c-p> :CtrlP<cr>
 
 " Dirvish: --------------------------------------------------
 
-
-
+" Vifm: -----------------------------------------------------
+let g:vifmSplitWidth = 70
+let g:vifmFixWidth = 0
 
 " Windows Navigation: -----------------------------
 set splitbelow
@@ -2166,7 +2294,7 @@ nnoremap <c-w>S :vs<cr>
 nnoremap <c-w>N :vnew<cr>
 " Note: the standard map "<c-w>s" & "<c-w>n" will split below
 
-" Resize: Using <c-./,> maps from Karabiner        
+" Resize: Using <c-./,> maps from Karabiner
 " Note: Can't Control-map non-alphanum chars like "."/period:
 " nnoremap <c-.> :exec "resize +4"<cr>
 nnoremap ≥ :vertical resize +4<cr>
@@ -2230,14 +2358,15 @@ nnoremap <c-w>< 4<c-w><
 nnoremap <c-f> gt
 nnoremap <c-d> gT
 
+" Move tab commands are vim-repeatable
 map <localleader>t[ <Plug>TabmoveLeft
 map <localleader>t] <Plug>TabmoveRight
 map <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>TabmoveLeft")<cr>
 map <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>
 
-" zoom/duplicate the current buffer in a new tab 
-nnoremap <c-w>t :tabe %<cr> 
-nnoremap <c-w><c-t> :tabe %<cr> 
+" zoom/duplicate the current buffer in a new tab
+nnoremap <c-w>t :tabe %<cr><c-o>
+nnoremap <c-w><c-t> :tabe %<cr><c-o>
 
 " close tab and go to the previous window
 nnoremap <localleader>tc :call CloseTabGoToPrevious()<cr>
@@ -2282,14 +2411,14 @@ autocmd TabLeave * let g:lasttab = tabpagenr()
 " nnoremap <silent> ð :bp<cr>
 " Next/Prev navigation works via <c-shift-f> <c-shift-d> (Karabiner) <Option/Alt>f / <A-f> / <A-d>
 " Tip Option Alt Key Mappings: get these chars by typing <option+key> in insert mode
-
+                                                          
 " TODO this map isn't really used/appropriate?
 " Prevent closing a window when closing a buffer
 " nnoremap \X :bp<bar>sp<bar>bn<bar>bd!<CR>
 " some as: ?
 " nnoremap \X :bp | :sp | :bn | :bd!<CR>
-nnoremap <localleader>bd :bd<cr>
-nnoremap <leader>bd :bd!<cr>
+nnoremap <leader>bd :bd<cr>
+nnoremap <leader>bD :bd!<cr>
 
 " Buffers: -----------------------------------------
 
@@ -2298,9 +2427,10 @@ nnoremap <leader>bd :bd!<cr>
 " General Leader Cmd Shortcut Maps: ---------------------------------
 
 nnoremap <localleader>qa :qa<cr>
+nnoremap <localleader>qq :q<cr>
 
 " nnoremap gw :w<cr>
-nnoremap <localleader>w :w<cr>
+" nnoremap <localleader>w :w<cr>
 
 
 
@@ -2311,10 +2441,7 @@ nnoremap <localleader>w :w<cr>
 " General: ----------------------------------------------------------
 
 " Exit insert mode
-" inoremap jk <esc>l
-inoremap <c-[> <esc>l
-" Exit visual mode
-" vnoremap g- <esc>
+" inoremap <c-[> <esc>l
 
 " General: ----------------------------------------------------------
 
@@ -2342,6 +2469,13 @@ nnoremap zh 7zh
 nnoremap zl 7zl
 " Scrolling: ------------------------
 
+" make '=' easier to type in haskell
+" inoremap <c-\> =
+" TODO test this ..
+" cnoremap <c-\> =
+" onoremap <c-\> =
+" lnoremap <c-\> =
+" nnoremap <c-\> =
 
 " make '=' easier to type in haskell
 " inoremap <c-\> =
@@ -2415,6 +2549,30 @@ command! Diff execute 'w !git diff --no-index % -'
 
 
 
+" Fugitive Gitv: -----------------------------------------------------------
+
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+nnoremap <leader>gv :Gitv<cr>
+nnoremap <leader>gV :Gitv!<cr>
+
+nnoremap <leader>gs :Gstatus<cr>
+
+let g:Gitv_CustomMappings = {
+  \'update': 'r',
+\}
+
+" autocmd BufNewFile,BufRead fugitive://* set bufhidden=delete
+
+" Disable neovim terminal when e.g. ":Git checkout master" (experimental)
+let g:fugitive_force_bang_command = 1
+
+" Deletes hidden fugitive buffers when I hide them?
+autocmd! BufReadPost fugitive://* set bufhidden=delete
+
+" Fugitive Gitv: -----------------------------------------------------------
+
+
 " ----------------------------------------------------------------------------------
 "  Launching external apps
 command! Browser :call OpenVisSel()
@@ -2439,7 +2597,7 @@ command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 " ----------------------------------------------------------------------------------
 
 " open a terminal window
-nmap <silent> glt :20Term<cr>
+nmap <silent> glt :below 20Term<cr>
 
 " Terminal util functions
 " and lots of documentations (TODO refactor this)
@@ -2519,7 +2677,7 @@ nmap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 
   
-" Seach Vim Help and fill the quickfix list with the results 
+" Seach Vim Help and fill the quickfix list with the results
 command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
 cnoreabbrev hg HelpGrep
 
@@ -2532,25 +2690,31 @@ fun! OpenCurrentFileInSystemEditor()
 endfun
 
 
+" Search: -----------------------------------
 " Vim Grepper: ------------------------------
 " command! -nargs=1 Find  :Grepper -side -query <args>
 command! -nargs=1 Find  :tabe % | Grepper -side -query <args>
-command! -nargs=1 Findb :tabe % |Grepper -side -buffers -query <args>
+command! -nargs=1 Findb :tabe % | Grepper -side -buffers -query <args>
 
+" This works pretty well. could reuse for other purposes
 command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
 
 runtime plugin/grepper.vim    " initialize g:grepper with default values
 let g:grepper.stop = 20
 
-autocmd! FileType GrepperSide 
+autocmd! FileType GrepperSide
   \  silent execute 'keeppatterns v#'.b:grepper_side.'#'
-  \| set syntax=purescript
+  " \| set syntax=purescript
+" TODO make this use the syntax of the (first?) buffer filetype
+  \| set syntax=vim
   \| silent normal! ggn
-" TODO make this use the syntax of the (first?) buffer
 
 " Note: This runs a search/selection that allows to apply the purescript syntax only to the selcted lines!
 " search pattern from ".b:grepper_side": \v^%(\>\>\>|\]\]\]) ([[:alnum:][:blank:]\/\-_.~]+):(\d+)
 
+" This does not seem needed? also not working?
+" nmap gs  <plug>(GrepperOperator)
+" xmap gs  <plug>(GrepperOperator)
 
 highlight GrepperSideFile gui=italic guifg=#C34371 guibg=#000000
 highlight Conceal         guifg=#FFFFFF guibg=#000000
@@ -3187,11 +3351,11 @@ com! -nargs=+ -complete=command Windofast noautocmd call WinDo(<q-args>)
 command! JSONFormat exec "%!python -m json.tool"
 
 " Chrome Bookmarks: a simple big JSON file "Library/Application\ Support/Google/Chrome/Default/Bookmarks"
-command! ChromeBookmarks exec ":tabe Library/Application\ Support/Google/Chrome/Default/Bookmarks" 
+command! ChromeBookmarks exec ":tabe Library/Application\ Support/Google/Chrome/Default/Bookmarks"
 
 
 " Redirect Vim Messages: --------------------------------------------------------------
-" Code from https://stackoverflow.com/questions/2573021/how-to-redirect-ex-command-output-into-current-buffer-or-file 
+" Code from https://stackoverflow.com/questions/2573021/how-to-redirect-ex-command-output-into-current-buffer-or-file
 function! RedirMessages(msgcmd, destcmd)
   redir => message
   " Execute the specified Ex command, capturing any messages that it generates into the message variable.

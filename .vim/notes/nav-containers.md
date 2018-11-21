@@ -16,7 +16,8 @@
     * `<c-w>n` `:new` below
     * `<c-w>N` `:vnew` left
   with existing buffer/file
-    * CtrlP `o` + `h/v`
+    * CtrlP `o` + `h/v` 
+    * TODO / Issue: above still does not force a split with exsisting buffer
 
 
 ### New vim-Tab
@@ -61,12 +62,77 @@
   1. **created**: by saving the content of a buffer
   2. **loaded**: in a buffer
 
+  in insert mode:
+  `c-x c-f` to start filename browse mode!
+  `c-x c-n` for completion. what the difference to just `c-n`?
+  use `c-w` to delete a word at the prompt
+  use the `*` to get fuzzy suggestions NOTE/TODO: this isn't *on the fly* fuzzy/ while you type - but completion plugins have this.
+
+## Folders
+
+### Cmdline :find               
+  `:find a<tab>` (e.g. in Haskell project folder) allows to:
+  * Reach into subfolders (usind `set path+=**`, but this includes other folders)
+  * autocompl menu
+  * fuzzy complete (e.g. `:find *hs<c-i>` will show all haskell files)
+  (https://www.kwyse.com/posts/twid-vim-minimalism/)
+
+### Cmdline Menu: 
+  (with setting `set wildmode=longest:list,full`)
+  * `c-i` to start command line auto completion (or tab)
+  * looking at the grid displayed options:
+      * type the first char, then hit `c-i` again to expand the filtered options
+  * `c-n/p` will suffle through in horz menu
+
+
+
+### Dirvish
+  * `-` open / up/parent folder
+  * `q` close
+  * use 'filepath' of dirvish in command:
+    * `cd %` set working dir
+    * `edit %/foo.txt` create a file **TODO** how to save a temp/unsaved buffer by navigating to a folder, then `w #/filesname`
+    * `]f/[f` next/prev file through all sub folders!
+    * on a file name (which is a full file path under conceil):
+      * `gf` or `<cr>` to `:e ` that file
+      * `c-w f` to split view that file below
+    * `yy` the path, then:
+      * go to buffer and `:read <c-r>"` the content of the yanked path
+
+how about folders?
+  relation to files/buffer/tabs?
+  create/remove
+  ctrlP navigate
+
+
+
 ## Buffers
   States:
   1. **listed**: in the bufferlist (~in memory)
   2. **displayed**: in some window (or be hidden but still listed)
   3. **active**: displayed in the current window
 
+> Tab navigate the file system while in insert mode
+inoremap <Tab> <c-x><c-f>
+" In command mode use <c-d> and Tab
+  Example path: `Documents/PS/2/pux-todo/README.md`
+  this works nicely with <c-j/k/l> nav
+  ⇒ maybe mapping to produce, then copy and delete the path from insert/normal mode and past it to command?
+In command mode (see `:h cmdline-completion`) after `:e ` 
+ 1. `c-d` to show all options
+ 2. then (optionally) type a char or two
+ 3. then `c-n` (or `c-i` or Tab) and `c-p` to go back and forth through the options
+ (1.) `c-d` selects/locks-in the currently selected element and displays child options
+ ⇒ `c-d` - `c-p/n` in alternation
+ * `c-w` to delete a word back
+
+Navigate in scrollback history: 
+  * <c-p> to go back in command history, <c-n> to go forward in history.
+
+code auto completion: 
+  Vim Completes me (currently testing)
+  Youcomplete-me is sort of difficult to install?
+  alternative: https://github.com/ncm2/ncm2 or Shougo/deoplete.nvim
 
 ### List Buffers
   Create New (File)
@@ -91,6 +157,8 @@
         `<c-w>T` to move it out of this tab into it's own tab.
 #### Load Open Buffer
   * **New Tab:** CtrlP `o` + `t` to load buffer into new tab (no matter if buffer is shown somewhere
+
+
 
 alternate between prev and current buffer: `:e #` `,`
 
@@ -137,9 +205,15 @@ use <c-o> open menu?
 ## Code navigation
 ### Tags
     * `:tags`
+        `set tags?`
+        `c-]` to nav, `c-t` to go back
+        
+
 ### Changes
     * `:changes`
     * back to last change (e.g. paste) `\`.`
+    * `g;` `g,` shuffle through changes
+
 ### Inserts
     * back to last insert
 ### Jumps
@@ -205,5 +279,30 @@ NOTE this is not complete - research full solution?
 save and restore a session with windows and tabs
 
 ----------------------------------------------------
+
+# Tags
+document hasktags workflow:
+  in stack.yaml add this: `extra-deps: [hasktags-0.71.2]`
+
+Tag screenshot featuring ctrlp and tagbar:
+  ~/.vim/screenshots/tags-tagbar-haskell-ctrlp.png
+
+run python that script, does this have --help?
+produce ctags as a text file - where is this put?
+
+optimize and document in vim-worksteps progressively:
+  * generate `ctags` file
+ ~  .vim  notes  python ~/.vim/plugged/markdown2ctags/markdown2ctags.py notes29-09.md
+ (could just get to command history in terminal buffer - it now seems to be the same shell(zsh)
+ instance??!)
+  * ctrlP needed to be cced into that folder .vim/notes, to pick up the 'tags' file
+current termina questions. see screenshot:
+  how to get to command history how to copy this?
+  how to copy/edit/get into vim a command I ran?
+  same re the markdown2ctags.py --help output
+
+
+
+
 
 

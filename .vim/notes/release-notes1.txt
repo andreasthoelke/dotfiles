@@ -1,0 +1,13 @@
+autoread and tmux focus events
+integrate General setting in vimrc
+undotree visualization plugin
+Whenever a new tab is created, set the tab-working dir accordingly
+Open command history with the cursor on the last command: Using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
+auto tab complete for filename insert mode and command line mode (notes)
+wildmode settings
+vim-completes-me
+vifm (testing two plugins)
+Nayovim Markdown
+autoload plugin
+Mundo undo-tree
+
