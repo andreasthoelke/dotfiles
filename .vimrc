@@ -21,6 +21,7 @@ Plug 'majutsushi/tagbar'
 
 " Git Integration: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
+Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv', {'on': ['Gitv']}
 
@@ -2594,7 +2595,8 @@ set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 nnoremap <leader>gv :Gitv<cr>
 nnoremap <leader>gV :Gitv!<cr>
 
-nnoremap <leader>gs :Gstatus<cr>
+nnoremap <leader>gs :Magit<cr>
+nnoremap <leader>Gs :Gstatus<cr>
 
 let g:Gitv_CustomMappings = {
   \'update': 'r',
