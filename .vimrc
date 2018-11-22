@@ -114,6 +114,7 @@ Plug 'chrisbra/csv.vim'
 
 " Code Navagation Editing: ---------------------------------------------
 Plug 'easymotion/vim-easymotion'
+Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
 Plug 'tomtom/tcomment_vim'
@@ -155,12 +156,13 @@ Plug 'sbdchd/neoformat'
 
 Plug 'kana/vim-textobj-user'
 " TODO test this: (works in nvim but conflicts with vim?)
-" Plug 'gilligan/vim-textobj-haskell'
+" Plug 'gilligan/vim-rextobj-haskell'
 " requires python
 
 " Plug 'jaspervdj/stylish-haskell'
 Plug 'w0rp/ale'
-Plug 'mpickering/hlint-refactor-vim'
+" Just 10 lines of code. uses "to" default map
+" Plug 'mpickering/hlint-refactor-vim'
 Plug 'neomake/neomake'
 Plug 'vim-syntastic/syntastic'
 
@@ -1940,11 +1942,45 @@ nnoremap <leader>om :CtrlPMark<cr>
 
 let g:SignatureIncludeMarks = 'ABCDEFGHIJKLMN'
 
-" Note Issue: Deleted markers (with "m-") are currently recreated after (auto!) session save/load a temp fix is to "ShadaClear".
+" Note Issue: Deleted markers are currcntly recreated after (auto!) session save/load a temp fix is to "ShadaClear".
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
 " command! DelMarks :delmarks ABCDEFGHIJKLMN
 
 " Markers Marks: ----------------------------------------------------------------
+
+
+" Sneak Code Navigation: ------------------------------------------------
+" 1-character enhanced 'f'
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
+" 1-character enhanced 't'
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
+" Use L/H for next so ";" and "," can be used elsewhere
+map L <Plug>Sneak_;
+map H <Plug>Sneak_,
+" let g:sneak#label = 1
+" let g:sneak#absolute_dir = 1 " 'L' alway navigates forward
+let g:sneak#use_ic_scs = 1 " 1 : Case sensitivity is determined by 'ignorecase' and 'smartcase'.
+" let g:sneak#target_labels = "funqt/FGHLTUNRMQZ?0"
+hi! link Sneak Cursor
+augroup colsneak
+  autocmd!
+  autocmd ColorScheme * hi! link SneakScope Normal
+  " autocmd ColorScheme * hi! Sneak guifg=green guibg=orange
+  autocmd ColorScheme * hi! link Sneak Cursor
+augroup END
+" Disables default s-map
+nmap <Plug>(go_away_sneak) <Plug>Sneak_s
+" Sneak Code Navigation: ------------------------------------------------
 
 
 " Easymotion Code Navigation: ------------------------------------------------
@@ -1957,21 +1993,23 @@ map <localleader>k <Plug>(easymotion-k)
 map <localleader>l <Plug>(easymotion-lineforward)
 map <localleader>h <Plug>(easymotion-linebackward)
 " Jump to specific char within a word
-nmap f <Plug>(easymotion-overwin-f)
-xmap f <Plug>(easymotion-bd-f)
-omap f <Plug>(easymotion-bd-f)
-map t <Plug>(easymotion-tl)
+nmap <localleader>f <Plug>(easymotion-overwin-f)
+xmap <localleader>f <Plug>(easymotion-bd-f)
+omap <localleader>f <Plug>(easymotion-bd-f)
+" map t <Plug>(easymotion-tl)
 " Search replacement
-nmap / <Plug>(easymotion-sn)
-omap / <Plug>(easymotion-tn)
-map L <Plug>(easymotion-next)
-map H <Plug>(easymotion-prev)
+" nmap / <Plug>(easymotion-sn)
+" omap / <Plug>(easymotion-tn)
+" map L <Plug>(easymotion-next)
+" map H <Plug>(easymotion-prev)
 
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_use_smartsign_us = 1
 let g:EasyMotion_do_shade = 0
 let g:EasyMotion_disable_two_key_combo = 0
 let g:EasyMotion_verbose = 0
+let g:EasyMotion_enter_jump_first = 1
+let g:EasyMotion_space_jump_first = 1
 hi EasyMotionTarget guifg=black guibg=white ctermfg=black ctermbg=white
 hi EasyMotionTarget2First guifg=black guibg=white ctermfg=black ctermbg=white
 hi EasyMotionTarget2Second guifg=black guibg=white ctermfg=black ctermbg=white
@@ -2035,8 +2073,8 @@ set path+=**
 " Also use *somecars to fuzzy the first part of the filename
 
 
-" nnoremap / :set hlsearch<cr>:noh<cr>/\v
-" vnoremap / /\v
+nnoremap / :set hlsearch<cr>:noh<cr>/\v
+vnoremap / /\v
 " nnoremap <M-/> /
 
 " Search visually selected text
