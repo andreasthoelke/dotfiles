@@ -14,8 +14,6 @@
 
 " PURESCRIPT WORKFLOW:
 " "mkdir test1" && "cd test1" && "pulp init" && "nvim Main.purs"
-" TODO: run this command from vim: ":PursProject test2" → 
-" "mkdir <projname> && cd <projname> && pulp init && vi src/Main.purs"
 " ":PursRepl" will start a pulp repl terminal session
 " "gw" saving refeshes syntastic
 " "dr" rebuilds syntastic and :r to pulp repl + imports
@@ -103,7 +101,7 @@
 "
 " "PSCID" just run "pscid" in project root folder to get something similar to
 " "ghcid" (see below)
-
+autocmd! BufWinEnter quickfix nmap <buffer> go :.cc | wincmd p<cr>
 " source "/Users/andreas.thoelke/.vim/utils/termin1.vim"
 
 " HASKELL WORKFLOW:
@@ -188,6 +186,7 @@
 " Open Url In Browser: "glb" "Go launch browser" on the visual selection of
 " the URL
 " Insert Mode Movement: Use Fn Key + "h,j,k,l" to navigate in insert mode (see Karabiner setup: )
+" normal movement while in insert mode: use this prefix/leaderkeystroke: "<c-o>" then e.g. "$"/"0"/"b"
 " Find Commands: use e.g. ":filter Intero command"
 " Repeat Last Command: use "<leader>."
 " Nerdtree: "go", Use "o" - "u", "C" to focus, "I" for hidden
@@ -195,13 +194,14 @@
 " run ":map <intended first keys>". ":unmap <first key><tab" .. shows what second
 " key mappings need to be deleted to allow a fast/not delayed one key mapping
 " Auto Format Code: e.g. json element: "=a}" ("format arount bracket"), document: "gg=G"
+
 " Jump To Matching Bracket: simply "%"
 " Previous Buffer: - "c-6"
 " Insert File Context: - ":r <path-to-file>" to insert the content of a file!
 " Command Suggestions: after "<Tab>" highlighted the first command suggestions, you can "<shift-tab>" to go back the the text you entered and type more chars to get better suggestions.
 " Change Inner Big Word: - "abc" or (abc) can be changed nicely with "ciW"!
 " Toggle Line Number And Wrap: - "yol", "yow"
-" Repeat Last Command: - ","
+" Repeat Last Command: - "<leader>." or just "@:"
 " Find Search In Code: - "gsb" / "gsf" on code-word or visual selection to search buffers or project root files
 "                        ":f " → ":Find " seach from project root or ":fb " → ":Findb " to search in buffer
 "                        This will open the file and seach/grepper side split in a Tab. 
@@ -209,6 +209,11 @@
 "                        now to continue collecting results, do "<c-w>n" " 
 "                        do "m<abcd>" at a found result, then go to your original tab/window and do "'<abcd>" to load the result here
 "                        "cd (..)" the current working dir to search across a specific folder
+"                        use ":cd %" in Dirvish buffer to first set working dir, then ":Find <searchstring>"
+" Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks 
+" Vimgrep Search Quickfix: - "vimgrep /\v`[^`]*`/g %" then "]q" and "[Q"
+" Quickfix Navigation: - 
+
 " Copy Paste File Path: - copy to "p" register "<leader>fpc": , insert: "<leader>fpi", echo: "<leader>fpe"
 " Jump To File Path: in split below "<c-w>f", in tab "<c-w>gf"
 " View A Folder Env Variable: e.g. VIMRUNTIMEPATH Folder: - "i<c-r>=$VIM<tab><cr>" in buffer, then "<c-w>f" to open Nerdtree.  Or ":NERDTree $VIM<tabs>"
@@ -217,7 +222,7 @@
 " Navigate errors: "]s" - "[s", show suggestions: "z=", rather: "ea" to go to insert mode at the end of the word, then
 " "c-x s" to open suggestion menu! TODO prevent proposing capitalized suggestions.
 " add to dictionary: "zg" undo "zug"
-" Go To Line: - ":123"!
+" Go To Line: - ":123"! or "123gg" / "222G" to stay in normal mode
 
 " Debugging: Prefix ":verbose " to a command, e.g. ":verb e .vim/utils/termin1.vim" 
 " What script has defined a mapping: ":verb map <leader>s"
@@ -271,22 +276,25 @@
 
 " Shell WORKFLOW: ----------------------------------------------------------------------    
 " Suspending Background Jobs In Same Terminal: - "<c-z>" to suspend, in terminal: "fg" to bring it back. "jobs" to see all suspended jobs, "fg %2" to bring back second job, "kill %2" to kill it, "bg" to have it running in the background, "ps T" will show a "T" for stopped processes
-" Man Pages: - "man ranger" will now use nvim to show the man page, thanks to in .zshrc: export MANPAGER="nvim -c 'set ft=man' -"
+" Man Pages: - `man ranger` will now use nvim to show the man page, thanks to in .zshrc: export MANPAGER="nvim -c 'set ft=man' -"
 " VMan To Read ManPages As PDF: -- "vman ls" from terminal to view ls man page in vim.
 " Man And Help Outline: - "gO" content outline 
 " Install Paths: -- "which zsh". 
 " Brew Installs: Brew installs here: "/usr/local/bin/" use "ls -la /usr/local/bin/zs*" or "brew list", "brew info"
-" Brew Cask: - "brew tap caskroom/versions" then "brew cask install iterm2-nightly" 
+" Brew Cask: - "brew tap caskroom/versions" then `brew cask install iterm2-nightly` 
 " Read User Shell From Directory Service: - "dscl . -read /Users/$USER UserShell"
 " ITerm Windows: - "Arrangements" tab specifies init window arrangement, "Profiles" tab specifies how a new window is opened
 " Quickly create and delete folders: "mkcd test2" then "rmcurdir"
 "           Or just the classic way: "mkdir test3 && cd $_", "echo 'test' > test3", "rm *", "cd ..", "rmdir test3"
+"           Note: - "&_" involves the argument to the previous command
 " Create Hard File Link: - "link target.txt linkname.something" - linkname reads and write to the same data on disk
 " Symlink To Folder: - "ln -s ~/Documents/temp ~/Documents/temp2"
 " Move Reference Of File Into Current Dir: - "ln subfolder/another/myfile.c" - now has "myfile.c" in the current dir.
 " Append To File: - "echo 'next line ..' >> linkname". NOTE: "echo 'i deleted all!' > linkname" deletes the previous content of the file!
+" "echo 'zwei' >> test1 | cat", the appended "| cat" only echos the 'zwei', it's not reading the longer content of the 'test' file, as "cat test" does. So this is sort of surprising behavior.
 " Search In Filenames: - "ls -la ~/ | grep vim" 
 " View Pipe STDOUT STDIN In Vim: - "grep 'vim' ~/.vimrc | nvim -" or "nvim <(ls -la)" (process substitution)
+" Exmode Shell: - "gQ" to launch. used to run multiple commands. Breakout: "visual<cr>" / "vi"
 
 
 " Shell WORKFLOW: ----------------------------------------------------------------------    
@@ -578,33 +586,18 @@ function! ToggleOption(option_name, ...)
   exe 'set' . option_scope . ' ' . option_prefix . a:option_name
 endfunction
 
-
+                     
 " ----------------------------------------------------------------------------------
 " Tryouts:
-
 
 " idea for insert mode mappings:
 " go to just before the first non-blank text of the line
 inoremap II <Esc>I
 
-
-" ToDo: reconsider usage
-" some command abbreviations
-" cnoreabbrev f Find
-" cnoreabbrev fb Findb
-" cnoreabbrev hg HelpGrep
-" cnoreabbrev h Hoogle
-" cnoreabbrev he help
-" cnoreabbrev ge grep
-" cnoreabbrev pi PlugInstall
-
-cnoreabbrev ssp set syntax=purescript
-cnoreabbrev ssh set syntax=help
-
 " .. or have shortcuts like this:
-nnoremap \sh :set syntax=help<cr>
-nnoremap \sv :set syntax=vim<cr>
-nnoremap \sm :set syntax=markdown<cr>
+nnoremap <localleader>sh :set syntax=help<cr>
+nnoremap <localleader>sv :set syntax=vim<cr>
+nnoremap <localleader>sm :set syntax=markdown<cr>
 " TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
 
 " demos:
@@ -650,6 +643,10 @@ command! -nargs=1 -bang -complete=file RenameBuffer f <args>|w<bang>
 command! -range -nargs=1 -complete=file Replace <line1>-pu_|<line1>,<line2>d|r <args>|<line1>d
 " Count the number of lines in the range
 command! -range -nargs=0 Lines  echo <line2> - <line1> + 1 "lines"
+" Only works if that file is not open in a buffer
+command! -bang -range -nargs=1 -complete=file SelectionToFile       <line1>,<line2>write<bang> <args>
+command! -bang -range -nargs=1 -complete=file SelectionToFileAppend <line1>,<line2>write<bang> >> <args>
+
 " Call a user function (example of <f-args>)
 command! -nargs=* SomeTest1 call SomeTest1(<f-args>)
 " Use normal mode in a command
@@ -678,6 +675,9 @@ endfunc
 " Expression mapping example: build a string and run it as an expression
 " nnoremap <expr> GG ":echom " . screencol() . "\n"
 " nnoremap <silent> GG :echom screencol()<CR>
+
+" Get time in command mode: "echo now" → "echo strftime('%X')"
+cabbrev now strftime('%X')
 
 " Defining Commands And Utility Example Commands: -----------------------------------------------------
 
@@ -713,7 +713,57 @@ endfunc
 " call DemoOpenFinderWindow()
 " Todo: jobsend example!
 
-" Use A Range Of Lines:
+" Vim Vars In Command Line: 
+" "!echo This-is-the-dir:% >> ccdd" use the dirvish path in the echo >> command/ write it to a file
+
+" Set Searchword: - "let @/='test'"
+" Put Command Uses: - 'put a/t/"/%' registers, "put =g:test2/&filetype" variables, (always linewise)
+" Insert Text Into Buffer: 1. "put ='Some Text:'"
+"                          2. "exe 'normal iSome Text:'"
+"                          3. "r!echo 'Some Text:'"
+"                          4. "call append( line('.'), 'Some Text:'"
+" New Vs Split: - "new", "vnew", "tabnew" (and "tabe") create an empty new buffer even if no filename is provided
+"               - "split", "vs[plit]" behave the same if a new file name is provided
+" Ranges Of Lines:
+" ".,.+5s/er/XXXX/g" Repleace in the following 5 lines. A range to the "s" command is ","-separeted tuple of (interpreted) Ints/linenumbers
+" ".,.+5write temp.txt" Write the following 5 lines to a file
+" ".,$g/vim" show/select all following lines that contain "vim"
+" "'a,'bs/in/XXXX" substitute from marker 'a' to marker 'b'
+" ".,.+2move $" move the following lines to the end of the file. "'<,'>copy 0" copy visual selection to before the fist line
+" Example Collecting Lines: 
+" "'<,'>! >> .vim/notes/acd2.md | cat" - creates a new file if needed, respects linebreaks, updates/write also to open buffer, however it only works on a line, not a selection basis.
+" Same as "'<,'>!cat >> .vim/notes/acd2.md | cat" note the echo-like behavior of 'cat'
+" Put String Into Open File: - ":silent !echo 'test' >> tt.txt" 
+" Using Filepath In Shell: - ":silent !echo %-evenmore >> Documents/temp/aa/ccdd"
+" Using Registers And Variables In Shell: - ":exe 'silent !echo' @a '>>' 'ccdd'", 
+" "exe 'silent !echo' g:colors_name '>>' 'ccdd'" - "exe" basically runs a string. args are integreted as vim
+" expressions, converted to a string and then concatinated (interposed with <space>) with the overall string/command
+
+" LINE COLLECTOR: ---------------
+" "leader cli" To start collecting lines, "leader cll" to collect the visual selection
+nnoremap <leader>cli :call CollectLinesInit()<cr>
+func! CollectLinesInit()
+  " let g:colLinesFileName = tempname() 
+  let g:colLinesFileName = $HOME . '/.vim/notes/CollectedLines7.txt'
+  exe 'vsplit' g:colLinesFileName  
+  " let g:colLineBufNr = bufnr('%')
+  write
+  call writefile( ['# Collected Lines 10:', ''], g:colLinesFileName, 'a' ) 
+  edit
+  " checktime
+  wincmd p
+endfunc
+vnoremap <leader>cll :call CollectLine()<cr>
+func! CollectLine() range
+  let l:selText = Get_visual_selection()
+  " * This actually uses the selected text not the lines
+  " * This preserves the line breaks of multiline selections
+  " * This can update the file while it's loaded in a buffer
+  call system( 'echo ' . shellescape(l:selText) . ' >> ' . g:colLinesFileName )
+  checktime
+endfunc
+" LINE COLLECTOR: ---------------
+
 " echo join( getline(".", line(".") + 3), "\n" )
 " Piping Text Selection To Shell Command: Select the following lines:
 " B

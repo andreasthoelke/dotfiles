@@ -329,21 +329,33 @@ let g:mundo_playback_delay = 200
 let g:mundo_mirror_graph = 0
 let g:mundo_inline_undo = 1
 let g:mundo_help = 1
+" Mundo: ----------------------
 
-" some
-" other
+autocmd! WinLeave magit* throw "Mag leave!"
+autocmd! WinEnter magit* throw "Mag enter!"
 
-" else
+autocmd! WinEnter * echo strftime('%X') . " - " . @%
+autocmd! WinEnter
+autocmd! WinEnter *.vim echo strftime('%X') . " xx " . @%
+
+autocmd! User VimagitEnterCommit echom "Magit entered"
+
+autocmd! FocusGained * :echo "focus gained!"
 
 " Autosave: -------------------
 " Use "AutoSaveToggle" enable/disable
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_silent = 1  " do not display the auto-save notification
+let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
+" Maybe need this?
+" let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
 " Note: Plugin will "set updatetime=200"
 " Autosave: -------------------
 
 " Vim Sessions: -----------------------------------------------------------------------
 
+" Not needed? now after plugin/gitv.vim
+" nnoremap <leader>sd :OpenSession! default<cr>:call OpenSessionCleanup()<cr>
 nnoremap <leader>sd :OpenSession! default<cr>
 nnoremap <leader>sl :OpenSession!<cr>
 " Load locked session after a vim crash
@@ -358,6 +370,12 @@ let g:session_menu = 1
 
 " 'sessionoptions' (default: "blank,buffers,curdir,folds,
 " 					       help,tabpages,winsize"
+
+" func! OpenSessionCleanup ()
+"   set splitbelow
+"   set splitright
+" endfunc
+
 
 set sessionoptions+=folds
 set sessionoptions+=curdir
@@ -569,9 +587,15 @@ set textwidth=120
 " command! -nargs=* Wrap set wrap linebreak nolist
 " use `gq<motion` or gqq to merely wrap a range/line
 
-" Auto load files that have changed outside of vim! (only when there are no unsaved changes!). This requires requires
+" Auto load files that have changed outside of vim! (only when there are no unsaved changes!). This requires
 " tmux focus events "FocusGained".
 set autoread
+
+" This seems needed to reload files that have changed outside of vim (https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044)
+" autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+" autocmd FileChangedShellPost *
+"   \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+" Issue: This is throwing an error in Command history window
 
 set noswapfile
 if has('nvim')
@@ -650,19 +674,11 @@ set nostartofline
 " COMMAND HISTORY: --------------------------------------------
 " Type a command slightly more quickly:
 noremap ; :
-" noremap : ;
-" semicolon ";" in normal mode is needed for Sneak "f<char1><char2>" and then next
-" works in visual mode as well!
 
-
-" Open command history with the cursor on the last command
-" nnoremap <c-\;> q:k
-" Note: - <c-;> and <c-+> are "unmappable" keys in vim! Therefore using:
-nnoremap … q:k
-" Using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
-
-" Previous map. This caused a delay in using "q" to quit e.g. Gstatus
-" nnoremap q; q:k
+" Open command history with the cursor on the last command. Avoids conflicts with bufferlocal/plugin "q"/quick maps.
+" Also avoid accidential Exmode shell, can still be accessed by "gQ"
+nnoremap Q q:k
+vnoremap Q q:k
 
 " Issue: Using "q" as sort of a leader key in a custom mapping will delay plugin "q" = quit maps! e.b. in Gstats.
 " workaround may be to double/ "qq" or to "q<space" instead.
@@ -675,7 +691,7 @@ nnoremap … q:k
 
 " Repeat last command
 " To Learn: use "@:"
-nnoremap <leader>. @:
+map <leader>. @:
 " nnoremap , @:
 
 " Editing Past Commands: (usage example)
@@ -1676,8 +1692,7 @@ endfun
 " paste last command: ":p
 " redirect command echo text to register: :redir @t, then pt, later :redir end
 " change terminal cursor colors: highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
-" TIP: :new creates a new buffer, ":read !cat /etc/shells" → append output of
-" the command to the current buffer at cursor positon.
+" TIP: :new creates a new buffer, ":read !cat /etc/shells" → append output of the command to the current buffer at cursor positon.
 " run a date/time loop in the shell: "terminal while true; do date; sleep 1; done
 " TIP: The expression register reads-in an arbitary expression into the p-register or insert-mode:
 " "<c-r>=v:version<cr>" will insert the vim-version in insert-mode, "=v:version<cr> will allow to 'p'/'P' in normal mode
@@ -2123,24 +2138,6 @@ command! ColorPicker VCoolor
 " Files Buffer:  --------------------------------------------
 
 
-"  ----------------------------------------------------------
-" NERDTree  --------------------------------------------------
-let NERDTreeShowBookmarks = 0
-
-nnoremap go :NERDTreeFind<cr>
-nnoremap <leader>no :NERDTree<cr>
-nnoremap <leader>nt :NERDTreeToggle<cr>
-nnoremap <leader>nc :NERDTreeClose<cr>
-" In Nerdtree: use "ql" to close, "m" to delete/move files, "t" on a folder-tab
-
-let NERDTreeQuitOnOpen=1
-
-" Tips:
-" use CC to reset tree to current dir
-" use :vnew to create a new buffer in a vertical window-split
-" use <c-w>< to resize the window
-
-
 "  --- Project Root --------------------------------------------
 
 " let g:rootmarkers = ['.projectroot', 'package.json', 'bower.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
@@ -2240,6 +2237,7 @@ endfunction
 
 " CTRLP:  --------------------------------------------------
 let g:ctrlp_cmd = 'CtrlPBuffer'
+let g:ctrlp_map = 'qo'
 
 " Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {
@@ -2305,7 +2303,28 @@ let g:ctrlp_clear_cache_on_exit = 0
 
 
 " Dirvish: --------------------------------------------------
-autocmd FileType dirvish nnoremap <buffer><silent> <c-p> :CtrlP<cr>
+" Example of how to set up custom maps
+" autocmd FileType dirvish nnoremap <buffer><silent> <c-p> :CtrlP<cr>
+
+" Sort folders at the top
+let g:dirvish_mode = ':sort ,^.*[\/],'
+
+
+augroup dirvish_config
+  autocmd!
+  " Map `t` to open in new tab.
+  autocmd FileType dirvish
+        \  nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+        \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+  " Map `gr` to reload.
+  autocmd FileType dirvish nnoremap <silent><buffer>
+        \ gr :<C-U>Dirvish %<CR>
+  " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
+  autocmd FileType dirvish nnoremap <silent><buffer>
+        \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
+augroup END
+
+
 
 " Dirvish: --------------------------------------------------
 
@@ -2313,7 +2332,7 @@ autocmd FileType dirvish nnoremap <buffer><silent> <c-p> :CtrlP<cr>
 let g:vifmSplitWidth = 70
 let g:vifmFixWidth = 0
 
-" Windows Navigation: -----------------------------
+" Windows: -----------------------------
 set splitbelow
 set splitright
 " Windows will always have status bar
@@ -2350,45 +2369,13 @@ nnoremap <c-w>< 4<c-w><
 
 " Note: Consider adopting tmux map <prefix>HJKL
 
-" To Delete: This was an experiment that allowed to just focus on moving the devider:
-" nnoremap þ :call StepRightResize()<cr>
-" nnoremap „ :call StepLeftResize()<cr>
-" nnoremap ≥ :call StepDownResize()<cr>
-" nnoremap ≤ :call StepUpResize()<cr>
-" func! StepRightResize()
-"   if IsLeftMostWindow()
-"     exec "vertical resize +5"
-"     " move resize handle to the right, by increasing the horz/width of the current (leftmost) window
-"   else
-"     exec "vertical resize -5"
-"     " move resize handle to the right, by decreasing the horz/width of the current window to the right
-"   endif
-" endfunc
-" func! StepLeftResize()
-"   if IsLeftMostWindow()
-"     exec "vertical resize -5"
-"   else
-"     exec "vertical resize +5"
-"   endif
-" endfunc
-" func! StepDownResize()
-"   if IsTopMostWindow()
-"     exec "resize +3"
-"   else
-"     exec "resize -3"
-"   endif
-" endfunc
-" func! StepUpResize()
-"   if IsTopMostWindow()
-"     exec "resize -3"
-"   else
-"     exec "resize +3"
-"   endif
-" endfunc
-" To Delete: This was an experiment that allowed to just focus on moving the devider:
+" Workaround to force vim-help to open below
+augroup vimrc_help
+  autocmd!
+  autocmd BufEnter *.txt if &buftype == 'help' | wincmd J | endif
+augroup END
 
-
-" Windows Navigation: -----------------------------
+" Windows: -----------------------------
 
 
 
@@ -2587,6 +2574,17 @@ command! Diff execute 'w !git diff --no-index % -'
 " Diffing: --------------------------------------------------------
 
 
+" Magit: ----------------------------------------------------------
+let g:magit_default_show_all_files = 1
+let g:magit_default_fold_level = 1
+" let g:magit_default_sections = ['info', 'global_help', 'commit', 'staged', 'unstaged']
+let g:magit_default_sections = ['commit', 'staged', 'unstaged']
+
+nnoremap <localleader>gs :Magit<cr>
+nnoremap yog :Magit<cr>
+
+" Magit: ----------------------------------------------------------
+
 
 " Fugitive Gitv: -----------------------------------------------------------
 
@@ -2595,7 +2593,6 @@ set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 nnoremap <leader>gv :Gitv<cr>
 nnoremap <leader>gV :Gitv!<cr>
 
-nnoremap <leader>gs :Magit<cr>
 nnoremap <leader>Gs :Gstatus<cr>
 
 let g:Gitv_CustomMappings = {
@@ -2696,9 +2693,7 @@ nmap <leader>ll :lopen<cr>
 " nmap <leader>qq :copen<cr>
 " Todo: this get's overwrittern on quickfix refesh:
 nmap <leader>qq :copen<cr>:set syntax=purescript<cr>
-
-
-nmap <leader>gs :Gstatus<cr>
+cabbrev co copen
 
 nmap <silent> gsg :call GoogleSearch("word")<cr>
 vmap <silent> gsg :call GoogleSearch("visSel")<cr>
@@ -2731,6 +2726,9 @@ endfun
 
 
 " Search: -----------------------------------
+
+cnoreabbrev vg vimgrep
+
 " Vim Grepper: ------------------------------
 " command! -nargs=1 Find  :Grepper -side -query <args>
 command! -nargs=1 Find  :tabe % | Grepper -side -query <args>

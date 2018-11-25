@@ -52,7 +52,7 @@ http://nosubstance.me/post/mutt-secret-sauce/
 
 ## Documentation Readme
   * using git tags and releases
-  * list feaaturesd plugins
+  * list features plugins
   * refactor into smaller scripts?
   * use standardized comments/section formatting
       * that allows 
@@ -178,9 +178,10 @@ Will show expand tags in the runnable source file to see the notes.
 
 
 ## Git
-* Diff against last commit (instead of staging area)
-* make releases, not just commits?
-* test using vimdiff in git: `git config --global diff.tool vimdiff`
+  * show number of unstaged files/hunks in (tmux?) status?
+  * Diff against last commit (instead of staging area)
+  * make releases, not just commits? - tags are basically releases
+  * test using vimdiff in git: `git config --global diff.tool vimdiff`
 
 
 ## Pandoc
@@ -367,6 +368,10 @@ what are sort of 'leader keys' with cound preceed other keys in sequences?
 Note: When a `Complex Modificatioin` is `remove`d in the Karabiner-Elements Preferences UI, the
 related object is **deleted** from the Karabiner.json file!
 
+> Karabiner option/alt mapping example. (not in use any more)
+> Note: - <c-;> and <c-+> are "unmappable" keys in vim! Therefore using:
+`nnoremap … q:k`
+> This map is using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
 
 ## Key Codes
   * Use the MacOS `Key Codes` app to view key codes and unicode id.
@@ -639,14 +644,17 @@ endfunc
 
 ---------------
 
-sneak first result is not highlighted
-
 test gregsexton/gitv
 
 new register /copy paste plugin
 
 use augroup to allow safely reloading my vimrc. can use the `au!` patterns to first remove commands
 in of that group
+
+### File/ folder bookmarks
+  Consider use-cases
+  How to implement?
+  Nerdtree recover the bookmarks
 
 config save a grep search through all info sources for:
   * vim notes
@@ -689,6 +697,7 @@ config save a grep search through all info sources for:
 mksession does not maintain cursor position in splits of one file
   → tested, and it now seems to work
 
+  command history q: trigger quit in plugin buffers
   -------------------
 
 
