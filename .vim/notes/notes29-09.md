@@ -698,6 +698,9 @@ mksession does not maintain cursor position in splits of one file
   → tested, and it now seems to work
 
   command history q: trigger quit in plugin buffers
+
+  how to stop autosave in magit?
+  cd in the underlying shell
   -------------------
 
 

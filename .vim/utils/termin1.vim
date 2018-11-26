@@ -1,4 +1,5 @@
-
+" Utils And Docs: ----------
+ 
 " TODO: 
 " show a type mismatch error in two lines in the code view:
 " redirect command echo text to register: :redir @t,
@@ -922,8 +923,6 @@ function! OpenRanger()
 endfunction
 
 
-
-
 " Testfunctions: -------------------------------------------------------------
 func! DemoBackForth ()
   silent exec      '!osascript' '-e' shellescape( 'tell application "System Events" to key code 124 using {control down}' ) | redraw!
@@ -945,11 +944,24 @@ endfunction
 " Autocommands Events: ----------------------------
 " Give a preview window local settings on WinEnter:
 " Note: the use of "if" in one line!
-augroup PreviewAutocmds
-  autocmd!
-  autocmd WinEnter * if &previewwindow | setlocal nonumber | endif
-augroup END
+" augroup PreviewAutocmds
+"   autocmd!
+"   autocmd WinEnter * if &previewwindow | setlocal nonumber | endif
+" augroup END
+" autocmd! WinEnter *.vim :echo strftime('%X') . " xx " . @%
+" autocmd! FocusGained * :echo "focus gained!"
+" Bufferlocal Autocmd: needs to be attached when a buffer is created, e.g. via a map
+" autocmd! WinEnter <buffer> echom 'Buffer-local event from buffer: ' . bufname('%')
 
+" Highlight Specific Strings Patterns:
+" highlight MyGroup ctermbg=green guibg=green
+" let m = matchadd("MyGroup", "WinEnter")
+" call matchdelete(m)
+highlight MDCode guifg=red
+" autocmd BufEnter,WinEnter *.vim call matchadd('MDCode', '`[^`]*`', -1)
+" Highlight Text In Quotes: let m = matchadd("MDCode", '`(.*?)`') - https://regexr.com/43o7i
+" TODO: 1. The highlight should be within the quotes but not including the quotes
+"       2. Could copy the conceil setting with the .MD syntax?!
 
 " Codeformatting Examples: -----------------------------------------------------
 " from: https://github.com/sdothum/dotfiles/blob/master/vim/.vim/config/buffer.vim

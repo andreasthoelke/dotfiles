@@ -329,18 +329,12 @@ let g:mundo_playback_delay = 200
 let g:mundo_mirror_graph = 0
 let g:mundo_inline_undo = 1
 let g:mundo_help = 1
+
+" Z Maps Unimpaired:
+" There is only one instance/window of Mundo. Whenever a Mundo window is open, Autosave should be off
+" nnoremap you :MundoToggle<cr>:AutoSaveToggle<cr>
+
 " Mundo: ----------------------
-
-autocmd! WinLeave magit* throw "Mag leave!"
-autocmd! WinEnter magit* throw "Mag enter!"
-
-autocmd! WinEnter * echo strftime('%X') . " - " . @%
-autocmd! WinEnter
-autocmd! WinEnter *.vim echo strftime('%X') . " xx " . @%
-
-autocmd! User VimagitEnterCommit echom "Magit entered"
-
-autocmd! FocusGained * :echo "focus gained!"
 
 " Autosave: -------------------
 " Use "AutoSaveToggle" enable/disable
@@ -350,7 +344,23 @@ let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 " Maybe need this?
 " let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
 " Note: Plugin will "set updatetime=200"
+func! AttachAutosaveStopEvents()
+  au! WinEnter <buffer> let g:auto_save = 0 | echo "auto off"
+  au! WinLeave <buffer> let g:auto_save = 1 | echo "auto on"
+endfunc
 " Autosave: -------------------
+
+" Example: Auto insert/update info in source files!
+" autocmd BufWritePre,FileWritePre *.vim ks | call LastMod() | 's
+" Issue: This clutters the undo-history when used with autosave
+fun LastMod()
+  if line("$") > 20
+    let l = 20
+  else
+    let l = line("$")
+  endif
+  exe "1," . l . "g/Last modified: /s/Last modified: .*/Last modified: " . strftime("%Y %b %d")
+endfun
 
 " Vim Sessions: -----------------------------------------------------------------------
 
@@ -1714,6 +1724,8 @@ endfun
 " TODO: delete long space between words: "elldw" example: ^ord            next
 " TIP: remove trailing whitespace: ":%s/\s\+$//e"
 " Show trailing whitespace only after some text (ignores blank lines): /\S\zs\s\+$
+" autocmd BufEnter,WinEnter * call matchadd('Error', '\v\s+$', -1)
+
 " TIP: use ":earlier" and ":later" to jump the ":undolist" back and forth in
 " *time* (disregarding branches of the undotree). use ":earlier 10m" or ".. 5h" to go back 10 minutes/ 5 hours
 " TIP: Vim-anywhere replacement: use: "alfred vim(mac vim)", edit text, then
@@ -2237,7 +2249,7 @@ endfunction
 
 " CTRLP:  --------------------------------------------------
 let g:ctrlp_cmd = 'CtrlPBuffer'
-let g:ctrlp_map = 'qo'
+let g:ctrlp_map = '<localleader>a'
 
 " Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {
@@ -2309,7 +2321,6 @@ let g:ctrlp_clear_cache_on_exit = 0
 " Sort folders at the top
 let g:dirvish_mode = ':sort ,^.*[\/],'
 
-
 augroup dirvish_config
   autocmd!
   " Map `t` to open in new tab.
@@ -2323,8 +2334,6 @@ augroup dirvish_config
   autocmd FileType dirvish nnoremap <silent><buffer>
         \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
 augroup END
-
-
 
 " Dirvish: --------------------------------------------------
 
@@ -2580,8 +2589,9 @@ let g:magit_default_fold_level = 1
 " let g:magit_default_sections = ['info', 'global_help', 'commit', 'staged', 'unstaged']
 let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 
-nnoremap <localleader>gs :Magit<cr>
-nnoremap yog :Magit<cr>
+" Z Maps Unimpaired:
+" There may be muliple Magit windows. Only when the focus is on any of there Autosave should be off
+" nnoremap yog :Magit<cr>:call AttachAutosaveStopEvents()<cr>
 
 " Magit: ----------------------------------------------------------
 
