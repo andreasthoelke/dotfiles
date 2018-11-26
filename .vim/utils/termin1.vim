@@ -650,8 +650,8 @@ command! -bang -range -nargs=1 -complete=file SelectionToFileAppend <line1>,<lin
 
 " Call a user function (example of <f-args>)
 command! -nargs=* SomeTest1 call SomeTest1(<f-args>)
-" Use normal mode in a command
-" command! SourceLine :normal yy:@"<cr>:echo 'Line sourced!'<cr>
+" Note: that function SomeTest1 only has one arg. Could use "..." in the arg or limit arg in the command to 1.
+" Use normal mode in a command: "command! SourceLine :normal yy:@"<cr>:echo 'Line sourced!'<cr>
 " Ex commands can be run from a command prefixing the ":" but not the "<cr>"
 " command! CopyAndQuit :%y+ | :q!
 " command! -nargs=1 Find  :Grepper -side -query <args>
@@ -739,6 +739,10 @@ endfunc
 " Using Registers And Variables In Shell: - ":exe 'silent !echo' @a '>>' 'ccdd'", 
 " "exe 'silent !echo' g:colors_name '>>' 'ccdd'" - "exe" basically runs a string. args are integreted as vim
 " expressions, converted to a string and then concatinated (interposed with <space>) with the overall string/command
+" Run Vim Function Per Selected Line: '<,'>call echom(getline('.'))
+" Loop Map Over Range Of Selected Lines: - "'<,'>call SomeTest1( getline('.'))" - this sort of moves to each selected line, so every command that works on a current line will be run n-line times on each line
+" Delete A Range Of Files: - "'<,'>call delete(getline('.'))"
+
 
 " LINE COLLECTOR: ---------------
 " "leader cli" To start collecting lines, "leader cll" to collect the visual selection
@@ -781,7 +785,6 @@ endfunction
 command! -range=% -nargs=0 DemoPipeRange1 :<line1>,<line2>call DemoPipeRange()
 
 " Running Commands: ------------------------------------------------------------
-" last
 
 
 " Running AppleScript: ----------------------------------------------------------------

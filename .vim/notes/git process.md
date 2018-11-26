@@ -63,6 +63,9 @@ For a new repo: Link local repo to github remote repo:
 "git push -u origin master" `-u` add upstream tracking(!?)
 "git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
 
+### Change Commit Message
+  * `git commit --amend -m 'New commit text/message'`, then `git push --force` to update remote
+
 ## Git Branch Merge
 In the following example "freatue1" is a "feature branch". the code for the feature
 is just "feature1 implementation" here. After that feature is commited to the "freature1" branch first, it will then be merged into master.

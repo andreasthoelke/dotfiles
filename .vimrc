@@ -8,7 +8,9 @@ Plug 'junegunn/vim-plug'
 
 " File Selectors Browsers: ------------------------------------------
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'justinmk/vim-dirvish'
+" Plug 'justinmk/vim-dirvish'
+" Added a convenient "silent" 'z' buffer local map for the Shdo command window 
+Plug 'andreasthoelke/vim-dirvish'
 " test these
 " Plug 'vifm/neovim-vifm'
 " Plug 'vifm/vifm.vim'
@@ -229,7 +231,7 @@ endfunc
 " Nyaovim Markdown: ------------------------
 
 " Nyaovim Popup: ------------------------
-nmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
+nnoremap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 " Nyaovim Popup: ------------------------
 
@@ -306,7 +308,8 @@ let g:promptline_preset = {
 
 " Messages: ----------------------------------------------------------------------
 " avoid |hit enter| prompts
-set shortmess+="mW"
+" set shortmess+="mW"
+set shortmess=aoOtIT
 
 " This is slow when exiting vim
 " autocmd! VimLeavePre * call VimLeaveCleanup()
@@ -333,8 +336,8 @@ let g:mundo_help = 1
 " Z Maps Unimpaired:
 " There is only one instance/window of Mundo. Whenever a Mundo window is open, Autosave should be off
 " nnoremap you :MundoToggle<cr>:AutoSaveToggle<cr>
-
 " Mundo: ----------------------
+
 
 " Autosave: -------------------
 " Use "AutoSaveToggle" enable/disable
@@ -345,22 +348,22 @@ let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 " let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
 " Note: Plugin will "set updatetime=200"
 func! AttachAutosaveStopEvents()
-  au! WinEnter <buffer> let g:auto_save = 0 | echo "auto off"
-  au! WinLeave <buffer> let g:auto_save = 1 | echo "auto on"
+  autocmd! BufEnter,WinEnter <buffer> let g:auto_save = 0 | echo "Autsave off"
+  autocmd! BufHidden,WinLeave <buffer> let g:auto_save = 1 | echo "Autsave on"
 endfunc
 " Autosave: -------------------
 
 " Example: Auto insert/update info in source files!
 " autocmd BufWritePre,FileWritePre *.vim ks | call LastMod() | 's
 " Issue: This clutters the undo-history when used with autosave
-fun LastMod()
-  if line("$") > 20
-    let l = 20
-  else
-    let l = line("$")
-  endif
-  exe "1," . l . "g/Last modified: /s/Last modified: .*/Last modified: " . strftime("%Y %b %d")
-endfun
+" func! LastMod()
+"   if line("$") > 20
+"     let l = 20
+"   else
+"     let l = line("$")
+"   endif
+"   exe "1," . l . "g/Last modified: /s/Last modified: .*/Last modified: " . strftime("%Y %b %d")
+" endfun
 
 " Vim Sessions: -----------------------------------------------------------------------
 
@@ -567,7 +570,7 @@ hi link jsonCommentError				Error
 
 
 " General Settings: ------------------------
-set cmdheight=2
+set cmdheight=3
 set ignorecase
 set fileencoding=utf-8
 set encoding=utf-8
@@ -683,7 +686,8 @@ set nostartofline
 
 " COMMAND HISTORY: --------------------------------------------
 " Type a command slightly more quickly:
-noremap ; :
+nnoremap ; :
+nnoremap : :silent !
 
 " Open command history with the cursor on the last command. Avoids conflicts with bufferlocal/plugin "q"/quick maps.
 " Also avoid accidential Exmode shell, can still be accessed by "gQ"
@@ -947,7 +951,7 @@ setlocal formatprg=stylish-haskell
 
 " Sourcing Parts Of Vimscript:
 " the current file
-nmap <silent><leader>su :w<CR>:so %<CR>
+nnoremap <silent><leader>su :w<CR>:so %<CR>
 " the following paragraph/lines
 nnoremap <leader>s} y}:@"<cr>
 " TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
@@ -1185,7 +1189,7 @@ let g:ale_enabled = 0
 " let g:ale_set_quickfix = 1
 " Note: Ale sets the loclist, not the quickfix-list!
 let g:ale_emit_conflict_warnings = 0
-nmap <leader>aa :ALEToggle<cr>
+nnoremap <leader>aa :ALEToggle<cr>
 
 " let g:ale_sign_error = '✖'
 let g:ale_sign_warning = '⚠'
@@ -1261,8 +1265,8 @@ let g:syntastic_style_warning_symbol = "⚠"
 
 " Todo Temp:
 " nmap <leader>ss :SyntasticToggle<cr>
-nmap <leader>sc :SyntasticCheck<cr>
-nmap <leader>sr :SyntasticReset<cr>
+nnoremap <leader>sc :SyntasticCheck<cr>
+nnoremap <leader>sr :SyntasticReset<cr>
 
 " SYNTASIC: ---------------------------------------------------
 
@@ -1306,11 +1310,11 @@ let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 " GitGutter: -------------------------------------------------------
 let g:gitgutter_map_keys = 0
 
-nmap <leader>gg :GitGutterToggle<cr>
+nnoremap <leader>gg :GitGutterToggle<cr>
 " Note: Gutter updates on save!
 
-nmap ]c <Plug>GitGutterNextHunk
-nmap [c <Plug>GitGutterPrevHunk
+nnoremap ]c <Plug>GitGutterNextHunk
+nnoremap [c <Plug>GitGutterPrevHunk
 " Issue Note: does not work after buffer change? temp-fix: make a change and safe!
 " alt: disable gutter, close file, open file, enable gutter → ]c should work again
 
@@ -1320,9 +1324,9 @@ nmap [c <Plug>GitGutterPrevHunk
 " undo it with <Leader>hu.
 " TIP: this actually undos the section (hunk). this is specifically useful at
 " the yellow "~", to see what was changed!
-nmap <Leader>hr <Plug>GitGutterUndoHunk
+nnoremap <Leader>hr <Plug>GitGutterUndoHunk
 " Todo: not sure how staging a hunk works..
-nmap <Leader>ha <Plug>GitGutterStageHunk
+nnoremap <Leader>ha <Plug>GitGutterStageHunk
 
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
@@ -1375,8 +1379,8 @@ nnoremap <silent> <leader>ik :InteroKill<CR>
 nnoremap <silent> <leader>io :InteroOpen<CR>
 nnoremap <silent> <leader>ih :InteroHide<CR>
 nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
-nnoremap <silent>         gd :call GotoDefinition()<CR>
-nnoremap <silent> <leader>gd :sp<CR>:call GotoDefinition()<CR>
+" nnoremap <silent>         gd :call GotoDefinition()<CR>
+" nnoremap <silent> <leader>gd :sp<CR>:call GotoDefinition()<CR>
 " fee mapping
 " nnoremap <silent>         ]d :call GotoDefinition()<CR>
 " Intero: -----------------------------------------------------------
@@ -1425,7 +1429,7 @@ nnoremap dap :Papply<cr>:call PurescriptUnicode()<cr>
 
 
 " just for testing - not sure when this might be useful
-nmap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
+nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 " alternative to PSCIDEgetKeyword()
 
 " New Haskell And Purescript Maps: ------------------------------------------------------
@@ -1551,7 +1555,7 @@ vnoremap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 " TODO: find alt mapping
-nmap <leader>ga <Plug>(EasyAlign)
+nnoremap <leader>ga <Plug>(EasyAlign)
 
 let g:easy_align_ignore_groups = ['Comment', 'String']
 
@@ -1611,7 +1615,7 @@ let g:easy_align_ignore_groups = ['Comment', 'String']
 
 
 " Insert line comment
-nmap <leader>mll i----------------------------------------------------------------------------------<esc>^
+nnoremap <leader>mll i----------------------------------------------------------------------------------<esc>^
 " Fill line with dashes
 nnoremap <leader>mlk $a<space><esc>82a-<esc>d82<bar>^
 " TODO: this somehow stops working!?
@@ -1621,11 +1625,11 @@ nnoremap <leader>mlk $a<space><esc>82a-<esc>d82<bar>^
 " Paste and delete -------------------------------------
 
 " Paste from the yank register
-nmap <leader>p "0p
+nnoremap <leader>p "0p
 nnoremap <leader>P "0P
 
 " Paste and copy System clipboard
-nmap <leader><c-p> "+P
+nnoremap <leader><c-p> "+P
 
 " nnoremap <leader>vv "+P
 nnoremap <leader>vv "+P:call PurescriptUnicode()<cr>h
@@ -1635,7 +1639,7 @@ nnoremap <leader>y "+y
 vnoremap <leader>y "+y
 
 " Paste to Command line
-nmap <leader><m-p> :<c-r>"
+nnoremap <leader><m-p> :<c-r>"
 " <c-r>"
 
 
@@ -1674,11 +1678,11 @@ function! Eatchar(pat)
 endfunc
 
 " Example: use "getchar()"
-nmap <leader>abb :echo getchar()<cr>
-nmap <leader>abb i<c-r>=getchar()<cr>
+nnoremap <leader>abb :echo getchar()<cr>
+nnoremap <leader>abb i<c-r>=getchar()<cr>
 
 " TODO a useful prompt?
-nmap <leader>abb @=
+nnoremap <leader>abb @=
 
 fun! SomeTest1( ar1 )
   if a:ar1 == "abc"
@@ -1754,31 +1758,31 @@ endfun
 "
 " HASKELL PURESCRIPT TEST FUNCTIONS: ----------------------------------------------------------------
 " "unique functions"
-nmap <leader>uf :call RandFnName()<cr>2w
+nnoremap <leader>uf :call RandFnName()<cr>2w
 " produces a (test) haskell function with a random name, e.g.:
 " cp0 = undefined
 " "unique symbol"
-nmap <leader>us :call RandSymbol()<cr>
+nnoremap <leader>us :call RandSymbol()<cr>
 
 " "expand function": expand a symbol name to a function stub
-nmap <leader>ef A :: String<esc>^ywo<esc>PA= undefined<esc>b
+nnoremap <leader>ef A :: String<esc>^ywo<esc>PA= undefined<esc>b
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
 
 " "expand signature": expand a signature to a function stub
-nmap <leader>es ^ywo<esc>PA= undefined<esc>b
+nnoremap <leader>es ^ywo<esc>PA= undefined<esc>b
 
 " "expand undefined": expand a signature to a function stub
-nmap <leader>eu yiwo<esc>PA = undefined<esc>b
+nnoremap <leader>eu yiwo<esc>PA = undefined<esc>b
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
 
 
-nmap <leader>uef <leader>us<leader>ef
+nnoremap <leader>uef <leader>us<leader>ef
 
 " "index symbol" append postfix index to function name
-nmap <leader>if ea0^jea0^k
+nnoremap <leader>if ea0^jea0^k
 
-nmap <leader><c-a> jk^
-nmap <leader><c-x> <c-x>j<c-x>k^
+nnoremap <leader><c-a> jk^
+nnoremap <leader><c-x> <c-x>j<c-x>k^
 
 
 function! RandFnName()
@@ -1803,7 +1807,7 @@ endfunction
 
 
 " Reduce a paragraph (purs repl type output) to one line, deleting 2+ space seperations between words
-nmap <leader>ccu "td}:call TransfTRegAndAppend( function('StripNewlinesAndMultispaces') )<cr>k
+nnoremap <leader>ccu "td}:call TransfTRegAndAppend( function('StripNewlinesAndMultispaces') )<cr>k
 
 " Get the type of do-binds by producing a type error:
 nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>"tp^
@@ -1814,7 +1818,7 @@ function! TransfTRegAndAppend ( fn )
   call append( line('.') - 1, a:fn( @t ))
 endfun
 " Testfn: Use of TransfTRegAndAppend with higher order function
-nmap <leader>cci "tdd:call TransfTRegAndAppend( function('toupper') )<cr>
+nnoremap <leader>cci "tdd:call TransfTRegAndAppend( function('toupper') )<cr>
 
 function! StripNewlinesAndMultispaces( str ) " 1. delete all newlines:
   let l:str1 = substitute(  a:str,  '\n',  '', 'ge' )
@@ -1850,16 +1854,16 @@ endfun
 
 
 " Replacing: ---------------------------------------------
-" nmap <leader>re "_die"0P`[
+" nnoremap <leader>re "_die"0P`[
 " nmap <leader>re ve"0pb
 " nmap <leader>re "_die"0Pb
 " nmap <leader>rf "_daf"0PB
 
 " Replace inner word
-nmap <leader>rw "_diw"0Pb
+nnoremap <leader>rw "_diw"0Pb
 " nmap yrw "_diw"0Pb
-nmap yriw "_diw"0Pb
-nmap yrw Pl"_dwb
+nnoremap yriw "_diw"0Pb
+nnoremap yrw Pl"_dwb
 " Register, black hole, delete, inner word, paste from yank register, go to beginning
 
 " Replace words
@@ -1868,7 +1872,7 @@ nmap yrw Pl"_dwb
 " beginning of pasted text.
 
 " Replace rest of the line
-nmap <leader>r0 "_d$"0p`[
+nnoremap <leader>r0 "_d$"0p`[
 
 " Make deleting to black hole register easier?
 nnoremap D "_d
@@ -2328,11 +2332,9 @@ augroup dirvish_config
         \  nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
         \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
   " Map `gr` to reload.
-  autocmd FileType dirvish nnoremap <silent><buffer>
-        \ gr :<C-U>Dirvish %<CR>
+  autocmd FileType dirvish nnoremap <silent><buffer> gr :<C-U>Dirvish %<CR>
   " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
-  autocmd FileType dirvish nnoremap <silent><buffer>
-        \ gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
+  autocmd FileType dirvish nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
 augroup END
 
 " Dirvish: --------------------------------------------------
@@ -2427,7 +2429,7 @@ nnoremap <leader>6 6gt
 nnoremap <leader>7 7gt
 nnoremap <leader>8 8gt
 nnoremap <leader>9 9gt
-nmap <Leader>^ :exe "tabn ".g:lasttab<CR>
+nnoremap <Leader>^ :exe "tabn " . g:lasttab<CR>
 
 if !exists('g:lasttab')
   let g:lasttab = 1
@@ -2521,7 +2523,7 @@ nnoremap zl 7zl
 " nnoremap <c-\> =
 
 " Show syntax highlighting groups for word under cursor
-nmap <F4> :call <SID>SynStack()<CR>
+nnoremap <F4> :call <SID>SynStack()<CR>
 function! <SID>SynStack()
   if !exists("*synstack")
     return
@@ -2550,7 +2552,7 @@ endfunc
 " Delete-CUT element and black hole delete the space after it, to
 " be able to paste the cut element
 " Todo: ? does not work
-nmap de die"_dl
+" nmap de die"_dl
 
 
 
@@ -2562,10 +2564,10 @@ function! DiffToggle()
     else
         diffthis
     endif
-:endfunction
+endfunction
 
-vmap <leader>di :Linediff<cr>
-nmap <leader>dr :LinediffReset<cr>
+vnoremap <leader>di :Linediff<cr>
+nnoremap <leader>dr :LinediffReset<cr>
 
 set diffopt+=vertical
 
@@ -2591,7 +2593,7 @@ let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 
 " Z Maps Unimpaired:
 " There may be muliple Magit windows. Only when the focus is on any of there Autosave should be off
-" nnoremap yog :Magit<cr>:call AttachAutosaveStopEvents()<cr>
+" nnoremap yog :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0
 
 " Magit: ----------------------------------------------------------
 
@@ -2624,27 +2626,27 @@ autocmd! BufReadPost fugitive://* set bufhidden=delete
 "  Launching external apps
 command! Browser :call OpenVisSel()
 vmap glb :call OpenVisSel()<cr>
-nmap glb :call HandleURL()<cr>
+nnoremap glb :call HandleURL()<cr>
 
 command! ITerm :call OpenITerm()
-nmap gli :call OpenITerm()<cr>
+nnoremap gli :call OpenITerm()<cr>
 
 command! Finder :call OpenFinder()
-nmap glf :call OpenFinder()<cr>
+nnoremap glf :call OpenFinder()<cr>
 
 command! Editor :call OpenCurrentFileInSystemEditor()
-nmap gle :call OpenCurrentFileInSystemEditor()<cr>
+nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
 " Tip: alternatively just ":!open $"!
 
 command! Markdown :call OpenMarkdownPreview()
-nmap glm :call OpenMarkdownPreview()<cr>
+nnoremap glm :call OpenMarkdownPreview()<cr>
 
 " This seems to work now (silently)
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 " ----------------------------------------------------------------------------------
 
 " open a terminal window
-nmap <silent> glt :below 20Term<cr>
+nnoremap <silent> glt :below 20Term<cr>
 
 " Terminal util functions
 " and lots of documentations (TODO refactor this)
@@ -2654,9 +2656,9 @@ source /Users/andreas.thoelke/.vim/utils/termin1.vim
 
 " Tagbar: --------------------------------------------------------------------------
 " nmap gkl :TagbarOpen j<cr>
-nmap <leader>to :TagbarOpen j<cr>
-nmap to :TagbarOpen j<cr>
-nmap <leader>th :TagbarClose<cr>
+nnoremap <leader>to :TagbarOpen j<cr>
+nnoremap to :TagbarOpen j<cr>
+nnoremap <leader>th :TagbarClose<cr>
 
 " nmap <silent> <c-h> gklk<cr>
 " nmap <silent> <c-l> gklj<cr>
@@ -2699,26 +2701,26 @@ augroup END
 " let g:lt_quickfix_list_toggle_map = '<leader>gq'
 
 " nmap <leader>ll :lopen<cr>:Wrap<cr>
-nmap <leader>ll :lopen<cr>
+nnoremap <leader>ll :lopen<cr>
 " nmap <leader>qq :copen<cr>
 " Todo: this get's overwrittern on quickfix refesh:
-nmap <leader>qq :copen<cr>:set syntax=purescript<cr>
+nnoremap <leader>qq :copen<cr>:set syntax=purescript<cr>
 cabbrev co copen
 
-nmap <silent> gsg :call GoogleSearch("word")<cr>
+nnoremap <silent> gsg :call GoogleSearch("word")<cr>
 vmap <silent> gsg :call GoogleSearch("visSel")<cr>
 
-nmap <silent> gsh :call DocsForCursorWord()<cr>
+nnoremap <silent> gsh :call DocsForCursorWord()<cr>
 vmap <silent> gsh :call DocsForVisSel()<cr>
-nmap <silent> gsd :call HoogleForCursorWord()<cr>
+nnoremap <silent> gsd :call HoogleForCursorWord()<cr>
 vmap <silent> gsd :call HoogleForVisSel()<cr>
 
-nmap <silent> gsi :call GithubSearch("word")<cr>
+nnoremap <silent> gsi :call GithubSearch("word")<cr>
 vmap <silent> gsi :call GithubSearch("visSel")<cr>
 
-nmap <silent> gsf :call GrepSearch("word", "file")<cr>
+nnoremap <silent> gsf :call GrepSearch("word", "file")<cr>
 vmap <silent> gsf :call GrepSearch("visSel", "file")<cr>
-nmap <silent> gsb :call GrepSearch("word", "buffers")<cr>
+nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 
   
