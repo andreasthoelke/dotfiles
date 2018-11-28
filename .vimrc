@@ -295,9 +295,11 @@ let g:airline_mode_map = {
 
 
 " Promptline Settings: ------------------------------------------------------------
-" Creates a (zsh) command prompt based on vim-airline style: ":PromptlineSnapshot ~/.promptline.sh airline" then in zsh: "source .promptline.sh"
+" Creates a (zsh) command prompt based on vim-airline style: "PromptlineSnapshot ~/.promptline.sh airline" then in zsh: "source .promptline.sh"
 " sections (a, b, c, x, y, z, warn) are optional
+" Note: Needs to briefly plugins-install airline to work
 let g:promptline_preset = {
+        \'b' : [ '$vim_mode' ],
         \'c' : [ promptline#slices#cwd({ 'dir_limit': 3 }) ],
         \'y' : [ promptline#slices#vcs_branch() ],
         \'z' : [ promptline#slices#jobs() ],
@@ -686,7 +688,8 @@ set nostartofline
 
 " COMMAND HISTORY: --------------------------------------------
 " Type a command slightly more quickly:
-nnoremap ; :
+noremap ; :
+" This requires that all maps that use ":" /commands! need to be defiled with "nnoremap"/ "vnoremap"
 nnoremap : :silent !
 
 " Open command history with the cursor on the last command. Avoids conflicts with bufferlocal/plugin "q"/quick maps.

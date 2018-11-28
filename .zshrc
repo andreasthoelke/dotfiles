@@ -18,6 +18,7 @@ export LANG=en_US.UTF-8
 export LC_COLLATE="C"
 export EDITOR="nvim"
 export VISUAL="nvim"
+# Could consider `export EDITOR='vim -u alternate_profile.vim'`
 export TERM="xterm-256color"
 
 # Open `man` pages in Chrome (not in less):
@@ -50,13 +51,13 @@ alias svim='nvim -u ~/.SpaceVim/vimrc'
 
 NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
-# Shell prompt config created by promptline.vim
-source ~/.promptline.sh
+
+
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell"
 # ZSH_THEME=“amuse”
 # ZSH_THEME="cobalt2"
 
@@ -96,6 +97,7 @@ plugins=(
    hub
    copyfile # "copyfile <filename>" to copy text of file into clipboard
    web-search # "google ..", "wiki" "!w"
+   vi-mode
    # zsh_reload # use "src" to reload .zshrc in all running shells
    )
 
@@ -107,7 +109,43 @@ source $ZSH/oh-my-zsh.sh
 # User configuration --------------------------------------------------
 
 # Activate vim bindings
-# bindkey -v
+bindkey -v
+
+export KEYTIMEOUT=1
+
+# `v` is already mapped to visual mode, so we need to use a different key to
+# open Vim
+# defined in vim-mode plugin:
+# bindkey -M vicmd "^V" edit-command-line
+
+# -- Vim Mode Indicator ----------
+vim_ins_mode="I"
+vim_cmd_mode="N"
+vim_mode=$vim_ins_mode
+
+function zle-keymap-select {
+  vim_mode="${${KEYMAP/vicmd/${vim_cmd_mode}}/(main|viins)/${vim_ins_mode}}"
+  __promptline
+  zle reset-prompt
+}
+zle -N zle-keymap-select
+
+function zle-line-finish {
+  vim_mode=$vim_ins_mode
+}
+zle -N zle-line-finish
+
+function TRAPINT() {
+  vim_mode=$vim_ins_mode
+  return $(( 128 + $1 ))
+}
+# -- Vim Mode Indicator ----------
+
+# Shell prompt config created by promptline.vim
+# This is used instead of a 'theme'?
+source ~/.promptline.sh
+
+
 
 unsetopt correct_all
 unsetopt correct

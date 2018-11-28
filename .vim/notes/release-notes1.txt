@@ -12,5 +12,6 @@ v1.0.1
 * Mundo undo-tree
 
 v1.0.2
-
+use zsh vim-mode
+zsh vim mode indicator via vim-promptline.sh
 
