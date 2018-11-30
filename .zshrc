@@ -111,6 +111,34 @@ source $ZSH/oh-my-zsh.sh
 # Activate vim bindings
 bindkey -v
 
+# Key maps for Zsh vi mode: https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/vi-mode/README.md
+
+
+# Enable copy/paste from and into the system clipboard in vi-mode using 'y' and 'p'
+function vi-yank-pbcopy { 
+  zle vi-yank 
+  echo "$CUTBUFFER" | pbcopy
+}
+zle -N vi-yank-pbcopy
+bindkey -M vicmd 'y' vi-yank-pbcopy
+
+function vi-put-after-pbcopy {
+  CUTBUFFER=$(pbpaste)
+  zle vi-put-after
+}
+zle -N vi-put-after-pbcopy
+bindkey -M vicmd 'p' vi-put-after-pbcopy
+
+function vi-put-before-pbcopy {
+  CUTBUFFER=$(pbpaste)
+  zle vi-put-before
+}
+zle -N vi-put-before-pbcopy
+bindkey -M vicmd 'P' vi-put-before-pbcopy
+
+
+# ~/.vim/notes
+
 export KEYTIMEOUT=1
 
 # `v` is already mapped to visual mode, so we need to use a different key to

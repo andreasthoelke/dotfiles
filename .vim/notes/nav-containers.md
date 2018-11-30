@@ -70,12 +70,29 @@
 
 ## Folders
 
+## Arglist
+
+  * `args \`cat files.txt\`` get arglist from a file using backtick expression
+
+### Argdo
+  substitute in a selection of files:
+  `vim /<c-r>// **/*.txt` previous search pattern in txt files in subfolders
+  `QfToArgs | argdo %s//abc/g | update` run a command on all file in the quickfix list
+
+
+## Registers
+  * `qaq` to clear
+
+
+
+
 ### Cmdline :find               
   `:find a<tab>` (e.g. in Haskell project folder) allows to:
   * Reach into subfolders (usind `set path+=**`, but this includes other folders)
   * autocompl menu
   * fuzzy complete (e.g. `:find *hs<c-i>` will show all haskell files)
   (https://www.kwyse.com/posts/twid-vim-minimalism/)
+  * `cd .vim/plugged`, `:tabf[ind] *.md<tab>` to show all readme files 
 
 ### Cmdline Menu: 
   (with setting `set wildmode=longest:list,full`)
@@ -99,6 +116,11 @@
     * `yy` the path, then:
       * go to buffer and `:read <c-r>"` the content of the yanked path
 
+#### Arglist
+  * use `x` and `dax` for arglist
+  * `c-w v` then `[A`, `]a` to have a window (`c-w t` or tab) with this group of files!
+
+
 how about folders?
   relation to files/buffer/tabs?
   create/remove
@@ -111,6 +133,10 @@ how about folders?
   1. **listed**: in the bufferlist (~in memory)
   2. **displayed**: in some window (or be hidden but still listed)
   3. **active**: displayed in the current window
+
+
+## Completion
+  https://github.com/mhinz/vim-galore#completion
 
 > Tab navigate the file system while in insert mode
 inoremap <Tab> <c-x><c-f>
@@ -125,6 +151,7 @@ In command mode (see `:h cmdline-completion`) after `:e `
  (1.) `c-d` selects/locks-in the currently selected element and displays child options
  ⇒ `c-d` - `c-p/n` in alternation
  * `c-w` to delete a word back
+
 
 Navigate in scrollback history: 
   * <c-p> to go back in command history, <c-n> to go forward in history.
@@ -220,9 +247,16 @@ use <c-o> open menu?
     * `:jumps`
 
 
-## MARKS
+
+
+## Marks
+  * set a global mark before using search/quickfix and arglist/bufferlist
+      → but isn't spinning off a tab better a be reminded about what to resume?
+  * `mV`, `'V` to use a global mark
+
 are those recognizing tabs? (no and this may be good)
 do a mark not per file but per win/tab?
+
 
 ## Folds, Folding
 `zk` `zj` to navigate
@@ -274,6 +308,12 @@ NOTE this is not complete - research full solution?
   * use `gv` to reactive the prev selection or a selection created with `m<`, `m>`
 
   * nav in markdown (and other langs?) with text objects/motions: https://github.com/coachshea/vim-textobj-markdown
+
+## Quickfix Navigation
+  * `leader qq` 
+  * `]q` with cursor in code, 
+  * `c-n/p` and `go` with cursor in quickfix list
+
 
 ## Sessions
 save and restore a session with windows and tabs

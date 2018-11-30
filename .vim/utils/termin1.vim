@@ -102,7 +102,7 @@
 "
 " "PSCID" just run "pscid" in project root folder to get something similar to
 " "ghcid" (see below)
-autocmd! BufWinEnter quickfix nmap <buffer> go :.cc | wincmd p<cr>
+
 " source "/Users/andreas.thoelke/.vim/utils/termin1.vim"
 
 " HASKELL WORKFLOW:
@@ -203,17 +203,26 @@ autocmd! BufWinEnter quickfix nmap <buffer> go :.cc | wincmd p<cr>
 " Change Inner Big Word: - "abc" or (abc) can be changed nicely with "ciW"!
 " Toggle Line Number And Wrap: - "yol", "yow"
 " Repeat Last Command: - "<leader>." or just "@:"
-" Find Search In Code: - "gsb" / "gsf" on code-word or visual selection to search buffers or project root files
-"                        ":f " → ":Find " seach from project root or ":fb " → ":Findb " to search in buffer
+" Find In Code Search: - "gsb" / "gsf" on code-word or visual selection to search buffers or project root files
+"                        ":f " → ":Find " search from project root or ":fb " → ":Findb " to search in buffer
 "                        This will open the file and seach/grepper side split in a Tab. 
 "                        Use "}" / "{" to jump files, then "n" to a specific occurence, then "o" to open the buffer in the left window
 "                        now to continue collecting results, do "<c-w>n" " 
 "                        do "m<abcd>" at a found result, then go to your original tab/window and do "'<abcd>" to load the result here
 "                        "cd (..)" the current working dir to search across a specific folder
 "                        use ":cd %" in Dirvish buffer to first set working dir, then ":Find <searchstring>"
+"                        Issue: currently only this seems to work: go into small git project, run "dpr", then "Find .."
+" Read Grep Results Into Buffer: - "0r! grep -rn 'tab' ~/.vim/plugged", then "c-w F" to on a result/line to open win-split with that exact line!
 " Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks 
+" Regex Html Tag: like "<a href=..> .. <\a>" - "/\v\<\/?\w+>" find "\<", "\/?" is optional, "\w+" any num of word chars, ">" end char
 " Vimgrep Search Quickfix: - "vimgrep /\v`[^`]*`/g %" then "]q" and "[Q"
-" Quickfix Navigation: - 
+"                          - "vim[grep] <term> .vim/notes/*.md", "vim" is a shortcut for vimgrep
+" Quickfix Navigation: - "leader qq", "]q" with cursor in code, "c-n/p" and "go" with cursor in quickfix list
+" Populate Arglist: - ":arg *.html" - or with subdirectories ":arg **/*.html", "argadd *.hs", then "argdo %s/abc/xyz/ge | update"
+"                     or use Dirvish, then use `##` special symbol to search through these files "vimgrep test ##"
+" Search In Files Range: - ":vim /<pattern>/g %", "vim /abc/g ##", "vim /abc/g `find . -type f`"(?) (test backtick expansion
+" Use Last Search Pattern: - do "/abc<cr>" (a normal search), then "vim /<c-r>/g %" → "c-r" will expand to the last search
+" Proposed Workflow: - 1. Test search expression with regular search, then 2. use the same expression with vimgrep
 
 " Copy Paste File Path: - copy to "p" register "<leader>fpc": , insert: "<leader>fpi", echo: "<leader>fpe"
 " Jump To File Path: in split below "<c-w>f", in tab "<c-w>gf"
@@ -270,10 +279,20 @@ autocmd! BufWinEnter quickfix nmap <buffer> go :.cc | wincmd p<cr>
 
 " Substitute Replace Text: - ":s/zwei/xx/g" -  Examp text: eins zwei drei vier zwei acht
 " Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
-
+" in a range of files: ":argdo %s//Practical/g"
 " TODO what is: "g," - "g-;"
 
+" Normal KeyCmds As Command: - "normal c3whi" runs c2w- "hi" on the current line
+" Copy To T Dublicate Command: - "\t." to dublicate line below, ".,.+1t$" short: ",+t$", "t0" to linenum, uns "m" /move to move lines
+" Range Linewise Commands: - "[range]delete, yank, put" (from register), "[range] copy, move" to target line, "[range]join" lines, "[range]normal <cmds>"
+" Global  Run Ex Commands On Select Lines:- "/zwei<cr>" search, then ":g//" to just print (default cmd) the lines that contain a match. reusing the prev search patthern
+" Global works on all line vs. the line-wise commands which it can be combined with.  "vglobal" or "g!" or "v" in[v]erts the selection "v/:" to show lines that have no ":" in it "Grep" = [g]lobal [re]gular expr [p]rint
+" "/abc<cr>" then "g//d" deletes all lines that don't have abc in it, "g/todo/t$" copy all lines with 'todo' to the end of the buffer
+" "v/abc/d" only keep lines with abc in the file - use in Dirvish
+
 " VIM WORKFLOW: ----------------------------------------------------------------------    
+
+
 
 " Shell WORKFLOW: ----------------------------------------------------------------------    
 " Suspending Background Jobs In Same Terminal: - "<c-z>" to suspend, in terminal: "fg" to bring it back. "jobs" to see all suspended jobs, "fg %2" to bring back second job, "kill %2" to kill it, "bg" to have it running in the background, "ps T" will show a "T" for stopped processes
@@ -739,6 +758,7 @@ endfunc
 " Using Registers And Variables In Shell: - ":exe 'silent !echo' @a '>>' 'ccdd'", 
 " "exe 'silent !echo' g:colors_name '>>' 'ccdd'" - "exe" basically runs a string. args are integreted as vim
 " expressions, converted to a string and then concatinated (interposed with <space>) with the overall string/command
+" Backtick Expressions: - ":vnew `=tempname()`"
 " Run Vim Function Per Selected Line: '<,'>call echom(getline('.'))
 " Loop Map Over Range Of Selected Lines: - "'<,'>call SomeTest1( getline('.'))" - this sort of moves to each selected line, so every command that works on a current line will be run n-line times on each line
 " Delete A Range Of Files: - "'<,'>call delete(getline('.'))"

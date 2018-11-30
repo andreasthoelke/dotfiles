@@ -60,13 +60,15 @@ http://nosubstance.me/post/mutt-secret-sauce/
   * document processes with https://asciinema.org/ (list command strokes, include comments, include
       a clickable table of contents)
 
-## Searching |
+## Searching 
   * `q/` search history
   * `HelpGrep` to seach vim help (rename?)
 
 " This works pretty well. could reuse for other purposes
 command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
 
+Populate arglist with Dirvish, then use `##` special symbol to search through these files
+  read: Tip 13: Searching Files with Grep-Alikes
 
 ## Undofile Shada
 
@@ -694,14 +696,16 @@ config save a grep search through all info sources for:
   deal with directories in ctrlp
     also create files in ctrlp
 
-mksession does not maintain cursor position in splits of one file
-  → tested, and it now seems to work
-
-  command history q: trigger quit in plugin buffers
-
   show g:auto_save in status bar
 
-  cd in the underlying shell
+  cd in the underlying shell: 
+    * can now in Divish buffer copy the current path to clipboard and cd in shell: `let @*=@%`, `c-z`, `c-[` for normal mode, `P<cr>`
+    * there should be a Tmux based solution
+
+]q not working 
+related to : remap?
+
+something activates gitgutter when quickfix list is used
   -------------------
 
 

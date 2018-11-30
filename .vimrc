@@ -379,7 +379,6 @@ command! SessionShowName echo xolox#session#find_current_session()
 
 let g:session_autosave = 'yes'
 let g:session_autoload = 'no'
-let g:nerdtree_tabs_open_on_gui_startup = 0
 let g:session_command_aliases = 1
 let g:session_menu = 1
 
@@ -1938,44 +1937,16 @@ endfunction
 
 
 " Markers Marks: ----------------------------------------------------------------
-" nnoremap ]a :<C-U>call signature#mark#Goto("next", "spot", "global")<CR>
-" nnoremap [a :<C-U>call signature#mark#Goto("prev", "spot", "global")<CR>
 " Note: had to copy this to ".vim/after/plugin/zmaps.vim" because unimpaired overwrites these maps
 
 " nnoremap <leader>mm :SignatureListGlobalMarks<cr>
 " Navigate loclist using "]l" and "[l" alternaivly "[a / ]a or [' / ']""
 nnoremap <leader>om :CtrlPMark<cr>
-" ctrlp-mark plugin useful?
+" ctrlp-mark plugin useful? yes, it shows an overview
 
   " To Learn: m` marks and `` jumps back to this! "m'" - "''" does the same but for the line only.
   " ma, mb, mc .. to set!
   " 'a, 'b, 'c .. to jump!
-
-  let g:SignatureMap = {
-      \ 'leader'             :  "m",
-      \ 'PlaceNextMark'      :  "m,",
-      \ 'ToggleMarkAtLine'   :  "m.",
-      \ 'PurgeMarksAtLine'   :  "m-",
-      \ 'DeleteMark'         :  "dm",
-      \ 'PurgeMarks'         :  "m<Space>",
-      \ 'PurgeMarkers'       :  "m<BS>",
-      \ 'GotoNextLineAlpha'  :  "",
-      \ 'GotoPrevLineAlpha'  :  "",
-      \ 'GotoNextSpotAlpha'  :  "",
-      \ 'GotoPrevSpotAlpha'  :  "",
-      \ 'GotoNextLineByPos'  :  "",
-      \ 'GotoPrevLineByPos'  :  "",
-      \ 'GotoNextSpotByPos'  :  "",
-      \ 'GotoPrevSpotByPos'  :  "",
-      \ 'GotoNextMarker'     :  "",
-      \ 'GotoPrevMarker'     :  "",
-      \ 'GotoNextMarkerAny'  :  "",
-      \ 'GotoPrevMarkerAny'  :  "",
-      \ 'ListLocalMarks'     :  "",
-      \ 'ListLocalMarkers'   :  ""
-      \ }
-
-let g:SignatureIncludeMarks = 'ABCDEFGHIJKLMN'
 
 " Note Issue: Deleted markers are currcntly recreated after (auto!) session save/load a temp fix is to "ShadaClear".
 " To delete all markers (as a last resort, just delete the ~.viminfo file!!
@@ -2107,6 +2078,16 @@ filetype plugin on
 set path+=**
 " Also use *somecars to fuzzy the first part of the filename
 
+" Find files and populate the quickfix list
+command! -nargs=1 FindFile call FindFiles(<q-args>)
+func! FindFiles(filename)
+  let error_file = tempname()
+  silent exe '!find . -name "'.a:filename.'" | xargs file | sed "s/:/:1:/" > '.error_file
+  set errorformat=%f:%l:%m
+  exe "cfile ". error_file
+  copen
+  call delete(error_file)
+endfunc
 
 nnoremap / :set hlsearch<cr>:noh<cr>/\v
 vnoremap / /\v
@@ -2249,6 +2230,15 @@ endfunction
 " autocmd QuickFixCmdPost * :call WinDo( "set syntax=purescript" )
 " num of 'valid' entries in quickfixlist:
 " echo len(filter(getqflist(), 'v:val.valid'))
+
+command! -nargs=0 -bar QfToArgs execute 'args' QuickfixFilenames()
+function! QuickfixFilenames()
+  let buffer_numbers = {}
+  for quickfix_item in getqflist()
+    let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
+  endfor
+  return join(map(values(buffer_numbers), 'fnameescape(v:val)'))
+endfunction
 
 " Quickfix List: -------------------------------------------------
 
@@ -2401,8 +2391,8 @@ nnoremap <c-d> gT
 " Move tab commands are vim-repeatable
 map <localleader>t[ <Plug>TabmoveLeft
 map <localleader>t] <Plug>TabmoveRight
-map <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>TabmoveLeft")<cr>
-map <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>
+noremap <silent> <Plug>TabmoveLeft  :tabmove -1<cr>:call repeat#set("\<Plug>TabmoveLeft")<cr>
+noremap <silent> <Plug>TabmoveRight :tabmove +1<cr>:call repeat#set("\<Plug>TabmoveRight")<cr>
 
 " zoom/duplicate the current buffer in a new tab
 nnoremap <c-w>t :tabe %<cr><c-o>
@@ -2472,6 +2462,7 @@ nnoremap <localleader>qq :q<cr>
 " nnoremap gw :w<cr>
 " nnoremap <localleader>w :w<cr>
 
+nnoremap <localleader>t. :t.<cr>
 
 
 " General Leader Cmd Shortcut Maps: ---------------------------------
@@ -2696,19 +2687,21 @@ augroup END
 " ---- GOYO - LIMELIGHT -----------------------------------------------------------------------
 
 
-" --- quickfix & loclist ----
-" let g:lt_location_list_toggle_map = 'gll'
-" let g:lt_location_list_toggle_map = '<leader>ll'
-" let g:lt_quickfix_list_toggle_map = 'gqq'
-" let g:lt_quickfix_list_toggle_map = '<leader>qq'
-" let g:lt_quickfix_list_toggle_map = '<leader>gq'
+" Quickfix loclist ----
+" Quickfix Navigation: - "leader qq", "]q" with cursor in code, "c-n/p" and "go" with cursor in quickfix list
+autocmd! BufWinEnter quickfix call QuickfixMaps()
+func! QuickfixMaps()
+  nnoremap <buffer> go :.cc<cr>:wincmd p<cr>      
+  nnoremap <buffer> <c-n> :cnext<cr>:wincmd p<cr> 
+  nnoremap <buffer> <c-p> :cprev<cr>:wincmd p<cr> 
+endfunc
 
 " nmap <leader>ll :lopen<cr>:Wrap<cr>
 nnoremap <leader>ll :lopen<cr>
 " nmap <leader>qq :copen<cr>
 " Todo: this get's overwrittern on quickfix refesh:
-nnoremap <leader>qq :copen<cr>:set syntax=purescript<cr>
-cabbrev co copen
+" nnoremap <leader>qq :copen<cr>:set syntax=purescript<cr>
+nnoremap <leader>qq :copen<cr>
 
 nnoremap <silent> gsg :call GoogleSearch("word")<cr>
 vmap <silent> gsg :call GoogleSearch("visSel")<cr>
