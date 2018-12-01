@@ -311,7 +311,7 @@ let g:promptline_preset = {
 " Messages: ----------------------------------------------------------------------
 " avoid |hit enter| prompts
 " set shortmess+="mW"
-set shortmess=aoOtIT
+set shortmess=aoOtT
 
 " This is slow when exiting vim
 " autocmd! VimLeavePre * call VimLeaveCleanup()

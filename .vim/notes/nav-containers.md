@@ -313,7 +313,8 @@ NOTE this is not complete - research full solution?
   * `leader qq` 
   * `]q` with cursor in code, 
   * `c-n/p` and `go` with cursor in quickfix list
-
+  * `cnf[ile]` to go the first item in the next file
+  * `:cdo {cmd}` run cmd on all qf entries, `cfdo cmd` runs on the files (?)
 
 ## Sessions
 save and restore a session with windows and tabs

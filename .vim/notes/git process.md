@@ -28,6 +28,11 @@ will create a folder `dotfiles` with the following filestructure:
   * create new file: `echo "test content dd" >> src/dd.txt`
   * `git add src/dd.txt` file to repo
 
+## Find Search in deleted code
+  * `git log -c -S'abc' | nvim -` , then `/abc` in vim. TODO could make this into one command using vim startup command (the search) using a shell var
+      * could i use this with neovim remote to the output into the current vim instance?
+  * `git log -c -S'missingtext' [pathToFile]` or `git log -p` and then `/missing code` in less using `n`/`N` to navigate
+
 ## Make a git commit to dotfiles of .vimrc , etc to https://github.com/andreasthoelke/dotfiles  
 Git Commit: (using Fugitive)
 1. "Gstatus" then use "-" to stage/unstage a changed file.

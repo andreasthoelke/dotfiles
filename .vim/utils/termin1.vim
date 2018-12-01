@@ -213,6 +213,7 @@
 "                        use ":cd %" in Dirvish buffer to first set working dir, then ":Find <searchstring>"
 "                        Issue: currently only this seems to work: go into small git project, run "dpr", then "Find .."
 " Read Grep Results Into Buffer: - "0r! grep -rn 'tab' ~/.vim/plugged", then "c-w F" to on a result/line to open win-split with that exact line!
+" Grep Searches: (in zsh and vim!) - "grep -R 'abc' ." (works without quotes). recursive search from the current dir. "grep -F '<*>' **/*.hs" - '-F' = no regex
 " Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks 
 " Regex Html Tag: like "<a href=..> .. <\a>" - "/\v\<\/?\w+>" find "\<", "\/?" is optional, "\w+" any num of word chars, ">" end char
 " Vimgrep Search Quickfix: - "vimgrep /\v`[^`]*`/g %" then "]q" and "[Q"
@@ -287,8 +288,36 @@
 " Range Linewise Commands: - "[range]delete, yank, put" (from register), "[range] copy, move" to target line, "[range]join" lines, "[range]normal <cmds>"
 " Global  Run Ex Commands On Select Lines:- "/zwei<cr>" search, then ":g//" to just print (default cmd) the lines that contain a match. reusing the prev search patthern
 " Global works on all line vs. the line-wise commands which it can be combined with.  "vglobal" or "g!" or "v" in[v]erts the selection "v/:" to show lines that have no ":" in it "Grep" = [g]lobal [re]gular expr [p]rint
-" "/abc<cr>" then "g//d" deletes all lines that don't have abc in it, "g/todo/t$" copy all lines with 'todo' to the end of the buffer
-" "v/abc/d" only keep lines with abc in the file - use in Dirvish
+"    Delete Lines: - "v/abc/d" only keep lines with abc in the file - use in Dirvish
+"    Copy Lines: - "/abc<cr>" then "g//d" deletes all lines that don't have abc in it, "g/todo/t$" copy all lines with 'todo' to the end of the buffer
+"                - "qaq" clear reg a, "g/todo/y A" to append-yank each line with 'todo' into the 'a' register! exact keys: "qaq" - ":g/todo/y A<cr>" - "tabe<cr" - "p" - "\sv"
+"    Collect Selected Todo Lines Across Multiple Files Arglist In Register: - dirvish 'x', "argdo g/abc/y A" - "c-w N" "P"
+" Globs  Work On Selection Of Files With Arglist: - run ":args src/**/*.hs" or start vim like this: "nvim **/*.hs". "globs" get replaced by the filenames they match. http://reasoniamhere.com/2014/01/11/outrageously-useful-tips-to-master-your-z-shell/
+" use "arga[dd] %" or "argd[elete] %" to add/remote files from the list. Note that "arga % | next" makes the newly added file the currently selected
+" "arglocal" to make a window local list. overwrite/init with "arglocal! newfiles" or "dax" dirvish
+" Relate a tab with a task and a group of files https://blog.tommcdo.com/2014/03/manage-small-groups-of-related-files.html
+" Explore And Come Back: - ":argu[ment]" goes back to the latest 'argument' file after you may have used "c-]" or quickfix search to explore related code
+" Load Arglist From File: - "args `cat .toc`" using backtick expression
+" Make a local copy
+nnoremap <Leader>al :arglocal<CR>
+" Add the current buffer
+nnoremap <Leader>aa :argadd % <Bar> next<CR>
+" Start a new arglist from the current file
+nnoremap <Leader>as :arglocal! %<CR>
+" Delete the current index
+nnoremap <Leader>ad :<C-R>=argidx()+1<CR>argdelete<CR>
+" Go to current arg file
+nnoremap <Leader>ac :argument<CR>
+" TODO add this to the status line
+function! StatuslineArglistIndicator()
+    return '%{argc()>0?("A[".repeat("-",argidx()).(expand("%")==argv(argidx())?"+":"~").repeat("-",argc()-argidx()-1)."]"):""}'
+endfunction
+" General Vim Notes: https://github.com/mhinz/vim-galore
+" Variables: note ":pwd" vs ":echo $PWD". Option var can be "set bg=light" or "let &bg=light".
+" Prefixes: [b]uffer, [w]indow, [t]ab, [l]=function, [a]rguments, [s]ourced file, [g]lobal, [v]im predefined. to view: "let v:"
+" History: - "hist a/:/i" to view a history of cmds or inserts
+" Paste Last Command: - ":%s/abc/cde/g" - "argdo <c-r>:" to paste the prev cmd/ apply it to the arglist
+
 
 " VIM WORKFLOW: ----------------------------------------------------------------------    
 
@@ -299,6 +328,8 @@
 " Man Pages: - `man ranger` will now use nvim to show the man page, thanks to in .zshrc: export MANPAGER="nvim -c 'set ft=man' -"
 " VMan To Read ManPages As PDF: -- "vman ls" from terminal to view ls man page in vim.
 " Man And Help Outline: - "gO" content outline 
+" Search Zsh Command History: - "c-r" then type e.g. "vim"
+" Get Past Zsh Arguments: - example "ls somepath", then you might want "ls -a !!1" hit <tab> to get "ls -a somepath"
 " Install Paths: -- "which zsh". 
 " Brew Installs: Brew installs here: "/usr/local/bin/" use "ls -la /usr/local/bin/zs*" or "brew list", "brew info"
 " Brew Cask: - "brew tap caskroom/versions" then `brew cask install iterm2-nightly` 
@@ -315,7 +346,26 @@
 " Search In Filenames: - "ls -la ~/ | grep vim" 
 " View Pipe STDOUT STDIN In Vim: - "grep 'vim' ~/.vimrc | nvim -" or "nvim <(ls -la)" (process substitution)
 " Exmode Shell: - "gQ" to launch. used to run multiple commands. Breakout: "visual<cr>" / "vi"
-
+" Get A List Of Filenames: - using "find"
+"  I  ⋯  Haskell  4  abc2  tree
+" .
+" ├── LICENSE
+" ├── Setup.hs
+" ├── abc2.cabal
+" ├── app
+" │   └── Main.hs
+" ├── src
+" │   └── Lib.hs
+" ├── stack.yaml
+" └── test
+"     └── Spec.hs
+" 3 directories, 7 files
+"  I  ⋯  Haskell  4  abc2  "find . -name '*.hs'"
+" ./Setup.hs
+" ./app/Main.hs
+" ./test/Spec.hs
+" ./.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/autogen/Paths_abc2.hs
+" ./src/Lib.hs
 
 " Shell WORKFLOW: ----------------------------------------------------------------------    
 

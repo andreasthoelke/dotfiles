@@ -555,6 +555,7 @@ oh-my-zsh github plugin:
   * .. or only when active?
 show curr working dir in tmux-line!!?
 
+add arglist indicator to statusline? → StatuslineArglistIndicator()
 run interactive shell commands like `history!` in a hidden terminal
   example: function! OpenMarkdownPreview() abort
 
@@ -659,6 +660,7 @@ in of that group
   Nerdtree recover the bookmarks
 
 config save a grep search through all info sources for:
+(have a `args \`cat file\``) /file lists for these searches:
   * vim notes
   * vim code
   * haskell code examples
@@ -706,6 +708,8 @@ config save a grep search through all info sources for:
 related to : remap?
 
 something activates gitgutter when quickfix list is used
+
+make local arglist global?
   -------------------
 
 
