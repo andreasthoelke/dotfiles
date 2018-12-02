@@ -150,7 +150,7 @@ Plug 'Shougo/vimproc.vim', {'do': 'make'}
 Plug 'dan-t/vim-hsimport'
 
 " Problem: this did not indent Record syntax properly
-" Plug 'neovimhaskell/haskell-vim'
+Plug 'neovimhaskell/haskell-vim'
 Plug 'itchyny/vim-haskell-indent'
 " Plug 'alx741/vim-hindent'
 
@@ -2166,18 +2166,17 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " TODO limit to nvim?
 " Whenever a new tab is created, set the tab-working dir accordingly
-if has('nvim')
-  autocmd TabNewEntered * call OnTabEnter(expand("<amatch>"))
-  func! OnTabEnter(path)
-    if isdirectory(a:path)
-      let dirname = a:path
-    else
-      " let dirname = fnamemodify(a:path, ":h")
-      let dirname = projectroot#guess( a:path )
-    endif
-    execute "tcd ". dirname
-  endfunc
-endif
+" Issue: This seemed to have confused session loading (buffers wheren't loaded), now do explicit "dpr" after creating a new tab?
+" autocmd TabNewEntered * call OnTabEnter(expand("<amatch>"))
+" func! OnTabEnter(path)
+"   if isdirectory(a:path)
+"     let dirname = a:path
+"   else
+"     " let dirname = fnamemodify(a:path, ":h")
+"     let dirname = projectroot#guess( a:path )
+"   endif
+"   execute "tcd ". dirname
+" endfunc
 
 " Change Working Directory: ---------------
 nnoremap <expr>dpr ":tcd " . projectroot#guess() . "\n"

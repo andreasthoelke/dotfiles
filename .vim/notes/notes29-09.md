@@ -691,8 +691,6 @@ config save a grep search through all info sources for:
   * set up callbacks
   * chunk returned text events into visible list. - allows to refer to/ insert specific protions via register/ paste?
 
-    how can I use the `:read` command?
-
   Select till end of the paragraph/sentence with vim-target
 
   deal with directories in ctrlp

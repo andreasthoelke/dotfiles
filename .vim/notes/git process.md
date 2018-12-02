@@ -1,5 +1,5 @@
 
-# Setting Up Repo
+## Setting Up Repo
   * `git init` (in root folder)
   * `git clone <ulr>`
 
@@ -24,7 +24,7 @@ will create a folder `dotfiles` with the following filestructure:
   └── README.md
 
 
-# Save Changes To Repo
+## Save Changes To Repo
   * create new file: `echo "test content dd" >> src/dd.txt`
   * `git add src/dd.txt` file to repo
 
@@ -33,8 +33,9 @@ will create a folder `dotfiles` with the following filestructure:
       * could i use this with neovim remote to the output into the current vim instance?
   * `git log -c -S'missingtext' [pathToFile]` or `git log -p` and then `/missing code` in less using `n`/`N` to navigate
 
-## Make a git commit to dotfiles of .vimrc , etc to https://github.com/andreasthoelke/dotfiles  
-Git Commit: (using Fugitive)
+## Make a git commit to dotfiles of .vimrc
+  etc to https://github.com/andreasthoelke/dotfiles  
+  Git Commit: (using Fugitive)
 1. "Gstatus" then use "-" to stage/unstage a changed file.
 2. Review Changes: "D" (diff) on the file to view what has changed compared to the last commit.
      Use "]c" to navigate and "do" in the right split to revert/undo a changed 'hunk' (go back to what was is in the last commit)
@@ -68,7 +69,7 @@ For a new repo: Link local repo to github remote repo:
 "git push -u origin master" `-u` add upstream tracking(!?)
 "git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
 
-### Change Commit Message
+## Change Commit Message
   * `git commit --amend -m 'New commit text/message'`, then `git push --force` to update remote
 
 ## Git Branch Merge
@@ -108,6 +109,7 @@ base features
 feature1 implementation
 
 ## Looking At A Past Commit
+
 Look at the previous commit (HEAD~1):
  ~  .vim  utils  "git checkout HEAD~1"                                                                   int-termin-changes
 HEAD is now at f3858c5 Gig commit, preparing release
@@ -128,7 +130,9 @@ Git Undo: - "git reset HEAD~1 --hard" will additionally checkout the previous br
 
 Three Statemanagement Mechanisms: Working Directory |>>| Staged Snapshot |>>| Commit History
 
-Staging To Git Index: -----------------------------------
+
+## Staging To Git Index: 
+
 Fugitive status: "<leader>gs", "<cr>" to view the file (nicely cancels the diff mode as well). 
 "D" to get to diff mode.  Use ":Gwrite" on the working copy to stage the entire file. 
 "u"/undo in the (left side) index version of the file will make the diff/difference appear again.  use "diffupdate" to update the diff
@@ -152,7 +156,10 @@ Gitgutter Stage Hunk: - "leader ha" "hunk add" stages a hunk, but the effect can
 Gitgutter Undo Hunk:  - "leader hr" rolls back the changed code segment to the *index/stage*, not to the last commit
 Staging Partial Hunks: In the diff split on the working copy/right buffer, select a range of lines of a bigger hunk, then ":diffput" only these lines into the index/stage.
 
-Git Reset: Git reset "overwrites" the tree trees:
+
+## Git Reset
+
+Git reset "overwrites" the tree trees:
 1. Move the branch HEAD via "--soft"
 2. Make Index look like HEAD "--mixed"
 3. Make Working Dir look like Index and HEAD "--hard"
@@ -177,7 +184,9 @@ while "reset [branch]" will move the *branch* head (and the global HEAD) to a co
 Example : HEAD points to 'dev' branch. 
 If we run "git reset master",    dev branch (current commit/branch HEAD) will be (pointing to) the same commit that master does!
 If we run "git checkout master", the global HEAD will be moved to the branch HEAD of master. The Dev branch HEAD does not move.
-Summary: → Checkout moves the global HEAD, Reset moves the branch HEAD.
+
+### Summary
+Checkout moves the global HEAD, Reset moves the branch HEAD.
          → Reset changes the branch HEAD (potentially including a commit from another branch) and moves the global HEAD to it.
 Checkout File: - "git checkout [branch] -- file.txt" overwrites that file to the current working dir and writes it to the Index.
 Who Does Reset And Checkout Affect: HEAD, Index, Workdir and is it WD Safe?
@@ -194,7 +203,7 @@ Who Does Reset And Checkout Affect: HEAD, Index, Workdir and is it WD Safe?
 │    "reset [commit] <paths>"│    NO│    YES│        NO│       YES│ only puts file into the index. usecase: integrate file from another commit with working dir version of that file: A diff with the fetched index let's you "dp" hunks from the working dir into the index.
 │ "checkout [commit] <paths>"│    NO│    YES│       YES│        NO│ overwrite that file in the workdir!
 └────────────────────────────┴──────┴───────┴──────────┴──────────┘
-_, HEAD, Index,	Workdir, WD Safe?
+HEAD, Index,	Workdir, WD Safe?
 Commit Level,,,,
 reset --soft [commit], REF, NO, NO, YES
 reset [commit], REF, YES, NO, YES
@@ -204,7 +213,10 @@ File Level,,,,
 reset [commit] <paths>, NO, YES, NO, YES
 checkout [commit] <paths>, NO, YES, YES, NO
 
-Git Stash: - "git stash" takes working dir and Index, then performs "git reset --hard"
+
+## Git Stash
+
+- "git stash" takes working dir and Index, then performs "git reset --hard"
 "git stash save “Your stash message”" (note these strange quotes here)
 "stach apply", "git stash apply stash@{1}",
 examples: - "git stash" then "git checkout -b new-branch HEAD~3"   # head back in time!  
@@ -213,10 +225,8 @@ examples: - "git stash" then "git checkout -b new-branch HEAD~3"   # head back i
 Alternative: - "git commit -a -m 'stash'" to save my work and "git reset HEAD~1"
 View Stash Content: - "stash list", "stash show" and "git stash show -p stash@{2}"
 "git stash list --pretty=format:%gd" or "gitk --reflog"
-Git Tags: - "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tab>" to checkout a commit based on the related tag!
-"git tagls" to view. "git push --tags" to push tags to remote. "git tag -d v<tab>" to delete, then "git push -f --tags"
 
-[alias]
+## Alias
 	co = checkout
   ci = commit
   st = status
@@ -227,8 +237,11 @@ Git Tags: - "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tab>
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
   visual = !gitk
 
+## Git Tags 
+  * "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tag>" to checkout a commit based on the related tag!
+  * "git tagls" to view. "git push --tags" to push tags to remote. "git tag -d v<tab>" to delete, then "git push -f --tags"
 
-# Resolve merge conflicts
+## Resolve merge conflicts
 
 1. On the receiving branch (master) run “git merge <merge branch>”
 In case of merge conflicts git will put “conflict markers” into conflicted files. These have to be resolved and removed.
