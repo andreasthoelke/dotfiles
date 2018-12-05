@@ -84,9 +84,7 @@
   * `qaq` to clear
 
 
-
-
-### Cmdline :find               
+## Cmdline
   `:find a<tab>` (e.g. in Haskell project folder) allows to:
   * Reach into subfolders (usind `set path+=**`, but this includes other folders)
   * autocompl menu
@@ -94,7 +92,7 @@
   (https://www.kwyse.com/posts/twid-vim-minimalism/)
   * `cd .vim/plugged`, `:tabf[ind] *.md<tab>` to show all readme files 
 
-### Cmdline Menu: 
+### Cmdline Menu
   (with setting `set wildmode=longest:list,full`)
   * `c-i` to start command line auto completion (or tab)
   * looking at the grid displayed options:
@@ -103,7 +101,7 @@
 
 
 
-### Dirvish
+## Dirvish
   * `-` open / up/parent folder
   * `q` close
   * use 'filepath' of dirvish in command:
@@ -116,7 +114,7 @@
     * `yy` the path, then:
       * go to buffer and `:read <c-r>"` the content of the yanked path
 
-#### Arglist
+## Arglist
   * use `x` and `dax` for arglist
   * `c-w v` then `[A`, `]a` to have a window (`c-w t` or tab) with this group of files!
 
@@ -161,7 +159,7 @@ code auto completion:
   Youcomplete-me is sort of difficult to install?
   alternative: https://github.com/ncm2/ncm2 or Shougo/deoplete.nvim
 
-### List Buffers
+## Buffers
   Create New (File)
     **Current Win** 
       * `:e <new path/name>` create in the curr win
@@ -176,13 +174,13 @@ code auto completion:
       * `:e <filename>` list a buffer and display it in the curr win. (currently no use to list but not display buffer)
       * CtrlP `o` + `r` (in file, mru) to list a buffer and display it in the curr window (no matter if buffer is displayed in other wins)
 
-#### Unlist Buffers
+### Unlist Buffers
 
 ### Nav Buffers
   * **Reveal:** CtrlP `<c-v>` to reveal/go to buffer if it's **shown** in a tab-window somewhere
     * otherwise **open/load** buffer in a vertical split. can then `<c-w>c` that split or close the original or use
         `<c-w>T` to move it out of this tab into it's own tab.
-#### Load Open Buffer
+### Load Open Buffer
   * **New Tab:** CtrlP `o` + `t` to load buffer into new tab (no matter if buffer is shown somewhere
 
 
@@ -218,7 +216,7 @@ use <c-o> open menu?
   * `:bd` closes window/tab
 
 
-### navigate MacOS App windows
+## MacOS App windows
   * `<c-s-w>` next app window (within the current workspace/desktop)
     (defined in `System preferences/Keyboard/Shortcuts/Keyboard` )
 
@@ -229,12 +227,14 @@ use <c-o> open menu?
     Defined in  `~/.config/karabiner/karabiner.json`
       "description": "Left Control + ' to cycle through running applications (like command+tab).",
 
+
 ## Code navigation
+
 ### Tags
     * `:tags`
         `set tags?`
         `c-]` to nav, `c-t` to go back
-        
+
 
 ### Changes
     * `:changes`
@@ -247,8 +247,6 @@ use <c-o> open menu?
     * `:jumps`
 
 
-
-
 ## Marks
   * set a global mark before using search/quickfix and arglist/bufferlist
       → but isn't spinning off a tab better a be reminded about what to resume?
@@ -259,18 +257,20 @@ do a mark not per file but per win/tab?
 
 
 ## Folds, Folding
-`zk` `zj` to navigate
-`zo` `zc` `z<space>` to open/close/toggle individual folds
-`zM`  `zR` to close/open all folds
-`zm`  `zr` progressively close/open the fold levels (of nested folds)
-`zx` / `zX` update /re apply 
-http://learnvimscriptthehardway.stevelosh.com/chapters/48.html
-" What actions automatically open folds?
+  `zk` `zj` to navigate
+  `zo` `zc` `z<space>` to open/close/toggle individual folds
+  `zM`  `zR` to close/open all folds
+  `zm`  `zr` progressively close/open the fold levels (of nested folds)
+  `zx` / `zX` update /re apply 
+  http://learnvimscriptthehardway.stevelosh.com/chapters/48.html
+  " What actions automatically open folds?
+
 ### set foldmethod=marker
 integrate fold chars into comments: `fold-create-marker`
 haskell (∷?) 'foldmarker' 'fmr'	string (default: "{{{,}}}")
   * Example: begin fold: {{{1 end: }}}
              from "Compos.hs": displayWR ∷ Float → App String -- {{{1
+
 ### set foldmethod=syntax
 see :syn-fold
 
@@ -279,22 +279,29 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
 
 `yofc`
 
-## Code Navigation
-* how to navigate header like this:?
-SOME *|*
-let g:nnoremap = {"]t": "", "[t": ""}
-how can I list/find/browse (ctrlp?, tagbar, quicklist) doc tags in e.g. .vimrc?
-examples: 
-  " Git Workflow: ------
-  " Windows: --------
-* make Links in vimscript
 
-document |bracket-navigation|
-*)* next open
-|%| or *]}* closing pair
-*[{* parent
-NOTE this is not complete - research full solution?
-* does not move to "[" as parent → vim navigate json file
+## Align
+
+ * `:Tabularize / /` to align to `" "`
+     * uses smart paragraph
+
+
+## Code Navigation
+  * how to navigate header like this:?
+  SOME *|*
+  let g:nnoremap = {"]t": "", "[t": ""}
+  how can I list/find/browse (ctrlp?, tagbar, quicklist) doc tags in e.g. .vimrc?
+  examples: 
+    " Git Workflow: ------
+    " Windows: --------
+  * make Links in vimscript
+
+  document |bracket-navigation|
+  *)* next open
+  |%| or *]}* closing pair
+  *[{* parent
+  NOTE this is not complete - research full solution?
+  * does not move to "[" as parent → vim navigate json file
 
   * jump to start/end of inserted/pasted text `\`[ \`]`
   * jump to start/end of previous selection \`< \`>
@@ -321,7 +328,7 @@ save and restore a session with windows and tabs
 
 ----------------------------------------------------
 
-# Tags
+## Tags
 document hasktags workflow:
   in stack.yaml add this: `extra-deps: [hasktags-0.71.2]`
 

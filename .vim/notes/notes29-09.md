@@ -117,20 +117,6 @@ A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookm
 ## Dirvish
 
 
-## Netrw
-" absolute width of netrw window
-let g:netrw_winsize = -28
-
-" tree-view
-let g:netrw_liststyle = 3
-
-" sort is affecting only: directories on the top, files below
-let g:netrw_sort_sequence = '[\/]$,*'
-
-" open file in a new tab
-let g:netrw_browse_split = 3
-
-
 ## NOTES .MD EDITOR
 Sync markdown on leave insert
 
@@ -182,7 +168,6 @@ Will show expand tags in the runnable source file to see the notes.
 ## Git
   * show number of unstaged files/hunks in (tmux?) status?
   * Diff against last commit (instead of staging area)
-  * make releases, not just commits? - tags are basically releases
   * test using vimdiff in git: `git config --global diff.tool vimdiff`
 
 
@@ -396,11 +381,11 @@ should search highlight and visual selection mode have different colors?
 if cursor is in insert mode in first column, and I hit c-[, it moves forward → make exception for
 first column?
 
-" TODO "push text" mapping. prev. "L"
+" TODO "push text to right" mapping. prev. "L"
 
 * vim text/strings (+haskell) should be highlighted (in green) by only including the string, but not the quotes "" into the highlight
 
-Command history Issue: needs two c-c to exit?
+Command history Issue: needs two c-c to exit? or `c-w c`
 
 
 how to find a line that includes "abbrev" and "Hoogle" in termin1.vim?
@@ -409,6 +394,7 @@ how to find a line that includes "abbrev" and "Hoogle" in termin1.vim?
 * dim something out (grey) if it is in ()! 
 
 navigate .md /markdown files. e.g. next bulletpoint/not bullet point
+ * there is the tagbar nav. c-n/p then p to preview
 
 document regex/wildcards in search. e.g. "/eins.*zwei"
 how is this consistent with ctrlp filename search?
@@ -437,6 +423,7 @@ spin off a related exploration in a split
 i can then leave open different views on a buffer/long file
 
 save buffer without switching to it, save all buffers?
+  obsolete with autosave?
 
 * set up unicode mappings (purescript unicode in vimrc) for these lib functions: 
   - https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions/basic-syntax-extensions
@@ -690,6 +677,7 @@ config save a grep search through all info sources for:
   The `Term` command allows running `history` and `node` repl
   * set up callbacks
   * chunk returned text events into visible list. - allows to refer to/ insert specific protions via register/ paste?
+  * consider using https://github.com/kassio/neoterm
 
   Select till end of the paragraph/sentence with vim-target
 

@@ -8,6 +8,12 @@ Plug 'junegunn/vim-plug'
 
 " File Selectors Browsers: ------------------------------------------
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'mattn/ctrlp-mark'
+Plug 'junegunn/fzf.vim'
+
+" CtrlPArgs will show the arglist
+Plug 'kshenoy/vim-ctrlp-args'
+
 " Plug 'justinmk/vim-dirvish'
 " Added a convenient "silent" 'z' buffer local map for the Shdo command window 
 Plug 'andreasthoelke/vim-dirvish'
@@ -21,22 +27,41 @@ Plug 'ajh17/VimCompletesMe'
 Plug 'majutsushi/tagbar'
 " there is a Haskell integration, but it does not work :Tag.. not..
 
-" Git Integration: --------------------------------------------------
+" Git: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv', {'on': ['Gitv']}
 
-" Search Integration: -----------------------------------------------
+" Search: -----------------------------------------------
 " Currently using this via "Find"
 Plug 'mhinz/vim-grepper'
 Plug 'mileszs/ack.vim'
 " Search integration
 Plug 'rking/ag.vim'
 
-" Styling: -----------------------------------------------------------
+" Tabline Statusline: -----------------------------------------------------------
+" Faster than airline and cleaner config?
+Plug 'itchyny/lightline.vim'
+" Lightline complient buffer/tabline
+" Plug 'mengelbrecht/lightline-bufferline'
+
+" May activate this at times to create styled promptline
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
+
+" Minimal script that shows all buffernames of a tab
+" Plug 'kcsongor/vim-tabbar'
+
+" Shows Tabs as numbers on the right and the buffers of the tab on the left side of the tabline
+" Clean code. Extend/ modify this?
+" Plug 'pacha/vem-tabline'
+" Plug 'pacha/vem-statusline'
+
+Plug 'gcavallanti/vim-noscrollbar'
+Plug 'drzel/vim-line-no-indicator'
+
+"   Outside Of Vim:
 " Creates tmux colors e.g. at ".tmuxline.conf"
 " Plug 'edkolev/tmuxline.vim'
 " This inserts unicode icons file-type into airline/bufferline, nerdtree and ctrlp!
@@ -44,9 +69,13 @@ Plug 'rking/ag.vim'
 " Plug 'ryanoasis/vim-devicons'
 " Creates a (zsh) command prompt based on vim-airline style: ":PromptlineSnapshot ~/.promptline.sh airline" then in zsh: "source .promptline.sh"
 Plug 'edkolev/promptline.vim'
+" Tabline Statusline: -----------------------------------------------------------
 
-" Color schemes
+
+
+" Colorschemes: ------------------
 Plug 'tomasr/molokai'
+Plug 'NLKNguyen/papercolor-theme'
 " Another colorscheme used (where?)
 Plug 'dim13/smyck.vim'
 Plug 'yosiat/oceanic-next-vim'
@@ -67,7 +96,6 @@ Plug 'junegunn/limelight.vim'
 " Plug 'fmoralesc/vim-pad', { 'branch': 'devel' }
 
 " Plug 'kshenoy/vim-signature'
-Plug 'mattn/ctrlp-mark'
 
 Plug 'AndrewRadev/linediff.vim'
 
@@ -236,10 +264,18 @@ vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 " Nyaovim Popup: ------------------------
 
 
+
+" Lightline Settings: -------------------------------
+
+
+" Lightline Settings: -------------------------------
+
+
+
 " Airline Settings: --------------------------------------------------------------
 let g:airline_theme='simple'
 " Powerline fonts work but the > seperator doesn't seem expressive for tabs to status
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 
 " Airline Extensions: ---
 let g:airline#extensions#tabline#enabled = 1
@@ -251,8 +287,6 @@ let g:airline#extensions#tabline#tab_nr_type = 2 " splits and tab number
 
 " not sure what this does
 " let g:airline#extensions#tabline#show_tab_type = 0
-
-
 
 let g:airline#extensions#hunks#enabled = 1
 " Airline Extensions: ---
@@ -503,16 +537,18 @@ endif
 
 
 " Color:  ------------------------------------------------------------------------
+
+set background=dark
 colorscheme molokai
 
-" Github Colors: Run "leader s s" on each line in sequence
-" let g:airline_theme = "github"
-" let g:github_colors_soft = 1
-" colorscheme github
+" set background=light
+" colorscheme PaperColor
 
-set nocompatible
-set background=dark
-set laststatus=2
+" let g:airline_theme = 'papercolor'
+" let g:lightline = { 'colorscheme': 'PaperColor' }
+
+" colorscheme github
+" let g:github_colors_soft = 0
 
 " if has("termguicolors")
 "     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -579,9 +615,13 @@ set encoding=utf-8
 " TODO what does this do? see ':hg syntax enable'
 syntax enable
 
+
 set ts=2 sts=2 sw=2 expandtab
 
 set smartcase
+
+" Not compatible with classic "vi" is ok
+set nocompatible
 
 " Note: this inverts what 'g' does in substitute!! avoid this
 " set gdefault
@@ -661,10 +701,15 @@ set mouse=a
 " Set this to the name of your terminal that supports mouse codes.
 " Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
 " set ttymouse=xterm2
-set guioptions-=T
-set guioptions-=m
-set guioptions-=r
-set guioptions-=L
+
+set guioptions = 
+" set guioptions-=T
+" set guioptions-=m
+" set guioptions-=r
+" set guioptions-=L
+" " No graphical tabline in Macvim
+" set guioptions-=e
+
 " disable sounds
 set noerrorbells
 set novisualbell
@@ -699,6 +744,29 @@ vnoremap Q q:k
 " Issue: Using "q" as sort of a leader key in a custom mapping will delay plugin "q" = quit maps! e.b. in Gstats.
 " workaround may be to double/ "qq" or to "q<space" instead.
 " Issue: needs two c-c to exit?
+
+" Go up/down in wrapped lines mode as well
+nnoremap j gj
+nnoremap k gk
+
+" Jump to the first and then last line of a paragrapth instead of the blank line after a paragraph
+noremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
+noremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
+
+" Some settings for when the file type is not set
+function! PlainText()
+  " We don't have a notion of comments in plain text.
+  " This also improves the use of '*' in formatlistpat.
+  setlocal comments=
+  " Use comment string for quoting
+  setlocal commentstring=>\ %s
+  setlocal spell
+endfunction
+
+" Set a pseudo filetype upon opening a buffer if filetype is not set.
+autocmd BufRead,BufNewFile * setfiletype txt
+autocmd FileType txt call PlainText()
+
 
 " This is supposed to "unmap" the native "q" map to record macros (i don't need this often), to allow me to double "qq"
 " to quit a plugin dialog instead of "q.." wait for timeout because I use "q.." as a sort of leader key (see ":map q")
@@ -2409,7 +2477,7 @@ function! CloseTabGoToPrevious()
 endfunction
 
 
-" This has to be disables, otherwisee <leaader>1 .. maps get overwritten.
+" This has to be disabled, otherwise <leader>1 .. maps get overwritten.
 let g:airline#extensions#tabline#buffer_idx_mode = 0
 
 nnoremap <leader>1 1gt
@@ -2590,10 +2658,123 @@ let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 
 " Magit: ----------------------------------------------------------
 
+" Don't show "-- INSERT --" in command line when in insert mode?
+set noshowmode
+
+
+" Unicode: -----------------
+" https://unicode-table.com
+
+
+" Arglist: -----------------
+nnoremap <leader>oa :CtrlPArgs<cr>
+" https://github.com/junegunn/fzf.vim/issues/605
+
+" -----------------------------------------------------------------
+" -----------------------------------------------------------------
+
+let g:lightline = {}
+" let g:lightline.colorscheme = 'PaperColor'
+
+let g:lightline.active = {}
+let g:lightline.active.left = [ []
+                            \ , ['relativepath'] ]
+
+" let g:lightline.active.right = [ ['lineinfo', 'percent']
+"                              \ , ['fpathBNum', 'percent']
+"                              \ , ['filename', 'fpathBNum'] ]
+
+let g:lightline.active.right = [ ['line', 'percent'] ]
+                             " \ , ['gitbranch']
+                             " \ ]
+
+let g:lightline.component = {}
+let g:lightline.component.helloworld = 'hi there!'
+let g:lightline.component.fpathBNum = '%f%n'
+
+let g:lightline.component_function = {}
+let g:lightline.component_function.gitbranch = 'fugitive#head'
+
+" Powerline symbols (work)
+" let g:lightline = {
+"   \ 'component': {
+"   \   'lineinfo': ' %3l:%-2v',
+"   \ },
+"   \ 'component_function': {
+"   \   'readonly': 'LightlineReadonly',
+"   \   'fugitive': 'LightlineFugitive'
+"   \ },
+"   \ 'separator': { 'left': '', 'right': '' },
+"   \ 'subseparator': { 'left': '', 'right': '' }
+"   \ }
+" function! LightlineReadonly()
+"   return &readonly ? '' : ''
+" endfunction
+" function! LightlineFugitive()
+"   if exists('*fugitive#head')
+"     let branch = fugitive#head()
+"     return branch !=# '' ? ''.branch : ''
+"   endif
+"   return ''
+" endfunction
+
+
+" Example: Overwriting the readonly component function
+" let g:lightline.component_function.readonly = 'LightlineReadonly'
+" Show a vim var dependant to the filetype var
+func! LightlineReadonly()
+  " return &readonly && &filetype !=# 'gitcommit' ? 'RO' : '-|-'
+  return &readonly && &filetype !~# '\v(help|gitcommit)' ? 'RO' : ''
+endfunc
+
+" function! StatuslineArglistIndicator()
+
+" Statusline: -----------------------------------------------------
+" https://hackernoon.com/the-last-statusline-for-vim-a613048959b2
+" set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %{noscrollbar#statusline()}
+" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %{noscrollbar#statusline(20,'■','◫',['◧'],['◨'])}
+
+" set statusline=%<%f\ %h%m%r%=%.(%l,%c%V%)\%{noscrollbar#statusline(30,'\ ','■')}
+" set statusline=%<%f\ %h%m%r%=%.(%l,%c%V%)\%{noscrollbar#statusline(30,'\ ','■')}
+" set statusline=%f
+" set statusline=%{StatuslineArglistIndicator()}
+" set statusline=[%n]
+               " StatuslineArglistIndicator()
+               " %{noscrollbar#statusline(20,'■','◫',['◧'],['◨'])}
+" %{argc()>0?("A[".repeat("-",argidx()).(expand("%")==argv(argidx())?"+":"~").repeat("-",argc()-argidx()-1)."]"):""}gcc
+               " showmode
+
+
+" Statusline: -----------------------------------------------------
+
+
+" Tabline: -----------------------
+
+
+
+" Vem Tabline: ---------------
+let g:vem_tabline_show = 1
+
+" highlight TabLine                    cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
+" highlight TabLineSel                 cterm=bold ctermfg=235 ctermbg=255 guifg=#242424 guibg=#ffffff gui=bold
+" highlight TabLineFill                cterm=none ctermfg=255 ctermbg=240 guifg=#e6e3d8 guibg=#404040 gui=italic
+" highlight VemTablineNormal           cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
+" highlight VemTablineLocation         cterm=none ctermfg=255 ctermbg=240 guifg=#666666 guibg=#cdcdcd gui=none
+" highlight VemTablineSelected         cterm=bold ctermfg=235 ctermbg=255 guifg=#242424 guibg=#ffffff gui=bold
+" highlight VemTablineLocationSelected cterm=bold ctermfg=235 ctermbg=255 guifg=#666666 guibg=#ffffff gui=bold
+" highlight VemTablineShown            cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
+" highlight VemTablineLocationShown    cterm=none ctermfg=255 ctermbg=240 guifg=#666666 guibg=#cdcdcd gui=none
+" highlight VemTablineSeparator        cterm=none ctermfg=246 ctermbg=240 guifg=#e6e3d8 guibg=#404040 gui=italic
+" highlight VemTablineTabNormal        cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
+" highlight VemTablineTabSelected      cterm=bold ctermfg=235 ctermbg=255 guifg=#242424 guibg=#ffffff gui=bold
+
+" Tabbar plugin (kcsongor/vim-tabbar) -----------
+" set tabline=%!tabbar#tabline()
+" -----------------------------------------------------------------
 
 " Fugitive Gitv: -----------------------------------------------------------
-
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 nnoremap <leader>gv :Gitv<cr>
 nnoremap <leader>gV :Gitv!<cr>

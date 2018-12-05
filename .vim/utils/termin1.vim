@@ -282,6 +282,8 @@
 " Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
 " in a range of files: ":argdo %s//Practical/g"
 " TODO what is: "g," - "g-;"
+" Prepolulate Command Map With Positioned Cursor:
+xnoremap <localleader>su y:%s/<C-r>"//g<Left><Left>
 
 " Normal KeyCmds As Command: - "normal c3whi" runs c2w- "hi" on the current line
 " Copy To T Dublicate Command: - "\t." to dublicate line below, ".,.+1t$" short: ",+t$", "t0" to linenum, uns "m" /move to move lines
@@ -310,6 +312,7 @@ nnoremap <Leader>ad :<C-R>=argidx()+1<CR>argdelete<CR>
 nnoremap <Leader>ac :argument<CR>
 " TODO add this to the status line
 function! StatuslineArglistIndicator()
+    " return '%{argc()>0?("A[".repeat("-",argidx()).(expand("%")==argv(argidx())?"+":"~").repeat("-",argc()-argidx()-1)."]"):""}'
     return '%{argc()>0?("A[".repeat("-",argidx()).(expand("%")==argv(argidx())?"+":"~").repeat("-",argc()-argidx()-1)."]"):""}'
 endfunction
 " General Vim Notes: https://github.com/mhinz/vim-galore
@@ -617,6 +620,7 @@ fun! Term(args, count)
   call OnTermOpen()
 endf
 
+" TODO consider using https://github.com/kassio/neoterm
 
 " helpers from https://github.com/jeromedalbert/dotfiles/blob/master/.vim/init.vim 
 if has('nvim')
