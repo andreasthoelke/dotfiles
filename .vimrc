@@ -547,7 +547,7 @@ endif
 " Color:  ------------------------------------------------------------------------
 
 set background=dark
-colorscheme molokai
+colorscheme munsell-blue-molokai
 
 " set background=light
 " colorscheme PaperColor
