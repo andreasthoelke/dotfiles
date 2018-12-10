@@ -264,6 +264,7 @@ do a mark not per file but per win/tab?
   `zx` / `zX` update /re apply 
   http://learnvimscriptthehardway.stevelosh.com/chapters/48.html
   " What actions automatically open folds?
+  improve performance of autofolding https://github.com/Konfekt/FastFold
 
 ### set foldmethod=marker
 integrate fold chars into comments: `fold-create-marker`
@@ -350,7 +351,129 @@ current termina questions. see screenshot:
   same re the markdown2ctags.py --help output
 
 
+## Tabline Statusline
 
+## Working modes
+
+### Focused implementation of one code part
+
+  Say you are starting at a clean slate
+  * your code will start spanning more than the screen size
+  * you will have to jump back and forth between multible code locations
+  * you will create multiple files
+
+location could be a
+  * win split
+  * mark
+  * arglist entry
+
+
+#### Permanent available
+ * REPL 
+ * Tests
+
+#### On demand available
+ * doc access
+ * notes access
+ * git control
+ * file explorer
+ * launch/ transistion to the modes below
+
+### Quick browse 
+ * want to explore/insight/confirm related code
+#### Tags 
+ - `gf`, `c-w` `f/gf` to open tab/split?
+#### Search
+#### CtrlP - Args, Buffers, other visit workspaces? 
+  * how to go back and/or pin/reference the code found?
+#### File explorer
+#### Exteral Info
+  * Documentation
+  * Google, websites/ browsertabs
+  * Issues, stackoverflow, blogposts
+
+  * most could be brought into vim?
+  * otherwise 
+    * need to copy code via clipboard
+    * need separate tab/workspace management
+
+  → a google search for a specific problem produces
+    * 3 - 8 tabs
+    * several articles that take 
+      * time to scan
+      * need to be re-read after/while implemetation
+    * code copy paste
+    * captured/ saved with comment with source url/search so it can be found later
+
+#### Marks
+  when scrolling, use as a back anchor?
+
+### Side by side
+#### working simultaniously
+ * working back and forth between 2 or more source-code locs)
+   implementation of code that spans 2 or more distant source-locations (in some or other file)
+
+#### show reference code
+ * keep a code example visible/accessible
+ * documentation, complementary code
+
+## suspend / resume a task
+documentation / multile parts of docs
+overview - spin off
+taking notes
+keep as reference
+
+Search and Explore should produce 
+  → little splits/ reminders that can be overseen then turned into
+    1. a side-by-side/ split
+    2. a todo (categorized and prioritised)
+    3. a note (categorized and searchable)
+
+### fuzzy file or directory browsing
+  * want to preview file before selecting
+
+### code search
+  * want to preview/explore sourrounding code before
+    * marking/pinning
+
+this includes code search in past commits/ may result in checking out a file
+
+
+* searching/ browsing/ scanning
+then
+* pinning to resume later
+then
+  * arrange in workspace - for side by side work
+  * make todo or note
+
+search and file explore is a progressive filtering process
+
+marking/ pinning should have references (not copies) and previews
+
+I might need/want 
+## a drawer/ stack of 
+   * previews
+   * notes
+   * references (urls, code)
+
+explore/search/notes might feed into this
+
+* copy a selection of code (or text)
+* include file location or url+header
+* add notes
+* add tags
+* add prio/reminder
+
+this could be one long buffer that can be filtered easily
+
+arglists and marks:
+ * allow to swap content of splits
+ * may want to have a stack with name/label/line-preview visible
+ * want more destinct select than [a ]a? or is this 'a 'b 'c?
+
+     marks would allow to include exact locs
+     ideally would want to be per tab
+     but allow to pull in marks from other tabs
 
 
 

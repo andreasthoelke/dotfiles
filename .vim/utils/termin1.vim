@@ -218,6 +218,7 @@
 " Regex Html Tag: like "<a href=..> .. <\a>" - "/\v\<\/?\w+>" find "\<", "\/?" is optional, "\w+" any num of word chars, ">" end char
 " Vimgrep Search Quickfix: - "vimgrep /\v`[^`]*`/g %" then "]q" and "[Q"
 "                          - "vim[grep] <term> .vim/notes/*.md", "vim" is a shortcut for vimgrep
+" Search In Vim Plugin Folder: - vim /conceal/g ~/.vim/plugged/**
 " Quickfix Navigation: - "leader qq", "]q" with cursor in code, "c-n/p" and "go" with cursor in quickfix list
 " Populate Arglist: - ":arg *.html" - or with subdirectories ":arg **/*.html", "argadd *.hs", then "argdo %s/abc/xyz/ge | update"
 "                     or use Dirvish, then use `##` special symbol to search through these files "vimgrep test ##"

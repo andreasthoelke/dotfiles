@@ -638,6 +638,13 @@ test gregsexton/gitv
 
 new register /copy paste plugin
 
+learn about conceal feature
+  usecaes:
+  * haskell lambda, Integer/String symbols (example plugin)
+  * hide quotes?
+
+match(it) "" in markdown syntax to highlight strings
+
 use augroup to allow safely reloading my vimrc. can use the `au!` patterns to first remove commands
 in of that group
 
@@ -697,6 +704,5 @@ something activates gitgutter when quickfix list is used
 
 make local arglist global?
   -------------------
-
 
 

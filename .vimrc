@@ -74,7 +74,7 @@ Plug 'edkolev/promptline.vim'
 
 
 " Colorschemes: ------------------
-Plug 'tomasr/molokai'
+" Plug 'tomasr/molokai'
 Plug 'NLKNguyen/papercolor-theme'
 " Another colorscheme used (where?)
 Plug 'dim13/smyck.vim'
@@ -156,12 +156,16 @@ Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 
 
-Plug 'raichoo/purescript-vim'
-Plug 'FrigoEU/psc-ide-vim'
+Plug 'purescript-contrib/purescript-vim'
+" Plug 'FrigoEU/psc-ide-vim'
 " Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
 
 " lookup ":h vim2hs", e.g. Tabularize haskell_types is useful
+" this also has two conceal replacements for "." and "::"
 Plug 'goolord/vim2hs'
+" This does show some nice unicode symbols (see "conceal" screenshots).
+" TODO customize some symbols e.g return looks not destinct enough. also apply to purescript
+Plug 'enomsg/vim-haskellConcealPlus'
 Plug 'eagletmt/ghcmod-vim', {'for': 'haskell'}
 " Plug 'eagletmt/ghcmod-vim'
 Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
@@ -178,7 +182,11 @@ Plug 'Shougo/vimproc.vim', {'do': 'make'}
 Plug 'dan-t/vim-hsimport'
 
 " Problem: this did not indent Record syntax properly
-Plug 'neovimhaskell/haskell-vim'
+" Plug 'neovimhaskell/haskell-vim'
+" Unicode supporting fork
+" Plug 'unclechu/haskell-vim'
+Plug 'unclechu/haskell-vim', { 'branch': 'my-fork' }
+Plug 'idris-hackers/idris-vim'
 Plug 'itchyny/vim-haskell-indent'
 " Plug 'alx741/vim-hindent'
 
@@ -566,8 +574,56 @@ endif
 highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 
 
+" STEP1: FIND THE SYNATX GROUP YOU WANT TO CHANGE:
+" Show the syntax group(s) of the word under the cursor
+" The first pasted line is the outermost syntax group eg. vimLineComment, the last line is actual syntax group/id for the work
+" under the cursor, e.g. vimCommentTitle 
+nnoremap <leader>hsg :call SyntaxStack()<CR>
+function! SyntaxStack()
+    let l:synList = map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')
+    call append(line('.'),  l:synList )
+endfunc
+
+" STEP2A: If you want a color that is already present in the in the colorscheme
+" you can just find the name of the highlight group/id (see below) 
+" Show the syntax group and the related active highlightgroup
+nnoremap <leader>hhg :call SyntaxGroup()<CR>
+function! SyntaxGroup()                                                            
+    let l:s = synID(line('.'), col('.'), 1)                                       
+    " echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+    call append(line('.'), synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name'))
+endfun
+" .. and then "hi! def link syntaxGroup Highlightgroup"
+" example: "highlight! def link vimCommentTitle Error"              
+
+" Overview of existing highlight groups:
 " Show a nice output of how all the vim-highlight groups are colored
 command! HighlightTest exec "source $VIMRUNTIME/syntax/hitest.vim"
+
+" STEP2B: FIND A NICE COLOR YOU WANT TO CHANGE TO
+" If you want to take a color from another coloscheme and/or modify that color
+" you will need the hex-color value of that color and set up a new/custom highlight group
+" Put cursor over a nice color, below pastes the highlight group/color values
+nnoremap <leader>hsc :call SyntaxColor()<CR>
+function! SyntaxColor()                                                            
+    let l:s = synID(line('.'), col('.'), 1)                                       
+    let l:hlname = synIDattr(synIDtrans(l:s), 'name')
+    exec 'RedirMessagesBuf' 'highlight' l:hlname
+    " exec ',ColorHighlight'
+endfun
+
+" Highligh color values in the current line
+nnoremap <leader>hcc :,ColorHighlight<CR>
+" TODO range mapping
+
+" Example: 
+" highlight! MyTest1 guifg=#E0306F
+" highlight! def link vimCommentTitle MyTest1
+" highlight! def link vimCommentTitle Function
+
+" Remove the highlighting (and related vim slowdown) of color values
+nnoremap <leader>hcd :ColorClear<CR>
+
 
 " Style Colors: ----------------------------
 " Change colors in the colorscheme: Open vimfiles/colors/molokai
@@ -590,6 +646,12 @@ highlight FoldColumn guibg=gray10 guifg=gray20
 hi        LineNr     guibg=gray10 guifg=gray15
 hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
 
+
+" i can RedirMessagesBuf hi Folded
+" to get:
+" guifg=#4B5B61 guibg=#0B0B0B
+" Folded         xxx ctermfg=4 ctermbg=248 guifg=#0087af guibg=#afd7ff
+" → write command so input color into code
 " JSON colors for ".vim/plugged/vim-json/syntax/json.vim" syntax file
 hi link jsonPadding		Operator
 hi link jsonString		vimString
@@ -602,6 +664,37 @@ hi link jsonBoolean		Boolean
 hi link jsonKeyword		Keyword
 hi link jsonCommentError				Error
 
+" Custom Coloring: --
+" Examples: 1. run "leader hh / SyntaxStack" to get the syntax group under the cursor
+"           2. this links the vimCommentTitle systax group to the Error highlight group
+" highlight! def link vimCommentTitle Error
+" This removes any highlighs (colors) defined for the syntax group
+" highlight! link vimCommentTitle NONE
+
+" Overwrite the 'Normal' highlight group
+" highlight! Normal guifg=Yellow guibg=Green
+" highlight! Normal guifg=White guibg=Black
+
+highlight! def link vimMapRhs Macro 
+
+" highlight! Normal guifg=Yellow guibg=Green
+" Function       xxx ctermfg=10 guifg=#D1FA71
+
+
+" syn match haskellCompose ' \zs\.' conceal cchar=∘
+" syn match haskellLambda '\\' conceal cchar=λ
+
+" This conceals "->" into unicode "→". and is supposed to trun :: into big ":" - but is that char not available?
+" Not needed?
+" let g:haskell_conceal_wide = 1
+" goolord/vim2hs us using this to display lambda symbol and fn compose dot
+let g:haskell_conceal = 1
+" TODO use this for purescript syntax?
+" TODO test these:
+" function! vim2hs#haskell#conceal#wide() " {{{
+" function! vim2hs#haskell#conceal#bad() " {{{
+let g:idris_conceal = 1
+
 
 " Style Colors: ----------------------------
 
@@ -613,7 +706,9 @@ set fileencoding=utf-8
 set encoding=utf-8
 " set backspace=indent,eol,start
 " TODO what does this do? see ':hg syntax enable'
+
 syntax enable
+
 
 
 set ts=2 sts=2 sw=2 expandtab
@@ -787,7 +882,6 @@ map <leader>. @:
 " type "<c-f>" then e.g. "yy" to later either "q:jP" or ':<c-r>"'
 " Find in all user commands: - ":filter Intero command" or just ":command"
 " COMMAND HISTORY: --------------------------------------------
-
 
 
 
@@ -1023,7 +1117,9 @@ setlocal formatprg=stylish-haskell
 " the current file
 nnoremap <silent><leader>su :w<CR>:so %<CR>
 " the following paragraph/lines
-nnoremap <leader>s} y}:@"<cr>
+" nnoremap <leader>s} y}:@"<cr>
+" TODO test this
+nnoremap <leader>s} "ty}:@t<cr>
 " TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
 " the current line
 " nnoremap <leader>ss yy:@"<cr>
@@ -1564,20 +1660,20 @@ command! ExtractGenSigs :g/∷.*⇒/t$
 
 " --------------------------------------------------------------------------------
 " HASKELL
-let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
-let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
-let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
-let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
-let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
-let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+" let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+" let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+" let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+" let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+" let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+" let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
 
-let g:haskell_indent_if = 3
-let g:haskell_indent_case = 2
-let g:haskell_indent_let = 4
-let g:haskell_indent_where = 6
-let g:haskell_indent_do = 3
-let g:haskell_indent_in = 1
-let g:haskell_indent_guard = 2
+" let g:haskell_indent_if = 3
+" let g:haskell_indent_case = 2
+" let g:haskell_indent_let = 4
+" let g:haskell_indent_where = 6
+" let g:haskell_indent_do = 3
+" let g:haskell_indent_in = 1
+" let g:haskell_indent_guard = 2
 
 " --------------------------------------------------------------------------------
 
@@ -1761,9 +1857,7 @@ fun! SomeTest1( ar1 )
   echo "out: " . a:ar1
   return "Some arg: " . a:ar1
 endfun
-" Some arg: hi!
-" stopping here!
-             
+
 
 " TIP: print the file type: ":echo &ft"
 " (returns filetype as literal string, e.g. 'haskell', instead of 'hs')
@@ -2183,9 +2277,6 @@ nnoremap <silent> g- :set nohlsearch<cr>
 nnoremap <silent> n n
 nnoremap <silent> N N
 
-" Important color/highlighy setting - sometimes gets overwritten
-hi Search guibg=#3E3E3E guifg=#DDDDDD
-hi Visual guibg=#3E3E3E gui=none
 
 
 " The Silver Searcher
@@ -2273,6 +2364,8 @@ autocmd BufEnter *.hs set syntax=purescript
 " this would show vim help with wrong syntax?
 " autocmd BufReadPost *.txt set syntax=markdown
 " autocmd some entry FileType help set syntax=help
+
+let g:haskell_classic_highlighting = 1
 
 " Quickfix List: -------------------------------------------------
 
@@ -2829,13 +2922,13 @@ source /Users/andreas.thoelke/.vim/utils/termin1.vim
 
 
 " Tagbar: --------------------------------------------------------------------------
-" nmap gkl :TagbarOpen j<cr>
-nnoremap <leader>to :TagbarOpen j<cr>
+" In ~/.vim/after/plugin/zmaps.vim
+" nnoremap yot :TagbarToggle<cr>
+" Use this because tagbar is the rightmost win?
 nnoremap to :TagbarOpen j<cr>
-nnoremap <leader>th :TagbarClose<cr>
-
-" nmap <silent> <c-h> gklk<cr>
-" nmap <silent> <c-l> gklj<cr>
+" discontinued maps
+" nnoremap <leader>th :TagbarClose<cr>
+" nnoremap <leader>to :TagbarOpen j<cr>
 " Tagbar: --------------------------------------------------------------------------
 
 
