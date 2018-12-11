@@ -26,6 +26,10 @@ Plug 'ajh17/VimCompletesMe'
 
 Plug 'majutsushi/tagbar'
 " there is a Haskell integration, but it does not work :Tag.. not..
+" Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project
+" TODO just purescript does not work
+" Not yet changed anything - but maybe needed for local mappings?
+" Plug 'andreasthoelke/tagbar'
 
 " Git: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
@@ -2929,7 +2933,29 @@ nnoremap to :TagbarOpen j<cr>
 " discontinued maps
 " nnoremap <leader>th :TagbarClose<cr>
 " nnoremap <leader>to :TagbarOpen j<cr>
-" Tagbar: --------------------------------------------------------------------------
+let g:tagbar_width = 23
+let g:tagbar_zoomwidth = 0
+let g:tagbar_indent = 1
+let g:tagbar_autoshowtag = 0
+let g:tagbar_autopreview = 0
+let g:tagbar_silent = 1
+
+" not use the defaul <space> map
+let g:tagbar_map_showproto = ''
+
+" unimpaired like toggle map
+" nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
+
+" func! MarkdownPreviewToggle()
+"   if exists( "g:markdown_preview_active" )
+"     StopMarkdownPreview
+"     unlet g:markdown_preview_active
+"   else
+"     StartMarkdownPreview
+"     let g:markdown_preview_active = 1
+"   endif
+" endfunc
+" " Tagbar: --------------------------------------------------------------------------
 
 
 " ---- GOYO - LIMELIGHT -----------------------------------------------------------------------
@@ -3442,7 +3468,11 @@ highlight default link TagbarHighlight  Cursor
 set updatetime=500
 let g:tagbar_sort = 0
 
+
+" Tags: ------------
 set tags=tags;/,codex.tags;/
+" to tell it to use the ./tags
+" set tags+=tags 
 " TODO: run ctags manually? how would tags work for purescript
 " ctags -f - --format=2 --excmd=pattern --extra= --fields=nksaSmt myfile
 

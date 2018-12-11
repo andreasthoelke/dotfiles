@@ -164,6 +164,12 @@ Will show expand tags in the runnable source file to see the notes.
 
 * haskell/ps comments support syntax highlight for code blocks?
 
+## Haskell IDE Engine LSP setup
+* https://www.reddit.com/r/haskell/comments/a4lr0h/haskell_programming_set_up_in_vim/
+
+intero-neovim?
+
+
 
 ## Git
   * show number of unstaged files/hunks in (tmux?) status?
@@ -515,6 +521,7 @@ c-s J/K/L/H is pretty intuitive!
 > change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
       some start Documents/PS/2/pux-todo/node_modules/anymatch
 
+
 ## Github
 set up the vim-hub plugin
 oh-my-zsh github plugin:
@@ -704,5 +711,17 @@ something activates gitgutter when quickfix list is used
 
 make local arglist global?
   -------------------
+
+turn a selection into a (drawer) split
+using mark previews drawer
+using search previews
+notes drawer?
+isn't the quickfix list a drawer? - just a small preview/ not syntax highlight
+can other 'lists' (of pins, marks) be used like the arglist?
+
+
+
+
+
 
 

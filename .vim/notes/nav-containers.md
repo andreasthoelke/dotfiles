@@ -8,7 +8,7 @@
    * OS-Wins    → OS-Apps
 ----------------------------------------------------
 
-### New vim-Window:
+## New vim-Window:
   'split' current buffer
     * `<c-w>s` `:sp` below
     * `<c-w>S`(v?) `:vs` left
@@ -20,7 +20,7 @@
     * TODO / Issue: above still does not force a split with exsisting buffer
 
 
-### New vim-Tab
+## New vim-Tab
   with current buffer
     * `:tabe` or `:tabe somename` for a new/temp buffer
     * `<c-w>t` or `:tabe %` to zoom/duplicate the current buffer in the tab
@@ -130,7 +130,7 @@ how about folders?
   States:
   1. **listed**: in the bufferlist (~in memory)
   2. **displayed**: in some window (or be hidden but still listed)
-  3. **active**: displayed in the current window
+  3. *active*: displayed in the current window
 
 
 ## Completion
@@ -355,6 +355,8 @@ current termina questions. see screenshot:
 
 ## Working modes
 
+TODO  make selection into window split? plugin
+
 ### Focused implementation of one code part
 
   Say you are starting at a clean slate
@@ -410,7 +412,7 @@ location could be a
 
 ### Side by side
 #### working simultaniously
- * working back and forth between 2 or more source-code locs)
+ * working back and forth between 2 or more source-code locs
    implementation of code that spans 2 or more distant source-locations (in some or other file)
 
 #### show reference code
@@ -455,6 +457,20 @@ I might need/want
    * previews
    * notes
    * references (urls, code)
+
+## Preview window
+
+  * `h preview-window`
+  * `psearch <tagname>` opens a preview win with the target of the tag under the cursor
+  * `c-w z` closes the preview window
+
+
+
+## Folding
+have the entire file (auto)folded, sort of archieves a similar effect? it can highlight (expand) several parts of an
+otherwise collapsed file. and bring some relavant code parts to attention/ mark them by having them open/ active.
+- it requires constant expanding collapsing?
+- it can't span different files?
 
 explore/search/notes might feed into this
 

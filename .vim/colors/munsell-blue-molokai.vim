@@ -291,10 +291,14 @@ hi! def link TagbarType Keyword
 hi! Title gui=bold guifg=#0087AF "munsell blue"
 hi! def link mkdHeading Operator 
 hi! def link mkdNonListItemBlock purescriptIdentifier 
+hi! def link mkdListItemLine purescriptIdentifier
+hi! def link mkdListItemLine mkdListItemLine 
 hi! def link mkdCode Statement 
 hi! def link mkdListItem Type 
 hi! Underlined2 guifg=#3C6B7C guibg=#0C0C0C gui=italic
 hi! def link mkdInlineURL Underlined2 
+" hi! def link htmlBold htmlBold 
+" hi! def link htmlItalic htmlItalic 
 
 " Dirvish
 hi! def link DirvishPathTail Function 
