@@ -214,6 +214,8 @@
 "                        Issue: currently only this seems to work: go into small git project, run "dpr", then "Find .."
 " Read Grep Results Into Buffer: - "0r! grep -rn 'tab' ~/.vim/plugged", then "c-w F" to on a result/line to open win-split with that exact line!
 " Grep Searches: (in zsh and vim!) - "grep -R 'abc' ." (works without quotes). recursive search from the current dir. "grep -F '<*>' **/*.hs" - '-F' = no regex
+" Regex In Visual Search: - \v^[.+\] - finds text in angle brackets if at start of line. also see https://regexr.com/45174
+" [will find] that text if this line is uncommented
 " Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks 
 " Regex Html Tag: like "<a href=..> .. <\a>" - "/\v\<\/?\w+>" find "\<", "\/?" is optional, "\w+" any num of word chars, ">" end char
 " Vimgrep Search Quickfix: - "vimgrep /\v`[^`]*`/g %" then "]q" and "[Q"
@@ -257,6 +259,7 @@
 " Repeatable Map Setup: e.g. repeat <leader>abb by typing "."! Example RepeatVim Setup:
 " nmap <Plug>Eins ieins<esc>:call repeat#set("\<Plug>Eins")<cr>
 " nmap <leader>abb <Plug>Eins
+" Note: <Plug> maps don't work with "noremap"!
 " Registers: Default register: ("), Yank register: (0), Black hole register (_), 
 " Access - "Ctrl-r" in insert and command mode, ("[name]) in normal mode
 " Read Only Registers: Last insert ".", last command ":"
@@ -673,6 +676,7 @@ inoremap II <Esc>I
 nnoremap <localleader>sh :set syntax=help<cr>
 nnoremap <localleader>sv :set syntax=vim<cr>
 nnoremap <localleader>sm :set syntax=markdown<cr>
+nnoremap <localleader>sp :set syntax=purescript<cr>
 " TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
 
 " demos:
@@ -1032,10 +1036,17 @@ endfunction
 " autocmd! WinEnter <buffer> echom 'Buffer-local event from buffer: ' . bufname('%')
 
 " Highlight Specific Strings Patterns:
-" highlight MyGroup ctermbg=green guibg=green
+" highlight MyGroup guibg=green
+" hi! MyGroup guifg=yellow
+" hi! MyGroup guifg=red
+" hi! clear MyGroup
 " let m = matchadd("MyGroup", "WinEnter")
 " call matchdelete(m)
-highlight MDCode guifg=red
+" call clearmatches()
+" [B] Some filename
+" (B) Some {filename} and more
+
+" highlight MDCode guifg=red
 " autocmd BufEnter,WinEnter *.vim call matchadd('MDCode', '`[^`]*`', -1)
 " Highlight Text In Quotes: let m = matchadd("MDCode", '`(.*?)`') - https://regexr.com/43o7i
 " TODO: 1. The highlight should be within the quotes but not including the quotes

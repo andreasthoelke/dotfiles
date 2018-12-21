@@ -238,7 +238,7 @@ exec 'hi! String guifg=' . g:color_sacramento_green_brighter
 exec 'hi! Boolean guifg=' . g:color_sacramento_green_brighter 
 
 
-let g:color_ming_green = '#3C6B7C '
+let g:color_ming_green_dark = '#3C6B7C '
 let g:color_ming_green = '#3A768C '
 
 " purescriptStructure (data) > Keyword 
@@ -289,14 +289,19 @@ hi! def link TagbarType Keyword
 
 " Markdown colors
 hi! Title gui=bold guifg=#0087AF "munsell blue"
+hi! Highlight1 gui=bold guifg=#F6DC69 "vim flashy yellow"
+
 hi! def link mkdHeading Operator 
 hi! def link mkdNonListItemBlock purescriptIdentifier 
 hi! def link mkdListItemLine purescriptIdentifier
 hi! def link mkdListItemLine mkdListItemLine 
 hi! def link mkdCode Statement 
 hi! def link mkdListItem Type 
-hi! Underlined2 guifg=#3C6B7C guibg=#0C0C0C gui=italic
+" hi! Underlined2 guifg=#3C6B7C guibg=#0C0C0C gui=italic
+" hi! Underlined2 guifg=#BECACD guibg=#0C0C0C gui=italic
+hi! Underlined2 guifg=#077D67 guibg=#0C0C0C gui=italic
 hi! def link mkdInlineURL Underlined2 
+hi! def link mkdLink Underlined2 
 " hi! def link htmlBold htmlBold 
 " hi! def link htmlItalic htmlItalic 
 
@@ -304,5 +309,9 @@ hi! def link mkdInlineURL Underlined2
 hi! def link DirvishPathTail Function 
 hi! def link DirvishArg DataConstructor 
 
+" Markbar
+exec 'hi! DarkHeader guifg=' . g:color_ming_green_dark
+hi! link markbarHeader DarkHeader
+hi! link markbarID Highlight1
 
 

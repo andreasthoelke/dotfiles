@@ -13,9 +13,9 @@ CloseTabGoToPrevious
 Window Resize: Using <c-./,> maps from Karabiner        
 Grepper-side window colors/syntax
 Find Search In Code docs
-Command history docs
+# Command history docs
 save and restore a session with windows and tabs
-Vimium workflow docs
+" # Vimium workflow docs
 OpenMarkdownPreview using `grip`
 several abbreviations
 Defining Commands And Utility Example Commands docs

@@ -21,15 +21,21 @@ Plug 'andreasthoelke/vim-dirvish'
 " Plug 'vifm/neovim-vifm'
 " Plug 'vifm/vifm.vim'
 
-" Completion: -------------------------------------
-Plug 'ajh17/VimCompletesMe'
-
+" Tools: ------------------------------------------
+" Show Tags. Note: There is a Haskell integration, but it does not work :Tag.. not..  Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project TODO just purescript does not work
 Plug 'majutsushi/tagbar'
-" there is a Haskell integration, but it does not work :Tag.. not..
-" Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project
-" TODO just purescript does not work
-" Not yet changed anything - but maybe needed for local mappings?
-" Plug 'andreasthoelke/tagbar'
+" Make the preview window more convienient to use
+Plug 'skywind3000/vim-preview'
+" Display registers on '"' or "c-r" or @
+Plug 'junegunn/vim-peekaboo'
+" Display marks with nearby code
+" Plug 'Yilin-Yang/vim-markbar'
+" Changed header style
+Plug 'andreasthoelke/vim-markbar'
+
+" Completion: -------------------------------------
+" Plug 'ajh17/VimCompletesMe'
+
 
 " Git: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
@@ -105,12 +111,11 @@ Plug 'AndrewRadev/linediff.vim'
 
 " Session: --------------------------------------------------------------
 Plug 'xolox/vim-misc'
-" Plug 'kopischke/vim-stay'
 Plug 'xolox/vim-session'
 " Restore folding
 " Plug 'vim-scripts/restore_view.vim'
 " Plug 'Twinside/vim-haskellFold'
-Plug 'https://github.com/dbakker/vim-projectroot'
+Plug 'dbakker/vim-projectroot'
 " Plug 'xolox/vim-shell'
 " iTerm2 integration
 Plug 'sjl/vitality.vim'
@@ -137,6 +142,7 @@ Plug 'mityu/vim-applescript'
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'jszakmeister/markdown2ctags'
 Plug 'rhysd/nyaovim-markdown-preview'
+Plug 'aklt/rel.vim'
 
 " Tmux .config features
 Plug 'tmux-plugins/vim-tmux'
@@ -160,7 +166,8 @@ Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
 
 
-Plug 'purescript-contrib/purescript-vim'
+" Plug 'purescript-contrib/purescript-vim'
+Plug 'andreasthoelke/purescript-vim'
 " Plug 'FrigoEU/psc-ide-vim'
 " Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
 
@@ -206,7 +213,7 @@ Plug 'kana/vim-textobj-user'
 Plug 'w0rp/ale'
 " Just 10 lines of code. uses "to" default map
 " Plug 'mpickering/hlint-refactor-vim'
-Plug 'neomake/neomake'
+" Plug 'neomake/neomake'
 Plug 'vim-syntastic/syntastic'
 
 Plug 'parsonsmatt/intero-neovim'
@@ -359,14 +366,6 @@ let g:promptline_preset = {
 " set shortmess+="mW"
 set shortmess=aoOtT
 
-" This is slow when exiting vim
-" autocmd! VimLeavePre * call VimLeaveCleanup()
-" func! VimLeaveCleanup()
-"   MundoShow " Briefly open Mundo in the current tab (closes it in other tabs) to then close it. Otherwise empty mundo buffers are open after restart.
-"   MundoHide
-" endfunc
-
-
 " Persistence Saving: -----------------------------------------------------------------
 
 
@@ -376,10 +375,8 @@ let g:mundo_preview_height = 35
 let g:mundo_right = 1
 let g:mundo_auto_preview_delay = 10
 let g:mundo_verbose_graph = 0
-let g:mundo_playback_delay = 200
 let g:mundo_mirror_graph = 0
 let g:mundo_inline_undo = 1
-let g:mundo_help = 1
 
 " Z Maps Unimpaired:
 " There is only one instance/window of Mundo. Whenever a Mundo window is open, Autosave should be off
@@ -436,7 +433,6 @@ let g:session_menu = 1
 "   set splitright
 " endfunc
 
-
 set sessionoptions+=folds
 set sessionoptions+=curdir
 " TODO test this effect?
@@ -449,16 +445,6 @@ set sessionoptions-=buffers
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
 let session_autosave_periodic = 0
-" Prevent mkview to save and restore the cwd per file! This uses the command API of the vim-stay plugin.
-" augroup stay_no_lcd
-"   autocmd!
-"   if exists(':tcd') == 2
-"     autocmd User BufStaySavePre  if haslocaldir() | let w:lcd = getcwd() | exe 'cd '.fnameescape(getcwd(-1, -1)) | endif
-"   else
-"     autocmd User BufStaySavePre  if haslocaldir() | let w:lcd = getcwd() | cd - | cd - | endif
-"   endif
-"   autocmd User BufStaySavePost if exists('w:lcd') | execute 'lcd' fnameescape(w:lcd) | unlet w:lcd | endif
-" augroup END
 
 " Falls back to writing undo file into cwd if "vimtmp/undo" is not available(?)
 set undodir=~/vimtmp/undo,.
@@ -736,9 +722,12 @@ set textwidth=120
 " activate line wrapping for a window:
 " command! -nargs=* Wrap set wrap linebreak nolist
 " Todo: do I want linebreak and nolist?
+" Update: linebreak avoids words being split across lines. so I want this, but when wrap is enabled?
 " use "set wrap" and "set nowrap" instead?
 " command! -nargs=* Wrap set wrap linebreak nolist
 " use `gq<motion` or gqq to merely wrap a range/line
+
+set linebreak
 
 " Auto load files that have changed outside of vim! (only when there are no unsaved changes!). This requires
 " tmux focus events "FocusGained".
@@ -832,8 +821,9 @@ set nostartofline
 " COMMAND HISTORY: --------------------------------------------
 " Type a command slightly more quickly:
 noremap ; :
-" This requires that all maps that use ":" /commands! need to be defiled with "nnoremap"/ "vnoremap"
-nnoremap : :silent !
+" This requires that all maps that use ":" (commands!) need to be defiled with "nnoremap"/ "vnoremap"
+" TODO suspend this. wanted to use this to silence/non-<cr> the dirvish shell commands. → fnid a different map for this
+" nnoremap : :silent !
 
 " Open command history with the cursor on the last command. Avoids conflicts with bufferlocal/plugin "q"/quick maps.
 " Also avoid accidential Exmode shell, can still be accessed by "gQ"
@@ -849,8 +839,10 @@ nnoremap j gj
 nnoremap k gk
 
 " Jump to the first and then last line of a paragrapth instead of the blank line after a paragraph
-noremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
-noremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
+nnoremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
+nnoremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
+vnoremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
+vnoremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
 
 " Some settings for when the file type is not set
 function! PlainText()
@@ -859,7 +851,6 @@ function! PlainText()
   setlocal comments=
   " Use comment string for quoting
   setlocal commentstring=>\ %s
-  setlocal spell
 endfunction
 
 " Set a pseudo filetype upon opening a buffer if filetype is not set.
@@ -1699,9 +1690,8 @@ nnoremap O o<Esc>
 
 " Break line at cursor position
 nnoremap J i<CR><Esc>
-" TODO "push text" mapping
-" this is now used for Sneak navigation
-" nnoremap L i <Esc>
+" "push text" mapping this is was before used for Sneak navigation
+nnoremap L i <Esc>
 
 " Join line below with current line
 nnoremap <BS> J
@@ -2136,8 +2126,8 @@ xmap t <Plug>Sneak_t
 xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
-" Use L/H for next so ";" and "," can be used elsewhere
-map L <Plug>Sneak_;
+" U se L/H for next so ";" and "," can be used elsewhere
+map : <Plug>Sneak_;
 map H <Plug>Sneak_,
 " let g:sneak#label = 1
 " let g:sneak#absolute_dir = 1 " 'L' alway navigates forward
@@ -2329,8 +2319,7 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " TODO limit to nvim?
 " Whenever a new tab is created, set the tab-working dir accordingly
-" Issue: This seemed to have confused session loading (buffers wheren't loaded), now do explicit "dpr" after creating a new tab?
-" autocmd TabNewEntered * call OnTabEnter(expand("<amatch>"))
+" autocmd! TabNewEntered * call OnTabEnter(expand("<amatch>"))
 " func! OnTabEnter(path)
 "   if isdirectory(a:path)
 "     let dirname = a:path
@@ -2338,11 +2327,19 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 "     " let dirname = fnamemodify(a:path, ":h")
 "     let dirname = projectroot#guess( a:path )
 "   endif
-"   execute "tcd ". dirname
+"   " Issue: "tcd" makes mksession fail to reload buffers in tabs where tcd was used
+"   " execute "tcd ". dirname
+"   execute "lcd ". dirname
 " endfunc
 
+autocmd! BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
+func! SetWorkingDirectory(path)
+  let dirname = projectroot#guess( a:path )
+  execute "lcd ". dirname
+endfunc
+
 " Change Working Directory: ---------------
-nnoremap <expr>dpr ":tcd " . projectroot#guess() . "\n"
+nnoremap <expr>dpr ":lcd " . projectroot#guess() . "\n"
 nnoremap <expr>dpR ":cd "  . projectroot#guess() . "\n"
 " Also consider using ":ProjectRootCD"
 
@@ -2364,7 +2361,7 @@ endfunction
 
 " use purescript syntax on haskell buffers.
 " Todo: what's the proper way to do this?
-autocmd BufEnter *.hs set syntax=purescript
+autocmd! BufEnter *.hs set syntax=purescript
 " this would show vim help with wrong syntax?
 " autocmd BufReadPost *.txt set syntax=markdown
 " autocmd some entry FileType help set syntax=help
@@ -2374,7 +2371,7 @@ let g:haskell_classic_highlighting = 1
 " Quickfix List: -------------------------------------------------
 
 " Refesh/force some style on the quickfix list:
-autocmd QuickFixCmdPost * :call QuickfixRefeshStyle()
+autocmd! QuickFixCmdPost * :call QuickfixRefeshStyle()
 
 function! QuickfixRefeshStyle()
   if len( filter(getqflist(), 'v:val.type == "e"') ) > 0
@@ -2410,7 +2407,9 @@ endfunction
 
 " CTRLP:  --------------------------------------------------
 let g:ctrlp_cmd = 'CtrlPBuffer'
-let g:ctrlp_map = '<localleader>a'
+" let g:ctrlp_cmd = 'CtrlPMRU'
+" let g:ctrlp_map = '<localleader>a'
+let g:ctrlp_map = 'go'
 
 " Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {
@@ -2485,6 +2484,7 @@ let g:dirvish_mode = ':sort ,^.*[\/],'
 augroup dirvish_config
   autocmd!
   " Map `t` to open in new tab.
+  " Example: buffer local maps
   autocmd FileType dirvish
         \  nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
         \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
@@ -2592,7 +2592,7 @@ if !exists('g:lasttab')
   let g:lasttab = 1
 endif
 
-autocmd TabLeave * let g:lasttab = tabpagenr()
+autocmd! TabLeave * let g:lasttab = tabpagenr()
 
 
 " Tabs: -----------------------------------------
@@ -2939,26 +2939,107 @@ let g:tagbar_indent = 1
 let g:tagbar_autoshowtag = 0
 let g:tagbar_autopreview = 0
 let g:tagbar_silent = 1
+let g:tagbar_compact = 1
 
-" not use the defaul <space> map
+" don't use the defaul <space> map
 let g:tagbar_map_showproto = ''
 
-" unimpaired like toggle map
-" nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
+" Tagbar: --------------------------------------------------------------------------
 
-" func! MarkdownPreviewToggle()
-"   if exists( "g:markdown_preview_active" )
-"     StopMarkdownPreview
-"     unlet g:markdown_preview_active
-"   else
-"     StartMarkdownPreview
-"     let g:markdown_preview_active = 1
-"   endif
-" endfunc
-" " Tagbar: --------------------------------------------------------------------------
+" Peekaboo: -------------------"
+" Delay to display the peedaboo window"
+let g:peekaboo_delay = 1000
+let g:peekaboo_delay = 0
+let g:peekaboo_prefix = '<localleader>'
 
 
-" ---- GOYO - LIMELIGHT -----------------------------------------------------------------------
+" Markbar: --------------------------------------------------------------------------"
+nmap <Leader>mm <Plug>ToggleMarkbar
+nmap yom <Plug>ToggleMarkbar
+nmap mo <Plug>OpenMarkbar
+let g:markbar_enable_peekaboo = v:false
+let g:markbar_width = 30
+let g:markbar_peekaboo_width = 30
+let g:markbar_marks_to_display = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+let g:markbar_peekaboo_marks_to_display = 'ABCDEFGH'
+" No default name
+" let g:markbar_mark_name_format_string = ''
+" let g:markbar_mark_name_arguments = ['']
+" let g:markbar_file_mark_format_string = '-- %s'
+" let g:markbar_file_mark_arguments = ['fname']
+" let g:markbar_file_mark_format_string = ''
+" let g:markbar_file_mark_arguments = ['']
+" No indent
+let g:markbar_context_indent_block = ''
+let g:markbar_peekaboo_context_indent_block = ''
+" No highlighting
+let g:markbar_enable_mark_highlighting = v:false
+let g:markbar_context_indent_block_NOWARN = 1
+let g:markbar_peekaboo_context_indent_block_NOWARN = 1
+
+" number of lines of context to retrieve per mark
+let g:markbar_num_lines_context = 2
+" TODO: changing this global var updates the markbar display automatically! 
+
+let g:markbar_close_after_go_to = v:false
+let g:markbar_peekaboo_close_after_go_to = v:false
+
+" markbar-local mappings
+let g:markbar_jump_to_mark_mapping  = 'o'
+let g:markbar_next_mark_mapping     = '<c-n>'
+let g:markbar_previous_mark_mapping = '<c-p>'
+let g:markbar_rename_mark_mapping   = '<c-r>'
+let g:markbar_reset_mark_mapping    = '<c-b>'
+let g:markbar_delete_mark_mapping   = '<c-x>'
+
+function! LineAndCol(mark_data) abort
+    return fnamemodify( a:mark_data['filename'], ':t:r')
+    " return printf('l: %4d, c: %4d', a:mark_data['line'], a:mark_data['column'])
+endfunction
+let g:markbar_file_mark_format_string = '%s'
+let g:markbar_file_mark_arguments = [ function('LineAndCol') ]
+
+" Only use upper case/ global marks, so make them quicker to type?"
+func! RemapUppercaseMarks ()
+  " Note this lacks the o!
+  let l:labels = split("abcdefghijklmnpqrstuvwxyz", '\zs') 
+  for label in l:labels
+    exec 'nmap m'  . label .  ' m' . toupper( l:label )
+    exec "nmap \'" . label . " \'" . toupper( l:label )
+  endfor
+endfunc
+call RemapUppercaseMarks()
+
+" Markbar: --------------------------------------------------------------------------
+
+
+" Markdown: ---------------------------------------
+" "ge"
+let g:vim_markdown_follow_anchor = 1
+" Just a fix, because insert-mode return creates an indented list?
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_no_extensions_in_markdown = 0
+" let g:vim_markdown_edit_url_in = 'vsplit'
+let g:vim_markdown_anchorexpr = "'# '.v:anchor"
+let g:vim_markdown_anchorexpr = "v:anchor"
+
+augroup markdown_config
+  autocmd!
+  " Example: buffer local maps. Note: <Plug> maps don't work with "noremap"!
+  " Follow a markdown hyperlink, add position to jumplist to allow "c-o" to jump back
+  autocmd FileType markdown nmap <silent><buffer> <c-]> m'<Plug>Markdown_EditUrlUnderCursor
+augroup END
+
+" Markdown: ---------------------------------------
+
+" Rel Links: -------------
+nmap gk <Plug>(Rel)
+" see "h rel-links" or help:rel.txt#/should%20refer
+" example: ~/.vimrc#/set
+" Rel Links: -------------
+
+
+" GOYO LIMELIGHT: -----------------------------------------------------------------------
 function! s:goyo_enter()
   set scrolloff=13
   Limelight
@@ -2993,7 +3074,12 @@ func! QuickfixMaps()
   nnoremap <buffer> go :.cc<cr>:wincmd p<cr>      
   nnoremap <buffer> <c-n> :cnext<cr>:wincmd p<cr> 
   nnoremap <buffer> <c-p> :cprev<cr>:wincmd p<cr> 
+  nnoremap <silent><buffer> p :PreviewQuickfix<cr>
+  nnoremap <silent><buffer> P :PreviewClose<cr>
+  " autocmd FileType qf nnoremap <silent><buffer> p :PreviewQuickfix<cr>
+  " autocmd FileType qf nnoremap <silent><buffer> P :PreviewClose<cr>
 endfunc
+
 
 " nmap <leader>ll :lopen<cr>:Wrap<cr>
 nnoremap <leader>ll :lopen<cr>

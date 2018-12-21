@@ -1,6 +1,6 @@
 ----------------------------------------------------
 # Navigate Containers & Objects
-   * Tags, Folds, Marks
+   Tag, Folds, Marks
    * Files, Foders
    * vim-Buffers 
    * vim-Wins   → vim-Tabs 
@@ -62,11 +62,6 @@
   1. **created**: by saving the content of a buffer
   2. **loaded**: in a buffer
 
-  in insert mode:
-  `c-x c-f` to start filename browse mode!
-  `c-x c-n` for completion. what the difference to just `c-n`?
-  use `c-w` to delete a word at the prompt
-  use the `*` to get fuzzy suggestions NOTE/TODO: this isn't *on the fly* fuzzy/ while you type - but completion plugins have this.
 
 ## Folders
 
@@ -100,6 +95,14 @@
   * `c-n/p` will suffle through in horz menu
 
 
+## Summary of native vim file exploring 
+   https://vimways.org/2018/death-by-a-thousand-files/
+   * `e **/*`
+      set wildcharm =<C-z>
+      `nnoremap ,e :e **/*<C-z><S-Tab>`
+      `nnoremap ,f :find **/*.md<C-z><S-Tab>`
+      `nnoremap ,f :find .**/*<C-z>` then c-c then type 'note' .. <tab> to get fuzzy searching
+
 
 ## Dirvish
   * `-` open / up/parent folder
@@ -131,6 +134,18 @@ how about folders?
   1. **listed**: in the bufferlist (~in memory)
   2. **displayed**: in some window (or be hidden but still listed)
   3. *active*: displayed in the current window
+
+
+## Insert mode
+
+  `c-r <reg>` to paste while in insert mode
+
+  `c-x c-f` to start filename browse mode!
+  `c-x c-n` for completion. what the difference to just `c-n`?
+  use `c-w` to delete a word at the prompt
+  use the `*` to get fuzzy suggestions NOTE/TODO: this isn't *on the fly* fuzzy/ while you type - but completion plugins have this.
+
+  use `gi` to resume insert mode where last exited
 
 
 ## Completion
@@ -235,6 +250,8 @@ use <c-o> open menu?
         `set tags?`
         `c-]` to nav, `c-t` to go back
 
+    * see [Preview window](#Preview window)
+
 
 ### Changes
     * `:changes`
@@ -243,6 +260,7 @@ use <c-o> open menu?
 
 ### Inserts
     * back to last insert
+
 ### Jumps
     * `:jumps`
 
@@ -323,6 +341,7 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
   * `c-n/p` and `go` with cursor in quickfix list
   * `cnf[ile]` to go the first item in the next file
   * `:cdo {cmd}` run cmd on all qf entries, `cfdo cmd` runs on the files (?)
+  * use `p` to open file:loc in preview window, `c-w z` or `P` to close preview
 
 ## Sessions
 save and restore a session with windows and tabs
@@ -345,6 +364,7 @@ optimize and document in vim-worksteps progressively:
  (could just get to command history in terminal buffer - it now seems to be the same shell(zsh)
  instance??!)
   * ctrlP needed to be cced into that folder .vim/notes, to pick up the 'tags' file
+
 current termina questions. see screenshot:
   how to get to command history how to copy this?
   how to copy/edit/get into vim a command I ran?
@@ -459,16 +479,39 @@ I might need/want
    * references (urls, code)
 
 ## Preview window
-
   * `h preview-window`
   * `psearch <tagname>` opens a preview win with the target of the tag under the cursor
   * `c-w z` closes the preview window
+  * see [Tags](#Tags), [Notes: Tags](notes29-09#Tags)
 
 
+## Navigating markdown files
+see/align with Github wiki repository
+
+  * `]]` `[[` next/prev header
+  * `to`, `to` to open and go to tagbar toc (use instead of `:Toc` command)
+    * then `p` on a heading to focus the heading in the editor window while staying in tagbar
+    * the `q` to close tagbar and have the cursor on the heading in the left window
+
+### Create hyperlink to header
+
+use `c-]` (not `ge`) on the link text to navigate hyperlinks and `c-o` to jump back
+  text [link to header in other .md file](notes29-09# Rich Text) next text
+    * note the space after `#` and that only the beginning of the (case sensitive?) header text needs to match
+    * also note this opens a vsplit as per so related `..edit_url` setting
+  text [link to header in same file](# Navigating markdown) next text
+  text [link to an .md file](notes29-09) next text
+  text [link to website](http://purescript.org) next text
+    * have to use `gx` on either the link text or the url
+  text [link to string in other file type](commit-nts1.txt#Command) next text text [link to string in other file type](commit-nts1.txt#Vimium) next text text [link to string in other file type](../utils/termin1.vim#PURESCRIPT) next text
+  jump to [Repl eval docs in termin1.vim file](../utils/termin1.vim#Repl Eval Insert:) using relative-back path, not having to escape white space
+  from any filetype to any search-word: ~/.vimrc#/set whitespace escape: help:rel.txt#/should%20refer
+  text commit-nts1.txt#/#%20Vimium%20workflow
+ 
 
 ## Folding
 have the entire file (auto)folded, sort of archieves a similar effect? it can highlight (expand) several parts of an
-otherwise collapsed file. and bring some relavant code parts to attention/ mark them by having them open/ active.
+otherwise collapsed [#Preview window] file. and bring some relavant code parts to attention/ mark them by having them open/ active.
 - it requires constant expanding collapsing?
 - it can't span different files?
 

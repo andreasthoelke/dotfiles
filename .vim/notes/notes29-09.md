@@ -13,8 +13,9 @@ font: Iosevka - for writing
   * Commented segments in code, like: https://github.com/sdothum/dotfiles/blob/master/vim/.vim/config/buffer.vim
   * Should be lined to Tags and Folds
 
-  * Scrollbar!? https://github.com/lornix/vim-scrollbar
   * Marks and Registers: https://github.com/Yilin-Yang/vim-markbar
+
+  * scroll indicator https://www.reddit.com/r/vim/comments/6xkjz9/presenting_vimlinenoindicator_see_your_position/
 
 ## Textobjects
 https://github.com/wellle/targets.vim
@@ -163,6 +164,15 @@ Will show expand tags in the runnable source file to see the notes.
     * how to format/indent lists?
 
 * haskell/ps comments support syntax highlight for code blocks?
+
+
+## Tags
+
+> When you are using Language Servers with LanguageClient-neovim, You can use PreviewFile to preview definition instead of jump to it:
+> call LanguageClient#textDocument_definition({'gotoCmd':'PreviewFile'})
+> Your current buffer will not be switched away, and just close the preview window by CTRL+W z when you are done.
+
+
 
 ## Haskell IDE Engine LSP setup
 * https://www.reddit.com/r/haskell/comments/a4lr0h/haskell_programming_set_up_in_vim/
@@ -400,7 +410,7 @@ how to find a line that includes "abbrev" and "Hoogle" in termin1.vim?
 * dim something out (grey) if it is in ()! 
 
 navigate .md /markdown files. e.g. next bulletpoint/not bullet point
- * there is the tagbar nav. c-n/p then p to preview
+ * there is the tagbar nav. c-n/p then p to jump file and P to show in preview window
 
 document regex/wildcards in search. e.g. "/eins.*zwei"
 how is this consistent with ctrlp filename search?
@@ -477,8 +487,6 @@ delete temp/undo folders? set a reminder?
 check out popups/completions:
   * https://github.com/vim-scripts/AutoComplPop
 
-`gx` closes Tab!
-* other unimpaired `yo..` maps, e.g. for tagbar?
 
 * new chrome tab should enable vimium
 * next tab navigation in google docs
@@ -623,8 +631,6 @@ inoremap <expr> <C-k> ("\<C-p>")
 " Go to definition in new split
 nnoremap <silent>fd <C-w>v<C-w>w :call feedkeys("gd")<CR>
 
-Plug 'junegunn/gv.vim'
-
 " CtrlP file, buffer, tag search
 let g:ctrlp_extensions = ['mixed', 'changes', 'quickfix']
 let g:ctrlp_cmd = 'call CallCtrlP()'
@@ -675,8 +681,7 @@ config save a grep search through all info sources for:
 * github will show changes from original repo, so I can merge them from time to time!!
 
 
-  Current Todos
--
+# Current Todos
 
   nyaovim fontsize, popup test, minibrowser
   vifm: show last changed in hours vs size!
@@ -718,6 +723,9 @@ using search previews
 notes drawer?
 isn't the quickfix list a drawer? - just a small preview/ not syntax highlight
 can other 'lists' (of pins, marks) be used like the arglist?
+
+a start screen?
+https://github.com/mhinz/vim-startify 
 
 
 
