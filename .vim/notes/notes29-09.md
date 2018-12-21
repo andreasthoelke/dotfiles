@@ -1,5 +1,32 @@
-## Done
+## Housekeeping & Cache Files
 
+### Shada 
+  * `ShadaClear` does: "!rm" . ' ~/.local/share/nvim/shada/main.shada'
+
+  * Marks save format:
+          Global mark with timestamp 2018-12-21T18:29:55:
+            % Key  Description  Value
+            + n    name         'A'
+            + f    file name    "/Users/andreas.thoelke/.vim/notes/notes29-09.md"
+            + l    line number  730
+            + c    column       0
+  * also contains jumps, changes, history, ..
+  * does this replace all/most of what is stored in .viminfo file?
+
+### Viminfo file
+  * see ~/.viminfo
+     * Command Line History (newest to oldest):
+     * Search String History (newest to oldest):
+     * Registers
+     * Jumplist
+     * History of marks within files (would like to turn this off)
+
+### Vimtmp folder
+  * see ~/vimtmp/
+     * use `c-w f` to get into dirvish
+     * delete the 'bak-..' folders
+     * rename `view` and `undo` to 'bak-..'
+     * create new view and undo folders
 
 ## Styles
 reactive and test haskell-vim first
@@ -167,11 +194,11 @@ Will show expand tags in the runnable source file to see the notes.
 
 
 ## Tags
+[Config](../../.vimrc#Tags:)
 
 > When you are using Language Servers with LanguageClient-neovim, You can use PreviewFile to preview definition instead of jump to it:
 > call LanguageClient#textDocument_definition({'gotoCmd':'PreviewFile'})
 > Your current buffer will not be switched away, and just close the preview window by CTRL+W z when you are done.
-
 
 
 ## Haskell IDE Engine LSP setup
@@ -197,12 +224,6 @@ can I just use html image tags in markdown?
 
 
 
-document marks usage
-persist marks? (seem persisted now!)
-syntax format marks window
-this seems useful
-SignatureListGlobalMarks 1
-see screenshot - similar cleanup needed?
 
 ## Syntax Tricks
 format/syntax highlight a filepath so it only show on cursor over?
@@ -709,9 +730,6 @@ config save a grep search through all info sources for:
     * can now in Divish buffer copy the current path to clipboard and cd in shell: `let @*=@%`, `c-z`, `c-[` for normal mode, `P<cr>`
     * there should be a Tmux based solution
 
-]q not working 
-related to : remap?
-
 something activates gitgutter when quickfix list is used
 
 make local arglist global?
@@ -727,6 +745,11 @@ can other 'lists' (of pins, marks) be used like the arglist?
 a start screen?
 https://github.com/mhinz/vim-startify 
 
+## Temp next
+> - how to set a link to code?
+- ctrlp murf and buffer map?
+> - dont jump to markbar win on open
+  how to jump to it if a win is inbetween
 
 
 

@@ -1672,46 +1672,30 @@ command! ExtractGenSigs :g/∷.*⇒/t$
 
 " --------------------------------------------------------------------------------
 
-" --------------------------------------------------------------------------------
 
 " free mapping <c-Backspace>
 
-" TODO: find (and break line?) at → and ∷
-
-" ------------------------------------------------------
-" Code formatting ------------------------
-
-" Issue: Remap return key. in command history this executes a line!
-" Hit enter to add a new line above or below the current line
-" nnoremap <c-Enter> i<cr><Esc>
-" nnoremap <CR> o<Esc>
-nnoremap O o<Esc>
-
-
+" Code Formatting: ------------------------
 " Break line at cursor position
 nnoremap J i<CR><Esc>
-" "push text" mapping this is was before used for Sneak navigation
-nnoremap L i <Esc>
 
 " Join line below with current line
 nnoremap <BS> J
 
-nnoremap <leader>L kJi<cr><esc>l
+" Push text to the right
+nnoremap <localleader>> i <Esc>
+
+" Insert line. Related to `]<space>`
+nnoremap O o<Esc>
 
 
-" Insert one space
-" nnoremap <leader>L a <esc>
-" nnoremap <C-L> i <esc>l
-
-" ---------------------------------------------------------
-" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vnoremap <Enter> <Plug>(EasyAlign)
-
-" EasyAlign:
+" EasyAlign: -----------------------------
 " 1. visually selecte the lines
 " 2. type ':EasyAlign'
 " 3. type '2 ' to align to the second space!!
 
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vnoremap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 " TODO: find alt mapping
@@ -2081,34 +2065,9 @@ endfunction
 
 
 " Comments: --------------------------
-" line or selection
-" nmap dc gc
-" nmap dco gcc
-
-  " comment form??
-  " nmap coaf gcaf
 
 " Comments: --------------------------
 
-
-
-" Markers Marks: ----------------------------------------------------------------
-" Note: had to copy this to ".vim/after/plugin/zmaps.vim" because unimpaired overwrites these maps
-
-" nnoremap <leader>mm :SignatureListGlobalMarks<cr>
-" Navigate loclist using "]l" and "[l" alternaivly "[a / ]a or [' / ']""
-nnoremap <leader>om :CtrlPMark<cr>
-" ctrlp-mark plugin useful? yes, it shows an overview
-
-  " To Learn: m` marks and `` jumps back to this! "m'" - "''" does the same but for the line only.
-  " ma, mb, mc .. to set!
-  " 'a, 'b, 'c .. to jump!
-
-" Note Issue: Deleted markers are currcntly recreated after (auto!) session save/load a temp fix is to "ShadaClear".
-" To delete all markers (as a last resort, just delete the ~.viminfo file!!
-" command! DelMarks :delmarks ABCDEFGHIJKLMN
-
-" Markers Marks: ----------------------------------------------------------------
 
 
 " Sneak Code Navigation: ------------------------------------------------
@@ -2126,8 +2085,8 @@ xmap t <Plug>Sneak_t
 xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
-" U se L/H for next so ";" and "," can be used elsewhere
-map : <Plug>Sneak_;
+" Use L/H for next so ";" and "," can be used elsewhere
+map L <Plug>Sneak_;
 map H <Plug>Sneak_,
 " let g:sneak#label = 1
 " let g:sneak#absolute_dir = 1 " 'L' alway navigates forward
@@ -2162,8 +2121,6 @@ omap <localleader>f <Plug>(easymotion-bd-f)
 " Search replacement
 " nmap / <Plug>(easymotion-sn)
 " omap / <Plug>(easymotion-tn)
-" map L <Plug>(easymotion-next)
-" map H <Plug>(easymotion-prev)
 
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_use_smartsign_us = 1
@@ -2953,36 +2910,49 @@ let g:peekaboo_delay = 0
 let g:peekaboo_prefix = '<localleader>'
 
 
+
+" Marks: ----------------------------------------------------------------
+
+" Only use upper case/ global marks, so make them quicker to type?"
+func! RemapUppercaseMarks ()
+  " Note this lacks the o!
+  let l:labels = split("abcdefghijklmnpqrstuvwxyz", '\zs') 
+  for label in l:labels
+    exec 'nmap m'  . label .  ' m' . toupper( l:label )
+    exec "nmap \'" . label . " \'" . toupper( l:label )
+    exec 'nnoremap M'  . label .  ' :delm ' . toupper( l:label ) . '<cr>'
+  endfor
+endfunc
+call RemapUppercaseMarks()
+
+" TODO Ctrlp-mark plugin useful? yes, it shows an overview
+nnoremap <leader>om :CtrlPMark<cr>
+
+" Issue: Deleted markers are currcntly recreated after session save/load a temp fix is to "ShadaClear".
+" To delete all markers (as a last resort, just delete the ~/.viminfo file!!
+" command! DelMarks :delmarks ABCDEFGHIJKLMN
+
+
 " Markbar: --------------------------------------------------------------------------"
-nmap <Leader>mm <Plug>ToggleMarkbar
 nmap yom <Plug>ToggleMarkbar
 nmap mo <Plug>OpenMarkbar
 let g:markbar_enable_peekaboo = v:false
 let g:markbar_width = 30
-let g:markbar_peekaboo_width = 30
 let g:markbar_marks_to_display = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-let g:markbar_peekaboo_marks_to_display = 'ABCDEFGH'
 " No default name
-" let g:markbar_mark_name_format_string = ''
-" let g:markbar_mark_name_arguments = ['']
 " let g:markbar_file_mark_format_string = '-- %s'
 " let g:markbar_file_mark_arguments = ['fname']
-" let g:markbar_file_mark_format_string = ''
-" let g:markbar_file_mark_arguments = ['']
 " No indent
 let g:markbar_context_indent_block = ''
-let g:markbar_peekaboo_context_indent_block = ''
 " No highlighting
 let g:markbar_enable_mark_highlighting = v:false
 let g:markbar_context_indent_block_NOWARN = 1
-let g:markbar_peekaboo_context_indent_block_NOWARN = 1
 
 " number of lines of context to retrieve per mark
 let g:markbar_num_lines_context = 2
 " TODO: changing this global var updates the markbar display automatically! 
 
 let g:markbar_close_after_go_to = v:false
-let g:markbar_peekaboo_close_after_go_to = v:false
 
 " markbar-local mappings
 let g:markbar_jump_to_mark_mapping  = 'o'
@@ -2998,17 +2968,6 @@ function! LineAndCol(mark_data) abort
 endfunction
 let g:markbar_file_mark_format_string = '%s'
 let g:markbar_file_mark_arguments = [ function('LineAndCol') ]
-
-" Only use upper case/ global marks, so make them quicker to type?"
-func! RemapUppercaseMarks ()
-  " Note this lacks the o!
-  let l:labels = split("abcdefghijklmnpqrstuvwxyz", '\zs') 
-  for label in l:labels
-    exec 'nmap m'  . label .  ' m' . toupper( l:label )
-    exec "nmap \'" . label . " \'" . toupper( l:label )
-  endfor
-endfunc
-call RemapUppercaseMarks()
 
 " Markbar: --------------------------------------------------------------------------
 

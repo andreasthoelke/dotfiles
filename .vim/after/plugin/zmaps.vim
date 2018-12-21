@@ -1,9 +1,4 @@
 
-" nnoremap ]a :<C-U>call signature#mark#Goto("next", "spot", "global")<CR>
-" nnoremap [a :<C-U>call signature#mark#Goto("prev", "spot", "global")<CR>
-
-" nnoremap you :MundoToggle<cr>
-" nnoremap yog :Magit<cr>
 
 " There is only one instance/window of Mundo. Whenever a Mundo window is open, Autosave should be off
 nnoremap you :MundoToggle<cr>:AutoSaveToggle<cr>

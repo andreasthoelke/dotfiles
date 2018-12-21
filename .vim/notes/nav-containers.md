@@ -252,6 +252,7 @@ use <c-o> open menu?
 
     * see [Preview window](#Preview window)
 
+[Config](../../.vimrc#Tags:)
 
 ### Changes
     * `:changes`
@@ -266,13 +267,12 @@ use <c-o> open menu?
 
 
 ## Marks
-  * set a global mark before using search/quickfix and arglist/bufferlist
-      → but isn't spinning off a tab better a be reminded about what to resume?
-  * `mV`, `'V` to use a global mark
 
-are those recognizing tabs? (no and this may be good)
-do a mark not per file but per win/tab?
+  * Deleting marks:
+  `delm G-Z` to clear a range of marks
+  `c-x` in markbar to delete selected mark
 
+[config](../../.vimrc#Marks:)
 
 ## Folds, Folding
   `zk` `zj` to navigate
@@ -427,8 +427,6 @@ location could be a
     * code copy paste
     * captured/ saved with comment with source url/search so it can be found later
 
-#### Marks
-  when scrolling, use as a back anchor?
 
 ### Side by side
 #### working simultaniously
@@ -482,7 +480,7 @@ I might need/want
   * `h preview-window`
   * `psearch <tagname>` opens a preview win with the target of the tag under the cursor
   * `c-w z` closes the preview window
-  * see [Tags](#Tags), [Notes: Tags](notes29-09#Tags)
+  * see [Tags](#Tags), [Notes: Tags](notes29-09.md#Tags)
 
 
 ## Navigating markdown files
@@ -496,14 +494,13 @@ see/align with Github wiki repository
 ### Create hyperlink to header
 
 use `c-]` (not `ge`) on the link text to navigate hyperlinks and `c-o` to jump back
-  text [link to header in other .md file](notes29-09# Rich Text) next text
+  text [link to header in other .md file](notes29-09.md# Rich Text) next text
     * note the space after `#` and that only the beginning of the (case sensitive?) header text needs to match
-    * also note this opens a vsplit as per so related `..edit_url` setting
   text [link to header in same file](# Navigating markdown) next text
-  text [link to an .md file](notes29-09) next text
+  text [link to an .md file](notes29-09.md) next text
   text [link to website](http://purescript.org) next text
     * have to use `gx` on either the link text or the url
-  text [link to string in other file type](commit-nts1.txt#Command) next text text [link to string in other file type](commit-nts1.txt#Vimium) next text text [link to string in other file type](../utils/termin1.vim#PURESCRIPT) next text
+text [link to string in other file type](commit-nts1.txt#Command) next text text [link to string in other file type](commit-nts1.txt#Vimium) next text text [link to string in other file type](../utils/termin1.vim#PURESCRIPT) next text
   jump to [Repl eval docs in termin1.vim file](../utils/termin1.vim#Repl Eval Insert:) using relative-back path, not having to escape white space
   from any filetype to any search-word: ~/.vimrc#/set whitespace escape: help:rel.txt#/should%20refer
   text commit-nts1.txt#/#%20Vimium%20workflow

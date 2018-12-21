@@ -1,3 +1,10 @@
+v1.0.3
+* markbar config, hyperlink docs
+* Tagbar setting
+* New color scheme munsell-blue
+* Tabline working modes notes
+* Start lightline /tabline config
+
 v1.0.1
 * autoread and tmux focus events
 * integrate General setting in vimrc
