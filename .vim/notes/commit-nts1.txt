@@ -1,3 +1,10 @@
+v1.0.3
+* markbar config, hyperlink docs
+* Tagbar setting
+* New color scheme munsell-blue
+* Tabline working modes notes
+* Start lightline /tabline config
+
 chrome and chromium alias in .zshrc
 adapt unimpaird maps
 include .vim/after/plugin scripts (to overwrite unimpaired maps)

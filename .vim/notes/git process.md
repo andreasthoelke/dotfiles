@@ -240,6 +240,14 @@ View Stash Content: - "stash list", "stash show" and "git stash show -p stash@{2
 ## Git Tags 
   * "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tag>" to checkout a commit based on the related tag!
   * "git tagls" to view. "git push --tags" to push tags to remote. "git tag -d v<tab>" to delete, then "git push -f --tags"
+  * Process: 
+    * in gv copy the commit messages to commit-nts1.txt
+    * delete the end of the line after the message! 
+    * include the version as headline, e.g. v1.0.3
+    * copy into clipboard
+    * <c-z> in the console do `git tag -a v1.0.4`
+    * then in vim paste the bullit points and :wq
+    * then `git push --tags`
 
 ## Resolve merge conflicts
 
