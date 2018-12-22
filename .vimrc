@@ -410,6 +410,14 @@ endfunc
 "   exe "1," . l . "g/Last modified: /s/Last modified: .*/Last modified: " . strftime("%Y %b %d")
 " endfun
 
+
+" Cleanup: ----------------------------------------------------------------------------
+" NOTE This might slow down exiting vim
+autocmd! VimLeavePre * call VimLeaveCleanup()
+func! VimLeaveCleanup()
+  " TODO close all Markbar wins, other tool windows?
+endfunc
+
 " Vim Sessions: -----------------------------------------------------------------------
 
 " Not needed? now after plugin/gitv.vim
@@ -470,7 +478,7 @@ set viewdir=~/vimtmp/view//
 " Issue: "badd" is commented out and only one buffer is reloaded: Solutions: unsolved.
 
 
-" Shared Persistence: ---------
+" Shada: (Shared Persistence) ---------
 command! ShadaClear :call ClearShada()
 abbrev sc ShadaClear
 function! ClearShada()
@@ -495,7 +503,7 @@ endif
 " uncomment this line to ignore marks on load! (Markers, Marks persisting)
 " TODO: as there is a bug that causes that marks can't be deleted, one could just
 " delete the shada file to delete the marks
-" Shared Persistence: ---------
+" Shada: ---------
 
 
 " Vim Sessions: -----------------------------------------------------------------------
@@ -2367,6 +2375,7 @@ let g:ctrlp_cmd = 'CtrlPBuffer'
 " let g:ctrlp_cmd = 'CtrlPMRU'
 " let g:ctrlp_map = '<localleader>a'
 let g:ctrlp_map = 'go'
+nnoremap ho :CtrlPMRU<cr>
 
 " Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {
@@ -2407,7 +2416,8 @@ let g:ctrlp_prompt_mappings = {
 "                          \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
 " let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 " let g:ctrlp_extensions = ['undo', 'line', 'changes']
-let g:ctrlp_extensions = ['tag', 'line', 'changes']
+" let g:ctrlp_extensions = ['tag', 'line', 'changes']
+let g:ctrlp_extensions = ['dir']
 
 
 let g:ctrlp_max_files = 2000
@@ -2468,8 +2478,8 @@ nnoremap <c-w>d <c-w>j<c-w>c
 " close the win right
 nnoremap <c-w>D <c-w>l<c-w>c
 
-" make equal size slightly easier to type
-" nnoremap <c-w><c-\> <c-w>=
+" Jump to rightmost window
+nnoremap <c-w>\ <c-w>5l
 
 " Split: current buffer left
 nnoremap <c-w>S :vs<cr>
@@ -2886,7 +2896,8 @@ source /Users/andreas.thoelke/.vim/utils/termin1.vim
 " In ~/.vim/after/plugin/zmaps.vim
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
-nnoremap to :TagbarOpen j<cr>
+" nnoremap to :TagbarOpen j<cr>
+nnoremap to :TagbarToggle<cr>
 " discontinued maps
 " nnoremap <leader>th :TagbarClose<cr>
 " nnoremap <leader>to :TagbarOpen j<cr>
@@ -2905,25 +2916,26 @@ let g:tagbar_map_showproto = ''
 
 " Peekaboo: -------------------"
 " Delay to display the peedaboo window"
-let g:peekaboo_delay = 1000
-let g:peekaboo_delay = 0
-let g:peekaboo_prefix = '<localleader>'
-
+" let g:peekaboo_delay = 1000
+" let g:peekaboo_delay = 0
+let g:peekaboo_prefix = '<leader>'
 
 
 " Marks: ----------------------------------------------------------------
 
 " Only use upper case/ global marks, so make them quicker to type?"
 func! RemapUppercaseMarks ()
-  " Note this lacks the o!
-  let l:labels = split("abcdefghijklmnpqrstuvwxyz", '\zs') 
+  " Note this lacks the o, m!
+  let l:labels = split("abcdefghijklnpqrstuvwxyz", '\zs') 
   for label in l:labels
-    exec 'nmap m'  . label .  ' m' . toupper( l:label )
+    exec 'nmap m'  . label .  ' m' . toupper( l:label ) . ':MarkbarUpdate<cr>'
     exec "nmap \'" . label . " \'" . toupper( l:label )
-    exec 'nnoremap M'  . label .  ' :delm ' . toupper( l:label ) . '<cr>'
+    exec 'nnoremap M'  . label .  ' :delm ' . toupper( l:label ) . '<cr>' . ':MarkbarUpdate<cr>'
   endfor
 endfunc
 call RemapUppercaseMarks()
+
+command! MarkbarUpdate call markbar#ui#RefreshMarkbar(g:__active_controller)
 
 " TODO Ctrlp-mark plugin useful? yes, it shows an overview
 nnoremap <leader>om :CtrlPMark<cr>
@@ -2935,7 +2947,9 @@ nnoremap <leader>om :CtrlPMark<cr>
 
 " Markbar: --------------------------------------------------------------------------"
 nmap yom <Plug>ToggleMarkbar
-nmap mo <Plug>OpenMarkbar
+" nmap mo <Plug>OpenMarkbar | wincmd p
+nmap mo :call g:standard_controller.toggleMarkbar()<cr>:wincmd p<cr>
+nmap mm :call markbar#ui#RefreshMarkbar(g:__active_controller)<cr>
 let g:markbar_enable_peekaboo = v:false
 let g:markbar_width = 30
 let g:markbar_marks_to_display = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -2949,7 +2963,7 @@ let g:markbar_enable_mark_highlighting = v:false
 let g:markbar_context_indent_block_NOWARN = 1
 
 " number of lines of context to retrieve per mark
-let g:markbar_num_lines_context = 2
+let g:markbar_num_lines_context = 5
 " TODO: changing this global var updates the markbar display automatically! 
 
 let g:markbar_close_after_go_to = v:false
@@ -3515,7 +3529,8 @@ let g:tagbar_sort = 0
 
 
 " Tags: ------------
-set tags=tags;/,codex.tags;/
+" set tags=tags;/,codex.tags;/
+set tags=/,codex.tags;/
 " to tell it to use the ./tags
 " set tags+=tags 
 " TODO: run ctags manually? how would tags work for purescript

@@ -13,6 +13,8 @@
   * also contains jumps, changes, history, ..
   * does this replace all/most of what is stored in .viminfo file?
 
+[config](../../.vimrc#Shada:)
+
 ### Viminfo file
   * see ~/.viminfo
      * Command Line History (newest to oldest):
@@ -27,6 +29,9 @@
      * delete the 'bak-..' folders
      * rename `view` and `undo` to 'bak-..'
      * create new view and undo folders
+
+### Todos
+  * automate this? with VimLeave? [cleanup](../../.vimrc#Cleanup:)
 
 ## Styles
 reactive and test haskell-vim first
@@ -735,6 +740,11 @@ something activates gitgutter when quickfix list is used
 make local arglist global?
   -------------------
 
+- use ctrlp tags?
+  (this is based on set the generated ctags = 'tags' here: tags=tags;/,codex.tags;/
+  (and it very/too big and slow)
+  maybe ctrlp-tags could use the lurshtags?
+
 turn a selection into a (drawer) split
 using mark previews drawer
 using search previews
@@ -742,14 +752,45 @@ notes drawer?
 isn't the quickfix list a drawer? - just a small preview/ not syntax highlight
 can other 'lists' (of pins, marks) be used like the arglist?
 
+if i have yanked a line (with line bread at the end) how do i past it at the mid of a line, without linebreaking
+
 a start screen?
 https://github.com/mhinz/vim-startify 
 
+[cleanup](../../.vimrc#Cleanup:)
+  " TODO close all Markbar wins, other tool windows?
+
+consider using ctrlp to create files/folders? see ctrlp help
+        f)  Type the name of a non-existent file and press <c-y> to create it. Mark a
+            file with <c-z> to create the new file in the same directory as the marked
+            file.
+
+            E.g. Using 'newdir/newfile.txt' will create a directory named 'newdir' as
+                 well as a file named 'newfile.txt'.
+
+
+
 ## Temp next
-> - how to set a link to code?
-- ctrlp murf and buffer map?
-> - dont jump to markbar win on open
-  how to jump to it if a win is inbetween
+- deleted global marks re-apear after vim-restart
+
+- expand-collapse markbar previews
+- i might actually want file local marks/previews
+  - they don't show up in other context → auto-clean
+  - they are the persisted current workingspots
+
+
+
+## Commit/ Release notes
+
+* ctrlP MRU map to `ho`
+* dont jump to markbar win on open
+* use `mo` and `to` to toggle markbar & tagbar
+* use `c-w \ ` to jump to rightmost/mark/tag bar window and `c-w p` to jump back
+* defining links in code with `h rel-links` like ~/.vimrc#/Rel%20Links: using `gk`
+
+old: .vim/notes/commit-nts1.txt
+
+
 
 
 
