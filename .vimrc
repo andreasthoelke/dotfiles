@@ -28,6 +28,8 @@ Plug 'majutsushi/tagbar'
 Plug 'skywind3000/vim-preview'
 " Display registers on '"' or "c-r" or @
 Plug 'junegunn/vim-peekaboo'
+" Vim clipboard features: Delete is not yank, substitute operator, yank buffer
+" Plug 'svermeulen/vim-easyclip'
 " Display marks with nearby code
 " Plug 'Yilin-Yang/vim-markbar'
 " Changed header style
@@ -416,6 +418,8 @@ endfunc
 autocmd! VimLeavePre * call VimLeaveCleanup()
 func! VimLeaveCleanup()
   " TODO close all Markbar wins, other tool windows?
+  " tabdo windo if &buftype == 'nofile' | close | endif
+  Tabdofast Windofast if &buftype == 'nofile' | close | endif
 endfunc
 
 " Vim Sessions: -----------------------------------------------------------------------
@@ -1118,14 +1122,13 @@ setlocal formatprg=stylish-haskell
 
 " Sourcing Parts Of Vimscript:
 " the current file
-nnoremap <silent><leader>su :w<CR>:so %<CR>
+nnoremap <silent><leader>so :w<cr>:so %<cr>
+" the vimrc
+nnoremap <silent><leader>sv :so $MYVIMRC<cr>
 " the following paragraph/lines
-" nnoremap <leader>s} y}:@"<cr>
-" TODO test this
 nnoremap <leader>s} "ty}:@t<cr>
 " TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
 " the current line
-" nnoremap <leader>ss yy:@"<cr>
 nnoremap <leader>ss "tyy:@t<cr>
 " free mappings? <leader>s..
 " TODO these map don't seem ideal. mnemonic not destinct enough?
@@ -2297,11 +2300,12 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 "   execute "lcd ". dirname
 " endfunc
 
-autocmd! BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
-func! SetWorkingDirectory(path)
-  let dirname = projectroot#guess( a:path )
-  execute "lcd ". dirname
-endfunc
+" autocmd! BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
+" func! SetWorkingDirectory(path)
+"   let dirname = projectroot#guess( a:path )
+"     " let dirname = fnamemodify(a:path, ":h")
+"   execute "lcd ". dirname
+" endfunc
 
 " Change Working Directory: ---------------
 nnoremap <expr>dpr ":lcd " . projectroot#guess() . "\n"
@@ -2375,7 +2379,7 @@ let g:ctrlp_cmd = 'CtrlPBuffer'
 " let g:ctrlp_cmd = 'CtrlPMRU'
 " let g:ctrlp_map = '<localleader>a'
 let g:ctrlp_map = 'go'
-nnoremap ho :CtrlPMRU<cr>
+nnoremap gp :CtrlPMRU<cr>
 
 " Don't list files fromm certain folders:
 let g:ctrlp_custom_ignore = {
@@ -2923,27 +2927,47 @@ let g:peekaboo_prefix = '<leader>'
 
 " Marks: ----------------------------------------------------------------
 
-" Only use upper case/ global marks, so make them quicker to type?"
-func! RemapUppercaseMarks ()
-  " Note this lacks the o, m!
-  let l:labels = split("abcdefghijklnpqrstuvwxyz", '\zs') 
+let g:markbar_marks_to_display = 'abcdefghijklnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+" generate maps to include a markbar update in the map
+func! MapMarks ()
+  " Note this lacks the o, m! for open an update maps
+  let l:labels = split( g:markbar_marks_to_display, '\zs') 
   for label in l:labels
-    exec 'nmap m'  . label .  ' m' . toupper( l:label ) . ':MarkbarUpdate<cr>'
-    exec "nmap \'" . label . " \'" . toupper( l:label )
-    exec 'nnoremap M'  . label .  ' :delm ' . toupper( l:label ) . '<cr>' . ':MarkbarUpdate<cr>'
+    exec 'nmap m'  . label .  ' m' . l:label . ':MarkbarUpdate<cr>'
+    " exec "nmap \'" . label . " \'" . l:label 
+    exec 'nnoremap M'  . label .  ' :delm ' . l:label . '<cr>' . ':MarkbarUpdate<cr>' . ':call ForceGlobalRemovalMarks()<cr>'
   endfor
 endfunc
-call RemapUppercaseMarks()
+call MapMarks()
+
+" Only use upper case/ global marks, so make them quicker to type?"
+" func! RemapUppercaseMarks ()
+"   " Note this lacks the o, m!
+"   let l:labels = split("abcdefghijklnpqrstuvwxyz", '\zs') 
+"   for label in l:labels
+"     exec 'nmap m'  . label .  ' m' . toupper( l:label ) . ':MarkbarUpdate<cr>'
+"     exec "nmap \'" . label . " \'" . toupper( l:label )
+"     exec 'nnoremap M'  . label .  ' :delm ' . toupper( l:label ) . '<cr>' . ':MarkbarUpdate<cr>'
+"   endfor
+" endfunc
+" call RemapUppercaseMarks()
 
 command! MarkbarUpdate call markbar#ui#RefreshMarkbar(g:__active_controller)
 
-" TODO Ctrlp-mark plugin useful? yes, it shows an overview
+command! DelLocalMarks  exec 'delmarks a-z' | call ForceGlobalRemovalMarks()
+command! DelGlobalMarks exec 'delmarks A-Z' | call ForceGlobalRemovalMarks()
+
+
+" TODO Ctrlp-mark plugin useful?
 nnoremap <leader>om :CtrlPMark<cr>
 
 " Issue: Deleted markers are currcntly recreated after session save/load a temp fix is to "ShadaClear".
-" To delete all markers (as a last resort, just delete the ~/.viminfo file!!
-" command! DelMarks :delmarks ABCDEFGHIJKLMN
-
+" Adopted from https://github.com/kshenoy/vim-signature/blob/eaa8af20ac4d46f911a083298d7a19e27be180e0/autoload/signature/mark.vim#L324
+function! ForceGlobalRemovalMarks()
+  " Description: Edit viminfo/shada file to forcibly delete Global mark since vim's handling is iffy
+  if has('nvim') | wshada! | else | wviminfo! | endif
+endfunction
 
 " Markbar: --------------------------------------------------------------------------"
 nmap yom <Plug>ToggleMarkbar
@@ -2952,8 +2976,17 @@ nmap mo :call g:standard_controller.toggleMarkbar()<cr>:wincmd p<cr>
 nmap mm :call markbar#ui#RefreshMarkbar(g:__active_controller)<cr>
 let g:markbar_enable_peekaboo = v:false
 let g:markbar_width = 30
-let g:markbar_marks_to_display = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-" No default name
+" Default mark name should just be the plain filename- no extension
+func! MarkbarPlainFName(mark_data) abort
+    return fnamemodify( a:mark_data['filename'], ':t:r')
+    " return printf('l: %4d, c: %4d', a:mark_data['line'], a:mark_data['column'])
+endfunc
+" For win-local marks
+let g:markbar_mark_name_format_string = ''
+let g:markbar_mark_name_arguments = []
+" For global/file marks
+let g:markbar_file_mark_format_string = '%s'
+let g:markbar_file_mark_arguments = [ function('MarkbarPlainFName') ]
 " let g:markbar_file_mark_format_string = '-- %s'
 " let g:markbar_file_mark_arguments = ['fname']
 " No indent
@@ -2963,7 +2996,7 @@ let g:markbar_enable_mark_highlighting = v:false
 let g:markbar_context_indent_block_NOWARN = 1
 
 " number of lines of context to retrieve per mark
-let g:markbar_num_lines_context = 5
+let g:markbar_num_lines_context = 2
 " TODO: changing this global var updates the markbar display automatically! 
 
 let g:markbar_close_after_go_to = v:false
@@ -2976,12 +3009,6 @@ let g:markbar_rename_mark_mapping   = '<c-r>'
 let g:markbar_reset_mark_mapping    = '<c-b>'
 let g:markbar_delete_mark_mapping   = '<c-x>'
 
-function! LineAndCol(mark_data) abort
-    return fnamemodify( a:mark_data['filename'], ':t:r')
-    " return printf('l: %4d, c: %4d', a:mark_data['line'], a:mark_data['column'])
-endfunction
-let g:markbar_file_mark_format_string = '%s'
-let g:markbar_file_mark_arguments = [ function('LineAndCol') ]
 
 " Markbar: --------------------------------------------------------------------------
 
@@ -3756,6 +3783,14 @@ com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
 " Just like Windo, but disable all autocommands for super fast processing.
 com! -nargs=+ -complete=command Windofast noautocmd call WinDo(<q-args>)
 
+" Like tabdo but restore the current tab.
+function! TabDo(command)
+  let currTab=tabpagenr()
+  execute 'tabdo ' . a:command
+  execute 'tabn ' . currTab
+endfunction
+com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>) 
+com! -nargs=+ -complete=command Tabdofast noautocmd call TabDo(<q-args>)
 
 command! JSONFormat exec "%!python -m json.tool"
 

@@ -485,7 +485,6 @@ I might need/want
 
 ## Navigating markdown files
 see/align with Github wiki repository
-
   * `]]` `[[` next/prev header
   * `to`, `to` to open and go to tagbar toc (use instead of `:Toc` command)
     * then `p` on a heading to focus the heading in the editor window while staying in tagbar

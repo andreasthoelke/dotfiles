@@ -275,7 +275,12 @@ On the right side move the cursor to the first conflicted hunk (e.g. using “]c
 
 9. Now (after you saved the file) in Gstatus “-“ on the file to add it to the index/state. (you can’t yet commit it, all conflicted files have to be resolved)
 
-
+## Sync a fork
+  * git remote add upstream https://github.com/Yilin-Yang/vim-markbar.git
+  * `git remote -v` to view remote repos
+  * `git fetch upstream` creates a new local branch that can be ..
+  * `git merge upstream/master` merged into master.
+  * note this caused an error last time I tried. even `--allow-unrelated-histories` dit not work
 
 
 

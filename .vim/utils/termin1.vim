@@ -238,6 +238,7 @@
 " add to dictionary: "zg" undo "zug"
 " Go To Line: - ":123"! or "123gg" / "222G" to stay in normal mode
 
+" Filenames And Paths: The folder (head): "echo fnamemodify( @%, ':h')" and the filename without extension "echo fnamemodify( @%, ':t:r')"
 " Debugging: Prefix ":verbose " to a command, e.g. ":verb e .vim/utils/termin1.vim" 
 " What script has defined a mapping: ":verb map <leader>s"
 " use "set verbose=1 to 15", start without plugins/vimrc: "nvim -u NONE", 

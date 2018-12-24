@@ -740,6 +740,8 @@ something activates gitgutter when quickfix list is used
 make local arglist global?
   -------------------
 
+highlight vim comment header `" Examples: --` in markbar/purescript syntax
+
 - use ctrlp tags?
   (this is based on set the generated ctags = 'tags' here: tags=tags;/,codex.tags;/
   (and it very/too big and slow)
@@ -757,8 +759,6 @@ if i have yanked a line (with line bread at the end) how do i past it at the mid
 a start screen?
 https://github.com/mhinz/vim-startify 
 
-[cleanup](../../.vimrc#Cleanup:)
-  " TODO close all Markbar wins, other tool windows?
 
 consider using ctrlp to create files/folders? see ctrlp help
         f)  Type the name of a non-existent file and press <c-y> to create it. Mark a
@@ -769,20 +769,15 @@ consider using ctrlp to create files/folders? see ctrlp help
                  well as a file named 'newfile.txt'.
 
 
-
 ## Temp next
-- deleted global marks re-apear after vim-restart
-
-- expand-collapse markbar previews
-- i might actually want file local marks/previews
-  - they don't show up in other context → auto-clean
-  - they are the persisted current workingspots
-
 
 
 ## Commit/ Release notes
 
-* ctrlP MRU map to `ho`
+* close all Markbar wins on VimLeave [cleanup](../../.vimrc#Cleanup:) 
+* include file-local marks
+* deleted global marks re-apear after vim-restart
+* ctrlP MRU map to `gp`
 * dont jump to markbar win on open
 * use `mo` and `to` to toggle markbar & tagbar
 * use `c-w \ ` to jump to rightmost/mark/tag bar window and `c-w p` to jump back
