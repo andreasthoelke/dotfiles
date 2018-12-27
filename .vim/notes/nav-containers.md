@@ -2,8 +2,8 @@
 # Navigate Containers & Objects
    Tag, Folds, Marks
    * Files, Foders
-   * vim-Buffers 
-   * vim-Wins   → vim-Tabs 
+   * vim-Buffers
+   * vim-Wins   → vim-Tabs
    * tmux-Panes → tmux-Windows
    * OS-Wins    → OS-Apps
 ----------------------------------------------------
@@ -16,7 +16,7 @@
     * `<c-w>n` `:new` below
     * `<c-w>N` `:vnew` left
   with existing buffer/file
-    * CtrlP `o` + `h/v` 
+    * CtrlP `o` + `h/v`
     * TODO / Issue: above still does not force a split with exsisting buffer
 
 
@@ -26,11 +26,11 @@
     * `<c-w>t` or `:tabe %` to zoom/duplicate the current buffer in the tab
     * `<c-w>T` to spin off a window to a tab
   with other buffer/file
-    * ctrlP `o` + `t` 
+    * ctrlP `o` + `t`
     * nerdtree `t`
 
 ### Close vim-Window
-  * `<c-w>c` 
+  * `<c-w>c`
   * `:q`
   window and buffer
     * `:bd` the buffer (when last window)
@@ -42,7 +42,7 @@
      * `:bd` the buffer (when last window)
 
 ### Nav vim-Tabs
-  * go next / prev `<c-d>` / `<c-f>` 
+  * go next / prev `<c-d>` / `<c-f>`
 #### Arrage Tabs
   * move tab left/right `[t` `]t`
 
@@ -85,7 +85,7 @@
   * autocompl menu
   * fuzzy complete (e.g. `:find *hs<c-i>` will show all haskell files)
   (https://www.kwyse.com/posts/twid-vim-minimalism/)
-  * `cd .vim/plugged`, `:tabf[ind] *.md<tab>` to show all readme files 
+  * `cd .vim/plugged`, `:tabf[ind] *.md<tab>` to show all readme files
 
 ### Cmdline Menu
   (with setting `set wildmode=longest:list,full`)
@@ -95,7 +95,7 @@
   * `c-n/p` will suffle through in horz menu
 
 
-## Summary of native vim file exploring 
+## Summary of native vim file exploring
    https://vimways.org/2018/death-by-a-thousand-files/
    * `e **/*`
       set wildcharm =<C-z>
@@ -157,7 +157,7 @@ inoremap <Tab> <c-x><c-f>
   Example path: `Documents/PS/2/pux-todo/README.md`
   this works nicely with <c-j/k/l> nav
   ⇒ maybe mapping to produce, then copy and delete the path from insert/normal mode and past it to command?
-In command mode (see `:h cmdline-completion`) after `:e ` 
+In command mode (see `:h cmdline-completion`) after `:e `
  1. `c-d` to show all options
  2. then (optionally) type a char or two
  3. then `c-n` (or `c-i` or Tab) and `c-p` to go back and forth through the options
@@ -166,26 +166,26 @@ In command mode (see `:h cmdline-completion`) after `:e `
  * `c-w` to delete a word back
 
 
-Navigate in scrollback history: 
+Navigate in scrollback history:
   * <c-p> to go back in command history, <c-n> to go forward in history.
 
-code auto completion: 
+code auto completion:
   Vim Completes me (currently testing)
   Youcomplete-me is sort of difficult to install?
   alternative: https://github.com/ncm2/ncm2 or Shougo/deoplete.nvim
 
 ## Buffers
   Create New (File)
-    **Current Win** 
+    **Current Win**
       * `:e <new path/name>` create in the curr win
     **New Win**
       * `<c-w>n/N` create below or left
       * CtrlP `<new path/name> <c-y>` create left
     **New Tab**
-      * CtrlP `<new path/name> <c-y>` create left && `<c-w>T` 
+      * CtrlP `<new path/name> <c-y>` create left && `<c-w>T`
 
   From File
-    **Current Win** 
+    **Current Win**
       * `:e <filename>` list a buffer and display it in the curr win. (currently no use to list but not display buffer)
       * CtrlP `o` + `r` (in file, mru) to list a buffer and display it in the curr window (no matter if buffer is displayed in other wins)
 
@@ -204,11 +204,11 @@ alternate between prev and current buffer: `:e #` `,`
 
   * `\tc` for tabc[lose]
   * `\bd` for `:bd`
-  * `\tm[` 
+  * `\tm[`
 
 " Select multiple files with <c-z> then do <c-o> to load the first into the current window (r) and
 to then hide the splits (undo the visual), <c-o> on the first win and <c-w>D or <c-w>o to close the splits
-to undo 
+to undo
 
 use <c-o> open menu?
 
@@ -279,7 +279,7 @@ use <c-o> open menu?
   `zo` `zc` `z<space>` to open/close/toggle individual folds
   `zM`  `zR` to close/open all folds
   `zm`  `zr` progressively close/open the fold levels (of nested folds)
-  `zx` / `zX` update /re apply 
+  `zx` / `zX` update /re apply
   http://learnvimscriptthehardway.stevelosh.com/chapters/48.html
   " What actions automatically open folds?
   improve performance of autofolding https://github.com/Konfekt/FastFold
@@ -310,7 +310,7 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
   SOME *|*
   let g:nnoremap = {"]t": "", "[t": ""}
   how can I list/find/browse (ctrlp?, tagbar, quicklist) doc tags in e.g. .vimrc?
-  examples: 
+  examples:
     " Git Workflow: ------
     " Windows: --------
   * make Links in vimscript
@@ -336,8 +336,8 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
   * nav in markdown (and other langs?) with text objects/motions: https://github.com/coachshea/vim-textobj-markdown
 
 ## Quickfix Navigation
-  * `leader qq` 
-  * `]q` with cursor in code, 
+  * `leader qq`
+  * `]q` with cursor in code,
   * `c-n/p` and `go` with cursor in quickfix list
   * `cnf[ile]` to go the first item in the next file
   * `:cdo {cmd}` run cmd on all qf entries, `cfdo cmd` runs on the files (?)
@@ -391,7 +391,7 @@ location could be a
 
 
 #### Permanent available
- * REPL 
+ * REPL
  * Tests
 
 #### On demand available
@@ -401,12 +401,12 @@ location could be a
  * file explorer
  * launch/ transistion to the modes below
 
-### Quick browse 
+### Quick browse
  * want to explore/insight/confirm related code
-#### Tags 
+#### Tags
  - `gf`, `c-w` `f/gf` to open tab/split?
 #### Search
-#### CtrlP - Args, Buffers, other visit workspaces? 
+#### CtrlP - Args, Buffers, other visit workspaces?
   * how to go back and/or pin/reference the code found?
 #### File explorer
 #### Exteral Info
@@ -415,13 +415,13 @@ location could be a
   * Issues, stackoverflow, blogposts
 
   * most could be brought into vim?
-  * otherwise 
+  * otherwise
     * need to copy code via clipboard
     * need separate tab/workspace management
 
   → a google search for a specific problem produces
     * 3 - 8 tabs
-    * several articles that take 
+    * several articles that take
       * time to scan
       * need to be re-read after/while implemetation
     * code copy paste
@@ -443,7 +443,7 @@ overview - spin off
 taking notes
 keep as reference
 
-Search and Explore should produce 
+Search and Explore should produce
   → little splits/ reminders that can be overseen then turned into
     1. a side-by-side/ split
     2. a todo (categorized and prioritised)
@@ -470,8 +470,8 @@ search and file explore is a progressive filtering process
 
 marking/ pinning should have references (not copies) and previews
 
-I might need/want 
-## a drawer/ stack of 
+I might need/want
+## a drawer/ stack of
    * previews
    * notes
    * references (urls, code)

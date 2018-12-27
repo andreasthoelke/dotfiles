@@ -1,16 +1,16 @@
 " Utils And Docs: ----------
  
-" TODO: 
+" TODO:
 " show a type mismatch error in two lines in the code view:
 " redirect command echo text to register: :redir @t,
 " take the last line.
 " src/Callback1.purs|222 col 24 error| 222:65:  Could not match type ( console ∷ CONSOLE , timeout ∷ TIMEOUT | t1 ) with type ( timeout ∷ TIMEOUT | eff0 ) while trying to match type Eff ( console ∷ CONSOLE , timeout ∷ TIMEOUT | t1 ) with type Eff ( timeout ∷ TIMEOUT | eff0 ) while checking that expression (apply ContT) (\k → (setTimeoutImpl mills) (k unit) ) has type ContT Unit (Eff ( timeout ∷ TIMEOUT | eff0 ) ) Unit in value declaration setTimeoutCont where eff0 is a rigid type variable t1 is an unknown type
 " find 'while' 4 words 'v' find 'with' find 'while' again
-" src/Callback1.purs|222 col 24 error| 222:65:  Could not match type ( console ∷ CONSOLE , timeout ∷ TIMEOUT | t1 ) with type ( timeout ∷ TIMEOUT | eff0 ) while trying to match type 
+" src/Callback1.purs|222 col 24 error| 222:65:  Could not match type ( console ∷ CONSOLE , timeout ∷ TIMEOUT | t1 ) with type ( timeout ∷ TIMEOUT | eff0 ) while trying to match type
 " IS:
-" Eff ( console ∷ CONSOLE , timeout ∷ TIMEOUT | t1 ) with type 
+" Eff ( console ∷ CONSOLE , timeout ∷ TIMEOUT | t1 ) with type
 " SHOULD BE:
-" Eff ( timeout ∷ TIMEOUT | eff0 ) 
+" Eff ( timeout ∷ TIMEOUT | eff0 )
 " while checking that expression (apply ContT) (\k → (setTimeoutImpl mills) (k unit) ) has type ContT Unit (Eff ( timeout ∷ TIMEOUT | eff0 ) ) Unit in value declaration setTimeoutCont where eff0 is a rigid type variable t1 is an unknown type
 
 " PURESCRIPT WORKFLOW:
@@ -54,11 +54,11 @@
 " --------------------------------------------------------------------------------
 " "RUN IN BROWSER - LOAD PROJECT INTO BROWSER"
 " --------------------------------------------------------------------------------
-" 1. Create a "index.html" file in the project root using the html below.  ":e index.html" 
+" 1. Create a "index.html" file in the project root using the html below.  ":e index.html"
 " 2. make sure you are in the project root (run "dpr") then do "glt" to lanch a terminal
-" 3. run "pulp -w build -to app.js" to watch-build an app.js bundle that will be loaded by index.html. 
+" 3. run "pulp -w build -to app.js" to watch-build an app.js bundle that will be loaded by index.html.
 " 4. enable live reloading in chrome
-" 5. you can run "PS.Main.myfunction(12)('secondarg')" in the Chrome console to call purescript function in the Main module. 
+" 5. you can run "PS.Main.myfunction(12)('secondarg')" in the Chrome console to call purescript function in the Main module.
 " Eff functions can be called like "PS.Main.main()"
 "
 " Use this as "index.html":
@@ -79,7 +79,7 @@
 " TODO: have a separate --watch browserify process that can be killed or
 "     : or, don't use --watch and just fire (via key-mapping e.g. "geb") and forget a browserify process that disposes itseft
 "
-" BUILD A SUB PROJECT/EXAMPLE IN A FOLDER: 
+" BUILD A SUB PROJECT/EXAMPLE IN A FOLDER:
 " "pulp --watch build -I examples/counter/src --to examples/counter/app.js -m Counter.Main"
 " TODO: attach callbacks to a visible terminal process
 " TODO: past and then call a test-function, instead of reloading the whole
@@ -123,7 +123,7 @@
 " the can't be undoed!!
 " also for new projects the ".stylish-haskell" file form "hello44" has to be
 " copied to the project root. Important setting is grouping the language
-" pragmas 
+" pragmas
 " use ":browse Web.Spock" in Intero/Ghci to see all loaded vars
 " use <leader>to and <leader>th to open and close "Tagbar" (a list of the the
 " top-level functions) hit return to jump to a functions, see the focus light
@@ -132,11 +132,11 @@
 " Get the type of do-binds by producing a type error:
 " nnoremap <leader>cco "tyiwolet (xb0 ∷ Int) = <esc>"tp^
 " Use Hoogle In Vim: "gsd" "go search docs" or "gsh" "go seach hoogle" on visual selection (including type signatures!)
-" or keyword to view the search results, then <c-]> on a specific line to see details. 
-" then "gsd" again on the keyword to go back to the overview. 
+" or keyword to view the search results, then <c-]> on a specific line to see details.
+" then "gsd" again on the keyword to go back to the overview.
 " Import Haskell Identifiers Using Hoogle And Hsimport:
 " 1. Use "gsd" ("go search docs") on a missing identifier or e.g. ":Hoogle replicateM"/ or "Hoogle (Applicative m) ⇒ Int → m a → m [a]"
-" 2. In the hoogle list of available identifiers, go to the line/version you want to import and 
+" 2. In the hoogle list of available identifiers, go to the line/version you want to import and
 " run <leader>ii to import the identifier (confirm the import section of your source file has added the identifier)
 " See HoogleImportIdentifier in vimrc and /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
 " also note the "HOOGLE INCLUDE NEW LIBS:" comment in vimrc
@@ -176,11 +176,11 @@
 "
 " <leader>oq opens all warnings? (how to exclude .vimrc warnings?)
 
-" VIM WORKFLOW: ----------------------------------------------------------------------    
+" VIM WORKFLOW: ----------------------------------------------------------------------
 " Vim Help: use "K" e.g. on this word: session_autoload
 " use ":hg<space to expand HelpGrep> <searchterm>", "]q/[q[Q" to browse. it uses ":cwindow" to fill the quickfix list!
 " Redirecting Messages: run "RedirMessagesTab messages"
-" Temp Split Buffer: - "<c-w>N" 
+" Temp Split Buffer: - "<c-w>N"
 " Check Error Messages: quick error messages that occur on startup can be seen
 " with ":messages" command, and then copied, etc.
 " Question: how can I copy echoed text?
@@ -205,9 +205,9 @@
 " Repeat Last Command: - "<leader>." or just "@:"
 " Find In Code Search: - "gsb" / "gsf" on code-word or visual selection to search buffers or project root files
 "                        ":f " → ":Find " search from project root or ":fb " → ":Findb " to search in buffer
-"                        This will open the file and seach/grepper side split in a Tab. 
+"                        This will open the file and seach/grepper side split in a Tab.
 "                        Use "}" / "{" to jump files, then "n" to a specific occurence, then "o" to open the buffer in the left window
-"                        now to continue collecting results, do "<c-w>n" " 
+"                        now to continue collecting results, do "<c-w>n" "
 "                        do "m<abcd>" at a found result, then go to your original tab/window and do "'<abcd>" to load the result here
 "                        "cd (..)" the current working dir to search across a specific folder
 "                        use ":cd %" in Dirvish buffer to first set working dir, then ":Find <searchstring>"
@@ -216,7 +216,7 @@
 " Grep Searches: (in zsh and vim!) - "grep -R 'abc' ." (works without quotes). recursive search from the current dir. "grep -F '<*>' **/*.hs" - '-F' = no regex
 " Regex In Visual Search: - \v^[.+\] - finds text in angle brackets if at start of line. also see https://regexr.com/45174
 " [will find] that text if this line is uncommented
-" Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks 
+" Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks
 " Regex Html Tag: like "<a href=..> .. <\a>" - "/\v\<\/?\w+>" find "\<", "\/?" is optional, "\w+" any num of word chars, ">" end char
 " Vimgrep Search Quickfix: - "vimgrep /\v`[^`]*`/g %" then "]q" and "[Q"
 "                          - "vim[grep] <term> .vim/notes/*.md", "vim" is a shortcut for vimgrep
@@ -239,9 +239,9 @@
 " Go To Line: - ":123"! or "123gg" / "222G" to stay in normal mode
 
 " Filenames And Paths: The folder (head): "echo fnamemodify( @%, ':h')" and the filename without extension "echo fnamemodify( @%, ':t:r')"
-" Debugging: Prefix ":verbose " to a command, e.g. ":verb e .vim/utils/termin1.vim" 
+" Debugging: Prefix ":verbose " to a command, e.g. ":verb e .vim/utils/termin1.vim"
 " What script has defined a mapping: ":verb map <leader>s"
-" use "set verbose=1 to 15", start without plugins/vimrc: "nvim -u NONE", 
+" use "set verbose=1 to 15", start without plugins/vimrc: "nvim -u NONE",
 " other vimrc: "nvim -u ~/.vim/bak/vimrc-22-09-2018.vim"
 " Debug Test With Mini VIMRC One Plugin: - Start nvim loading vimrc from Gist!: nvim -Nu <(curl https://gist.githubusercontent.com/junegunn/6936bf79fedd3a079aeb1dd2f3c81ef5/raw/vimrc) "https://gist.githubusercontent.com/andreasthoelke/f223558ed5d89341c0f21c41868c92b0/raw/27028c93e046aa4a021fc97f8a59e60b774e0e38"
 " Logging Autocommands: - :set verbose=9 - set verbosefile=filename.txt - session_autosave_periodic - http://inlehmansterms.net/2014/10/31/debugging-vim/
@@ -249,8 +249,8 @@
 " set verbosefile=''
 " Show Source Of Autocmds: - "verbose autocmd BufWritePost *"
 " Debug a function: ":debug call FunctionName(arg)"
-" Startup time: "nvim --startuptime ~/.vim/Logs/startup1.log" 
-" Performance Profile: 
+" Startup time: "nvim --startuptime ~/.vim/Logs/startup1.log"
+" Performance Profile:
 " profile start profile.log
 " profile func *
 " profile file *
@@ -261,7 +261,7 @@
 " nmap <Plug>Eins ieins<esc>:call repeat#set("\<Plug>Eins")<cr>
 " nmap <leader>abb <Plug>Eins
 " Note: <Plug> maps don't work with "noremap"!
-" Registers: Default register: ("), Yank register: (0), Black hole register (_), 
+" Registers: Default register: ("), Yank register: (0), Black hole register (_),
 " Access - "Ctrl-r" in insert and command mode, ("[name]) in normal mode
 " Read Only Registers: Last insert ".", last command ":"
 " Copy Between Registers: - "let @+=@%" (Copy current filepath to clipboard)
@@ -287,7 +287,8 @@
 " Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
 " in a range of files: ":argdo %s//Practical/g"
 " TODO what is: "g," - "g-;"
-" Prepolulate Command Map With Positioned Cursor:
+" Prepolulate Command Map With Positioned Moved Cursor:
+" Substitute Replace Selected String:
 xnoremap <localleader>su y:%s/<C-r>"//g<Left><Left>
 
 " Normal KeyCmds As Command: - "normal c3whi" runs c2w- "hi" on the current line
@@ -327,20 +328,20 @@ endfunction
 " Paste Last Command: - ":%s/abc/cde/g" - "argdo <c-r>:" to paste the prev cmd/ apply it to the arglist
 
 
-" VIM WORKFLOW: ----------------------------------------------------------------------    
+" VIM WORKFLOW: ----------------------------------------------------------------------
 
 
 
-" Shell WORKFLOW: ----------------------------------------------------------------------    
+" Shell WORKFLOW: ----------------------------------------------------------------------
 " Suspending Background Jobs In Same Terminal: - "<c-z>" to suspend, in terminal: "fg" to bring it back. "jobs" to see all suspended jobs, "fg %2" to bring back second job, "kill %2" to kill it, "bg" to have it running in the background, "ps T" will show a "T" for stopped processes
 " Man Pages: - `man ranger` will now use nvim to show the man page, thanks to in .zshrc: export MANPAGER="nvim -c 'set ft=man' -"
 " VMan To Read ManPages As PDF: -- "vman ls" from terminal to view ls man page in vim.
-" Man And Help Outline: - "gO" content outline 
+" Man And Help Outline: - "gO" content outline
 " Search Zsh Command History: - "c-r" then type e.g. "vim"
 " Get Past Zsh Arguments: - example "ls somepath", then you might want "ls -a !!1" hit <tab> to get "ls -a somepath"
-" Install Paths: -- "which zsh". 
+" Install Paths: -- "which zsh".
 " Brew Installs: Brew installs here: "/usr/local/bin/" use "ls -la /usr/local/bin/zs*" or "brew list", "brew info"
-" Brew Cask: - "brew tap caskroom/versions" then `brew cask install iterm2-nightly` 
+" Brew Cask: - "brew tap caskroom/versions" then `brew cask install iterm2-nightly`
 " Read User Shell From Directory Service: - "dscl . -read /Users/$USER UserShell"
 " ITerm Windows: - "Arrangements" tab specifies init window arrangement, "Profiles" tab specifies how a new window is opened
 " Quickly create and delete folders: "mkcd test2" then "rmcurdir"
@@ -351,7 +352,7 @@ endfunction
 " Move Reference Of File Into Current Dir: - "ln subfolder/another/myfile.c" - now has "myfile.c" in the current dir.
 " Append To File: - "echo 'next line ..' >> linkname". NOTE: "echo 'i deleted all!' > linkname" deletes the previous content of the file!
 " "echo 'zwei' >> test1 | cat", the appended "| cat" only echos the 'zwei', it's not reading the longer content of the 'test' file, as "cat test" does. So this is sort of surprising behavior.
-" Search In Filenames: - "ls -la ~/ | grep vim" 
+" Search In Filenames: - "ls -la ~/ | grep vim"
 " View Pipe STDOUT STDIN In Vim: - "grep 'vim' ~/.vimrc | nvim -" or "nvim <(ls -la)" (process substitution)
 " Exmode Shell: - "gQ" to launch. used to run multiple commands. Breakout: "visual<cr>" / "vi"
 " Get A List Of Filenames: - using "find"
@@ -375,7 +376,7 @@ endfunction
 " ./.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/autogen/Paths_abc2.hs
 " ./src/Lib.hs
 
-" Shell WORKFLOW: ----------------------------------------------------------------------    
+" Shell WORKFLOW: ----------------------------------------------------------------------
 
 " Tmux Workflow: -----------------------------------------------------------------------
 " Lookup Manual: use "K" on a keyword in "~/.tmux.conf" to open manual entryj
@@ -412,20 +413,20 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 
 
 " VIMIUM WORKFLOW:
-" "f" to open link, 
+" "f" to open link,
 " "<c-[>" to cancel
 " "J" - "K" for prev - next tab
 " "T" - Tab menu! "<c-j>"/ "<c-k" for up/down, "<c-[" to cancel, also use "^" for previous tab!
 " "x" to close tab, "X" restore cloed tab!
 " "vc" for carret mode, "ve" to select word, "y" to copy to clipboard
-" "gi" to select text input (mode!), <shift><tab>, <tab> to select input field, "<c-[" to exit! 
+" "gi" to select text input (mode!), <shift><tab>, <tab> to select input field, "<c-[" to exit!
 " "?" for help/command overview
 " "H" - "L" navigate back/forward! instead of backspace!
 " "ge" to edit URL, "gE" to open the changed URL in a new tab
-" "t" for new tab, "yt" to dublicate tab. 
+" "t" for new tab, "yt" to dublicate tab.
 " "<<" and ">>" to move tab!
 " Move Tab To Other Window: - "yy", <c-arrowKey> to move to other space/window, "P" to open a new tab for the copied URL in the new window.
-" Select Copy Paste Text: With source text area in view, hit "vc" and confirm 'carret mode' is active. use regular movements, 
+" Select Copy Paste Text: With source text area in view, hit "vc" and confirm 'carret mode' is active. use regular movements,
 " hit "v" for visual selection ode, use "o" to switch to adapt the beginning of the selection. the
 " "y" to copy. In VIM, do "*P to past the clipboard.
 " Google Search Copied Text: just hit "P" to search in a new Tab!
@@ -489,9 +490,9 @@ let Cbs1 = {
 
 command! PursRepl :let PursReplID = jobstart("pulp repl", Cbs1)
 
-" let Tid = jobstart("ls") 
+" let Tid = jobstart("ls")
 
-"--* 
+"--*
 
 " echo jobsend(g:Tid, "ls /n")
 
@@ -627,7 +628,7 @@ endf
 
 " TODO consider using https://github.com/kassio/neoterm
 
-" helpers from https://github.com/jeromedalbert/dotfiles/blob/master/.vim/init.vim 
+" helpers from https://github.com/jeromedalbert/dotfiles/blob/master/.vim/init.vim
 if has('nvim')
   augroup on_display_events
     autocmd!
@@ -641,7 +642,7 @@ function! OnTermOpen()
   if &buftype != 'terminal' | return | endif
   setlocal nonumber norelativenumber colorcolumn=
   nnoremap <silent><buffer> G G{}
-  " tnoremap <buffer> <Esc> <C-\><C-n> 
+  " tnoremap <buffer> <Esc> <C-\><C-n>
 endfunction
 
 command! -range=0 FocusSelection call FocusSelection(<count>)
@@ -683,7 +684,7 @@ nnoremap <localleader>sp :set syntax=purescript<cr>
 " demos:
 abbrev mul Multiple<CR>lines
 
-" eins zwei drei vier fuenf sechs 
+" eins zwei drei vier fuenf sechs
 
 " Launching Chromium: ---------------------------------------------------------------
 " Using the full path on MacOS: "/Applications/Chromium.app/Contents/MacOS/Chromium --window-size=200,500 --window-position=0,20"
@@ -694,10 +695,10 @@ abbrev mul Multiple<CR>lines
 " Using mini bar and start URL: "chromium --app=http://purescript.org --window-position=200,50 --window-size=60,60"
 " Closing The Window: End the terminal session? Use "call jobstop(s:markdown_job_id)"
 
-command! -nargs=1 Chromium exec ':Dispatch' '/Applications/Chromium.app/Contents/MacOS/Chromium --app=' . <q-args> '--window-size=500,400 --window-position=800,20' 
-command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/MacOS/Chromium ' . <q-args> 
+command! -nargs=1 Chromium exec ':Dispatch' '/Applications/Chromium.app/Contents/MacOS/Chromium --app=' . <q-args> '--window-size=500,400 --window-position=800,20'
+command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/MacOS/Chromium ' . <q-args>
 
-" let Tid = jobstart("/Applications/Chromium.app/Contents/MacOS/Chromium http://purescript.org") 
+" let Tid = jobstart("/Applications/Chromium.app/Contents/MacOS/Chromium http://purescript.org")
 
 command! -nargs=1 Chromium :let  = jobstart("pulp repl", Cbs1)
 
@@ -779,7 +780,7 @@ endfun
 " silent exec "!osascript -e 'tell application \"Finder\" to make new Finder window'"
 " Issue: silent does produce artefacts on the lower bar of vim. this can be avoided with ":redraw!"
 " Discard Return Dialog: example: "silent !echo Hello" then use ":redraw!" to refresh screen
-" This closed (but flashes) the return message: 
+" This closed (but flashes) the return message:
 command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
 " example: "Silent ps" instead of ":!ps"
 " Using Vim Dispatch:
@@ -793,7 +794,7 @@ endfunc
 " call DemoOpenFinderWindow()
 " Todo: jobsend example!
 
-" Vim Vars In Command Line: 
+" Vim Vars In Command Line:
 " "!echo This-is-the-dir:% >> ccdd" use the dirvish path in the echo >> command/ write it to a file
 
 " Set Searchword: - "let @/='test'"
@@ -810,12 +811,12 @@ endfunc
 " ".,$g/vim" show/select all following lines that contain "vim"
 " "'a,'bs/in/XXXX" substitute from marker 'a' to marker 'b'
 " ".,.+2move $" move the following lines to the end of the file. "'<,'>copy 0" copy visual selection to before the fist line
-" Example Collecting Lines: 
+" Example Collecting Lines:
 " "'<,'>! >> .vim/notes/acd2.md | cat" - creates a new file if needed, respects linebreaks, updates/write also to open buffer, however it only works on a line, not a selection basis.
 " Same as "'<,'>!cat >> .vim/notes/acd2.md | cat" note the echo-like behavior of 'cat'
-" Put String Into Open File: - ":silent !echo 'test' >> tt.txt" 
+" Put String Into Open File: - ":silent !echo 'test' >> tt.txt"
 " Using Filepath In Shell: - ":silent !echo %-evenmore >> Documents/temp/aa/ccdd"
-" Using Registers And Variables In Shell: - ":exe 'silent !echo' @a '>>' 'ccdd'", 
+" Using Registers And Variables In Shell: - ":exe 'silent !echo' @a '>>' 'ccdd'",
 " "exe 'silent !echo' g:colors_name '>>' 'ccdd'" - "exe" basically runs a string. args are integreted as vim
 " expressions, converted to a string and then concatinated (interposed with <space>) with the overall string/command
 " Backtick Expressions: - ":vnew `=tempname()`"
@@ -828,12 +829,12 @@ endfunc
 " "leader cli" To start collecting lines, "leader cll" to collect the visual selection
 nnoremap <leader>cli :call CollectLinesInit()<cr>
 func! CollectLinesInit()
-  " let g:colLinesFileName = tempname() 
+  " let g:colLinesFileName = tempname()
   let g:colLinesFileName = $HOME . '/.vim/notes/CollectedLines7.txt'
-  exe 'vsplit' g:colLinesFileName  
+  exe 'vsplit' g:colLinesFileName
   " let g:colLineBufNr = bufnr('%')
   write
-  call writefile( ['# Collected Lines 10:', ''], g:colLinesFileName, 'a' ) 
+  call writefile( ['# Collected Lines 10:', ''], g:colLinesFileName, 'a' )
   edit
   " checktime
   wincmd p
@@ -897,7 +898,7 @@ endfun
 " call CSVBufferFromParagraph()
 " eins,zwei,drei
 " 1,23,334
-" 44,6,6 
+" 44,6,6
 
 " Detect CSV delimiter in paragraph using a temp csv.vim buffer
 fun! FindCSVDelimiterInParagraph ()
@@ -913,7 +914,7 @@ fun! ShowAsciiTableOfVisualSelection () range
   " This process will involve temp windows/buffers, we need this var to go back:
   let l:startWindowNr = winnr()
   " Paste the visual selection into a new split buffer
-  let l:visSelLines = getline( a:firstline, a:lastline) 
+  let l:visSelLines = getline( a:firstline, a:lastline)
   exec 'vnew'
   call append( 1, l:visSelLines )
   exec 'normal dd'
@@ -923,7 +924,7 @@ fun! ShowAsciiTableOfVisualSelection () range
   " Produces the Asciitable in a split below and jump to it
   exec 'CSVTabularize'
   " Copy then dispose the buffer
-  let g:asciiLines = getline( 1, line('$') ) 
+  let g:asciiLines = getline( 1, line('$') )
   exec 'bd!'
   " Also dispose the csv.vim buffer
   " Issue: Is this save? / Can never dispose the original buffer?
@@ -937,7 +938,7 @@ endfun
 " '<,'>call ShowAsciiTableOfVisualSelection()
 " eins,zwei,drei
 " 1,23,334
-" 44,6,6 
+" 44,6,6
 " This will then paste this Ascii table just below the CSV lines
 " ┌─────┬─────┬─────┐
 " │ eins│ zwei│ drei│
@@ -951,11 +952,11 @@ endfun
 " on this csv text:
 " eins,zwei,drei
 " 1,23,334
-" 44,6,6 
+" 44,6,6
 command! -range -nargs=1 OpenRangeInExcel <line1>,<line2>call OpenRangeInExcel( <args> )
 fun! OpenRangeInExcel ( origDelim ) range
   " get CSV text from range in current buffer
-  let l:linesCSV = getline( a:firstline, a:lastline) 
+  let l:linesCSV = getline( a:firstline, a:lastline)
   " Substitute the orig delimiter to Excels preferred one
   let l:linesExcelCSV = SubstituteInLines( l:linesCSV, a:origDelim, ';' )
   "

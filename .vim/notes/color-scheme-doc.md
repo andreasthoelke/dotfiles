@@ -26,7 +26,7 @@ verbose hi DataConstructor
 hi! MyTest1 guifg=#E0306F
 hi! def link vimCommentTitle MyTest1
 
-
+Note: The main colors are now defined in ~/.vim/colors/munsell-blue-molokai.vim
 
 ## Purescript Haskell Colors
 

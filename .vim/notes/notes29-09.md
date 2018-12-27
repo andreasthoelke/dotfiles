@@ -1,6 +1,6 @@
 ## Housekeeping & Cache Files
 
-### Shada 
+### Shada
   * `ShadaClear` does: "!rm" . ' ~/.local/share/nvim/shada/main.shada'
 
   * Marks save format:
@@ -88,12 +88,12 @@ http://nosubstance.me/post/mutt-secret-sauce/
   * list features plugins
   * refactor into smaller scripts?
   * use standardized comments/section formatting
-      * that allows 
+      * that allows
         * automatic folding
   * document processes with https://asciinema.org/ (list command strokes, include comments, include
       a clickable table of contents)
 
-## Searching 
+## Searching
   * `q/` search history
   * `HelpGrep` to seach vim help (rename?)
 
@@ -121,7 +121,7 @@ H/L maps
   word motion for camel casing?
 
 
-## Chrome Bookmarks: 
+## Chrome Bookmarks:
 A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookmarks`
 {
   "date_added": "13151100891640297",
@@ -154,7 +154,7 @@ A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookm
 Sync markdown on leave insert
 
 add #to-learn tags onto mappings/tips? haskell conclusions?
-remind about these in the notes taking app? 
+remind about these in the notes taking app?
 
 * use the conceil feature to highlight code/keywords/tags in haskell and vim comments
 * include tags for folding → }}}
@@ -179,9 +179,9 @@ there is also vim-pencil and http://vimwiki.github.io/ and vim-orgmode
 
 ## Rich Text Comments In Referened Meta File
 
-Take mark-up comment meta files 
+Take mark-up comment meta files
 A list of record that refer to line numbers in different files
-Will show expand tags in the runnable source file to see the notes.  
+Will show expand tags in the runnable source file to see the notes.
 
 
 
@@ -192,7 +192,7 @@ Will show expand tags in the runnable source file to see the notes.
 * navigate/format hyperlinks/weblinks
     * in vim(help) these are tags. can I create/use haskell/markdown tags? (is tagbar related?)
     * make grep search for a text tag through most recent files? show first result in split?
-* learn markdown editing 
+* learn markdown editing
     * how to format/indent lists?
 
 * haskell/ps comments support syntax highlight for code blocks?
@@ -281,7 +281,7 @@ Folding
 * code block to Gist: https://github.com/mattn/gist-vim
 
 send meeting invites quickly
-  show browser win at location - 
+  show browser win at location -
   show e.g. a bookmark timebuddy, google search?
 
 
@@ -347,7 +347,7 @@ Ctrl+v: split current window vertically
 when fuzzy typing to select a buffer in ctrlP, the filenate (not the folderpath) should be preferred
 
 
-use `du` mapping? 
+use `du` mapping?
 changed/hunks?
 
 rename with curent path shown
@@ -359,13 +359,13 @@ can I check those or is this implemented in the vim orgmode?
 
 
 no line numbers in narrow windows?
-use `yon` 
+use `yon`
 
 
 
 reactivate goyo for notes taking?
 
-also check outhttps://github.com/reedes/vim-pencil 
+also check outhttps://github.com/reedes/vim-pencil
 
 make "O" mapping go up/just push a line below while cursor stays set
 
@@ -376,17 +376,17 @@ update plugin/see plugin changes file
 --- TODO: FINISH THIS SUMMARY, MAPPING AND DOCS
 closing *buffers* and or windows and/or tabs:
 - "gx" only closes the buffer but leaves windows and tab in tact
-- 
+-
 
 -- PUT THIS UNDER MAPPING KEYS DOCU?
 what are sort of 'leader keys' with cound preceed other keys in sequences?
-- can't be  leading-sequence keys: b, n, ., 
-- potential leading-sequence keys: q, [, ], 
+- can't be  leading-sequence keys: b, n, .,
+- potential leading-sequence keys: q, [, ],
 
 
 ## Karabiner
 
-### Config path 
+### Config path
   * `~/.config/karabiner/karabiner.json`
 
 ### Create a Karabiner complex modifications mapping
@@ -433,7 +433,7 @@ Command history Issue: needs two c-c to exit? or `c-w c`
 how to find a line that includes "abbrev" and "Hoogle" in termin1.vim?
 
 * syntax highlighting in :Find search results should should somehow set the appropriate syntax (though there may be different files types)
-* dim something out (grey) if it is in ()! 
+* dim something out (grey) if it is in ()!
 
 navigate .md /markdown files. e.g. next bulletpoint/not bullet point
  * there is the tagbar nav. c-n/p then p to jump file and P to show in preview window
@@ -441,17 +441,17 @@ navigate .md /markdown files. e.g. next bulletpoint/not bullet point
 document regex/wildcards in search. e.g. "/eins.*zwei"
 how is this consistent with ctrlp filename search?
 
-list of unsaved buffer (status indicator count?) 
+list of unsaved buffer (status indicator count?)
   => just c-p! note yellow buffers
      * save buffer from ctrlP buffer selector?
 else it will prompt me. however will jump to other tabs
 
-search - find within a range of lines /paragraph 
-search not just the buffer but predefined groups of files (vim config files, haskell examples code/notes) 
+search - find within a range of lines /paragraph
+search not just the buffer but predefined groups of files (vim config files, haskell examples code/notes)
 
 vim-help syntax sometimes seems broken - need to run `set synatx=help`
 
-make `rm -r` commands move to trash? 
+make `rm -r` commands move to trash?
 make a file remember it's last set syntax? via shada?
 vim help in split window still open at the bottom
 
@@ -467,7 +467,7 @@ i can then leave open different views on a buffer/long file
 save buffer without switching to it, save all buffers?
   obsolete with autosave?
 
-* set up unicode mappings (purescript unicode in vimrc) for these lib functions: 
+* set up unicode mappings (purescript unicode in vimrc) for these lib functions:
   - https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions/basic-syntax-extensions
 
 `cursor line?`
@@ -479,7 +479,7 @@ gitgutter and ale toggles as `yog/a`?
 have a quicklink/bookmarks drawer?
 
 ## Next:
-test out Ctrlp undo, line, dir(!) mode!! 
+test out Ctrlp undo, line, dir(!) mode!!
   can I finally navigate down in dir mode?
 
 insert
@@ -611,7 +611,7 @@ how about folders?
 
 scroll text window to max left - "(" only jumps to first char
 
-ctrlP typing in buffers selector refers to files name with preference 
+ctrlP typing in buffers selector refers to files name with preference
   .. not to some char in the long folderpath!
 
 what are buffertags?
@@ -646,7 +646,7 @@ https://medium.com/@olegsmetanin/vim-recipes-ac65f75f26bf
 
 " Deoplete: code completion tool
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Use TAB for code completion 
+" Use TAB for code completion
 Plug 'ervandew/supertab'
 " Enable deoplete at startup
 let g:deoplete#enable_at_startup = 1
@@ -709,6 +709,9 @@ config save a grep search through all info sources for:
 
 # Current Todos
 
+  search should not add to jumplist - only the beginning
+    many other motions should add to the jumplist
+
   nyaovim fontsize, popup test, minibrowser
   vifm: show last changed in hours vs size!
   Grepper: Test running in Haskell hello44 vs Homedir
@@ -717,7 +720,6 @@ config save a grep search through all info sources for:
 
   Minimal Tab/status line plugin (to test)
   Buffer manager plugin
-  2 git plugins to test
 
   The `Term` command allows running `history` and `node` repl
   * set up callbacks
@@ -731,7 +733,7 @@ config save a grep search through all info sources for:
 
   show g:auto_save in status bar
 
-  cd in the underlying shell: 
+  cd in the underlying shell:
     * can now in Divish buffer copy the current path to clipboard and cd in shell: `let @*=@%`, `c-z`, `c-[` for normal mode, `P<cr>`
     * there should be a Tmux based solution
 
@@ -757,8 +759,9 @@ can other 'lists' (of pins, marks) be used like the arglist?
 if i have yanked a line (with line bread at the end) how do i past it at the mid of a line, without linebreaking
 
 a start screen?
-https://github.com/mhinz/vim-startify 
+https://github.com/mhinz/vim-startify
 
+the changelist enables `g;` but it does not seem to be persisted/show up after vim restart
 
 consider using ctrlp to create files/folders? see ctrlp help
         f)  Type the name of a non-existent file and press <c-y> to create it. Mark a
@@ -768,13 +771,23 @@ consider using ctrlp to create files/folders? see ctrlp help
             E.g. Using 'newdir/newfile.txt' will create a directory named 'newdir' as
                  well as a file named 'newfile.txt'.
 
+## Easy-clip
+  * delete does not change clipboard
+  * `S` substitute motion
+  * yank stack use with <leader>"<regnum>
+  * persisted and shared with vim instances
 
 ## Temp next
-
+cut/ move map
 
 ## Commit/ Release notes
 
-* close all Markbar wins on VimLeave [cleanup](../../.vimrc#Cleanup:) 
+* use easyclip:
+  * delete does not change clipboard
+  * `S` substitute motion
+  * yank stack use with <leader>"<regnum>
+  * persisted and shared with vim instances
+* close all Markbar wins on VimLeave [cleanup](../../.vimrc#Cleanup:)
 * include file-local marks
 * deleted global marks re-apear after vim-restart
 * ctrlP MRU map to `gp`

@@ -15,7 +15,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'kshenoy/vim-ctrlp-args'
 
 " Plug 'justinmk/vim-dirvish'
-" Added a convenient "silent" 'z' buffer local map for the Shdo command window 
+" Added a convenient "silent" 'z' buffer local map for the Shdo command window
 Plug 'andreasthoelke/vim-dirvish'
 " test these
 " Plug 'vifm/neovim-vifm'
@@ -30,10 +30,17 @@ Plug 'skywind3000/vim-preview'
 Plug 'junegunn/vim-peekaboo'
 " Vim clipboard features: Delete is not yank, substitute operator, yank buffer
 " Plug 'svermeulen/vim-easyclip'
+Plug 'andreasthoelke/vim-easyclip'
+" Briefly highlight the yanked region
+Plug 'machakann/vim-highlightedyank'
+" Allow to swap paste history stack in place
+" Plug 'maxbrunsfeld/vim-yankstack'
+
 " Display marks with nearby code
 " Plug 'Yilin-Yang/vim-markbar'
+Plug 'Yilin-Yang/vim-markbar',  { 'branch': 'issue_12' }
 " Changed header style
-Plug 'andreasthoelke/vim-markbar'
+" Plug 'andreasthoelke/vim-markbar'
 
 " Completion: -------------------------------------
 " Plug 'ajh17/VimCompletesMe'
@@ -233,6 +240,8 @@ Plug 'radenling/vim-dispatch-neovim'
 
 call plug#end()
 " ----------------------------------------------------------------------------------
+
+" General Settings: ---------------------------------------
 
 " This needs to be set early in the vimrc, as the mappings below will refer to it!
 let mapleader="\<Space>"
@@ -579,7 +588,7 @@ highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 " STEP1: FIND THE SYNATX GROUP YOU WANT TO CHANGE:
 " Show the syntax group(s) of the word under the cursor
 " The first pasted line is the outermost syntax group eg. vimLineComment, the last line is actual syntax group/id for the work
-" under the cursor, e.g. vimCommentTitle 
+" under the cursor, e.g. vimCommentTitle
 nnoremap <leader>hsg :call SyntaxStack()<CR>
 function! SyntaxStack()
     let l:synList = map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')
@@ -587,16 +596,16 @@ function! SyntaxStack()
 endfunc
 
 " STEP2A: If you want a color that is already present in the in the colorscheme
-" you can just find the name of the highlight group/id (see below) 
+" you can just find the name of the highlight group/id (see below)
 " Show the syntax group and the related active highlightgroup
 nnoremap <leader>hhg :call SyntaxGroup()<CR>
-function! SyntaxGroup()                                                            
-    let l:s = synID(line('.'), col('.'), 1)                                       
+function! SyntaxGroup()
+    let l:s = synID(line('.'), col('.'), 1)
     " echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
     call append(line('.'), synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name'))
 endfun
 " .. and then "hi! def link syntaxGroup Highlightgroup"
-" example: "highlight! def link vimCommentTitle Error"              
+" example: "highlight! def link vimCommentTitle Error"
 
 " Overview of existing highlight groups:
 " Show a nice output of how all the vim-highlight groups are colored
@@ -607,8 +616,8 @@ command! HighlightTest exec "source $VIMRUNTIME/syntax/hitest.vim"
 " you will need the hex-color value of that color and set up a new/custom highlight group
 " Put cursor over a nice color, below pastes the highlight group/color values
 nnoremap <leader>hsc :call SyntaxColor()<CR>
-function! SyntaxColor()                                                            
-    let l:s = synID(line('.'), col('.'), 1)                                       
+function! SyntaxColor()
+    let l:s = synID(line('.'), col('.'), 1)
     let l:hlname = synIDattr(synIDtrans(l:s), 'name')
     exec 'RedirMessagesBuf' 'highlight' l:hlname
     " exec ',ColorHighlight'
@@ -618,7 +627,7 @@ endfun
 nnoremap <leader>hcc :,ColorHighlight<CR>
 " TODO range mapping
 
-" Example: 
+" Example:
 " highlight! MyTest1 guifg=#E0306F
 " highlight! def link vimCommentTitle MyTest1
 " highlight! def link vimCommentTitle Function
@@ -677,7 +686,7 @@ hi link jsonCommentError				Error
 " highlight! Normal guifg=Yellow guibg=Green
 " highlight! Normal guifg=White guibg=Black
 
-highlight! def link vimMapRhs Macro 
+highlight! def link vimMapRhs Macro
 
 " highlight! Normal guifg=Yellow guibg=Green
 " Function       xxx ctermfg=10 guifg=#D1FA71
@@ -802,7 +811,7 @@ set mouse=a
 " Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
 " set ttymouse=xterm2
 
-set guioptions = 
+set guioptions =
 " set guioptions-=T
 " set guioptions-=m
 " set guioptions-=r
@@ -1129,7 +1138,10 @@ nnoremap <silent><leader>sv :so $MYVIMRC<cr>
 nnoremap <leader>s} "ty}:@t<cr>
 " TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
 " the current line
-nnoremap <leader>ss "tyy:@t<cr>
+nnoremap <leader>ss :exec getline('.')<cr>
+" same as above, but clutters the register
+nnoremap <leader>si "tyy:@t<cr>
+
 " free mappings? <leader>s..
 " TODO these map don't seem ideal. mnemonic not destinct enough?
 command! SourceLine :normal yy:@"<cr>:echo 'Line sourced!'<cr>
@@ -2599,6 +2611,9 @@ nnoremap <localleader>qq :q<cr>
 
 nnoremap <localleader>t. :t.<cr>
 
+" Vim Plug:
+nnoremap <leader>pc :PlugClean<cr>
+nnoremap <leader>pi :PlugInstall<cr>
 
 " General Leader Cmd Shortcut Maps: ---------------------------------
 
@@ -2924,27 +2939,77 @@ let g:tagbar_map_showproto = ''
 " let g:peekaboo_delay = 0
 let g:peekaboo_prefix = '<leader>'
 
+" A yank in vim writes to the system clipboard, and a system copy is available to paste in vim. but gets overwritten at the first yank.
+set clipboard=unnamed
+
+" Easyclip: ----------------------------------------
+let g:EasyClipUseYankDefaults = 1
+let g:EasyClipUseCutDefaults = 0
+let g:EasyClipUsePasteDefaults = 1
+let g:EasyClipEnableBlackHoleRedirect = 1
+let g:EasyClipUsePasteToggleDefaults = 0
+let g:EasyClipUseSubstituteDefaults = 0
+
+" Paste features
+let g:EasyClipAutoFormat = 1
+nmap <leader>cf <plug>EasyClipToggleFormattedPaste
+imap <c-v> <plug>EasyClipInsertModePaste
+cmap <c-v> <plug>EasyClipCommandModePaste
+" Also use
+
+" This keeps the cursor at the position where the paste occured
+nmap p <Plug>G_EasyClipPasteAfter`[
+nmap P <Plug>G_EasyClipPasteBefore`[
+" Note: not sure what these do - the cursor pos is not maintained. now added "`[" which moves the cursor to the beginning
+xmap p <Plug>XEasyClipPaste`[
+xmap P <Plug>XEasyClipPaste`[
+xmap s <Plug>XEasyClipPaste`[
+" Subtitute motion
+nmap S <Plug>G_SubstituteOverMotionMap
+" nmap S <Plug>G_SubstituteToEndOfLine
+nmap SS <Plug>SubstituteLine
+
+" Cut Move:
+" nmap mmm <Plug>MoveMotionPlug
+" xmap m <Plug>MoveMotionXPlug
+" nmap mm <Plug>MoveMotionLinePlug
+
+" Yank Buffer History: Save yank history to file - allows to paste in other vim instance
+let g:EasyClipShareYanks = 1
+" Prefer to have a clean view in the visual menu
+let g:EasyClipYankHistorySize = 6
+" Use a menu to select from the yank buffer
+" Note: use <leader>"<regnumber> instead
+nnoremap <leader>P :IPasteBefore<cr>
+
+" Easyclip: ----------------------------------------
+
+
+" Vim Highlighedhank:
+let g:highlightedyank_highlight_duration = 700
+hi! HighlightedyankRegion guibg=#585858
+
 
 " Marks: ----------------------------------------------------------------
 
 let g:markbar_marks_to_display = 'abcdefghijklnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 " generate maps to include a markbar update in the map
-func! MapMarks ()
-  " Note this lacks the o, m! for open an update maps
-  let l:labels = split( g:markbar_marks_to_display, '\zs') 
-  for label in l:labels
-    exec 'nmap m'  . label .  ' m' . l:label . ':MarkbarUpdate<cr>'
-    " exec "nmap \'" . label . " \'" . l:label 
-    exec 'nnoremap M'  . label .  ' :delm ' . l:label . '<cr>' . ':MarkbarUpdate<cr>' . ':call ForceGlobalRemovalMarks()<cr>'
-  endfor
-endfunc
-call MapMarks()
+" func! MapMarks ()
+"   " Note this lacks the o, m! for open an update maps
+"   let l:labels = split( g:markbar_marks_to_display, '\zs')
+"   for label in l:labels
+"     exec 'nmap m'  . label .  ' m' . l:label . ':MarkbarUpdate<cr>'
+"     " exec "nmap \'" . label . " \'" . l:label
+"     exec 'nnoremap M'  . label .  ' :delm ' . l:label . '<cr>' . ':MarkbarUpdate<cr>' . ':call ForceGlobalRemovalMarks()<cr>'
+"   endfor
+" endfunc
+" call MapMarks()
 
 " Only use upper case/ global marks, so make them quicker to type?"
 " func! RemapUppercaseMarks ()
 "   " Note this lacks the o, m!
-"   let l:labels = split("abcdefghijklnpqrstuvwxyz", '\zs') 
+"   let l:labels = split("abcdefghijklnpqrstuvwxyz", '\zs')
 "   for label in l:labels
 "     exec 'nmap m'  . label .  ' m' . toupper( l:label ) . ':MarkbarUpdate<cr>'
 "     exec "nmap \'" . label . " \'" . toupper( l:label )
@@ -2997,7 +3062,7 @@ let g:markbar_context_indent_block_NOWARN = 1
 
 " number of lines of context to retrieve per mark
 let g:markbar_num_lines_context = 2
-" TODO: changing this global var updates the markbar display automatically! 
+" TODO: changing this global var updates the markbar display automatically!
 
 let g:markbar_close_after_go_to = v:false
 
@@ -3071,9 +3136,9 @@ augroup END
 " Quickfix Navigation: - "leader qq", "]q" with cursor in code, "c-n/p" and "go" with cursor in quickfix list
 autocmd! BufWinEnter quickfix call QuickfixMaps()
 func! QuickfixMaps()
-  nnoremap <buffer> go :.cc<cr>:wincmd p<cr>      
-  nnoremap <buffer> <c-n> :cnext<cr>:wincmd p<cr> 
-  nnoremap <buffer> <c-p> :cprev<cr>:wincmd p<cr> 
+  nnoremap <buffer> go :.cc<cr>:wincmd p<cr>
+  nnoremap <buffer> <c-n> :cnext<cr>:wincmd p<cr>
+  nnoremap <buffer> <c-p> :cprev<cr>:wincmd p<cr>
   nnoremap <silent><buffer> p :PreviewQuickfix<cr>
   nnoremap <silent><buffer> P :PreviewClose<cr>
   " autocmd FileType qf nnoremap <silent><buffer> p :PreviewQuickfix<cr>
@@ -3559,7 +3624,7 @@ let g:tagbar_sort = 0
 " set tags=tags;/,codex.tags;/
 set tags=/,codex.tags;/
 " to tell it to use the ./tags
-" set tags+=tags 
+" set tags+=tags
 " TODO: run ctags manually? how would tags work for purescript
 " ctags -f - --format=2 --excmd=pattern --extra= --fields=nksaSmt myfile
 
@@ -3789,7 +3854,7 @@ function! TabDo(command)
   execute 'tabdo ' . a:command
   execute 'tabn ' . currTab
 endfunction
-com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>) 
+com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
 com! -nargs=+ -complete=command Tabdofast noautocmd call TabDo(<q-args>)
 
 command! JSONFormat exec "%!python -m json.tool"
