@@ -276,11 +276,20 @@ On the right side move the cursor to the first conflicted hunk (e.g. using “]c
 9. Now (after you saved the file) in Gstatus “-“ on the file to add it to the index/state. (you can’t yet commit it, all conflicted files have to be resolved)
 
 ## Sync a fork
+
+### Using github
+  * on the github page of your fork it will show that there were upstream commits
+    * click compare
+    * change base to your fork
+    * after the page refresh click compare between forks in the text above
+    * change head to the upstream repo
+
+### Using git
   * git remote add upstream https://github.com/Yilin-Yang/vim-markbar.git
   * `git remote -v` to view remote repos
   * `git fetch upstream` creates a new local branch that can be ..
   * `git merge upstream/master` merged into master.
   * note this caused an error last time I tried. even `--allow-unrelated-histories` dit not work
-
+  * `gs` shows what needs to be done to still do a merge. basically merge conflict markups in some files have to be resolved manually.
 
 

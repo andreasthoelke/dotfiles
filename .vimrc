@@ -38,9 +38,8 @@ Plug 'ntpeters/vim-better-whitespace'
 
 " Display marks with nearby code
 " Plug 'Yilin-Yang/vim-markbar'
-Plug 'Yilin-Yang/vim-markbar',  { 'branch': 'issue_12' }
 " Changed header style
-" Plug 'andreasthoelke/vim-markbar'
+Plug 'andreasthoelke/vim-markbar'
 
 " Completion: -------------------------------------
 " Plug 'ajh17/VimCompletesMe'
