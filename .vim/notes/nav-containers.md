@@ -532,3 +532,26 @@ arglists and marks:
 
 
 
+## Editing
+
+### Deleting parts of a line
+  * delete till end of the line `C` or `d$`
+  * delete all chars `cc` or `dD`
+  * delete line `dd`
+
+### EasyClip notes
+  * delete does not change clipboard, but <localleader>d does
+  * `S` substitute motion
+  * yank stack use with <leader>"<regnum>
+    * persisted and shared with vim instances
+
+> Exercise: Sort these arguments
+fnName( drei, zwei, eins, vier)
+fnName( eins, zwei, drei, vier)  
+fnName( drei, zwei, eins, vier)  
+> Solution: 
+let @r='yIaWWyw"1SwBBSw0j'
+nmap <leader>ab :normal yIaWWyw"1SwBBSw0j<cr> 
+> use @@ to rerun the macro
+
+

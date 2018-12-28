@@ -33,8 +33,8 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'andreasthoelke/vim-easyclip'
 " Briefly highlight the yanked region
 Plug 'machakann/vim-highlightedyank'
-" Allow to swap paste history stack in place
-" Plug 'maxbrunsfeld/vim-yankstack'
+" Highlight trailing whitespace
+Plug 'ntpeters/vim-better-whitespace'
 
 " Display marks with nearby code
 " Plug 'Yilin-Yang/vim-markbar'
@@ -303,6 +303,7 @@ vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 
 
 " Airline Settings: --------------------------------------------------------------
+" TODO delete airline setting when lightline settings are done
 let g:airline_theme='simple'
 " Powerline fonts work but the > seperator doesn't seem expressive for tabs to status
 let g:airline_powerline_fonts = 0
@@ -334,12 +335,6 @@ let g:airline_section_y = "%{airline#util#wrap(airline#extensions#hunks#get_hunk
 " Airline Sections: -------
 
 " Minor Settings:
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline_highlighting_cache = 0
-let g:airline_detect_modified=0
-let g:airline_inactive_collapse=0
-let g:airline_exclude_preview = 0
-
 " abbriviate vim-mode (e.g. "Normal" to "N"):
 let g:airline_mode_map = {
       \ '__' : '-',
@@ -657,8 +652,14 @@ highlight FoldColumn guibg=gray10 guifg=gray20
 hi        LineNr     guibg=gray10 guifg=gray15
 hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
 
+" Trailing Whitespace:
+" vim-better-whitespace plugin
+let g:better_whitespace_guicolor='#252525'
+let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
+" use "StripWhitespace" and "ToggleWhitespace"
+" Notes: highlight TrailingWhitespace guibg=#333333 match TrailingWhitespace /\s\+$/ Remove trailing whitespace: ":%s/\s\+$//e" autocmd BufEnter,WinEnter * call matchadd('Error', '\v\s+$', -1) autocmd BufEnter * call matchadd('Error', '\v\s+$', -1)
 
-" i can RedirMessagesBuf hi Folded
+" run: RedirMessagesBuf hi Folded
 " to get:
 " guifg=#4B5B61 guibg=#0B0B0B
 " Folded         xxx ctermfg=4 ctermbg=248 guifg=#0087af guibg=#afd7ff
@@ -1138,9 +1139,9 @@ nnoremap <silent><leader>sv :so $MYVIMRC<cr>
 nnoremap <leader>s} "ty}:@t<cr>
 " TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
 " the current line
-nnoremap <leader>ss :exec getline('.')<cr>
+nnoremap <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
 " same as above, but clutters the register
-nnoremap <leader>si "tyy:@t<cr>
+" nnoremap <leader>si "tyy:@t<cr>
 
 " free mappings? <leader>s..
 " TODO these map don't seem ideal. mnemonic not destinct enough?
@@ -1709,7 +1710,7 @@ nnoremap <BS> J
 nnoremap <localleader>> i <Esc>
 
 " Insert line. Related to `]<space>`
-nnoremap O o<Esc>
+" nnoremap O o<Esc> 
 
 
 " EasyAlign: -----------------------------
@@ -1891,9 +1892,6 @@ endfun
 " TIP: "<C-z>" to suspend nvim and get back to the terminal. then run "fg" to
 " get back to nvim.
 " TODO: delete long space between words: "elldw" example: ^ord            next
-" TIP: remove trailing whitespace: ":%s/\s\+$//e"
-" Show trailing whitespace only after some text (ignores blank lines): /\S\zs\s\+$
-" autocmd BufEnter,WinEnter * call matchadd('Error', '\v\s+$', -1)
 
 " TIP: use ":earlier" and ":later" to jump the ":undolist" back and forth in
 " *time* (disregarding branches of the undotree). use ":earlier 10m" or ".. 5h" to go back 10 minutes/ 5 hours
@@ -2233,7 +2231,7 @@ vnoremap / /\v
 vnoremap // y/<C-R>"<CR>
 
 
-                 
+
 " HOW TO SEARCH:
 
 
@@ -2398,7 +2396,7 @@ let g:ctrlp_custom_ignore = {
     \ 'dir':  '\.git$\|\.cache$\|\.stack$\|\.stack-work$\|vimtmp\|undo\bower_components$\|dist$\|node_modules$\|project_files$\|test$',
     \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 " This needs a restart to take effect.
-  
+
 let g:ctrlp_root_markers = ['src/', '.gitignore', 'package.yaml', '.git/']
 let g:ctrlp_by_filename = 1
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:20,results:40'
@@ -2588,7 +2586,7 @@ autocmd! TabLeave * let g:lasttab = tabpagenr()
 " nnoremap <silent> ð :bp<cr>
 " Next/Prev navigation works via <c-shift-f> <c-shift-d> (Karabiner) <Option/Alt>f / <A-f> / <A-d>
 " Tip Option Alt Key Mappings: get these chars by typing <option+key> in insert mode
-                                                          
+
 " TODO this map isn't really used/appropriate?
 " Prevent closing a window when closing a buffer
 " nnoremap \X :bp<bar>sp<bar>bn<bar>bd!<CR>
@@ -2963,16 +2961,16 @@ nmap P <Plug>G_EasyClipPasteBefore`[
 " Note: not sure what these do - the cursor pos is not maintained. now added "`[" which moves the cursor to the beginning
 xmap p <Plug>XEasyClipPaste`[
 xmap P <Plug>XEasyClipPaste`[
-xmap s <Plug>XEasyClipPaste`[
+xmap S <Plug>XEasyClipPaste`[
 " Subtitute motion
 nmap S <Plug>G_SubstituteOverMotionMap
 " nmap S <Plug>G_SubstituteToEndOfLine
 nmap SS <Plug>SubstituteLine
 
 " Cut Move:
-" nmap mmm <Plug>MoveMotionPlug
-" xmap m <Plug>MoveMotionXPlug
-" nmap mm <Plug>MoveMotionLinePlug
+nmap <localleader>d <Plug>MoveMotionPlug
+xmap <localleader>d <Plug>MoveMotionXPlug
+nmap <localleader>dd <Plug>MoveMotionLinePlug
 
 " Yank Buffer History: Save yank history to file - allows to paste in other vim instance
 let g:EasyClipShareYanks = 1
@@ -3169,7 +3167,7 @@ vmap <silent> gsf :call GrepSearch("visSel", "file")<cr>
 nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 
-  
+
 " Seach Vim Help and fill the quickfix list with the results
 command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
 cnoreabbrev hg HelpGrep
@@ -3410,7 +3408,7 @@ fun! HaskellStackRun()
     let commString = "20Term stack build && stack exec " . projectName . "-exe"
     " let StackRunIO = jobstart(commString, Cbs2)
     " exec "20Term stack build"
-    
+
     exec commString
 endfun
 " example command:

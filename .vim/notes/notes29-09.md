@@ -365,7 +365,7 @@ use `yon`
 
 reactivate goyo for notes taking?
 
-also check outhttps://github.com/reedes/vim-pencil
+also check out https://github.com/reedes/vim-pencil
 
 make "O" mapping go up/just push a line below while cursor stays set
 
@@ -761,7 +761,6 @@ if i have yanked a line (with line bread at the end) how do i past it at the mid
 a start screen?
 https://github.com/mhinz/vim-startify
 
-the changelist enables `g;` but it does not seem to be persisted/show up after vim restart
 
 consider using ctrlp to create files/folders? see ctrlp help
         f)  Type the name of a non-existent file and press <c-y> to create it. Mark a
@@ -779,17 +778,21 @@ consider using ctrlp to create files/folders? see ctrlp help
 
 ## Temp next
 cut/ move map
+doc targets, substitute
+delete undo for vimrc. why is this so long?
+the changelist enables `g;` but it does not seem to be persisted/show up after vim restart
 
 ## Commit/ Release notes
 
-* use easyclip:
+* vim-better-whitespace plugin
+* easyclip:
   * delete does not change clipboard
   * `S` substitute motion
   * yank stack use with <leader>"<regnum>
   * persisted and shared with vim instances
 * close all Markbar wins on VimLeave [cleanup](../../.vimrc#Cleanup:)
 * include file-local marks
-* deleted global marks re-apear after vim-restart
+* refresh shada to avoid deleted global marks re-apear after vim-restart
 * ctrlP MRU map to `gp`
 * dont jump to markbar win on open
 * use `mo` and `to` to toggle markbar & tagbar
