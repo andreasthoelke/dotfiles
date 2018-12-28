@@ -1720,7 +1720,11 @@ nnoremap J i<CR><Esc>
 nnoremap <BS> J
 
 " Push text to the right
-nnoremap <localleader>> i <Esc>
+" nnoremap <localleader>> i <Esc>
+" Make it repeatable so the cursor follows the text to the right
+nmap <Plug>PushTextRight i <esc>l:call repeat#set("\<Plug>PushTextRight")<cr>
+nmap <localleader>> <Plug>PushTextRight
+
 
 " Insert line. Related to `]<space>`
 " nnoremap O o<Esc> 
@@ -1884,7 +1888,6 @@ endfun
 " TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
 " paste last command: ":p
 " redirect command echo text to register: :redir @t, then pt, later :redir end
-" change terminal cursor colors: highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 " TIP: :new creates a new buffer, ":read !cat /etc/shells" → append output of the command to the current buffer at cursor positon.
 " run a date/time loop in the shell: "terminal while true; do date; sleep 1; done
 " TIP: The expression register reads-in an arbitary expression into the p-register or insert-mode:
@@ -2913,6 +2916,7 @@ nnoremap glm :call OpenMarkdownPreview()<cr>
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 " ----------------------------------------------------------------------------------
 
+" Terminal: ------------------------------------------------------------------------
 " open a terminal window
 nnoremap <silent> glt :below 20Term<cr>
 
@@ -2920,6 +2924,9 @@ nnoremap <silent> glt :below 20Term<cr>
 " and lots of documentations (TODO refactor this)
 source /Users/andreas.thoelke/.vim/utils/termin1.vim
 
+hi! TermCursorNC guibg=grey guifg=white
+
+" Terminal: ------------------------------------------------------------------------
 
 
 " Tagbar: --------------------------------------------------------------------------

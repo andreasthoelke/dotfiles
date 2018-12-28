@@ -64,7 +64,7 @@ hi PreProc         guifg=#A6E22E
 hi Question        guifg=#66D9EF
 hi Repeat          guifg=#F92672               gui=bold
 hi SpecialChar     guifg=#F92672               gui=bold
-hi SpecialComment  guifg=#7E8E91           
+hi SpecialComment  guifg=#7E8E91
 hi Special         guifg=#66D9EF guibg=bg      gui=italic
 if has("spell")
     hi SpellBad    guisp=#FF0000 gui=undercurl
@@ -96,7 +96,7 @@ hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
 hi Comment         guifg=#60777C
 hi CursorLine                    guibg=#222525
 hi CursorLineNr    guifg=#FD971F               gui=none
-hi LineNr          guifg=#303030 
+hi LineNr          guifg=#303030
 hi NonText         guifg=#465457
 hi SpecialKey      guifg=#465457
 
@@ -183,9 +183,9 @@ hi Visual guibg=#3E3E3E gui=none
 " > where was the highlight set?
 " verbose hi DataConstructor
 
-" * Syntax stack 
+" * Syntax stack
 " `<leader>hsg :call SyntaxStack()`
-" * Syntax group → Highlight group 
+" * Syntax group → Highlight group
 " `<leader>hhg :call SyntaxGroup()`
 " * Highlight group - color values
 " `<leader>hsc :call SyntaxColor()
@@ -211,9 +211,9 @@ hi! Type guifg=#76E0D9 "middle blue"
 " purescriptTypeVar > Identifier
 hi! Identifier guifg=#AAB27C "Misty moss - shift sage yellow from red to green"
 
-" purescriptConstructor 
+" purescriptConstructor
 hi! DataConstructor guifg=#983B4D "smoky topaz red"
-hi! def link purescriptConstructor DataConstructor 
+hi! def link purescriptConstructor DataConstructor
 
 " purescipt Import section
 hi! def link purescriptModule Function
@@ -226,43 +226,43 @@ let g:color_sacramento_green_brighter = '#077D67'
 
 " purescriptNumber > Number
 hi! def link purescriptNumber Number
-exec 'hi! Number guifg=' . g:color_sacramento_green_brighter 
+exec 'hi! Number guifg=' . g:color_sacramento_green_brighter
 
 " purescriptFloat > Float
-exec 'hi! Float guifg=' . g:color_sacramento_green_brighter 
+exec 'hi! Float guifg=' . g:color_sacramento_green_brighter
 
 " purescriptString > String
-exec 'hi! String guifg=' . g:color_sacramento_green_brighter 
+exec 'hi! String guifg=' . g:color_sacramento_green_brighter
 
 " purescriptBoolean > Boolean
-exec 'hi! Boolean guifg=' . g:color_sacramento_green_brighter 
+exec 'hi! Boolean guifg=' . g:color_sacramento_green_brighter
 
 
 let g:color_ming_green_dark = '#3C6B7C '
 let g:color_ming_green = '#3A768C '
 
-" purescriptStructure (data) > Keyword 
-exec 'hi! Keyword guifg=' . g:color_ming_green 
+" purescriptStructure (data) > Keyword
+exec 'hi! Keyword guifg=' . g:color_ming_green
 
 " purescriptOperator > Operator
-exec 'hi! Operator guifg=' . g:color_ming_green 
+exec 'hi! Operator guifg=' . g:color_ming_green
 
 " purescriptDelimiter > Delimiter
-exec 'hi! Delimiter guifg=' . g:color_ming_green 
+exec 'hi! Delimiter guifg=' . g:color_ming_green
 
-" purescriptStatement (do and let) > Statement 
-exec 'hi! Statement guifg=' . g:color_ming_green 
+" purescriptStatement (do and let) > Statement
+exec 'hi! Statement guifg=' . g:color_ming_green
 
 " purescriptConditional > Conditional
-exec 'hi! Conditional guifg=' . g:color_ming_green 
+exec 'hi! Conditional guifg=' . g:color_ming_green
 
 
 " Magit Git colors
-hi! def link fileEntry Function 
-hi! def link diffAdded Type 
-hi! def link diffRemoved Macro 
-hi! def link gitHunk Comment 
-hi! def link diffSubname Comment 
+hi! def link fileEntry Function
+hi! def link diffAdded Type
+hi! def link diffRemoved Macro
+hi! def link gitHunk Comment
+hi! def link diffSubname Comment
 
 " VimScript colors
 hi! Todo guibg=bg guifg=#F92672
@@ -275,39 +275,39 @@ hi! VimOption guifg=#F92672
 hi! def link vimOption String
 
 " Vim help colors
-hi! def link helpHyperTextEntry Type 
-hi! def link helpHyperTextJump DataConstructor 
-hi! def link helpOption DataConstructor 
-hi! def link helpStar DataConstructor 
-hi! def link helpExample DataConstructor 
-hi! def link helpCommand DataConstructor 
+hi! def link helpHyperTextEntry Type
+hi! def link helpHyperTextJump DataConstructor
+hi! def link helpOption DataConstructor
+hi! def link helpStar DataConstructor
+hi! def link helpExample DataConstructor
+hi! def link helpCommand DataConstructor
 
 " Tagbar colors
-hi! def link TagbarSignature Type 
-hi! def link TagbarScope Function 
-hi! def link TagbarType Keyword 
+hi! def link TagbarSignature Type
+hi! def link TagbarScope Function
+hi! def link TagbarType Keyword
 
 " Markdown colors
 hi! Title gui=bold guifg=#0087AF "munsell blue"
 hi! Highlight1 gui=bold guifg=#F6DC69 "vim flashy yellow"
 
-hi! def link mkdHeading Operator 
-hi! def link mkdNonListItemBlock purescriptIdentifier 
+hi! def link mkdHeading Operator
+hi! def link mkdNonListItemBlock purescriptIdentifier
 hi! def link mkdListItemLine purescriptIdentifier
-hi! def link mkdListItemLine mkdListItemLine 
-hi! def link mkdCode Statement 
-hi! def link mkdListItem Type 
+hi! def link mkdListItemLine mkdListItemLine
+hi! def link mkdCode Statement
+hi! def link mkdListItem Type
 " hi! Underlined2 guifg=#3C6B7C guibg=#0C0C0C gui=italic
 " hi! Underlined2 guifg=#BECACD guibg=#0C0C0C gui=italic
 hi! Underlined2 guifg=#077D67 guibg=#0C0C0C gui=italic
-hi! def link mkdInlineURL Underlined2 
-hi! def link mkdLink Underlined2 
-" hi! def link htmlBold htmlBold 
-" hi! def link htmlItalic htmlItalic 
+hi! def link mkdInlineURL Underlined2
+hi! def link mkdLink Underlined2
+" hi! def link htmlBold htmlBold
+" hi! def link htmlItalic htmlItalic
 
 " Dirvish
-hi! def link DirvishPathTail Function 
-hi! def link DirvishArg DataConstructor 
+hi! def link DirvishPathTail Function
+hi! def link DirvishArg DataConstructor
 
 " Markbar
 exec 'hi! DarkHeader guifg=' . g:color_ming_green_dark

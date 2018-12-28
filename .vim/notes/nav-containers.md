@@ -284,6 +284,9 @@ use <c-o> open menu?
   " What actions automatically open folds?
   improve performance of autofolding https://github.com/Konfekt/FastFold
 
+*v:foldstart* *foldstart-variable*
+in tutor docs
+
 ### set foldmethod=marker
 integrate fold chars into comments: `fold-create-marker`
 haskell (∷?) 'foldmarker' 'fmr'	string (default: "{{{,}}}")
@@ -406,6 +409,7 @@ location could be a
 #### Tags
  - `gf`, `c-w` `f/gf` to open tab/split?
 #### Search
+
 #### CtrlP - Args, Buffers, other visit workspaces?
   * how to go back and/or pin/reference the code found?
 #### File explorer
