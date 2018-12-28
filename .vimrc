@@ -130,8 +130,6 @@ Plug 'sjl/vitality.vim'
 " Show undotree with inline diffs and search
 " Plug 'simnalamburt/vim-mundo'
 Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in display
-" Alternative undotree visualizer that does not allow inline diffs and search
-" Plug 'mbbill/undotree'
 
 " Autosaves buffers on specific events
 Plug '907th/vim-auto-save'
@@ -373,6 +371,21 @@ set shortmess=aoOtT
 
 " Persistence Saving: -----------------------------------------------------------------
 
+" Undo: -----------------------
+function! ClearUndo()
+  let choice = confirm("Clear undo information?", "&Yes\n&No", 2)
+  if choice == 1
+    let old_undolevels = &undolevels
+    set undolevels=-1
+    exe "normal a \<Bs>\<Esc>"
+    let &undolevels = old_undolevels
+    echo "done."
+  endif
+endfunction
+command! ClearUndo :call ClearUndo()<CR>
+" echom undofile('.')
+" /Users/andreas.thoelke/vimtmp/undo/%Users%andreas.thoelke
+" echo &undolevels 
 
 " Mundo: ----------------------
 let g:mundo_width = 50
@@ -653,7 +666,7 @@ hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
 
 " Trailing Whitespace:
 " vim-better-whitespace plugin
-let g:better_whitespace_guicolor='#252525'
+let g:better_whitespace_guicolor='#333333'
 let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
 " use "StripWhitespace" and "ToggleWhitespace"
 " Notes: highlight TrailingWhitespace guibg=#333333 match TrailingWhitespace /\s\+$/ Remove trailing whitespace: ":%s/\s\+$//e" autocmd BufEnter,WinEnter * call matchadd('Error', '\v\s+$', -1) autocmd BufEnter * call matchadd('Error', '\v\s+$', -1)
@@ -1139,6 +1152,7 @@ nnoremap <leader>s} "ty}:@t<cr>
 " TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
 " the current line
 nnoremap <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
+nnoremap <leader>se :exec getline('.')<cr>
 " same as above, but clutters the register
 " nnoremap <leader>si "tyy:@t<cr>
 
@@ -2992,28 +3006,16 @@ hi! HighlightedyankRegion guibg=#585858
 let g:markbar_marks_to_display = 'abcdefghijklnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 " generate maps to include a markbar update in the map
-" func! MapMarks ()
-"   " Note this lacks the o, m! for open an update maps
-"   let l:labels = split( g:markbar_marks_to_display, '\zs')
-"   for label in l:labels
-"     exec 'nmap m'  . label .  ' m' . l:label . ':MarkbarUpdate<cr>'
-"     " exec "nmap \'" . label . " \'" . l:label
-"     exec 'nnoremap M'  . label .  ' :delm ' . l:label . '<cr>' . ':MarkbarUpdate<cr>' . ':call ForceGlobalRemovalMarks()<cr>'
-"   endfor
-" endfunc
-" call MapMarks()
-
-" Only use upper case/ global marks, so make them quicker to type?"
-" func! RemapUppercaseMarks ()
-"   " Note this lacks the o, m!
-"   let l:labels = split("abcdefghijklnpqrstuvwxyz", '\zs')
-"   for label in l:labels
-"     exec 'nmap m'  . label .  ' m' . toupper( l:label ) . ':MarkbarUpdate<cr>'
-"     exec "nmap \'" . label . " \'" . toupper( l:label )
-"     exec 'nnoremap M'  . label .  ' :delm ' . toupper( l:label ) . '<cr>' . ':MarkbarUpdate<cr>'
-"   endfor
-" endfunc
-" call RemapUppercaseMarks()
+func! MapMarks ()
+  " Note this lacks the o, m! for open an update maps
+  let l:labels = split( g:markbar_marks_to_display, '\zs')
+  for label in l:labels
+    exec 'nmap m'  . label .  ' m' . l:label . ':MarkbarUpdate<cr>'
+    " exec "nmap \'" . label . " \'" . l:label
+    exec 'nnoremap M'  . label .  ' :delm ' . l:label . '<cr>' . ':MarkbarUpdate<cr>' . ':call ForceGlobalRemovalMarks()<cr>'
+  endfor
+endfunc
+call MapMarks()
 
 command! MarkbarUpdate call markbar#ui#RefreshMarkbar(g:__active_controller)
 

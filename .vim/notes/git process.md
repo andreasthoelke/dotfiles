@@ -131,7 +131,7 @@ Git Undo: - "git reset HEAD~1 --hard" will additionally checkout the previous br
 Three Statemanagement Mechanisms: Working Directory |>>| Staged Snapshot |>>| Commit History
 
 
-## Staging To Git Index: 
+## Staging To Git Index:
 
 Fugitive status: "<leader>gs", "<cr>" to view the file (nicely cancels the diff mode as well). 
 "D" to get to diff mode.  Use ":Gwrite" on the working copy to stage the entire file. 
@@ -237,7 +237,7 @@ View Stash Content: - "stash list", "stash show" and "git stash show -p stash@{2
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
   visual = !gitk
 
-## Git Tags 
+## Git Tags
   * "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tag>" to checkout a commit based on the related tag!
   * "git tagls" to view. "git push --tags" to push tags to remote. "git tag -d v<tab>" to delete, then "git push -f --tags"
   * Process: 

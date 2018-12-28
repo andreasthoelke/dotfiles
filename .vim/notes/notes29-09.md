@@ -1,4 +1,4 @@
-## Housekeeping & Cache Files
+## Housekeeping, Cache Files, Cleanup
 
 ### Shada
   * `ShadaClear` does: "!rm" . ' ~/.local/share/nvim/shada/main.shada'
@@ -26,9 +26,11 @@
 ### Vimtmp folder
   * see ~/vimtmp/
      * use `c-w f` to get into dirvish
+     * actually do this while vim is closed! 
      * delete the 'bak-..' folders
      * rename `view` and `undo` to 'bak-..'
      * create new view and undo folders
+  * there is a `ClearUndo` command now - but the counter seems not resetted 
 
 ### Todos
   * automate this? with VimLeave? [cleanup](../../.vimrc#Cleanup:)
@@ -758,6 +760,11 @@ can other 'lists' (of pins, marks) be used like the arglist?
 
 if i have yanked a line (with line bread at the end) how do i past it at the mid of a line, without linebreaking
 
+mudo - autosave sometimes get confused
+
+the changelist enables `g;` but it does not seem to be persisted/show up after vim restart
+last time I checked this seemed to work!
+
 a start screen?
 https://github.com/mhinz/vim-startify
 
@@ -770,23 +777,14 @@ consider using ctrlp to create files/folders? see ctrlp help
             E.g. Using 'newdir/newfile.txt' will create a directory named 'newdir' as
                  well as a file named 'newfile.txt'.
 
-## Easy-clip
-  * delete does not change clipboard
-  * `S` substitute motion
-  * yank stack use with <leader>"<regnum>
-  * persisted and shared with vim instances
 
 ## Temp next
-cut/ move map
-doc targets, substitute
-delete undo for vimrc. why is this so long?
-the changelist enables `g;` but it does not seem to be persisted/show up after vim restart
 
 ## Commit/ Release notes
-
+* doc vim-targets, substitute
 * vim-better-whitespace plugin
 * easyclip:
-  * delete does not change clipboard
+  * delete does not change clipboard, but <localleader>d does
   * `S` substitute motion
   * yank stack use with <leader>"<regnum>
   * persisted and shared with vim instances
