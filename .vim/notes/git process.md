@@ -245,9 +245,13 @@ View Stash Content: - "stash list", "stash show" and "git stash show -p stash@{2
     * delete the end of the line after the message! 
     * include the version as headline, e.g. v1.0.3
     * copy into clipboard
-    * <c-z> in the console do `git tag -a v1.0.4`
+    * merge branch to master first?
+    * in the console do `git tag -a v1.0.4`
     * then in vim paste the bullit points and :wq
     * then `git push --tags`
+
+view tags https://github.com/andreasthoelke/dotfiles/tags
+TODO how to view the full tag/release notes? → change `git tagls`?
 
 ## Resolve merge conflicts
 

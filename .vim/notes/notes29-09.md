@@ -780,8 +780,8 @@ consider using ctrlp to create files/folders? see ctrlp help
 
 ## Temp next
 
-## Commit/ Release notes
-* doc vim-targets, substitute
+## Release notes v1.0.4
+* doc vim-targets, substitute motion
 * vim-better-whitespace plugin
 * easyclip:
   * delete does not change clipboard, but <localleader>d does
@@ -800,6 +800,14 @@ consider using ctrlp to create files/folders? see ctrlp help
 old: .vim/notes/commit-nts1.txt
 
 
+*  (HEAD -> tabline-statusline) clear undo command                                                                                                            25 seconds ago  Andreas Thoelke  [30833d5]
+*  markbar merge upstream                                                                                                                                     2 hours ago     Andreas Thoelke  [ff2b102]
+*  whitespace, docs                                                                                                                                           3 hours ago     Andreas Thoelke  [dc2b9f6]
+*  EasyClip, delete trailing whitespace                                                                                                                       20 hours ago    Andreas Thoelke  [a88a59f]
+*  cleanup                                                                                                                                                    4 days ago      Andreas Thoelke  [319c4dc]
+*  maps                                                                                                                                                       6 days ago      Andreas Thoelke  [1981263]
+*  cleanup, docs                                                                                                                                              7 days ago      Andreas Thoelke  [9f7252d]
+*  release notes                                                                                                                                              7 days ago      Andreas Thoelke  [8c1d0b2]
 
 
 
