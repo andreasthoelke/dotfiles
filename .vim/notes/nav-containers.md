@@ -19,6 +19,9 @@
     * CtrlP `o` + `h/v`
     * TODO / Issue: above still does not force a split with exsisting buffer
 
+  from selection
+    * `c-w gss` or `.. gsa` for split above
+    * Pin a paragraph to the top: `vip<c-w>gsa`
 
 ## New vim-Tab
   with current buffer
@@ -551,10 +554,32 @@ arglists and marks:
 
 
 
-## Editing
+## Code Movement, Motions, Editing
 
 ### TODO
-  * I often want to paste/copy to the end of the line but excluding the new-line character
+  * DONE: I often want to paste/copy to the end of the line but excluding the new-line character
+
+
+### Line
+  * line text object `al` `il`
+
+### Targets
+  * Pairwise: `i)` `a)` `I)` `A)`
+  * Next/Last pairwise: `in)` `c2in)` change 2 inside next parentheses
+  * Seek: `vI)` selects "eins" from here: X
+    > ( eins ), ( zwei ), ( drei)
+  * Separator: `i,` `a,` `I,` `A,`
+  * Arguments: `ia` `aa` `Ia` `Aa`
+
+### CamelCaseMotion
+  Use e.g. `v2iw`, `vie`, `vbbb`
+  Example:
+    > script_31337_path_and_name_without_extension_11
+    > set Script31337PathAndNameWithoutExtension11=%~dpn0
+    > v3iw selects script_31337_path_and_[name_without_extension_]11
+    > v3ib selects script_31337_[path_and_name]_without_extension_11
+    > v3ie selects script_31337_path_and_[name_without_extension]_11
+    > Note there are no "around" textobjects
 
 ### Deleting parts of a line
   * delete till end of the line `C` or `d$`

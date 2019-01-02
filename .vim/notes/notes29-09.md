@@ -178,7 +178,7 @@ A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookm
       * autosave markdown on TextChanged
       * nicer style
 
-      
+
 add #to-learn tags onto mappings/tips? haskell conclusions?
 remind about these in the notes taking app?
 
@@ -216,7 +216,7 @@ or run vimtutor of vim-pad?
 
   * use [notes <the note text> <or empty to view ~/notes.md file>](../../.zshrc#Note Taking:)
   * do `notes some text <<ID .. lines .. ID
-  * can also log any standard in. example: `fzf | notes` 
+  * can also log any standard in. example: `fzf | notes`
 
   * A *Scratchpad* alias
   `alias sp='vim ~/notes/scratchpad-$(date +"%m-%d-%Y-%T")'`
@@ -229,7 +229,7 @@ or run vimtutor of vim-pad?
   git pull
   git push
 
-  * Very simple: 
+  * Very simple:
     * `cat >> ~/notes` will save on new line
     * `rlwarp cat >> ~/notes` allows proper `c-h` and `c-c`
 
@@ -406,7 +406,7 @@ call OniCommand('browser.openUrl.verticalSplit', 'http://purescript.org')
   - pale colors
 
 #### Install/ Launch
-* install nvim-qt via (outdated?) homebrew tab 
+* install nvim-qt via (outdated?) homebrew tab
   (not sure what that is, but there is an issue in the nvim-qt repo)
   commands to install:
     brew tap gwerbin/tap
@@ -587,7 +587,7 @@ make `rm -r` commands move to trash?
   c-s c-l is fast, but should it switch windows? tabs?
   c-s-w is awkward and should be consitent
 
-  c-s J/K/L/H is pretty intuitive!  
+  c-s J/K/L/H is pretty intuitive!
 
   > change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
   some start Documents/PS/2/pux-todo/node_modules/anymatch
@@ -682,18 +682,22 @@ consider using ctrlp to create files/folders? see ctrlp help
 
 ## Temp next
 
-https://github.com/bkad/camelcasemotion
-  * do inner word selects! v3ie selects script_31337_path_and_[name_without_extension]_11
 
 
 
 ## Release notes v1.0.5
-    * Indenting settings
-    * Add every yank position to the jumplist. In EasyClip with tag "AT tweak:"
-    * Add line motions to jumplist
-    * Only the start of 'select word' `ga` next and search adds to the jumplist  
-    * line text object `al` `il`
-    * Add start of visual mode to jumplist
+  * close win above, below, left, right with `<c-w>d`: `k/j/h/l`
+  * Pinning paragraphs and visual selections with `<leader>wp` (visual-split plugin)
+  * Indenting settings
+  * CamelCaseMotion plugin. Use e.g. `v2iw`, `vie`, `vbbb`
+  * Add every yank position to the jumplist. In EasyClip with tag "AT tweak:"
+  * Add start of visual mode (`v`) to jumplist
+  * Add line motions to jumplist
+  * Only the start of 'select word' `ga` next and search adds to the jumplist
+  * line text object `al` `il`
+
+
+*  (HEAD -> master) Note taking, jumplist, indention                                                                                                          5 hours ago   Andreas Thoelke  [d24bfe4]
 
 ## Release notes v1.0.4
 * doc vim-targets, substitute motion

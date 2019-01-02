@@ -36,11 +36,11 @@ Plug 'andreasthoelke/vim-easyclip'
 Plug 'machakann/vim-highlightedyank'
 " Highlight trailing whitespace
 Plug 'ntpeters/vim-better-whitespace'
-
 " Display marks with nearby code
 " Plug 'Yilin-Yang/vim-markbar'
 " Changed header style
 Plug 'andreasthoelke/vim-markbar'
+Plug 'wellle/visual-split.vim'
 
 " Completion: -------------------------------------
 " Plug 'ajh17/VimCompletesMe'
@@ -2256,6 +2256,26 @@ endfunction
 " Comments: --------------------------
 
 
+" CamelCaseMotion: ------------------------------------------------------
+
+map <silent> w <Plug>CamelCaseMotion_w
+map <silent> b <Plug>CamelCaseMotion_b
+map <silent> e <Plug>CamelCaseMotion_e
+sunmap w
+sunmap b
+sunmap e
+omap <silent> iw <Plug>CamelCaseMotion_iw
+xmap <silent> iw <Plug>CamelCaseMotion_iw
+omap <silent> ib <Plug>CamelCaseMotion_ib
+xmap <silent> ib <Plug>CamelCaseMotion_ib
+omap <silent> ie <Plug>CamelCaseMotion_ie
+xmap <silent> ie <Plug>CamelCaseMotion_ie
+imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
+imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
+
+
+" CamelCaseMotion: ------------------------------------------------------
+
 
 " Sneak Code Navigation: ------------------------------------------------
 " 1-character enhanced 'f'
@@ -2653,10 +2673,11 @@ set splitright
 " Windows will always have status bar
 set laststatus=2
 
-" close the win below
-nnoremap <c-w>d <c-w>j<c-w>c
-" close the win right
-nnoremap <c-w>D <c-w>l<c-w>c
+" close win above, below, left, right
+nnoremap <c-w>dk <c-w>k<c-w>c
+nnoremap <c-w>dj <c-w>j<c-w>c
+nnoremap <c-w>dh <c-w>h<c-w>c<c-w>p
+nnoremap <c-w>dl <c-w>l<c-w>c
 
 " Jump to rightmost window
 nnoremap <c-w>\ <c-w>5l
@@ -2684,11 +2705,16 @@ nnoremap <c-w>< 4<c-w><
 
 " Note: Consider adopting tmux map <prefix>HJKL
 
+" Pinning Windows:
+" Pin paragraph
+nmap <leader>wp <Plug>(Visual-Split-SplitAbove)ip
+xmap <leader>wp <Plug>(Visual-Split-VSSplitAbove)
+
 " Workaround to force vim-help to open below
-augroup vimrc_help
-  autocmd!
-  autocmd BufEnter *.txt if &buftype == 'help' | wincmd J | endif
-augroup END
+" augroup vimrc_help
+"   autocmd!
+"   autocmd BufEnter *.txt if &buftype == 'help' | wincmd J | endif
+" augroup END
 
 " Windows: -----------------------------
 
