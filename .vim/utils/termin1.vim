@@ -331,8 +331,7 @@ endfunction
 " VIM WORKFLOW: ----------------------------------------------------------------------
 
 
-
-" Shell WORKFLOW: ----------------------------------------------------------------------
+" Shell WORKFLOW: {{{----------------------------------------------------------------------
 " Suspending Background Jobs In Same Terminal: - "<c-z>" to suspend, in terminal: "fg" to bring it back. "jobs" to see all suspended jobs, "fg %2" to bring back second job, "kill %2" to kill it, "bg" to have it running in the background, "ps T" will show a "T" for stopped processes
 " Man Pages: - `man ranger` will now use nvim to show the man page, thanks to in .zshrc: export MANPAGER="nvim -c 'set ft=man' -"
 " VMan To Read ManPages As PDF: -- "vman ls" from terminal to view ls man page in vim.
@@ -375,8 +374,9 @@ endfunction
 " ./test/Spec.hs
 " ./.stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/autogen/Paths_abc2.hs
 " ./src/Lib.hs
+" Recursive Wildcard: - "ls /var/**.log" will show "/var/run/sntp.log/" and "/var/someotherfolder/file.log"
+" Shell WORKFLOW: }}} ----------------------------------------------------------------------
 
-" Shell WORKFLOW: ----------------------------------------------------------------------
 
 " Tmux Workflow: -----------------------------------------------------------------------
 " Lookup Manual: use "K" on a keyword in "~/.tmux.conf" to open manual entryj
@@ -568,13 +568,14 @@ command! Demo1Markdown Dispatch grip -b %
 
 " a simpler version of the above
 function! OpenMarkdownPreview() abort
-  if exists('s:markdown_job_id') && s:markdown_job_id > 0
-    call jobstop(s:markdown_job_id)
-    unlet s:markdown_job_id
+  if exists('g:markdown_job_id') && g:markdown_job_id > 0
+    call jobstop(g:markdown_job_id)
+    unlet g:markdown_job_id
   endif
-  let s:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
-  if s:markdown_job_id <= 0 | return | endif
-  call system('open http://localhost:6419')
+  let g:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
+  if g:markdown_job_id <= 0 | return | endif
+  " call system('open http://localhost:6419')
+  call LaunchChromium( 'http://localhost:6419' )
 endfunction
 
 " MARKDOWN: -----------------------------------------------------------------------
@@ -684,8 +685,6 @@ nnoremap <localleader>sp :set syntax=purescript<cr>
 " demos:
 abbrev mul Multiple<CR>lines
 
-" eins zwei drei vier fuenf sechs
-
 " Launching Chromium: ---------------------------------------------------------------
 " Using the full path on MacOS: "/Applications/Chromium.app/Contents/MacOS/Chromium --window-size=200,500 --window-position=0,20"
 " Using an alias: "chromium --window-size=800,400 --window-position=222,222"
@@ -700,17 +699,17 @@ command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/
 
 " let Tid = jobstart("/Applications/Chromium.app/Contents/MacOS/Chromium http://purescript.org")
 
-command! -nargs=1 Chromium :let  = jobstart("pulp repl", Cbs1)
-
+" command! -nargs=1 Chromium :let  = jobstart("pulp repl", Cbs1)
+" TODO try chromium-browser --force-device-scale-factor=0.79 - but can also set this globally in Chromium app settings
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
 
 function! LaunchChromium( url ) abort
-  if exists('s:launchChromium_job_id') && s:launchChromium_job_id) > 0
-    call jobstop( s:launchChromium_job_id )
-    unlet s:launchChromium_job_id
+  if exists('g:launchChromium_job_id') && (g:launchChromium_job_id) > 0
+    call jobstop( g:launchChromium_job_id )
+    unlet g:launchChromium_job_id
   endif
-  let s:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
+  let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
 endfunction
 
 " Launching Chromium: ---------------------------------------------------------------

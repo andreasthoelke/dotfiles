@@ -2,6 +2,7 @@
 ## Setting Up Repo
   * `git init` (in root folder)
   * `git clone <ulr>`
+  * could just so yes this is text I can just put in here!
 
 **git clone** `https://github.com/andreasthoelke/dotfiles`
 will create a folder `dotfiles` with the following filestructure:
@@ -22,6 +23,12 @@ will create a folder `dotfiles` with the following filestructure:
   ├── .vimrc
   ├── .zshrc
   └── README.md
+
+### Remote setup
+  * `git remote add origin` https://github.com/andreasthoelke/somerepo.git
+  * `git remote add upstream` ..
+  * `git remote -v` to view remote repos
+  * `git remote show` and `git remote show origin` to show infos
 
 
 ## Save Changes To Repo
@@ -289,7 +296,7 @@ On the right side move the cursor to the first conflicted hunk (e.g. using “]c
     * change head to the upstream repo
 
 ### Using git
-  * git remote add upstream https://github.com/Yilin-Yang/vim-markbar.git
+  * `git remote add upstream https://github.com/Yilin-Yang/vim-markbar.git`
   * `git remote -v` to view remote repos
   * `git fetch upstream` creates a new local branch that can be ..
   * `git merge upstream/master` merged into master.

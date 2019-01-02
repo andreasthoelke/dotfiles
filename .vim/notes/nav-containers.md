@@ -117,6 +117,20 @@
     * `yy` the path, then:
       * go to buffer and `:read <c-r>"` the content of the yanked path
 
+  * ok, some new stuff in here
+
+## Demo header with Purescript code
+and a *simple* line of text with `code in` there
+
+```purescript
+ab ∷ Maybe Int → String
+ab a = Just "Some"
+  where
+  aa = 123
+  bb = "just some other val"
+```
+ok, could just put some text in here
+
 ## Arglist
   * use `x` and `dax` for arglist
   * `c-w v` then `[A`, `]a` to have a window (`c-w t` or tab) with this group of files!
@@ -409,6 +423,7 @@ location could be a
 #### Tags
  - `gf`, `c-w` `f/gf` to open tab/split?
 #### Search
+[notes](notes29-09.md# Searching)
 
 #### CtrlP - Args, Buffers, other visit workspaces?
   * how to go back and/or pin/reference the code found?
@@ -507,7 +522,7 @@ text [link to string in other file type](commit-nts1.txt#Command) next text text
   jump to [Repl eval docs in termin1.vim file](../utils/termin1.vim#Repl Eval Insert:) using relative-back path, not having to escape white space
   from any filetype to any search-word: ~/.vimrc#/set whitespace escape: help:rel.txt#/should%20refer
   text commit-nts1.txt#/#%20Vimium%20workflow
- 
+
 
 ## Folding
 have the entire file (auto)folded, sort of archieves a similar effect? it can highlight (expand) several parts of an
@@ -538,10 +553,14 @@ arglists and marks:
 
 ## Editing
 
+### TODO
+  * I often want to paste/copy to the end of the line but excluding the new-line character
+
 ### Deleting parts of a line
   * delete till end of the line `C` or `d$`
   * delete all chars `cc` or `dD`
   * delete line `dd`
+
 
 ### EasyClip notes
   * delete does not change clipboard, but <localleader>d does
@@ -551,11 +570,11 @@ arglists and marks:
 
 > Exercise: Sort these arguments
 fnName( drei, zwei, eins, vier)
-fnName( eins, zwei, drei, vier)  
-fnName( drei, zwei, eins, vier)  
-> Solution: 
+fnName( eins, zwei, drei, vier)
+fnName( drei, zwei, eins, vier)
+> Solution:
 let @r='yIaWWyw"1SwBBSw0j'
-nmap <leader>ab :normal yIaWWyw"1SwBBSw0j<cr> 
+nmap <leader>ab :normal yIaWWyw"1SwBBSw0j<cr>
 > use @@ to rerun the macro
 
 

@@ -9,6 +9,7 @@ Plug 'junegunn/vim-plug'
 " File Selectors Browsers: ------------------------------------------
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-mark'
+Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
 " CtrlPArgs will show the arglist
@@ -79,7 +80,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'gcavallanti/vim-noscrollbar'
 Plug 'drzel/vim-line-no-indicator'
 
-"   Outside Of Vim:
+" Outside Of Vim:
 " Creates tmux colors e.g. at ".tmuxline.conf"
 " Plug 'edkolev/tmuxline.vim'
 " This inserts unicode icons file-type into airline/bufferline, nerdtree and ctrlp!
@@ -90,6 +91,13 @@ Plug 'edkolev/promptline.vim'
 " Tabline Statusline: -----------------------------------------------------------
 
 
+" NyaoVim: {{{-----------------------
+Plug 'andreasthoelke/nyaovim-markdown-preview'
+Plug 'rhysd/nyaovim-popup-tooltip'
+Plug 'rhysd/nyaovim-mini-browser'
+" Plug 'rhysd/nyaovim-markdown-preview'
+Plug 'rhysd/nyaovim-tree-view'
+" }}}
 
 " Colorschemes: ------------------
 " Plug 'tomasr/molokai'
@@ -102,7 +110,6 @@ Plug 'cormacrelf/vim-colors-github'
 Plug 'chrisbra/Colorizer'
 Plug 'KabbAmine/vCoolor.vim'
 
-Plug 'rhysd/nyaovim-popup-tooltip'
 
 
 " Highlight
@@ -147,7 +154,6 @@ Plug 'mityu/vim-applescript'
 " Markdown: -------------
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'jszakmeister/markdown2ctags'
-Plug 'rhysd/nyaovim-markdown-preview'
 Plug 'aklt/rel.vim'
 
 " Tmux .config features
@@ -164,9 +170,18 @@ Plug 'easymotion/vim-easymotion'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
+Plug 'bkad/camelcasemotion'
 Plug 'tomtom/tcomment_vim'
+
+Plug 'kana/vim-textobj-user'
+" TODO test this: (works in nvim but conflicts with vim?)
+" Plug 'gilligan/vim-rextobj-haskell'
+" TODO test/document this
 Plug 'kana/vim-textobj-fold'
+" Provides around/inner line 'al'/'il' objects
+Plug 'kana/vim-textobj-line'
 " Plug 'kana/vim-operator-user'
+
 " Aligning: ------------------------------------------------------------
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
@@ -210,10 +225,6 @@ Plug 'itchyny/vim-haskell-indent'
 " compliant with brittany
 Plug 'sbdchd/neoformat'
 
-Plug 'kana/vim-textobj-user'
-" TODO test this: (works in nvim but conflicts with vim?)
-" Plug 'gilligan/vim-rextobj-haskell'
-" requires python
 
 " Plug 'jaspervdj/stylish-haskell'
 Plug 'w0rp/ale'
@@ -245,6 +256,7 @@ let mapleader="\<Space>"
 let maplocalleader="\\"
 
 
+" Increase this for debugging
 set verbose=0
 
 " set omnifunc=syntaxcomplete#Complete
@@ -264,13 +276,15 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 " let g:loaded_python_provider = 1
 " let g:loaded_python3_provider = 1
 
+" TODO experiment with textobject?
 " /Users/andreas.thoelke/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py
-let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
+" let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
 
 
 " Nyaovim Markdown: ------------------------
 let g:markdown_preview_eager = 1
 let g:markdown_preview_auto = 0
+" let g:markdown_preview_no_default_mapping = 1
 
 nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
 
@@ -283,6 +297,16 @@ func! MarkdownPreviewToggle()
     let g:markdown_preview_active = 1
   endif
 endfunc
+
+nnoremap <leader>k <Plug>(markdown-preview-scroll-up)
+nnoremap <leader>j <Plug>(markdown-preview-scroll-down)
+
+
+command! -nargs=1 NyaoVim exec ':Dispatch' 'npm run app --prefix ~/Documents/NyaoVim --' <q-args>
+command! OpenInNyaoVim exec ':Dispatch' 'npm run app --prefix ~/Documents/NyaoVim --' expand('%:p')
+nnoremap gln :OpenInNyaoVim<cr>
+
+
 " Nyaovim Markdown: ------------------------
 
 " Nyaovim Popup: ------------------------
@@ -290,6 +314,102 @@ nnoremap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 " Nyaovim Popup: ------------------------
 
+" Oni: {{{----------------------------------
+if exists('g:gui_oni')
+  set nocompatible              " be iMproved, required
+  filetype off                  " required
+
+  set number
+  set noswapfile
+  set smartcase
+
+  " Enable GUI mouse behavior
+  set mouse=a
+
+  " If using Oni's externalized statusline, hide vim's native statusline, 
+  set noshowmode
+  set noruler
+  set laststatus=0
+  set noshowcmd
+endif
+
+" }}} Oni: ----------------------------------
+
+
+" VeoNim: {{{-------------------------------
+
+if exists('veonim')
+
+let g:vn_font = 'SauceCodePro Nerd Font'
+let g:vn_font_size = 11
+let g:vn_line_height = '1.4'
+
+set guicursor=n:block-CursorNormal,i:hor10-CursorInsert,v:block-CursorVisual
+hi! CursorNormal guibg=#846385
+hi! CursorInsert guibg=#f3a082
+hi! CursorVisual guibg=#6d33ff
+
+" built-in plugin manager
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+
+" extensions for web dev
+VeonimExt 'veonim/ext-css'
+VeonimExt 'veonim/ext-json'
+VeonimExt 'veonim/ext-html'
+VeonimExt 'vscode:extension/sourcegraph.javascript-typescript'
+
+" workspace management
+let g:vn_project_root = '~/proj'
+nno <silent> <c-t>p :call Veonim('vim-create-dir', g:vn_project_root)<cr>
+nno <silent> ,r :call Veonim('change-dir', g:vn_project_root)<cr>
+
+" multiplexed vim instance management
+nno <silent> <c-t>c :Veonim vim-create<cr>
+nno <silent> <c-g> :Veonim vim-switch<cr>
+nno <silent> <c-t>, :Veonim vim-rename<cr>
+
+" workspace functions
+nno <silent> ,f :Veonim files<cr>
+nno <silent> ,e :Veonim explorer<cr>
+nno <silent> ,b :Veonim buffers<cr>
+nno <silent> ,d :Veonim change-dir<cr>
+
+" searching text
+nno <silent> <space>fw :Veonim grep-word<cr>
+vno <silent> <space>fw :Veonim grep-selection<cr>
+nno <silent> <space>fa :Veonim grep<cr>
+nno <silent> <space>ff :Veonim grep-resume<cr>
+nno <silent> <space>fb :Veonim buffer-search<cr>
+
+" color picker
+nno <silent> sc :Veonim pick-color<cr>
+
+" language server functions
+nno <silent> sr :Veonim rename<cr>
+nno <silent> sd :Veonim definition<cr>
+nno <silent> st :Veonim type-definition<cr>
+nno <silent> si :Veonim implementation<cr>
+nno <silent> sf :Veonim references<cr>
+nno <silent> sh :Veonim hover<cr>
+nno <silent> sl :Veonim symbols<cr>
+nno <silent> so :Veonim workspace-symbols<cr>
+nno <silent> sq :Veonim code-action<cr>
+nno <silent> sp :Veonim show-problem<cr>
+nno <silent> sk :Veonim highlight<cr>
+nno <silent> sK :Veonim highlight-clear<cr>
+nno <silent> <c-n> :Veonim next-problem<cr>
+nno <silent> <c-p> :Veonim prev-problem<cr>
+nno <silent> ,n :Veonim next-usage<cr>
+nno <silent> ,p :Veonim prev-usage<cr>
+nno <silent> <space>pt :Veonim problems-toggle<cr>
+nno <silent> <space>pf :Veonim problems-focus<cr>
+nno <silent> <d-o> :Veonim buffer-prev<cr>
+nno <silent> <d-i> :Veonim buffer-next<cr>
+
+endif
+" }}}
 
 
 " Lightline Settings: -------------------------------
@@ -372,6 +492,10 @@ set shortmess=aoOtT
 " Persistence Saving: -----------------------------------------------------------------
 
 " Undo: -----------------------
+
+" This was somehow set to 1000 before
+set undolevels =300
+
 function! ClearUndo()
   let choice = confirm("Clear undo information?", "&Yes\n&No", 2)
   if choice == 1
@@ -668,8 +792,14 @@ hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
 " vim-better-whitespace plugin
 let g:better_whitespace_guicolor='#333333'
 let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
-" use "StripWhitespace" and "ToggleWhitespace"
 " Notes: highlight TrailingWhitespace guibg=#333333 match TrailingWhitespace /\s\+$/ Remove trailing whitespace: ":%s/\s\+$//e" autocmd BufEnter,WinEnter * call matchadd('Error', '\v\s+$', -1) autocmd BufEnter * call matchadd('Error', '\v\s+$', -1)
+
+" use "StripWhitespace" and "ToggleWhitespace"  
+nnoremap <leader>sw :StripWhitespace<cr>
+
+" Tested: unprintable chars, tabs, show trailing whitespace chars
+" set list
+" set listchars=tab:>-,trail:_,extends:#,nbsp:_
 
 " run: RedirMessagesBuf hi Folded
 " to get:
@@ -677,8 +807,8 @@ let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
 " Folded         xxx ctermfg=4 ctermbg=248 guifg=#0087af guibg=#afd7ff
 " → write command so input color into code
 " JSON colors for ".vim/plugged/vim-json/syntax/json.vim" syntax file
-hi link jsonPadding		Operator
-hi link jsonString		vimString
+hi link jsonPadding   Operator
+hi link jsonString    vimString
 hi link jsonTest			Label
 hi link jsonEscape		Special
 hi! link jsonNumber		Function
@@ -715,8 +845,8 @@ highlight! def link vimMapRhs Macro
 let g:haskell_conceal = 1
 " TODO use this for purescript syntax?
 " TODO test these:
-" function! vim2hs#haskell#conceal#wide() " {{{
-" function! vim2hs#haskell#conceal#bad() " {{{
+" function! vim2hs#haskell#conceal#wide() " {_{{
+" function! vim2hs#haskell#conceal#bad() " {_{{
 let g:idris_conceal = 1
 
 
@@ -729,13 +859,11 @@ set ignorecase
 set fileencoding=utf-8
 set encoding=utf-8
 " set backspace=indent,eol,start
-" TODO what does this do? see ':hg syntax enable'
 
-syntax enable
-
-
-
-set ts=2 sts=2 sw=2 expandtab
+" prevents unnecessary execution when sourcing vimrc
+if !exists("g:syntax_on")
+  syntax enable
+endif
 
 set smartcase
 
@@ -864,6 +992,9 @@ noremap ; :
 nnoremap Q q:k
 vnoremap Q q:k
 
+" Default command history is 20
+set history =40
+
 " Issue: Using "q" as sort of a leader key in a custom mapping will delay plugin "q" = quit maps! e.b. in Gstats.
 " workaround may be to double/ "qq" or to "q<space" instead.
 " Issue: needs two c-c to exit?
@@ -888,8 +1019,8 @@ function! PlainText()
 endfunction
 
 " Set a pseudo filetype upon opening a buffer if filetype is not set.
-autocmd BufRead,BufNewFile * setfiletype txt
-autocmd FileType txt call PlainText()
+" autocmd BufRead,BufNewFile * setfiletype txt
+" autocmd FileType txt call PlainText()
 
 
 " This is supposed to "unmap" the native "q" map to record macros (i don't need this often), to allow me to double "qq"
@@ -950,28 +1081,43 @@ nnoremap cug :%s/>#>/>=>/ge<cr>
 noremap <leader>cu :call PurescriptUnicode()<cr>
 fun! PurescriptUnicode()
   " normal cufcuccuacubcudcue
-  " TODO: there as a reason to NOT convert forall, what was it??
+  " TODO: there was a reason to NOT convert forall, what was it??
   normal cufcuccuacubcuecudcuf
 endfun
 
 
 " Movement Navigation:  ---------------------------------------------------------------------
-" TODO: move to a function with something like `?`. (`gf` or `<leader>F` do something else)
 
-" Learn: Use "$" and "^" instead of the maps below
-" nnoremap $ g_
-" onoremap $ g_
-" vnoremap $ g_
-"
-" nnoremap 0 g_
-" onoremap 0 g_
-" vnoremap 0 g_
-"
-" nnoremap ( ^
-" onoremap ( ^
-" vnoremap ( ^
-" Learn: Uncomment a range of non consecutive lines, e.g. the once above:
-" With cursor on the first line: "dcfap<label>" - using a motion to a sneak labeled char/line
+" Add start of visual mode to jumplist
+nnoremap v m'v
+
+" Want to go to last visible char most of the times and g_ is tricky to type
+nnoremap $ m'g_
+onoremap $ g_
+vnoremap $ g_
+
+" Add line motions to jumplist
+nnoremap ^ m'^
+nnoremap 0 m'0
+
+
+augroup NoHLSearch
+  au!
+  autocmd CursorHold,CursorMoved * call <SID>NoHLAfter(4)
+augroup END
+
+function! s:NoHLAfter(n)
+  if !exists('g:nohl_starttime')
+    let g:nohl_starttime = localtime()
+  else
+    if v:hlsearch && (localtime() - g:nohl_starttime) >= a:n
+      :nohlsearch
+      redraw
+      unlet g:nohl_starttime
+    endif
+  endif
+endfunction
+
 
 " `)` is a free mapping!
 
@@ -1021,14 +1167,15 @@ endfun
 
 " Movement Naviagation:  ---------------------------------------------------------------------
 
-" Indenting: -------------------------------------
-" TODO Learn: test / understand these
-" set autoindent
-" set smartindent
 
-" How ">>" will indent lines
-" set shiftwidth=2
-" set shiftround
+
+" Indenting: -------------------------------------
+
+" Use only spaces for indentation
+set expandtab
+set shiftwidth=2
+set softtabstop=2
+" http://vim.wikia.com/wiki/Indenting_source_code
 
 nnoremap <leader>>> :call IndentToCursorH()<CR>
 nnoremap <leader><< :call IndentToCursorH()<CR>
@@ -2061,6 +2208,9 @@ nnoremap D "_d
 
 " Folding Folds: ------------------------------------------------
 
+set foldenable
+set foldmethod =marker
+
 " Partially expand syntax and expression based folding (of markdown and gitv plugins)
 autocmd Syntax git set foldlevel=1
 autocmd FileType markdown set foldlevel=1
@@ -2091,12 +2241,12 @@ function! GoToOpenFold(direction)
   call cursor(start, 0)
 endfunction
 
-set foldtext=MyFoldText()
-function! MyFoldText()
-  let line = getline(v:foldstart)
-  " let sub  = substitute(line, '/\*\|\*/\|{{{\d\=', '', 'g')
-  return line
-endfunction
+" set foldtext=MyFoldText()
+" function! MyFoldText()
+"   let line = getline(v:foldstart)
+"   " let sub  = substitute(line, '/\*\|\*/\|{ *JUST BLOCK THIS* {{\d\=', '', 'g')
+"   return line
+" endfunction
 
 " Folding: ------------------------------------------------
 
@@ -2255,16 +2405,16 @@ vnoremap // y/<C-R>"<CR>
 " --------------------------------------------------------------------------------
 let g:ag_highlight=1
 
-
 " --------------------------------------------------------------------------------
 
-" Search next:
-nnoremap <silent> ga :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
-nnoremap <silent> g- :set nohlsearch<cr>
+" Search next: Select, deselect. Similar to "*" / "#"
+nnoremap <silent> ga m':let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+nnoremap <silent> g- m':set nohlsearch<cr>
 
-nnoremap <silent> n n
-nnoremap <silent> N N
-
+" Don't add seach next/prev to the jumplist
+nnoremap <silent> n :keepjumps normal! n<cr>
+nnoremap <silent> N :keepjumps normal! N<cr>
+" Note "normal!" ignores all mappings - to prevent recursion
 
 
 " The Silver Searcher
@@ -2326,12 +2476,12 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 "   execute "lcd ". dirname
 " endfunc
 
-" autocmd! BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
-" func! SetWorkingDirectory(path)
-"   let dirname = projectroot#guess( a:path )
-"     " let dirname = fnamemodify(a:path, ":h")
-"   execute "lcd ". dirname
-" endfunc
+autocmd! BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
+func! SetWorkingDirectory(path)
+  let dirname = projectroot#guess( a:path )
+    " let dirname = fnamemodify(a:path, ":h")
+  execute "lcd ". dirname
+endfunc
 
 " Change Working Directory: ---------------
 nnoremap <expr>dpr ":lcd " . projectroot#guess() . "\n"

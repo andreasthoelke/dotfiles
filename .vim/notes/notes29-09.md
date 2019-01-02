@@ -1,7 +1,8 @@
 ## Housekeeping, Cache Files, Cleanup
-
+call markdown_preview#scroll('down')
 ### Shada
   * `ShadaClear` does: "!rm" . ' ~/.local/share/nvim/shada/main.shada'
+    but I think I have to do this when vim is off
 
   * Marks save format:
           Global mark with timestamp 2018-12-21T18:29:55:
@@ -26,11 +27,12 @@
 ### Vimtmp folder
   * see ~/vimtmp/
      * use `c-w f` to get into dirvish
-     * actually do this while vim is closed! 
+     * actually do this while vim is closed!
      * delete the 'bak-..' folders
      * rename `view` and `undo` to 'bak-..'
      * create new view and undo folders
-  * there is a `ClearUndo` command now - but the counter seems not resetted 
+  * there is a `ClearUndo` command now - but the counter seems not resetted
+    * now set undolevels to 300 for faster mundo loading?
 
 ### Todos
   * automate this? with VimLeave? [cleanup](../../.vimrc#Cleanup:)
@@ -78,6 +80,12 @@ http://nosubstance.me/post/mutt-secret-sauce/
       a clickable table of contents)
 
 ## Searching
+
+  * a recursive grep + fzf
+      `grep -r nyaovim ~/.vim | fzf` or `grep -r nyaovim . | fzf`
+      then type "init Plug" and `j/k` select this path
+      /Users/andreas.thoelke/.vim/init.vim:Plug 'andreasthoelke/nyaovim-markdown-preview'
+
   * `q/` search history
   * `HelpGrep` to seach vim help (rename?)
 
@@ -98,6 +106,16 @@ Populate arglist with Dirvish, then use `##` special symbol to search through th
   http://regexr.com/40v3p
 
 
+## FZF
+
+  `Files ~/.vim`
+  `Gfiles ~` all git files: (git ls-files)
+  `:BLines` is super useful alternative to search/navigate `/something` as it's not cluttering the jumplist!
+  `vim $(fzf -m)` opening multiple buffers using multiselect (TAB/S-TAB) and process substitution
+    * TODO set this up for arglist, and lines of full paths
+  nvim $(fzf --height 40%)
+
+
 ## Undofile Shada
 
   `:verbose e .config/alacritty/alacritty.yml" 491L, 18989C`
@@ -107,11 +125,6 @@ Populate arglist with Dirvish, then use `##` special symbol to search through th
   TODO: Does vim resume undohistory after git-checkout?
         git check in ShaDa and undo files
 
-## Code Motions
-  Sneak
-  * move to (2 chars): `f/F` <.><.> `:`/`H`
-  * move before (1 char): `t/T` <.>
-H/L maps
 
 ## Chrome Bookmarks:
 A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookmarks`
@@ -127,6 +140,15 @@ A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookm
   "url": "https://blog.jez.io/haskell-development-with-neovim/#fn:3"
 }
 
+## Drawer
+  turn a selection into a (drawer) split
+  using mark previews drawer
+  using search previews
+  notes drawer?
+  isn't the quickfix list a drawer? - just a small preview/ not syntax highlight
+  can other 'lists' (of pins, marks) be used like the arglist?
+  * just one more
+
 ## Processing Lines & Columns
   * Sort: [range]sort u %sort u
   * Sustitute: [range]s/,/;/g
@@ -135,16 +157,28 @@ A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookm
   * How to set up conditions for that value, to add/change something in that line
 
 
-## Editing commands in terminal mode and the shell
-* term cursor posion vs. normal mode position
-  > how to see and move both. in- and outside of vim
-
-## Dirvish
-
-
 ## NOTES .MD EDITOR
-Sync markdown on leave insert
 
+### Current state (29-12-2018):
+
+  * run `glm` or `:Markdown` to
+    * launch a grip-server and
+    * open load the preview page in chromium
+    * use vimium to navigate in chromium
+    * Sync markdown on leave insert
+      * this now works via autosave and it's fast (like 700ms)
+      * could try to autosave while typing in insert mode
+    * position window
+      * now the previous position is reused. which is useful
+    * close a window with Vimium `x`
+    * **todos**:
+      * scale canvas
+      * jump to a headline from vim
+      * update scroll loc from vim?
+      * autosave markdown on TextChanged
+      * nicer style
+
+      
 add #to-learn tags onto mappings/tips? haskell conclusions?
 remind about these in the notes taking app?
 
@@ -177,6 +211,28 @@ or run vimtutor of vim-pad?
   support: literate haskell, SoH Markdown
   not hide/conceile image tags in markdown
   can I just use html image tags in markdown?
+
+## Some command line ideas
+
+  * use [notes <the note text> <or empty to view ~/notes.md file>](../../.zshrc#Note Taking:)
+  * do `notes some text <<ID .. lines .. ID
+  * can also log any standard in. example: `fzf | notes` 
+
+  * A *Scratchpad* alias
+  `alias sp='vim ~/notes/scratchpad-$(date +"%m-%d-%Y-%T")'`
+
+  * The cron points to a shell script:
+  > #!/bin/sh
+  cd ~/notes
+  git add -A .
+  git commit -am wip
+  git pull
+  git push
+
+  * Very simple: 
+    * `cat >> ~/notes` will save on new line
+    * `rlwarp cat >> ~/notes` allows proper `c-h` and `c-c`
+
 
 ## Rich Text Comments In Referened Meta File
 
@@ -276,6 +332,10 @@ CtrlPMixed
 endif
 endfunc
 
+- use ctrlp tags?
+(this is based on set the generated ctags = 'tags' here: tags=tags;/,codex.tags;/
+(and it very/too big and slow)
+maybe ctrlp-tags could use the lurshtags?
 
 ## Karabiner
 
@@ -300,7 +360,84 @@ Config path
 
 
 ## Chromium
+can start Chromium macos app and
+ * install extensions
+ * go to settings
 " Closing The Window: End the terminal session? Use "call jobstop(s:markdown_job_id)"
+
+## NVim GUI Clients: NyaoVim, vimR, nvim-qt, VeoNim
+
+### NyaoVim
+
+#### Summary 12-2018:
+  + fonts align perfectly with alacritty
+  - scrolling is a bit jumpy
+
+> just <leader>ss this line - but this blocks nvim while nyaovim is running
+!npm run app --prefix Documents/NyaoVim
+!npm run app --prefix Documents/NyaoVim -- /Users/andreas.thoelke/.vim/notes/color-scheme-doc.md
+
+> rather use
+command! OpenInNyanVim exec ':Dispatch' 'npm run app --prefix Documents/NyaoVim --' expand('%:p')
+> this allows to go back and work in nvim and then kill nyaovim by killing the terminal buffer
+
+
+~/.config/nyaovim/nyaovimrc.html
+
+[config](../../.vimrc#Nyaovim Markdown:)
+
+### Oni
+  + the scrollbars I always wanted. Small, proportional in view range, transparent
+  + soft scrolling and tab transitions
+  + it shows bubble help!
+  + markbar preview scrolls in sync!
+  + browser works via this command
+    - window resize needs another keystroke
+
+oni.commands.executeCommand("browser.openUrl.verticalSplit", "https://github.com/onivim/oni")
+call OniCommand('browser.openUrl.verticalSplit', 'http://purescript.org')
+
+
+### nvim-qt
+
+#### Summary 12-2018:
+  + fast - it's C++
+  + seems like a terminal/ has all features
+  - pale colors
+
+#### Install/ Launch
+* install nvim-qt via (outdated?) homebrew tab 
+  (not sure what that is, but there is an issue in the nvim-qt repo)
+  commands to install:
+    brew tap gwerbin/tap
+    brew install --HEAD gwerbin/tap/neovim-qt
+* to start
+    cd /usr/local/Cellar/neovim-qt
+    nvim-qt
+    or actually now moved this into /Applications, so Alfred nvim-qt works
+
+Config: (just <leader>ss these lines)
+GuiTabline 0
+Guifont SauceCodePro Nerd Font:h11
+GuiPopupmenu 1
+GuiPopupmenu 0
+
+### VeoNim
+
+[conf](../../.vimrc# VeoNim:)
+
+#### Summary 12-2018:
+  - setting the font-size was still hacky
+  + colors are nice - see comparison with alacritty in screenshot
+  - weired resizing of wins when switching tabs
+  + autocomplete popup just worked!
+  + statusbar made sense, including the small tab display on the right. though not yet scaled with font
+  + fast. scrolling, tabswitch, etc
+  - some ex-commands like `:ls` don't show - no expanded area below.
+    + .. though the display bubble in the center has potential - it's ergonomically better positioned
+
+#### Install/ Launch
+
 
 ## Github
 set up the vim-hub plugin
@@ -311,7 +448,7 @@ oh-my-zsh github plugin:
 * `git.io` - Shortens a URL using [git.io](https://git.io)
 
 run interactive shell commands like `history!` in a hidden terminal
-example: function! OpenMarkdownPreview() abort 
+example: function! OpenMarkdownPreview() abort
 
 ctrlP typing in buffers selector refers to files name with preference
 .. not to some char in the long folderpath!
@@ -351,10 +488,7 @@ config save a grep search through all info sources for:
 
 ## Todos
 
-Toggle map for:
-set foldcolumn=1
-set foldcolumn=0
-to show markdown foldlevels
+Toggle map for: set foldcolumn=1 set foldcolumn=0 to show markdown foldlevels
 
 move section? `Utility And Example Commands:`
 
@@ -453,7 +587,7 @@ make `rm -r` commands move to trash?
   c-s c-l is fast, but should it switch windows? tabs?
   c-s-w is awkward and should be consitent
 
-  c-s J/K/L/H is pretty intuitive!
+  c-s J/K/L/H is pretty intuitive!  
 
   > change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
   some start Documents/PS/2/pux-todo/node_modules/anymatch
@@ -494,16 +628,13 @@ make `rm -r` commands move to trash?
 * add arglist indicator to statusline? → StatuslineArglistIndicator()
 
   search should not add to jumplist - only the beginning
-    many other motions should add to the jumplist
+    many other motions should add to the jumplist. all tricky motions?
 
   nyaovim fontsize, popup test, minibrowser
   vifm: show last changed in hours vs size!
   Grepper: Test running in Haskell hello44 vs Homedir
            How to quickly change dir the underlying shell?
            How to get the current folder path into an ex-command?
-
-  Minimal Tab/status line plugin (to test)
-  Buffer manager plugin
 
   The `Term` command allows running `history` and `node` repl
   * set up callbacks
@@ -528,27 +659,12 @@ make local arglist global?
 
 highlight vim comment header `" Examples: --` in markbar/purescript syntax
 
-- use ctrlp tags?
-  (this is based on set the generated ctags = 'tags' here: tags=tags;/,codex.tags;/
-  (and it very/too big and slow)
-  maybe ctrlp-tags could use the lurshtags?
-
-turn a selection into a (drawer) split
-using mark previews drawer
-using search previews
-notes drawer?
-isn't the quickfix list a drawer? - just a small preview/ not syntax highlight
-can other 'lists' (of pins, marks) be used like the arglist?
-
-if i have yanked a line (with line bread at the end) how do i past it at the mid of a line, without linebreaking
 
 migrate docs from termin1.vim and vimrc
 do I want a searchable wiki?
 
 mudo - autosave sometimes get confused
 
-the changelist enables `g;` but it does not seem to be persisted/show up after vim restart
-last time I checked this seemed to work!
 
 a start screen?
 https://github.com/mhinz/vim-startify
@@ -572,7 +688,12 @@ https://github.com/bkad/camelcasemotion
 
 
 ## Release notes v1.0.5
-
+    * Indenting settings
+    * Add every yank position to the jumplist. In EasyClip with tag "AT tweak:"
+    * Add line motions to jumplist
+    * Only the start of 'select word' `ga` next and search adds to the jumplist  
+    * line text object `al` `il`
+    * Add start of visual mode to jumplist
 
 ## Release notes v1.0.4
 * doc vim-targets, substitute motion

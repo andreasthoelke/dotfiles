@@ -39,11 +39,11 @@ alias vi="nvr -l "
 # nvim instance in the previously acitve window.
 
 alias nvim="NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim"
-# set an environment variable to nvim's default unix address, 
+# set an environment variable to nvim's default unix address,
 # so neo-vim-remote can send it messages.
 
 alias vicd='nvr -c "cd $(pwd) | pwd"'
-# From nvim terminal mode 'vicd' changes vim's current directory 
+# From nvim terminal mode 'vicd' changes vim's current directory
 # to the current dir in the terminal
 # Neovim Remote: ---------------------------------------------------------
 
@@ -51,7 +51,8 @@ alias svim='nvim -u ~/.SpaceVim/vimrc'
 
 NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
-
+# NyaoVim
+alias yvim='npm run app --prefix Documents/NyaoVim'
 
 
 # Set name of the theme to load. Optionally, if you set this to "random"
@@ -91,8 +92,8 @@ COMPLETION_WAITING_DOTS="true"
 # Add wisely, as too many plugins slow down shell startup.
 
 plugins=(
-   git 
-   zsh-syntax-highlighting 
+   git
+   zsh-syntax-highlighting
    # fast-syntax-highlighting
    hub
    copyfile # "copyfile <filename>" to copy text of file into clipboard
@@ -111,12 +112,42 @@ source $ZSH/oh-my-zsh.sh
 # Activate vim bindings
 bindkey -v
 
+# Prevent accidential overwriting using redireaction, e.g. `echo "test" > willbeereased.txt`. Can still use `echo "Start new" >! file.txt`
+set -o noclobber
+
 # Key maps for Zsh vi mode: https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/vi-mode/README.md
 
 
+# Note Taking: {{{ -------------------------------------------------------
+
+# A Scratchpad
+alias vnote='nvim ~/notes/note-$(date +"%m-%d-%Y-%T")'
+
+notes() {
+  if [ -n "$1" ]; then
+    echo $@ >> "$HOME/notes.md"
+  else
+    # detect if we're in a tty or a pipe
+    if [ -t 0 ]; then
+      nvim "$HOME/notes.md"
+    else
+      cat - >> "$HOME/notes.md"
+    fi
+  fi
+}
+# Allows doing `uptime | notes`
+# And heredoc multiline: `notes <<SOMEID
+#                         first line
+#                         second line
+#                         SOMEID
+
+# }}} Note Taking: -------------------------------------------------------
+
+
+
 # Enable copy/paste from and into the system clipboard in vi-mode using 'y' and 'p'
-function vi-yank-pbcopy { 
-  zle vi-yank 
+function vi-yank-pbcopy {
+  zle vi-yank
   echo "$CUTBUFFER" | pbcopy
 }
 zle -N vi-yank-pbcopy
@@ -192,7 +223,7 @@ alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 
 alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
-# Tested examples: 
+# Tested examples:
 # /Applications/Chromium.app/Contents/MacOS/Chromium --window-size=200,500 --window-position=0,20
 # chromium --window-size=800,400 --window-position=222,222
 
