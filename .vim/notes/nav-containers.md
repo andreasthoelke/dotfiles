@@ -212,10 +212,9 @@ code auto completion:
   * **Reveal:** CtrlP `<c-v>` to reveal/go to buffer if it's **shown** in a tab-window somewhere
     * otherwise **open/load** buffer in a vertical split. can then `<c-w>c` that split or close the original or use
         `<c-w>T` to move it out of this tab into it's own tab.
+
 ### Load Open Buffer
   * **New Tab:** CtrlP `o` + `t` to load buffer into new tab (no matter if buffer is shown somewhere
-
-
 
 alternate between prev and current buffer: `:e #` `,`
 
@@ -241,7 +240,6 @@ use <c-o> open menu?
   in new window:
       * `:new` / `<c-w>n` new buffer below
       * `:vnew` new buffer to the right
-
 
 ### close buffer
   * `gx` leaves window open
@@ -281,7 +279,9 @@ use <c-o> open menu?
 
 ### Jumps
     * `:jumps`
-
+    * could use CursorHold + updatetime (500 now → 1000) to add more to the jumplist? TODO
+    * jumps are currently not centering the view - which might cause less view jumping but makes it harder to find
+    cursor. 
 
 ## Marks
 
@@ -355,13 +355,18 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
 
   * nav in markdown (and other langs?) with text objects/motions: https://github.com/coachshea/vim-textobj-markdown
 
-## Quickfix Navigation
+## Quickfix Locationlist Navigation
   * `leader qq`
   * `]q` with cursor in code,
   * `c-n/p` and `go` with cursor in quickfix list
   * `cnf[ile]` to go the first item in the next file
   * `:cdo {cmd}` run cmd on all qf entries, `cfdo cmd` runs on the files (?)
   * use `p` to open file:loc in preview window, `c-w z` or `P` to close preview
+
+### Examples
+  * `lvim /vimium/ .vim/notes/**` load vimseach results into location list
+  * Grep to vim quickfix via process substitution: `nvim -q <(grep -rsni todo .vim/notes/**)` or `vim -q<(!!)`
+
 
 ## Sessions
 save and restore a session with windows and tabs
@@ -572,7 +577,7 @@ arglists and marks:
   * Arguments: `ia` `aa` `Ia` `Aa`
 
 ### CamelCaseMotion
-  Use e.g. `v2iw`, `vie`, `vbbb`
+  Use e.g. `v2i,w`, `vi,e`, `v,b,b,b`
   Example:
     > script_31337_path_and_name_without_extension_11
     > set Script31337PathAndNameWithoutExtension11=%~dpn0

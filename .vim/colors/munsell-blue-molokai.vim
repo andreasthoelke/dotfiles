@@ -96,7 +96,7 @@ hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
 hi Comment         guifg=#60777C
 hi CursorLine                    guibg=#222525
 hi CursorLineNr    guifg=#FD971F               gui=none
-hi LineNr          guifg=#303030
+" hi LineNr          guifg=#303030
 hi NonText         guifg=#465457
 hi SpecialKey      guifg=#465457
 
@@ -313,5 +313,9 @@ hi! def link DirvishArg DataConstructor
 exec 'hi! DarkHeader guifg=' . g:color_ming_green_dark
 hi! link markbarHeader DarkHeader
 hi! link markbarID Highlight1
+
+" Editor & Quickfix
+hi LineNr guifg=#404040
+
 
 

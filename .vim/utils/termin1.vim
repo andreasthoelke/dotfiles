@@ -326,6 +326,8 @@ endfunction
 " Prefixes: [b]uffer, [w]indow, [t]ab, [l]=function, [a]rguments, [s]ourced file, [g]lobal, [v]im predefined. to view: "let v:"
 " History: - "hist a/:/i" to view a history of cmds or inserts
 " Paste Last Command: - ":%s/abc/cde/g" - "argdo <c-r>:" to paste the prev cmd/ apply it to the arglist
+" Get Count To A Keymap: - use "v:count1". e.g. noremap <silent> <s-F8> :<c-u>exe 'norm 0f\|e' . v:count1 . 'W'<cr>
+" Ignore Range: The CTRL-U is used to remove the range that Vim may insert.
 
 
 " VIM WORKFLOW: ----------------------------------------------------------------------

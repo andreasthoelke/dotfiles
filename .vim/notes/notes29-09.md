@@ -107,9 +107,8 @@ Populate arglist with Dirvish, then use `##` special symbol to search through th
 
 
 ## FZF
-
   `Files ~/.vim`
-  `Gfiles ~` all git files: (git ls-files)
+  `GFiles ~` all git files: (git ls-files)
   `:BLines` is super useful alternative to search/navigate `/something` as it's not cluttering the jumplist!
   `vim $(fzf -m)` opening multiple buffers using multiselect (TAB/S-TAB) and process substitution
     * TODO set this up for arglist, and lines of full paths
@@ -215,7 +214,7 @@ or run vimtutor of vim-pad?
 ## Some command line ideas
 
   * use [notes <the note text> <or empty to view ~/notes.md file>](../../.zshrc#Note Taking:)
-  * do `notes some text <<ID .. lines .. ID
+  * do `notes some text <<ID` .. lines .. ID
   * can also log any standard in. example: `fzf | notes`
 
   * A *Scratchpad* alias
@@ -293,22 +292,22 @@ file:///Users/andreas.thoelke/Documents/
 ## CtrlP
 
 * open
-enter: current window
-Ctrl+t: new tab
-Ctrl+x: split current window horizontally
-Ctrl+v: split current window vertically
+  enter: current window
+  Ctrl+t: new tab
+  Ctrl+x: split current window horizontally
+  Ctrl+v: split current window vertically
 
 *All Control maps:*
-`[` to close
-`r` to purge the cache
-`f` and `b` to cycle between modes.
-`d` to switch to filename search instead of full path.
-`t` or `v`, `x` to open the selected entry in a new tab or in a new split.
-TRY: y to create a new file and its parent directories.
-`z` to mark/unmark multiple files and `o` to open them.
-submit `?` in CtrlP for more mapping help
-http://ctrlpvim.github.io/ctrlp.vim/
-`<c-\>` paste from <cword>, visual sel, etc
+  `[` to close
+  `r` to purge the cache
+  `f` and `b` to cycle between modes.
+  `d` to switch to filename search instead of full path.
+  `t` or `v`, `x` to open the selected entry in a new tab or in a new split.
+  TRY: y to create a new file and its parent directories.
+  `z` to mark/unmark multiple files and `o` to open them.
+  submit `?` in CtrlP for more mapping help
+  http://ctrlpvim.github.io/ctrlp.vim/
+  `<c-\>` paste from <cword>, visual sel, etc
 
 when fuzzy typing to select a buffer in ctrlP, the filenate (not the folderpath) should be preferred
 
@@ -319,23 +318,29 @@ rename with curent path shown
 does 'Ren' do this?
 
 " CtrlP file, buffer, tag search
-let g:ctrlp_extensions = ['mixed', 'changes', 'quickfix']
-let g:ctrlp_cmd = 'call CallCtrlP()'
-" Search tags with Ctrl-i
-noremap <c-i> :CtrlPTag<CR>
-func! CallCtrlP()
-if exists('s:called_ctrlp')
-CtrlPLastMode
-else
-let s:called_ctrlp = 1
-CtrlPMixed
-endif
-endfunc
+  let g:ctrlp_extensions = ['mixed', 'changes', 'quickfix']
+  let g:ctrlp_cmd = 'call CallCtrlP()'
+  " Search tags with Ctrl-i
+  noremap <c-i> :CtrlPTag<CR>
+  func! CallCtrlP()
+  if exists('s:called_ctrlp')
+  CtrlPLastMode
+  else
+  let s:called_ctrlp = 1
+  CtrlPMixed
+  endif
+  endfunc
 
 - use ctrlp tags?
-(this is based on set the generated ctags = 'tags' here: tags=tags;/,codex.tags;/
-(and it very/too big and slow)
-maybe ctrlp-tags could use the lurshtags?
+  (this is based on set the generated ctags = 'tags' here: tags=tags;/,codex.tags;/
+  (and it very/too big and slow)
+  maybe ctrlp-tags could use the lurshtags?
+
+
+TODO some tricks from FZF:
+  `GFiles ~` all git files: (git ls-files)
+  `:BLines` is super useful alternative to search/navigate `/something` as it's not cluttering the jumplist!
+
 
 ## Karabiner
 
@@ -368,23 +373,26 @@ can start Chromium macos app and
 ## NVim GUI Clients: NyaoVim, vimR, nvim-qt, VeoNim
 
 ### NyaoVim
+  * start with `gln` or :NyaoVim ''
+
 
 #### Summary 12-2018:
   + fonts align perfectly with alacritty
   - scrolling is a bit jumpy
 
-> just <leader>ss this line - but this blocks nvim while nyaovim is running
-!npm run app --prefix Documents/NyaoVim
-!npm run app --prefix Documents/NyaoVim -- /Users/andreas.thoelke/.vim/notes/color-scheme-doc.md
 
-> rather use
-command! OpenInNyanVim exec ':Dispatch' 'npm run app --prefix Documents/NyaoVim --' expand('%:p')
-> this allows to go back and work in nvim and then kill nyaovim by killing the terminal buffer
+#### Config
+  * NyaoRC. html ~/.config/nyaovim/nyaovimrc.html
+  * Markdown preview config ~/.vimrc#/Nyaovim%20Markdown:
 
 
-~/.config/nyaovim/nyaovimrc.html
-
-[config](../../.vimrc#Nyaovim Markdown:)
+#### old notes
+    > just <leader>ss this line - but this blocks nvim while nyaovim is running
+    !npm run app --prefix Documents/NyaoVim
+    !npm run app --prefix Documents/NyaoVim -- /Users/andreas.thoelke/.vim/notes/color-scheme-doc.md
+    > rather use
+    command! OpenInNyanVim exec ':Dispatch' 'npm run app --prefix Documents/NyaoVim --' expand('%:p')
+    > this allows to go back and work in nvim and then kill nyaovim by killing the terminal buffer
 
 ### Oni
   + the scrollbars I always wanted. Small, proportional in view range, transparent
@@ -457,34 +465,6 @@ what are buffertags?
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
 ## Completion
-" Deoplete: code completion tool
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Use TAB for code completion
-Plug 'ervandew/supertab'
-" Enable deoplete at startup
-let g:deoplete#enable_at_startup = 1
-" Select from completion list with SHIFT-j/k
-inoremap <expr> <C-j> ("\<C-n>")
-inoremap <expr> <C-k> ("\<C-p>")
-
-" Go to definition in new split
-nnoremap <silent>fd <C-w>v<C-w>w :call feedkeys("gd")<CR>
-
-check out popups/completions:
-  * https://github.com/vim-scripts/AutoComplPop
-
-### File/ folder bookmarks
-Consider use-cases
-How to implement? - a wiki usecase?
-Nerdtree recover the bookmarks
-
-config save a grep search through all info sources for:
-(have a `args \`cat file\``) /file lists for these searches:
-  * vim notes
-  * vim code
-  * haskell code examples
-  * etc ..
-
 
 ## Todos
 
@@ -520,6 +500,8 @@ usecaes:
   match(it) "" in markdown syntax to highlight strings
 
 goyo for notes taking?
+
+" `)` is a free mapping!
 
 Popup Tooltip UI
  * Hover over the following line and `localleader-gi`
@@ -678,12 +660,20 @@ consider using ctrlp to create files/folders? see ctrlp help
             E.g. Using 'newdir/newfile.txt' will create a directory named 'newdir' as
                  well as a file named 'newfile.txt'.
 
+* DONE - this should not jump the view. jumplist c-o/i should center view
+
+Insert mode is currently hardly noticable - also the cursor in insert mode
 
 
 ## Temp next
+  * easyclip smaller plugins
+  * if empty char then w
 
 
-
+## Release notes v1.0.6
+  * add to jumplist on updatetime and ex-command (;/:)
+  * camelCaseMotion use `,` leader e.g. `v2i,w`, `vi,e`, `v,b,b,b`
+  * go to insert start at InsertLeave, save insert end to jumplist
 
 ## Release notes v1.0.5
   * close win above, below, left, right with `<c-w>d`: `k/j/h/l`
@@ -695,7 +685,6 @@ consider using ctrlp to create files/folders? see ctrlp help
   * Add line motions to jumplist
   * Only the start of 'select word' `ga` next and search adds to the jumplist
   * line text object `al` `il`
-
 
 *  (HEAD -> master) Note taking, jumplist, indention                                                                                                          5 hours ago   Andreas Thoelke  [d24bfe4]
 

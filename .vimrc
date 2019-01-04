@@ -32,6 +32,7 @@ Plug 'junegunn/vim-peekaboo'
 " Vim clipboard features: Delete is not yank, substitute operator, yank buffer
 " Plug 'svermeulen/vim-easyclip'
 Plug 'andreasthoelke/vim-easyclip'
+" TODO replace with smaller plugins
 " Briefly highlight the yanked region
 Plug 'machakann/vim-highlightedyank'
 " Highlight trailing whitespace
@@ -40,7 +41,12 @@ Plug 'ntpeters/vim-better-whitespace'
 " Plug 'Yilin-Yang/vim-markbar'
 " Changed header style
 Plug 'andreasthoelke/vim-markbar'
+" Creates vertical window-splits from visual-selections
 Plug 'wellle/visual-split.vim'
+
+" Used as tool functions for working with jumps
+Plug 'inkarkat/vim-ingo-library'
+Plug 'andreasthoelke/vim-EnhancedJumps'
 
 " Completion: -------------------------------------
 " Plug 'ajh17/VimCompletesMe'
@@ -313,6 +319,7 @@ nnoremap gln :OpenInNyaoVim<cr>
 nnoremap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 " Nyaovim Popup: ------------------------
+
 
 " Oni: {{{----------------------------------
 if exists('g:gui_oni')
@@ -738,6 +745,13 @@ endfun
 " .. and then "hi! def link syntaxGroup Highlightgroup"
 " example: "highlight! def link vimCommentTitle Error"
 
+" When modifiable is off
+nnoremap <leader>hhh :call SyntaxGroupEcho()<CR>
+function! SyntaxGroupEcho()
+  let l:s = synID(line('.'), col('.'), 1)
+  echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
+
 " Overview of existing highlight groups:
 " Show a nice output of how all the vim-highlight groups are colored
 command! HighlightTest exec "source $VIMRUNTIME/syntax/hitest.vim"
@@ -981,8 +995,8 @@ set nostartofline
 
 
 " COMMAND HISTORY: --------------------------------------------
-" Type a command slightly more quickly:
-noremap ; :
+" Type a command slightly more quickly: (also → jumplist)
+noremap ; m':
 " This requires that all maps that use ":" (commands!) need to be defiled with "nnoremap"/ "vnoremap"
 " TODO suspend this. wanted to use this to silence/non-<cr> the dirvish shell commands. → fnid a different map for this
 " nnoremap : :silent !
@@ -1004,10 +1018,16 @@ nnoremap j gj
 nnoremap k gk
 
 " Jump to the first and then last line of a paragrapth instead of the blank line after a paragraph
-nnoremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
-nnoremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
+" nnoremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
+" nnoremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
+" Modified to not add to the jumplist
+nnoremap <expr> { len(getline(line('.')-1)) > 0 ? ":exec 'keepjumps normal! {+'<cr>" :  ":exec 'keepjumps normal! {-'<cr>"
+nnoremap <expr> } len(getline(line('.')+1)) > 0 ? ":exec 'keepjumps normal! }-'<cr>" :  ":exec 'keepjumps normal! }+'<cr>"
 vnoremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
 vnoremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
+
+" nnoremap } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
+" nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
 " Some settings for when the file type is not set
 function! PlainText()
@@ -1100,28 +1120,61 @@ vnoremap $ g_
 nnoremap ^ m'^
 nnoremap 0 m'0
 
+nnoremap zz m'zz
 
-augroup NoHLSearch
-  au!
-  autocmd CursorHold,CursorMoved * call <SID>NoHLAfter(4)
-augroup END
 
-function! s:NoHLAfter(n)
-  if !exists('g:nohl_starttime')
-    let g:nohl_starttime = localtime()
-  else
-    if v:hlsearch && (localtime() - g:nohl_starttime) >= a:n
-      :nohlsearch
-      redraw
-      unlet g:nohl_starttime
-    endif
+" Go back to insert start (+ jumplist)
+" autocmd! InsertLeave * exec "normal! m'`["
+autocmd! InsertLeave * call InsertLeave()
+
+func! InsertLeave()
+  " Put end of inserted text into jumplist, then go to the beginning of the insert
+  normal! m'`[
+  " Test if character under cursor is a <space>
+  if getline('.')[col('.')-1] == ' '
+    normal! w
   endif
-endfunction
+endfunc
 
 
-" `)` is a free mapping!
-
-" move in haskell function signature ---------------------------------------------
+" Example: {{{ This saves the cursor pos to the jumplist when the cursor rested for 4 seconds. See ISSUE below.
+" augroup JumplistTimeout
+"   au!
+"   autocmd CursorHold,CursorMoved * call JumplistTimeout_WaitStart( 5 )
+" augroup END
+" function! JumplistTimeout_WaitStart( secs )
+"   if !exists('g:jumplisttimeout_starttime')
+"     " When the cursor-wait starts
+"     let g:jumplisttimeout_starttime = localtime()
+"     let g:jumplisttimeout_waitloc = getpos('.')
+"     " echo "----- WAIT START ------"
+"   else
+"     " A first cursor-motion happened after a wait was had been started
+"     if (localtime() - g:jumplisttimeout_starttime) >= a:secs
+"       " this wait was long enought - add the wait loc to the jumplist
+"       call AddLocToJumplist( g:jumplisttimeout_waitloc )
+"       " echo "saved to loclist!"
+"       unlet g:jumplisttimeout_starttime
+"     endif
+"   endif
+" endfunction
+" " call JumplistTimeout_WaitStart( 3 )
+" }}}
+" {{{ Add a location (a list as returned by getpos() - [bufnum, lnum, col, off]) to the jumplist, 
+" restoring the cursor pos. (Note: this fills in to what I think setpos("''", <loc>) is supposed to do)
+func! AddLocToJumplist ( loc )
+  let l:maintainedCursorPos = getpos('.')
+  " Store the arg-location in the jumplist (there is seemingly no other way to do this)
+  " ISSUE: this line jumps the viewport!
+  call setpos('.', a:loc)
+  normal! m'
+  " Go back to original cursor pos
+  call setpos('.', l:maintainedCursorPos)
+  " This does the same but requires indivitual arg handling: call cursor(a:cursor_pos[1], a:cursor_pos[2])
+endfunc
+" Test: This is the loc of this >> X << character: [0,1158,30,0]. Run the next the next line, then <c-o> to jump to that char
+" }}} call AddLocToJumplist([0,1158,30,0])
+" {{{ move in haskell function signature ---------------------------------------------
 " nnoremap <silent> - :call FindArrow()<cr>w
 " fun! FindArrow()
 "   exec "silent normal! /→\\|⇒\\|∷\<cr>"
@@ -1137,8 +1190,10 @@ endfunction
 " nnoremap <silent> ) /[\(\$\∷\.\⇒\<\→\[\{\#]<cr>
 " nnoremap <silent> - ?[\(\∷\.\⇒\→\[\{]<cr>
 " nnoremap <silent> ) /[\(\∷\.\⇒\→\[\{\#]<cr>
+" }}}
 
-" move to next paragraph/fn ------------------------------------------------------
+
+" {{{ Move to next paragraph/fn ------------------------------------------------------
 nnoremap <silent> <c-l> :call ParagNext()<cr>
 vnoremap <silent> <c-l> }
 " nnoremap <silent> ) :call ParagNext()<cr>
@@ -1151,7 +1206,6 @@ fun! JumpNextNonEmptyLine()
   call search('^.\+')
 endfun
 
-
 " move to previous paragraph/fn
 nnoremap <silent> <c-h> :call ParagPrev()<cr>
 vnoremap <silent> <c-h> {k$
@@ -1163,9 +1217,59 @@ fun! ParagPrev()
     exec "silent normal! {{w"
   endif
 endfun
+" }}} Move to next paragraph/fn ------------------------------------------------------
 
 
 " Movement Naviagation:  ---------------------------------------------------------------------
+
+
+" Jumplist: --------------------------------------
+
+nnoremap <silent> <leader>bb :<c-u>call Qf_jumplist()<cr>
+
+func! Qf_jumplist() abort
+  let jps = EnhancedJumps#Common#GetJumps('jumps')
+  " echomsg jps
+  let jumplist = get( EnhancedJumps#Common#GetJumps('jumps'), 0, [])
+  call setqflist(jumplist)
+  call setloclist(jumplist)
+  lopen
+endfunc
+
+
+
+" call setloclist(0, map(systemlist('ls -a ~/'), {_, p -> {'filename': p}}))
+" call setloclist(0, map(systemlist('ls .vim/notes'), {_, p -> { 'filename': fnamemodify('~/.vim/notes/' . p, ':p:.'),   'text': 'The text: ' . p }}))
+
+" let Abb = { idx, path -> { 'filename': fnamemodify('~/.vim/notes/' . path, ':p:.'), 'lnum': idx, 'text': 'Index: ' . idx }}
+" call setloclist(0, map(systemlist('ls .vim/notes'), Abb))
+"
+"
+" let Abb = { idx, path -> { 'filename': fnamemodify('~/.vim/notes/' . path, ':p:.'), 'lnum': idx, 'text': 'Index: ' . idx }}
+" call setloclist(0, map(systemlist('ls .vim/notes'), Abb))
+"
+" " Without lambda using "v:val" magic var
+" call setloclist(0, map(systemlist('ls .vim/notes'), "{'filename': v:val}"))
+
+call setloclist(0, map( ['.vim/notes/release-notes1.txt', '.vim/notes/color-scheme-doc.md'], "{'filename': v:val, 'col': 2, 'lnum': 4, 'type': '', 'text': 'hi there'}"))
+
+" systemlist('ls -a ~/')
+
+" eins zwei 
+
+" :execute "normal \<C-O>"
+" :execute "normal \<C-I>"
+
+augroup JumplistTimeout
+  au!
+  autocmd CursorHold * exec "normal! m'"
+  " autocmd CursorHold * exec "normal! m'" | echo localtime()
+augroup END
+" TODO try this with updatime
+" Issue: this interval is also used for tagbar loc update
+set updatetime=2000
+
+" Jumplist: --------------------------------------
 
 
 
@@ -1296,6 +1400,7 @@ nnoremap <silent><leader>so :w<cr>:so %<cr>
 nnoremap <silent><leader>sv :so $MYVIMRC<cr>
 " the following paragraph/lines
 nnoremap <leader>s} "ty}:@t<cr>
+nnoremap <leader>sip m'"tyip:@t<cr>``
 " TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
 " the current line
 nnoremap <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
@@ -1591,10 +1696,11 @@ command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
 
 " Deactivate Syntasic for haskell dev in favour of Ale
 let g:syntastic_haskell_checkers = []
+let g:syntastic_javascript_checkers = ['jshint']
 
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
 " turn off initially
 let g:syntastic_check_on_wq = 0
 
@@ -2257,23 +2363,21 @@ endfunction
 
 
 " CamelCaseMotion: ------------------------------------------------------
-
-map <silent> w <Plug>CamelCaseMotion_w
-map <silent> b <Plug>CamelCaseMotion_b
-map <silent> e <Plug>CamelCaseMotion_e
-sunmap w
-sunmap b
-sunmap e
-omap <silent> iw <Plug>CamelCaseMotion_iw
-xmap <silent> iw <Plug>CamelCaseMotion_iw
-omap <silent> ib <Plug>CamelCaseMotion_ib
-xmap <silent> ib <Plug>CamelCaseMotion_ib
-omap <silent> ie <Plug>CamelCaseMotion_ie
-xmap <silent> ie <Plug>CamelCaseMotion_ie
-imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
-imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
-
-
+call camelcasemotion#CreateMotionMappings(',')
+" map <silent> w <Plug>CamelCaseMotion_w
+" map <silent> b <Plug>CamelCaseMotion_b
+" map <silent> e <Plug>CamelCaseMotion_e
+" sunmap w
+" sunmap b
+" sunmap e
+" omap <silent> iw <Plug>CamelCaseMotion_iw
+" xmap <silent> iw <Plug>CamelCaseMotion_iw
+" omap <silent> ib <Plug>CamelCaseMotion_ib
+" xmap <silent> ib <Plug>CamelCaseMotion_ib
+" omap <silent> ie <Plug>CamelCaseMotion_ie
+" xmap <silent> ie <Plug>CamelCaseMotion_ie
+" imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
+" imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
 " CamelCaseMotion: ------------------------------------------------------
 
 
@@ -2483,18 +2587,18 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " TODO limit to nvim?
 " Whenever a new tab is created, set the tab-working dir accordingly
-" autocmd! TabNewEntered * call OnTabEnter(expand("<amatch>"))
-" func! OnTabEnter(path)
-"   if isdirectory(a:path)
-"     let dirname = a:path
-"   else
-"     " let dirname = fnamemodify(a:path, ":h")
-"     let dirname = projectroot#guess( a:path )
-"   endif
-"   " Issue: "tcd" makes mksession fail to reload buffers in tabs where tcd was used
-"   " execute "tcd ". dirname
-"   execute "lcd ". dirname
-" endfunc
+autocmd! TabNewEntered * call OnTabEnter(expand("<amatch>"))
+func! OnTabEnter(path)
+  if isdirectory(a:path)
+    let dirname = a:path
+  else
+    " let dirname = fnamemodify(a:path, ":h")
+    let dirname = projectroot#guess( a:path )
+  endif
+  " Issue: "tcd" makes mksession fail to reload buffers in tabs where tcd was used
+  " execute "tcd ". dirname
+  execute "lcd ". dirname
+endfunc
 
 autocmd! BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
 func! SetWorkingDirectory(path)
@@ -2687,6 +2791,9 @@ nnoremap <c-w>S :vs<cr>
 " new buffer left
 nnoremap <c-w>N :vnew<cr>
 " Note: the standard map "<c-w>s" & "<c-w>n" will split below
+
+" ":h rel-links" - "gk" split right. though "c-w f" splits below - TODO
+let g:rel_open = 'vsplit'
 
 " Resize: Using <c-./,> maps from Karabiner
 " Note: Can't Control-map non-alphanum chars like "."/period:
@@ -3798,7 +3905,7 @@ let g:easy_align_delimiters = {
 " highlight TagbarHighlight guifg=Green ctermfg=Green
 highlight default link TagbarHighlight  Cursor
 " how quickly tagbar (and vim in gnyeneral!) refreshes (from file?)
-set updatetime=500
+" set updatetime=500
 let g:tagbar_sort = 0
 
 
