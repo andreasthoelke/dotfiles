@@ -472,6 +472,8 @@ Toggle map for: set foldcolumn=1 set foldcolumn=0 to show markdown foldlevels
 
 move section? `Utility And Example Commands:`
 
+go to the end of pasted text - similar to end of insert - via jumplist - easyclip has a related map
+
 review:  EXTRACT SIGNATURES:
 
 code block to Gist: https://github.com/mattn/gist-vim
@@ -671,6 +673,7 @@ Insert mode is currently hardly noticable - also the cursor in insert mode
 
 
 ## Release notes v1.0.6
+  * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
   * add to jumplist on updatetime and ex-command (;/:)
   * camelCaseMotion use `,` leader e.g. `v2i,w`, `vi,e`, `v,b,b,b`
   * go to insert start at InsertLeave, save insert end to jumplist

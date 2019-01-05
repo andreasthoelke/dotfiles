@@ -798,10 +798,6 @@ set foldcolumn=0
 set numberwidth=2
 set nonumber
 
-highlight FoldColumn guibg=gray10 guifg=gray20
-hi        LineNr     guibg=gray10 guifg=gray15
-hi        Folded     guifg=#4B5B61 guibg=#0B0B0B
-
 " Trailing Whitespace:
 " vim-better-whitespace plugin
 let g:better_whitespace_guicolor='#333333'
@@ -1225,49 +1221,51 @@ endfun
 
 " Jumplist: --------------------------------------
 
-nnoremap <silent> <leader>bb :<c-u>call Qf_jumplist()<cr>
-
-func! Qf_jumplist() abort
-  let jps = EnhancedJumps#Common#GetJumps('jumps')
-  " echomsg jps
-  let jumplist = get( EnhancedJumps#Common#GetJumps('jumps'), 0, [])
-  call setqflist(jumplist)
-  call setloclist(jumplist)
-  lopen
-endfunc
-
-
-
-" call setloclist(0, map(systemlist('ls -a ~/'), {_, p -> {'filename': p}}))
-" call setloclist(0, map(systemlist('ls .vim/notes'), {_, p -> { 'filename': fnamemodify('~/.vim/notes/' . p, ':p:.'),   'text': 'The text: ' . p }}))
-
-" let Abb = { idx, path -> { 'filename': fnamemodify('~/.vim/notes/' . path, ':p:.'), 'lnum': idx, 'text': 'Index: ' . idx }}
-" call setloclist(0, map(systemlist('ls .vim/notes'), Abb))
-"
-"
-" let Abb = { idx, path -> { 'filename': fnamemodify('~/.vim/notes/' . path, ':p:.'), 'lnum': idx, 'text': 'Index: ' . idx }}
-" call setloclist(0, map(systemlist('ls .vim/notes'), Abb))
-"
-" " Without lambda using "v:val" magic var
-" call setloclist(0, map(systemlist('ls .vim/notes'), "{'filename': v:val}"))
-
-call setloclist(0, map( ['.vim/notes/release-notes1.txt', '.vim/notes/color-scheme-doc.md'], "{'filename': v:val, 'col': 2, 'lnum': 4, 'type': '', 'text': 'hi there'}"))
-
-" systemlist('ls -a ~/')
-
-" eins zwei 
-
-" :execute "normal \<C-O>"
-" :execute "normal \<C-I>"
-
+" Add cursor-rests to jumplist
 augroup JumplistTimeout
   au!
   autocmd CursorHold * exec "normal! m'"
+  " Example Debug Jumplist:
+  " autocmd CursorHold * call JumpsToQuickfix()
+  " autocmd CursorHold * exec "normal! m'" | call JumpsToQuickfix()
   " autocmd CursorHold * exec "normal! m'" | echo localtime()
 augroup END
 " TODO try this with updatime
 " Issue: this interval is also used for tagbar loc update
 set updatetime=2000
+
+" Skip cursor-rest jump if cursor hasn't moved (unfortunate fix) 
+noremap <c-o> :call JumpBackSkipCurrentLoc()<cr>
+func! JumpBackSkipCurrentLoc ()
+  let l:origCursorPos = getpos('.')
+  exec 'normal!' "\<C-o>"
+  if getpos('.') == l:origCursorPos
+    " Jump back one more, /bc the jump back was to the JumplistTimeout autocmd (see below)
+    exec 'normal!' "\<C-o>"
+  endif
+endfunc
+
+nnoremap <leader>cj :clearjumps<cr>
+
+func! JumpsToQuickfix ()
+  call setqflist(map( EnhancedJumps#Common#GetJumps('jumps'), function('MapJumpLineToDict') ) )
+endfunc
+func! MapJumpLineToDict (_, line)
+  return EnhancedJumps#Common#ParseJumpLine( a:line )
+endfunc
+
+" Example Quickfix Lambda: {{{
+" call setloclist(0, map(systemlist('ls -a ~/'), {_, p -> {'filename': p}}))
+" call setloclist(0, map(systemlist('ls .vim/notes'), {_, p -> { 'filename': fnamemodify('~/.vim/notes/' . p, ':p:.'),   'text': 'The text: ' . p }}))
+" let Abb = { idx, path -> { 'filename': fnamemodify('~/.vim/notes/' . path, ':p:.'), 'lnum': idx, 'text': 'Index: ' . idx }}
+" call setloclist(0, map(systemlist('ls .vim/notes'), Abb))
+" let Abb = { idx, path -> { 'filename': fnamemodify('~/.vim/notes/' . path, ':p:.'), 'lnum': idx, 'text': 'Index: ' . idx }}
+" call setloclist(0, map(systemlist('ls .vim/notes'), Abb))
+" Without Lambda: using "v:val" magic var
+" call setloclist(0, map(systemlist('ls .vim/notes'), "{'filename': v:val}"))
+" call setloclist(0, map( ['.vim/notes/release-notes1.txt', '.vim/notes/color-scheme-doc.md'], "{'filename': v:val, 'col': 2, 'lnum': 4, 'type': '', 'text': 'hi there'}"))
+" call setqflist(map( ['.vim/notes/release-notes1.txt', '.vim/notes/color-scheme-doc.md'], "{'filename': v:val, 'col': 2, 'lnum': 4, 'type': '', 'text': 'hi there'}"))
+" }}}
 
 " Jumplist: --------------------------------------
 

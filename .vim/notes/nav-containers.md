@@ -366,6 +366,7 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
 ### Examples
   * `lvim /vimium/ .vim/notes/**` load vimseach results into location list
   * Grep to vim quickfix via process substitution: `nvim -q <(grep -rsni todo .vim/notes/**)` or `vim -q<(!!)`
+  * Use this to debug Jumplist `autocmd CursorHold * call JumpsToQuickfix()`
 
 
 ## Sessions

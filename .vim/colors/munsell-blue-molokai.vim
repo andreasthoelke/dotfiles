@@ -316,6 +316,8 @@ hi! link markbarID Highlight1
 
 " Editor & Quickfix
 hi LineNr guifg=#404040
+hi FoldColumn guibg=gray10 guifg=gray20
+hi Folded     guifg=#4B5B61 guibg=#0B0B0B
 
 
 
