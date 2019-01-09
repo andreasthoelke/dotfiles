@@ -99,10 +99,12 @@ Plug 'edkolev/promptline.vim'
 
 " NyaoVim: {{{-----------------------
 Plug 'andreasthoelke/nyaovim-markdown-preview'
-Plug 'rhysd/nyaovim-popup-tooltip'
-Plug 'rhysd/nyaovim-mini-browser'
+Plug 'andreasthoelke/nyaovim-mini-browser'
+Plug 'andreasthoelke/nyaovim-popup-tooltip'
+" Plug 'rhysd/nyaovim-popup-tooltip'
+" Plug 'rhysd/nyaovim-mini-browser'
 " Plug 'rhysd/nyaovim-markdown-preview'
-Plug 'rhysd/nyaovim-tree-view'
+" Plug 'rhysd/nyaovim-tree-view'
 " }}}
 
 " Colorschemes: ------------------
@@ -156,6 +158,7 @@ Plug 'jelera/vim-javascript-syntax'
 Plug 'elzr/vim-json'
 Plug 'leafgarland/typescript-vim'
 Plug 'mityu/vim-applescript'
+Plug 'bendavis78/vim-polymer'
 
 " Markdown: -------------
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
@@ -237,7 +240,7 @@ Plug 'w0rp/ale'
 " Just 10 lines of code. uses "to" default map
 " Plug 'mpickering/hlint-refactor-vim'
 " Plug 'neomake/neomake'
-Plug 'vim-syntastic/syntastic'
+" Plug 'vim-syntastic/syntastic'
 
 Plug 'parsonsmatt/intero-neovim'
 
@@ -287,13 +290,11 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 " let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
 
 
-" Nyaovim Markdown: ------------------------
+" NyaoVim Markdown: ------------------------
 let g:markdown_preview_eager = 1
 let g:markdown_preview_auto = 0
 " let g:markdown_preview_no_default_mapping = 1
-
 nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
-
 func! MarkdownPreviewToggle()
   if exists( "g:markdown_preview_active" )
     StopMarkdownPreview
@@ -303,22 +304,38 @@ func! MarkdownPreviewToggle()
     let g:markdown_preview_active = 1
   endif
 endfunc
-
-nnoremap <leader>k <Plug>(markdown-preview-scroll-up)
-nnoremap <leader>j <Plug>(markdown-preview-scroll-down)
-
-
+nnoremap <leader>kk <Plug>(markdown-preview-scroll-up)
+nnoremap <leader>jj <Plug>(markdown-preview-scroll-down)
 command! -nargs=1 NyaoVim exec ':Dispatch' 'npm run app --prefix ~/Documents/NyaoVim --' <q-args>
 command! OpenInNyaoVim exec ':Dispatch' 'npm run app --prefix ~/Documents/NyaoVim --' expand('%:p')
 nnoremap gln :OpenInNyaoVim<cr>
+" NyaoVim Markdown: ------------------------
 
-
-" Nyaovim Markdown: ------------------------
-
-" Nyaovim Popup: ------------------------
+" NyaoVim Popup: ------------------------
+let g:nyaovim_popup_tooltip_default_mapping = 0
 nnoremap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
 vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
-" Nyaovim Popup: ------------------------
+" Test: ~/Documents/logo.png
+" NyaoVim Popup: ------------------------
+
+" NyaoVim MiniBrowser: ------------------------
+nnoremap <leader>gx :<c-u>MiniBrowser! <c-r><c-p><cr>
+nnoremap <leader>bo :MiniBrowser!<cr>
+nnoremap <leader>bc :MiniBrowserClose<cr>
+function! Devdocs(query) abort
+  if a:query ==# ''
+    let cword = expand('<cword>')
+    if cword ==# ''
+      MiniBrowser! http://devdocs.io/
+    else
+      execute 'MiniBrowser!' 'http://devdocs.io/#q='.escape(cword, ' \')
+    endif
+    return
+  endif
+  execute 'MiniBrowser!' 'http://devdocs.io/#q='.escape(a:query, ' \')
+endfunction
+command! -nargs=* DevDocs call Devdocs(<q-args>)
+" NyaoVim MiniBrowser: ------------------------
 
 
 " Oni: {{{----------------------------------
@@ -798,6 +815,10 @@ set foldcolumn=0
 set numberwidth=2
 set nonumber
 
+" Don't show the Pipe "|" character vertical window split borders
+set fillchars+=vert:\  
+"hsl(348, 100%, 83%) Could also use the "VertSplit" highlight group
+
 " Trailing Whitespace:
 " vim-better-whitespace plugin
 let g:better_whitespace_guicolor='#333333'
@@ -1200,7 +1221,14 @@ endfun
 
 fun! JumpNextNonEmptyLine()
   call search('^.\+')
+  " Jump to next word if the line is indented
+  " Test if character under cursor is a <space>
+  if getline('.')[col('.')-1] == ' '
+    normal! w
+  endif
 endfun
+" TODO maybe jump to only lines that have a char in row 0
+
 
 " move to previous paragraph/fn
 nnoremap <silent> <c-h> :call ParagPrev()<cr>
@@ -1232,7 +1260,9 @@ augroup JumplistTimeout
 augroup END
 " TODO try this with updatime
 " Issue: this interval is also used for tagbar loc update
-set updatetime=2000
+set updatetime=3000
+" Note: This also defines the time you have to c-o to get to the insert end location. And after this time the jumplist
+" will also get cleaned up/ suffled a bit. Typically c-i is not useful *after* this time - the jumps then basically become c-o jumps
 
 " Skip cursor-rest jump if cursor hasn't moved (unfortunate fix) 
 noremap <c-o> :call JumpBackSkipCurrentLoc()<cr>
@@ -1696,13 +1726,13 @@ command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
 let g:syntastic_haskell_checkers = []
 let g:syntastic_javascript_checkers = ['jshint']
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
 " turn off initially
 let g:syntastic_check_on_wq = 0
 
-let g:psc_ide_syntastic_mode = 1
+" let g:psc_ide_syntastic_mode = 1
 
 hi SyntasticErrorSign   ctermfg=white
 hi SpellBad term=reverse ctermbg=darkgreen
@@ -1715,6 +1745,7 @@ let g:syntastic_style_warning_symbol = "⚠"
 " Todo Temp:
 " nmap <leader>ss :SyntasticToggle<cr>
 nnoremap <leader>sc :SyntasticCheck<cr>
+nnoremap <leader>st :SyntasticToggleMode<cr>
 nnoremap <leader>sr :SyntasticReset<cr>
 
 " SYNTASIC: ---------------------------------------------------
@@ -1973,8 +2004,10 @@ nnoremap <BS> J
 " Push text to the right
 " nnoremap <localleader>> i <Esc>
 " Make it repeatable so the cursor follows the text to the right
-nmap <Plug>PushTextRight i <esc>l:call repeat#set("\<Plug>PushTextRight")<cr>
-nmap <localleader>> <Plug>PushTextRight
+" Followup: it just does this. not sure what the problem was before
+" nmap <Plug>PushTextRight i <esc>l:call repeat#set("\<Plug>PushTextRight")<cr>
+" nmap <localleader>> <Plug>PushTextRight
+nmap <localleader>> i <esc>
 
 
 " Insert line. Related to `]<space>`
@@ -2583,9 +2616,10 @@ nmap z<c-\> z=
 " Open file rel to current buffer dir
 map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 
-" TODO limit to nvim?
+" TODO Test Bufenter - TabNewEntered is only for nvim
 " Whenever a new tab is created, set the tab-working dir accordingly
-autocmd! TabNewEntered * call OnTabEnter(expand("<amatch>"))
+" autocmd! TabNewEntered * call OnTabEnter(expand("<amatch>"))
+autocmd! BufEnter * call OnTabEnter(expand("<amatch>"))
 func! OnTabEnter(path)
   if isdirectory(a:path)
     let dirname = a:path
@@ -3470,13 +3504,16 @@ fun! OpenCurrentFileInSystemEditor()
 endfun
 
 
-" Search: -----------------------------------
+" Search Config: -----------------------------------
 
+" Can just use 'vim' instead of 'vimgrep'
 cnoreabbrev vg vimgrep
+
+
 
 " Vim Grepper: ------------------------------
 " command! -nargs=1 Find  :Grepper -side -query <args>
-command! -nargs=1 Find  :tabe % | Grepper -side -query <args>
+command! -nargs=1 Find  :tabe % | Grepper -tool git -side -query <args>
 command! -nargs=1 Findb :tabe % | Grepper -side -buffers -query <args>
 
 " This works pretty well. could reuse for other purposes

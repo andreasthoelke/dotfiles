@@ -211,7 +211,7 @@ code auto completion:
 ### Nav Buffers
   * **Reveal:** CtrlP `<c-v>` to reveal/go to buffer if it's **shown** in a tab-window somewhere
     * otherwise **open/load** buffer in a vertical split. can then `<c-w>c` that split or close the original or use
-        `<c-w>T` to move it out of this tab into it's own tab.
+        `<c-w>T` to move it out of this tab into its own tab.
 
 ### Load Open Buffer
   * **New Tab:** CtrlP `o` + `t` to load buffer into new tab (no matter if buffer is shown somewhere
@@ -306,9 +306,7 @@ in tutor docs
 
 ### set foldmethod=marker
 integrate fold chars into comments: `fold-create-marker`
-haskell (∷?) 'foldmarker' 'fmr'	string (default: "{{{,}}}")
-  * Example: begin fold: {{{1 end: }}}
-             from "Compos.hs": displayWR ∷ Float → App String -- {{{1
+             from "Compos.hs": displayWR ∷ Float → App String -- { { { 1
 
 ### set foldmethod=syntax
 see :syn-fold
@@ -346,7 +344,7 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
   * jump to start/end of previous selection \`< \`>
 
   * Using seach to navigate
-    You can get an empty line with /^$; or if you don't want to select the empty line itself you can use \n\n to put the cursor at the end of the line before the first blank line:
+    You can get an empty line with /^$; or if you dont want to select the empty line itself you can use \n\n to put the cursor at the end of the line before the first blank line:
     * <S-v>/^$<CR>
     * <S-v>/\n\n<CR>
 
@@ -364,7 +362,8 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
   * use `p` to open file:loc in preview window, `c-w z` or `P` to close preview
 
 ### Examples
-  * `lvim /vimium/ .vim/notes/**` load vimseach results into location list
+  * lvim /vimium/ .vim/notes/** load vimseach results into location list
+
   * Grep to vim quickfix via process substitution: `nvim -q <(grep -rsni todo .vim/notes/**)` or `vim -q<(!!)`
   * Use this to debug Jumplist `autocmd CursorHold * call JumpsToQuickfix()`
 
@@ -523,11 +522,11 @@ see/align with Github wiki repository
 use `c-]` (not `ge`) on the link text to navigate hyperlinks and `c-o` to jump back
   text [link to header in other .md file](notes29-09.md# Rich Text) next text
     * note the space after `#` and that only the beginning of the (case sensitive?) header text needs to match
-  text [link to header in same file](# Navigating markdown) next text
-  text [link to an .md file](notes29-09.md) next text
-  text [link to website](http://purescript.org) next text
+      text [link to header in same file](# Navigating markdown) next text
+      text [link to an .md file](notes29-09.md) next text
+      text [link to website](http://purescript.org) next text
     * have to use `gx` on either the link text or the url
-text [link to string in other file type](commit-nts1.txt#Command) next text text [link to string in other file type](commit-nts1.txt#Vimium) next text text [link to string in other file type](../utils/termin1.vim#PURESCRIPT) next text
+      text [link to string in other file type](commit-nts1.txt#Command) next text text [link to string in other file type](commit-nts1.txt#Vimium) next text text [link to string in other file type](../utils/termin1.vim#PURESCRIPT) next text
   jump to [Repl eval docs in termin1.vim file](../utils/termin1.vim#Repl Eval Insert:) using relative-back path, not having to escape white space
   from any filetype to any search-word: ~/.vimrc#/set whitespace escape: help:rel.txt#/should%20refer
   text commit-nts1.txt#/#%20Vimium%20workflow

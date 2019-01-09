@@ -1,5 +1,10 @@
 ## Housekeeping, Cache Files, Cleanup
-call markdown_preview#scroll('down')
+
+ > some
+ > line
+ > * in here
+ >
+
 ### Shada
   * `ShadaClear` does: "!rm" . ' ~/.local/share/nvim/shada/main.shada'
     but I think I have to do this when vim is off
@@ -81,6 +86,22 @@ http://nosubstance.me/post/mutt-secret-sauce/
 
 ## Searching
 
+  1. `:Find <searchword>`
+    * only in git files
+    * on sidebar, with context
+    * in new tab
+    * based on project root
+
+  see ~/.vimrc#/Search%20Config:
+
+  2. search vimconf and notes
+    `vim /andreasthoelke/ ~/.vimrc ~/.vim/utils/** ~/.vim/notes/**`
+    `Ag andreasthoelke ~/.vimrc ~/.vim/utils/** ~/.vim/notes/**`
+
+  3. the fastest way to seach an entire project folder:
+    `nvim -q<(ag "new BrowserWindow" **)`
+    → use quickfix to navigate results
+
   * a recursive grep + fzf
       `grep -r nyaovim ~/.vim | fzf` or `grep -r nyaovim . | fzf`
       then type "init Plug" and `j/k` select this path
@@ -158,7 +179,7 @@ A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookm
 
 ## NOTES .MD EDITOR
 
-### Current state (29-12-2018):
+Current state (29-12-2018):
 
   * run `glm` or `:Markdown` to
     * launch a grip-server and
@@ -205,11 +226,12 @@ there is also vim-pencil and http://vimwiki.github.io/ and vim-orgmode
 run vim-tutor of https://github.com/reedes/vim-pencil
 or run vimtutor of vim-pad?
 
-* Pandoc
+  Pandoc
   links in haskell docs lhs? pandoc
   support: literate haskell, SoH Markdown
   not hide/conceile image tags in markdown
   can I just use html image tags in markdown?
+
 
 ## Some command line ideas
 
@@ -365,25 +387,70 @@ Config path
 
 
 ## Chromium
-can start Chromium macos app and
- * install extensions
- * go to settings
-" Closing The Window: End the terminal session? Use "call jobstop(s:markdown_job_id)"
+  can start Chromium macos app and
+   * install extensions
+   * go to settings
+   * Closing The Window: End the terminal session?
+     * Use "call jobstop(s:markdown_job_id)"
+
 
 ## NVim GUI Clients: NyaoVim, vimR, nvim-qt, VeoNim
 
 ### NyaoVim
   * start with `gln` or :NyaoVim ''
 
+  Config
+    * NyaoRC. html ~/.config/nyaovim/nyaovimrc.html
+    * Markdown preview config ~/.vimrc#/NyaoVim%20Markdown:
+
+
+  Markdown
+    * `leader mp`
+    - TODO call markdown_preview#scroll('down')
+
+  Mini Browser
+    * `leader bo/bc` to open/close browser
+    * Use `leader gx` on Url http://purescript.org https://github.com
+    * back and forward buttons work
+
+  Popup
+    * `leader gi`
+    * Test: ~/Documents/logo.png
+
+
+> Open DevTools
+call nyaovim#open_devtools('undocked')
+
+> Use NyaoVim Methods via RpcNotify
+call rpcnotify( 0, 'mini-browser:demo1', 'some text' )
+call rpcnotify( 0, 'mini-browser:scrollup' )
+call rpcnotify( 0, 'mini-browser:scrolldown' )
+
+
+> Run JavaScript
+call nyaovim#execute_javascript('console.log("hi nyao")')
+call nyaovim#execute_javascript('console.log(document)')
+
+> Get DOM element does not work
+call nyaovim#execute_javascript('console.log( document.getElementById("mini-browser-view") )')
+call nyaovim#execute_javascript('(function(){ var win1 = require("electron").remote.getCurrentWindow(); console.log( win1.document.getElementById("mini-browser-view")); })()')
+
+> Require Electorn API, close DevTools
+call nyaovim#execute_javascript('(function(){ var win1 = require("electron").remote.getCurrentWindow(); win1.closeDevTools()})()')
+
+> Call JS function TODO test
+call nyaovim#call_javascript_function('fnname', 'arg')
+> Browser window - but no fullscreen available
+call nyaovim#browser_window('setFullScreen', [v:true])
+
+
+
 
 #### Summary 12-2018:
   + fonts align perfectly with alacritty
-  - scrolling is a bit jumpy
+  - scrolling is a bit jumpy/slow
+  - have to use with nvim 0.3.1 - otherwise I get a lot of unhandled 'flush' events
 
-
-#### Config
-  * NyaoRC. html ~/.config/nyaovim/nyaovimrc.html
-  * Markdown preview config ~/.vimrc#/Nyaovim%20Markdown:
 
 
 #### old notes
@@ -398,7 +465,7 @@ can start Chromium macos app and
   + the scrollbars I always wanted. Small, proportional in view range, transparent
   + soft scrolling and tab transitions
   + it shows bubble help!
-  + markbar preview scrolls in sync!
+  + markdown preview scrolls in sync!
   + browser works via this command
     - window resize needs another keystroke
 
@@ -466,6 +533,34 @@ let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
 ## Completion
 
+## Low priority
+
+a start screen?
+https://github.com/mhinz/vim-startify
+
+mudo - autosave sometimes get confused
+
+send meeting invites quickly
+  Slack/ FBMessenger integration?
+  asana integration?
+  send to time manager! (have regular interval events?)
+show e.g. a bookmark timebuddy, google search?
+
+code block to Gist: https://github.com/mattn/gist-vim
+
+show browser win at location -
+
+goyo for notes taking?
+
+" `)` is a free mapping!
+
+review:  EXTRACT SIGNATURES:
+
+learn about conceal feature
+usecaes:
+  * haskell lambda, Integer/String symbols (example plugin)
+  * hide quotes?
+
 ## Todos
 
 Toggle map for: set foldcolumn=1 set foldcolumn=0 to show markdown foldlevels
@@ -473,18 +568,6 @@ Toggle map for: set foldcolumn=1 set foldcolumn=0 to show markdown foldlevels
 move section? `Utility And Example Commands:`
 
 go to the end of pasted text - similar to end of insert - via jumplist - easyclip has a related map
-
-review:  EXTRACT SIGNATURES:
-
-code block to Gist: https://github.com/mattn/gist-vim
-
-send meeting invites quickly
-  show browser win at location -
-  show e.g. a bookmark timebuddy, google search?
-
-Slack/ FBMessenger integration?
-asana integration?
-send to time manager! (have regular interval events?)
 
 consolidate vim Tips "Tip" is redundant?!
 align vim tips to after ":"
@@ -494,16 +577,9 @@ general: quickly share urls with Android, mac, other iphone
 how are check-lists rendered in markdown?
 can I check those or is this implemented in the vim orgmode?
 
-learn about conceal feature
-usecaes:
-  * haskell lambda, Integer/String symbols (example plugin)
-  * hide quotes?
 
   match(it) "" in markdown syntax to highlight strings
 
-goyo for notes taking?
-
-" `)` is a free mapping!
 
 Popup Tooltip UI
  * Hover over the following line and `localleader-gi`
@@ -549,11 +625,11 @@ make `rm -r` commands move to trash?
 * next tab navigation in google docs
     * vim/vimium navigarion in google docs?
 
-    " `gf` opens file under cursor in a new vertical split
+    * `gf` opens file under cursor in a new vertical split
     nnoremap gf :vertical wincmd f<CR>
     → local haskell and PS maps
 
-    grepper maps to collect (→ markbar usecase?)
+    grepper maps to collect interesing results via marks (→ markbar usecase?)
     local plugin window maps
     function! s:side_buffer_settings() abort
 
@@ -576,8 +652,10 @@ make `rm -r` commands move to trash?
   > change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
   some start Documents/PS/2/pux-todo/node_modules/anymatch
 
+  * markbar currently only shows the filename. filename - projectfoldername would be useful 
+      to destinguish across projects
 
-## Current Todos
+### Current Todos
 
 * scroll indicator https://www.reddit.com/r/vim/comments/6xkjz9/presenting_vimlinenoindicator_see_your_position/
 
@@ -586,9 +664,13 @@ make `rm -r` commands move to trash?
   * extend this to splitting out to (the top of) a right bar column
 
 * Update Readme
+  * vim setup focused on
+    - Haskell, Purescript development
+    - Markdown, Note writing
+  * point to nav-container.md?
+  * point to release notes? or extract into readme?
   * screenhot
   * some featues
-  * not just PS and Haskell
 
 * email https://neomutt.org/distro/homebrew
 
@@ -610,6 +692,8 @@ make `rm -r` commands move to trash?
     show curr working dir in tmux-line!!?
 
 * add arglist indicator to statusline? → StatuslineArglistIndicator()
+
+* easyclip smaller plugins
 
   search should not add to jumplist - only the beginning
     many other motions should add to the jumplist. all tricky motions?
@@ -645,14 +729,6 @@ highlight vim comment header `" Examples: --` in markbar/purescript syntax
 
 
 migrate docs from termin1.vim and vimrc
-do I want a searchable wiki?
-
-mudo - autosave sometimes get confused
-
-
-a start screen?
-https://github.com/mhinz/vim-startify
-
 
 consider using ctrlp to create files/folders? see ctrlp help
         f)  Type the name of a non-existent file and press <c-y> to create it. Mark a
@@ -666,17 +742,18 @@ consider using ctrlp to create files/folders? see ctrlp help
 
 Insert mode is currently hardly noticable - also the cursor in insert mode
 
+push text to the right currently requires two undos
+
+
 
 ## Temp next
-  * easyclip smaller plugins
-  * if empty char then w
-
+  nyaovim markdown scrolling
 
 ## Release notes v1.0.6
-  * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
-  * add to jumplist on updatetime and ex-command (;/:)
-  * camelCaseMotion use `,` leader e.g. `v2i,w`, `vi,e`, `v,b,b,b`
-  * go to insert start at InsertLeave, save insert end to jumplist
+* Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
+* add to jumplist on updatetime and ex-command (;/:)
+* camelCaseMotion use `,` leader e.g. `v2i,w`, `vi,e`, `v,b,b,b`
+* go to insert start at InsertLeave, save insert end to jumplist
 
 ## Release notes v1.0.5
   * close win above, below, left, right with `<c-w>d`: `k/j/h/l`

@@ -25,3 +25,38 @@ v1.0.2
 * dirvish and arglist notes
 * search notes
 
+temp
+
+<script>
+(function(){ 'use strict';
+
+ const neovim_element = document.getElementById('neovim');
+ const Store = neovim_element.editor.store;
+
+ const ThisWindow = require('electron').remote.getCurrentWindow();
+
+ console.log('Got this window:');
+ console.log(ThisWindow);
+
+ // Handle cursor movements
+ Store.on('cursor', () => console.log('Cursor is moved to ', Store.cursor));
+
+ // Handle mode changes
+ Store.on('mode', () => console.log('Mode is changed to ', Store.mode));
+
+ // Handle text redraws
+ Store.on('put', () => console.log('UI was redrawn'));
+
+ // Accessing the state of the editor.
+ const bounds = [ Store.size.lines, Store.size.cols ];
+ const cursor_pos = [ Store.cursor.line, Store.cursor.col ];
+
+ console.log('Bounds:');
+ console.log(bounds);
+
+})();
+</script>
+
+
+
+

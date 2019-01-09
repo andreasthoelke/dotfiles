@@ -33,6 +33,8 @@ export VIMDATA=~/vimtmp
 # Kitty is a terminal (similar to Alacritty)
 export KITTY_CONFIG_DIRECTORY="/Users/andreas.thoelke/.config/kitty"
 
+# export ONI_NEOVIM_PATH="/usr/local/Cellar/neovim/0.3.3/bin/"
+
 # Neovim Remote: ---------------------------------------------------------
 alias vi="nvr -l "
 # when in terminal mode, use neo-vim-remote to open file in the host

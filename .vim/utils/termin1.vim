@@ -341,8 +341,10 @@ endfunction
 " Search Zsh Command History: - "c-r" then type e.g. "vim"
 " Get Past Zsh Arguments: - example "ls somepath", then you might want "ls -a !!1" hit <tab> to get "ls -a somepath"
 " Install Paths: -- "which zsh".
-" Brew Installs: Brew installs here: "/usr/local/bin/" use "ls -la /usr/local/bin/zs*" or "brew list", "brew info"
+" Brew Installs: Brew installs here: "/usr/local/bin/" - actually here: "ls -la /usr/local/Cellar/" Use "ls -la /usr/local/bin/zs*" or "brew list", "brew info"
+" NeoVim Binary Path: - /usr/local/Cellar/neovim/0.3.3/bin
 " Brew Cask: - "brew tap caskroom/versions" then `brew cask install iterm2-nightly`
+" Brew Switch Version: - "brew list --versions nvim" - "brew switch neovim 0.3.1"
 " Read User Shell From Directory Service: - "dscl . -read /Users/$USER UserShell"
 " ITerm Windows: - "Arrangements" tab specifies init window arrangement, "Profiles" tab specifies how a new window is opened
 " Quickly create and delete folders: "mkcd test2" then "rmcurdir"
