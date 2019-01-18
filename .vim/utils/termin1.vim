@@ -444,6 +444,12 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 
 
 
+" Tests: ----------------------------
+
+
+
+" Tests: ----------------------------
+
 
 
 function! OnEv1(job_id, data, event) dict
@@ -680,7 +686,8 @@ endfunction
 inoremap II <Esc>I
 
 " .. or have shortcuts like this:
-nnoremap <localleader>sh :set syntax=help<cr>
+nnoremap <localleader>sh :set syntax=html<cr>
+nnoremap <localleader>sj :set syntax=javascript<cr>
 nnoremap <localleader>sv :set syntax=vim<cr>
 nnoremap <localleader>sm :set syntax=markdown<cr>
 nnoremap <localleader>sp :set syntax=purescript<cr>
@@ -1039,6 +1046,20 @@ endfunction
 " autocmd! FocusGained * :echo "focus gained!"
 " Bufferlocal Autocmd: needs to be attached when a buffer is created, e.g. via a map
 " autocmd! WinEnter <buffer> echom 'Buffer-local event from buffer: ' . bufname('%')
+" Dynamically Create And Revoke AutoCmds: 
+" function! markdown_preview#start() abort
+"   " Set up an autocommand that passes the buffer text into the plugin
+"   augroup plugin-mdprev-watcher
+"     autocmd!
+"     execute 'autocmd' TextChanged "<buffer> call rpcnotify(0, 'markdown-preview:update', join(getline(1, '$'), \"\\n\"))"
+"     autocmd BufUnload,BufHidden <buffer> call markdown_preview#stop()
+"   augroup END
+"   call rpcnotify(0, 'markdown-preview:update', join(getline(1, '$'), "\n"))
+" endfunction
+" function! markdown_preview#stop() abort
+"   silent! autocmd! plugin-mdprev-watcher
+"   call rpcnotify(0, 'markdown-preview:update', '')
+" endfunction
 
 " Highlight Specific Strings Patterns:
 " highlight MyGroup guibg=green

@@ -1,23 +1,44 @@
 ## Housekeeping, Cache Files, Cleanup
 
- > some
- > line
- > * in here
- >
+ some
+ line
+ * in here
+ * and more
+
+> test
+> this
 
 ### Shada
   * `ShadaClear` does: "!rm" . ' ~/.local/share/nvim/shada/main.shada'
     but I think I have to do this when vim is off
 
   * Marks save format:
-          Global mark with timestamp 2018-12-21T18:29:55:
-            % Key  Description  Value
-            + n    name         'A'
-            + f    file name    "/Users/andreas.thoelke/.vim/notes/notes29-09.md"
-            + l    line number  730
-            + c    column       0
+  ``` 
+  Global mark with timestamp 2018-12-21T18:29:55:
+      % Key  Description  Value
+      + n    name         'A'
+      + f    file name    "/Users/andreas.thoelke/.vim/notes/notes29-09.md"
+      + l    line number  730
+      + c    column       0
+  ```
+
   * also contains jumps, changes, history, ..
   * does this replace all/most of what is stored in .viminfo file?
+
+``` javascript
+function updateMenu(browserWindow, loadInit) {
+    const menu = menu_1.buildMenu(browserWindow, loadInit);
+    if (process.platform === "darwin") {
+        electron_1.Menu.setApplicationMenu(menu);
+        const dockMenu = menu_1.buildDockMenu(browserWindow, loadInit);
+        electron_1.app.dock.setMenu(dockMenu);
+    }
+    else {
+        browserWindow.setMenu(menu);
+    }
+}
+```
+
 
 [config](../../.vimrc#Shada:)
 
@@ -392,7 +413,7 @@ Config path
    * go to settings
    * Closing The Window: End the terminal session?
      * Use "call jobstop(s:markdown_job_id)"
-
+   * test URL: http://purescript.org
 
 ## NVim GUI Clients: NyaoVim, vimR, nvim-qt, VeoNim
 
@@ -410,11 +431,13 @@ Config path
 
   Mini Browser
     * `leader bo/bc` to open/close browser
-    * Use `leader gx` on Url http://purescript.org https://github.com
+    * Use `leader gx` on Url http://purescript.org https://github.com http://docs.google.com
+    https://chrome.google.com/webstore/category/extensions
+    https://docs.google.com/document/d/12NNunuYleBu5d-scEkxIJMZbOIn6fVsvszbCwAxJ0CI/
     * back and forward buttons work
 
   Popup
-    * `leader gi`
+    * `gi`
     * Test: ~/Documents/logo.png
 
 
@@ -422,17 +445,32 @@ Config path
 call nyaovim#open_devtools('undocked')
 
 > Use NyaoVim Methods via RpcNotify
-call rpcnotify( 0, 'mini-browser:demo1', 'some text' )
-call rpcnotify( 0, 'mini-browser:scrollup' )
-call rpcnotify( 0, 'mini-browser:scrolldown' )
+call rpcnotify( 0, 'markdown-preview:scrollToLine', 223 )
 
+call rpcnotify( 0, 'markdown-preview:scroll', 'down' )
+call rpcnotify( 0, 'markdown-preview:scroll', 'up' )
+
+call rpcnotify( 0, 'mini-browser:demo1', 'some text' )
+call rpcnotify( 0, 'sometest2' )
+
+call rpcnotify( 0, 'dev-tools:open' )
+call rpcnotify( 0, 'mini-browser:devtoolsopen' )
+call rpcnotify( 0, 'dev-tools:close' )
+
+call rpcnotify( 0, 'mini-browser:scrollTo', 0, 150)
+call rpcnotify( 0, 'mini-browser:scrollTo', 0, 0)
+
+nnoremap Y :call rpcnotify( 0, 'mini-browser:scrollBy', 0, -50)<cr>
+nnoremap E :call rpcnotify( 0, 'mini-browser:scrollBy', 0, 50)<cr>
 
 > Run JavaScript
 call nyaovim#execute_javascript('console.log("hi nyao")')
 call nyaovim#execute_javascript('console.log(document)')
 
 > Get DOM element does not work
-call nyaovim#execute_javascript('console.log( document.getElementById("mini-browser-view") )')
+call nyaovim#execute_javascript('(function(){ var win1 = require("electron").remote.getCurrentWindow(); console.log("hiii: " + win1); })()')
+
+
 call nyaovim#execute_javascript('(function(){ var win1 = require("electron").remote.getCurrentWindow(); console.log( win1.document.getElementById("mini-browser-view")); })()')
 
 > Require Electorn API, close DevTools
@@ -443,8 +481,15 @@ call nyaovim#call_javascript_function('fnname', 'arg')
 > Browser window - but no fullscreen available
 call nyaovim#browser_window('setFullScreen', [v:true])
 
-
-
+> Fire a Vim Command from a JS Plugin
+click: () => {
+  if ((win.webContents as any).isFocused()) {
+    // send the command to the nyaovim-app
+    win.webContents.send('nyaovim:exec-commands', ['undo']);
+  } else {
+    // execute the default command
+    webContents.getFocusedWebContents().undo();
+}
 
 #### Summary 12-2018:
   + fonts align perfectly with alacritty
@@ -452,6 +497,9 @@ call nyaovim#browser_window('setFullScreen', [v:true])
   - have to use with nvim 0.3.1 - otherwise I get a lot of unhandled 'flush' events
 
 
+#### Summary 1-2019:
+  * Markdown scrolling/autoscrolling works. But the current line is scrolled to the top of the markdown preview. it should instead be centered and highlighted
+  * Problem is that Nyaovim lags a bit and the fonts are not as nice as in Alacritty
 
 #### old notes
     > just <leader>ss this line - but this blocks nvim while nyaovim is running
@@ -499,7 +547,7 @@ GuiPopupmenu 0
 
 ### VeoNim
 
-[conf](../../.vimrc# VeoNim:)
+[conf](../../.vimrc#%20VeoNim:)
 
 #### Summary 12-2018:
   - setting the font-size was still hacky
@@ -532,7 +580,9 @@ what are buffertags?
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
 ## Completion
-
+   * eins
+   * zwei
+   * drei
 ## Low priority
 
 a start screen?
@@ -581,9 +631,11 @@ can I check those or is this implemented in the vim orgmode?
   match(it) "" in markdown syntax to highlight strings
 
 
-Popup Tooltip UI
- * Hover over the following line and `localleader-gi`
- /Users/andreas.thoelke/Pictures/download.jpeg
+Image quick view feature
+below was only for nyaovim
+  Popup Tooltip UI
+   * Hover over the following line and `localleader-gi`
+   /Users/andreas.thoelke/Pictures/download.jpeg
 
 * Cleanup patched plugings
   * fork the original repo, pull it locally
@@ -655,6 +707,8 @@ make `rm -r` commands move to trash?
   * markbar currently only shows the filename. filename - projectfoldername would be useful 
       to destinguish across projects
 
+  AsyncRun plugin may be useful: AsyncRun git push origin master
+
 ### Current Todos
 
 * scroll indicator https://www.reddit.com/r/vim/comments/6xkjz9/presenting_vimlinenoindicator_see_your_position/
@@ -674,11 +728,13 @@ make `rm -r` commands move to trash?
 
 * email https://neomutt.org/distro/homebrew
 
-  # next/prev through bufferlist where to show?
-    * command bar - as it's temp anyway
-    * in a horz split win at the top - to keep tabline visible
-    * temp switch tabline to bufline
-  ## Prob:
+next/prev through bufferlist where to show?
+
+  * command bar - as it's temp anyway
+  * in a horz split win at the top - to keep tabline visible
+  * temp switch tabline to bufline
+
+## Prob:
   bufferlist sequence is rated arbit (unmanagable?)
   you want groups/lists of files
   → could create separate buffer lists (attach to tab/win?)
@@ -744,10 +800,15 @@ Insert mode is currently hardly noticable - also the cursor in insert mode
 
 push text to the right currently requires two undos
 
+`ga` selects word, maybe gA for selecting big Word?
+
+"m is undefined" error when opening markbar for the first time
+  this just did not happen
+
+typing in insert mode sometimes gets jumpy - gone after restart
 
 
 ## Temp next
-  nyaovim markdown scrolling
 
 ## Release notes v1.0.6
 * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
