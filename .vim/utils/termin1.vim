@@ -705,7 +705,9 @@ abbrev mul Multiple<CR>lines
 " Using mini bar and start URL: "chromium --app=http://purescript.org --window-position=200,50 --window-size=60,60"
 " Closing The Window: End the terminal session? Use "call jobstop(s:markdown_job_id)"
 
+" Terminal win opens
 command! -nargs=1 Chromium exec ':Dispatch' '/Applications/Chromium.app/Contents/MacOS/Chromium --app=' . <q-args> '--window-size=500,400 --window-position=800,20'
+" With addressbar and terminal in other tab
 command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/MacOS/Chromium ' . <q-args>
 
 " let Tid = jobstart("/Applications/Chromium.app/Contents/MacOS/Chromium http://purescript.org")
@@ -804,6 +806,18 @@ endfunc
 " call DemoOpenFinderWindow()
 " Todo: jobsend example!
 
+" Timers Timeouts Intervals:
+" call timer_start(1000, 'TestHandler', {'repeat': 3})
+let g:cnt = 0
+func! TestHandler( timer )
+  let g:cnt = g:cnt + 1
+  if g:cnt > 1
+    call timer_stop( a:timer )
+    echo 'done'
+  endif
+  echo ('yes ' . g:cnt)
+endfunc
+
 " Vim Vars In Command Line:
 " "!echo This-is-the-dir:% >> ccdd" use the dirvish path in the echo >> command/ write it to a file
 
@@ -889,11 +903,12 @@ func! AppleScriptRunAndForgetAsync (ascode)
   exec 'Dispatch!' 'osascript' '-e' shellescape( a:ascode )
 endfunc
 
+" call AppleScriptRunAndForget('tell application "Google Chrome" to open location "http://github.com"'){{{
 " call AppleScriptRunAndForget('tell application "Finder" to make new Finder window')
 " call AppleScriptRunAndForget('tell application "System Events" to key code 124 using {control down}')
 " call AppleScriptRunAndForgetAsync('tell application "Finder" to make new Finder window')
 " call AppleScriptRunAndForgetAsync('tell application "System Events" to key code 124 using {control down}')
-" Running AppleScript: ----------------------------------------------------------------
+" Running AppleScript: ----------------------------------------------------------------}}}
 
 
 

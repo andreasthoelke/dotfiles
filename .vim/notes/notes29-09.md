@@ -413,7 +413,113 @@ Config path
    * go to settings
    * Closing The Window: End the terminal session?
      * Use "call jobstop(s:markdown_job_id)"
-   * test URL: http://purescript.org
+   * Use `<leader>gx` to open URL: http://purescript.org https://github.com
+     * TODO, this opens terminal tab. 
+       * → allows to close tab/chromium from vim
+       * → automatically sessionrecreates the browserwins!!
+   * `gx` works for Chrome. not sure where this is configured though
+
+Status:
+  this throws channelID errors and sometimes vimium does not launch
+    nnoremap <leader>gx :call LaunchChromium('<c-r><c-p>')<cr>
+
+let g:js = '(function() { var nodes = document.querySelectorAll("h2"); var titles = []; for (var i = 0; i < 5; i++) { titles.push(nodes[i].innerHTML) } return titles.join(" "); })();'
+
+let g:js = '(function() { var nodes = document.querySelectorAll("h2"); var titles = []; for (var i = 0; i < 5; i++) { titles.push(nodes[i].textContent) } return titles.join(","); })();'
+
+let g:js = 'console.log( abc1 )'
+let g:js = 'console.log("hi")'
+
+let g:js = 'abc1 = "test"'
+
+chrome-cli execute '(function() { var nodes = document.querySelectorAll("h2"); var titles = []; for (var i = 0; i < 5; i++) { titles.push(nodes[i].innerHTML) } return titles.join("
+"); })();'
+
+echo system('chrome-cli execute ' . shellescape(g:js))
+
+call system('chrome-cli open http://github.com')
+
+!chrome-cli open http://github.com
+echo system('chrome-cli execute ' . shellescape(@a))
+
+
+(function() {
+  return document.readyState === 'complete';
+})();
+
+call timer_start(1000, function("Backer", ["one"]))
+
+{{{
+call timer_start(1000, 'TestHandler', {'repeat': 3})
+let g:cnt = 0
+func! TestHandler( timer )
+  let g:cnt = g:cnt + 1
+  if g:cnt > 1
+    call timer_stop( a:timer )
+    echo 'done'
+  endif
+  echo ('yes ' . g:cnt)
+endfunc
+}}}
+
+
+
+testi
+
+silent !chrome-cli activate -t 1192
+silent !chrome-cli activate -t 1182
+
+func! Backer(foo, ...)
+  echo 'back: ' ++ a:foo
+endfunc
+
+could to google search with quickfix list
+
+window.location = 'http://purescript.org';
+window.location = 'http://github.com';
+window.open('https://www.codexworld.com', '_blank');
+
+Overview Installation JavaScript execution Usage Examples
+
+Overview,Installation,JavaScript execution,Usage,Examples
+
+chrome-cli
+  Overview
+  Installation
+      Homebrew
+      Manual
+        Downloads
+  JavaScript execution
+  Usage
+  Examples 
+
+func! InsertHeadingTexts()
+  let g:headingsStartLine = line('.')
+  let g:headingTextAsLines = system('chrome-cli execute ' . shellescape( @a ))
+  call append( line('.') - 1, '' )
+  call append( line('.') - 2, split( g:headingTextAsLines, ',') )
+  exec 'normal!' ++ g:headingsStartLine ++ 'G'
+endfunc
+call InsertHeadingTexts()
+
+Here, we get a list of <p> elements whose immediate parent element is a div with the class "highlighted" and which are located inside a container whose ID is "test".
+
+var container = document.querySelector("#test");
+var matches = container.querySelectorAll("div.highlighted > p");
+
+(function() {
+  var content = document.querySelector('article');
+  var headingElems = content.querySelectorAll('h1, h2, h3, h4, h5');
+  var headingTexts = Array.from( headingElems ).map( el => {
+                                                       const indent = ' '.repeat( 2 * (el.tagName[1] - 1) );
+                                                       return indent + el.textContent;
+                                                     }).join(',');
+  return headingTexts;
+})();
+
+
+
+return 
 
 ## NVim GUI Clients: NyaoVim, vimR, nvim-qt, VeoNim
 
@@ -611,16 +717,14 @@ usecaes:
   * haskell lambda, Integer/String symbols (example plugin)
   * hide quotes?
 
-## Todos
-
 Toggle map for: set foldcolumn=1 set foldcolumn=0 to show markdown foldlevels
 
 move section? `Utility And Example Commands:`
-
 go to the end of pasted text - similar to end of insert - via jumplist - easyclip has a related map
-
 consolidate vim Tips "Tip" is redundant?!
 align vim tips to after ":"
+
+## Todos
 
 general: quickly share urls with Android, mac, other iphone
 
@@ -700,7 +804,7 @@ make `rm -r` commands move to trash?
   c-s-w is awkward and should be consitent
 
   c-s J/K/L/H is pretty intuitive!
-
+                                                  j
   > change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
   some start Documents/PS/2/pux-todo/node_modules/anymatch
 
@@ -711,11 +815,12 @@ make `rm -r` commands move to trash?
 
 ### Current Todos
 
+put notes in separate files?
+https://github.com/rhysd/vim-notes-cli
+https://github.com/rhysd/notes-cli
+
 * scroll indicator https://www.reddit.com/r/vim/comments/6xkjz9/presenting_vimlinenoindicator_see_your_position/
 
-* Splits
-  * https://github.com/wellle/visual-split.vim
-  * extend this to splitting out to (the top of) a right bar column
 
 * Update Readme
   * vim setup focused on
@@ -734,7 +839,7 @@ next/prev through bufferlist where to show?
   * in a horz split win at the top - to keep tabline visible
   * temp switch tabline to bufline
 
-## Prob:
+Prob:
   bufferlist sequence is rated arbit (unmanagable?)
   you want groups/lists of files
   → could create separate buffer lists (attach to tab/win?)
@@ -751,11 +856,6 @@ next/prev through bufferlist where to show?
 
 * easyclip smaller plugins
 
-  search should not add to jumplist - only the beginning
-    many other motions should add to the jumplist. all tricky motions?
-
-  nyaovim fontsize, popup test, minibrowser
-  vifm: show last changed in hours vs size!
   Grepper: Test running in Haskell hello44 vs Homedir
            How to quickly change dir the underlying shell?
            How to get the current folder path into an ex-command?

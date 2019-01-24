@@ -400,7 +400,6 @@ current termina questions. see screenshot:
 
 ## Working modes
 
-TODO  make selection into window split? plugin
 
 ### Focused implementation of one code part
 
@@ -562,7 +561,7 @@ arglists and marks:
 ## Code Movement, Motions, Editing
 
 ### TODO
-  * DONE: I often want to paste/copy to the end of the line but excluding the new-line character
+
 
 
 ### Line

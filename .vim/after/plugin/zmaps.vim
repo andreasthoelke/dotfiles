@@ -10,6 +10,7 @@ nnoremap yot :TagbarToggle<cr>
 " Note: have to copy these maps to ~/.vim/after/plugin/zmaps.vim because EasyClip is diffcult to control
 " nnoremap Y :call rpcnotify( 0, 'mini-browser:scrollBy', 0, -50)<cr>
 " nnoremap E :call rpcnotify( 0, 'mini-browser:scrollBy', 0, 50)<cr>
-nnoremap <silent> Y :call NyaoSplitScroll('up')<cr>
-nnoremap <silent> E :call NyaoSplitScroll('down')<cr>
+" Worked. But not persuing NyaoVim any more
+" nnoremap <silent> Y :call NyaoSplitScroll('up')<cr>
+" nnoremap <silent> E :call NyaoSplitScroll('down')<cr>
 

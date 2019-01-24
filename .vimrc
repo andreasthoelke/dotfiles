@@ -22,6 +22,9 @@ Plug 'andreasthoelke/vim-dirvish'
 " Plug 'vifm/neovim-vifm'
 " Plug 'vifm/vifm.vim'
 
+" Browser Integration: ---------
+" Plug 'carlosrocha/vim-chrome-devtools', { 'do': 'npm install && npm run build' }
+
 " Tools: ------------------------------------------
 " Show Tags. Note: There is a Haskell integration, but it does not work :Tag.. not..  Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project TODO just purescript does not work
 Plug 'majutsushi/tagbar'
@@ -101,6 +104,7 @@ Plug 'edkolev/promptline.vim'
 Plug 'andreasthoelke/nyaovim-markdown-preview'
 Plug 'andreasthoelke/nyaovim-mini-browser'
 Plug 'andreasthoelke/nyaovim-popup-tooltip'
+
 " Plug 'rhysd/nyaovim-popup-tooltip'
 " Plug 'rhysd/nyaovim-mini-browser'
 " Plug 'rhysd/nyaovim-markdown-preview'
@@ -123,8 +127,8 @@ Plug 'KabbAmine/vCoolor.vim'
 " Highlight
 " Plug 't9md/vim-quickhl'
 " fullscreen mode
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
+" Plug 'junegunn/goyo.vim'
+" Plug 'junegunn/limelight.vim'
 " Note taking with vim
 " Plug 'fmoralesc/vim-pad', { 'branch': 'devel' }
 
@@ -240,8 +244,8 @@ Plug 'sbdchd/neoformat'
 Plug 'w0rp/ale'
 " Just 10 lines of code. uses "to" default map
 " Plug 'mpickering/hlint-refactor-vim'
-" Plug 'neomake/neomake'
-" Plug 'vim-syntastic/syntastic'
+Plug 'neomake/neomake'
+Plug 'vim-syntastic/syntastic'
 
 Plug 'parsonsmatt/intero-neovim'
 
@@ -357,13 +361,16 @@ func! NyaoSplitScrollTo(direction)
 endfunc
 
 " NyaoVim MiniBrowser: ------------------------
-nnoremap <leader>gx :<c-u>MiniBrowser! <c-r><c-p><cr>
+" nnoremap <leader>gx :<c-u>MiniBrowser! <c-r><c-p><cr>
+" nnoremap <leader>gx :<c-u>Chromium <c-r><c-p><cr>
+" TODO clean up
+nnoremap <leader>gx :<c-u>Chromium1 <c-r><c-p><cr>
 nnoremap <leader>bo :MiniBrowser!<cr>
 nnoremap <leader>bc :MiniBrowserClose<cr>
 
 " Note: have to copy these maps to ~/.vim/after/plugin/zmaps.vim because EasyClip is diffcult to control
-nnoremap <silent> Y :call NyaoSplitScroll('up')<cr>
-nnoremap <silent> E :call NyaoSplitScroll('down')<cr>
+" nnoremap <silent> Y :call NyaoSplitScroll('up')<cr>
+" nnoremap <silent> E :call NyaoSplitScroll('down')<cr>
 " nnoremap Y :call rpcnotify( 0, 'mini-browser:scrollBy', 0, -50)<cr>
 " nnoremap E :call rpcnotify( 0, 'mini-browser:scrollBy', 0, 50)<cr>
 " TODO map \e to 'big' E
@@ -1571,26 +1578,26 @@ set guicursor=n:block-iCursor
 
 
 function! GotoDefinition()
-    if IsPurs()
-      normal m'
+  if IsPurs()
+    normal m'
     " add position to jumplist
-      exec 'Pgoto'
-    else
-      exec 'InteroGoToDef'
-    endif
+    exec 'Pgoto'
+  else
+    exec 'InteroGoToDef'
+  endif
 endfun
 
 " function! TypeInsert( keyword)
 function! TypeInsert()
-    if IsPurs()
-      let l:kw = PSCIDEgetKeyword()
-      " call PursType( a:keyword )
-      call PursType( l:kw )
-    else
-      " exec 'InteroInstTypeInsert'
-      " :InteroInstTypeInsert
-      :InteroGenTypeInsert
-    endif
+  if IsPurs()
+    let l:kw = PSCIDEgetKeyword()
+    " call PursType( a:keyword )
+    call PursType( l:kw )
+  else
+    " exec 'InteroInstTypeInsert'
+    " :InteroInstTypeInsert
+    :InteroGenTypeInsert
+  endif
 endfun
 
 function! ReplEvalExpr_Insert( exprStr )
@@ -1603,20 +1610,20 @@ endfun
 
 " Get a (repl-) evaluable expression-string from a (line-) string
 function! ExtractEvalExpFromLineStr( lineStr )
-    let l:lineList = split( a:lineStr )
+  let l:lineList = split( a:lineStr )
 
-    if l:lineList[0] == '--'
-      " it's a commented line
-      " → use the second word onwards
-      return join( l:lineList[1:], ' ')
+  if l:lineList[0] == '--'
+    " it's a commented line
+    " → use the second word onwards
+    return join( l:lineList[1:], ' ')
 
-    elseif l:lineList[1] == '='
-      " it's a declaration
-      " → use the third word onwards
-      return join( l:lineList[2:], ' ')
-    else
-      echoe 'Could not extract an expression!'
-    endif
+  elseif l:lineList[1] == '='
+    " it's a declaration
+    " → use the third word onwards
+    return join( l:lineList[2:], ' ')
+  else
+    echoe 'Could not extract an expression!'
+  endif
 endfun
 
 
@@ -1656,59 +1663,59 @@ endfun
 
 
 function! ReplReload()
-    let modulename = GetModuleName()
-    " exec ':up'
-    if IsPurs()
-      " TODO: is this needed? what does it do?
-      call purescript#ide#utils#update()
-      exec ':Prebuild'
-      call PursEval(':r')
-      call PursEval('import ' . modulename)
-      " call PursEval('import Helpers')
-      " exec 'SlimeSend1 :r'
-      " exec 'SlimeSend1 import ' . modulename
-      " exec 'SlimeSend1 import Helpers'
+  let modulename = GetModuleName()
+  " exec ':up'
+  if IsPurs()
+    " TODO: is this needed? what does it do?
+    call purescript#ide#utils#update()
+    exec ':Prebuild'
+    call PursEval(':r')
+    call PursEval('import ' . modulename)
+    " call PursEval('import Helpers')
+    " exec 'SlimeSend1 :r'
+    " exec 'SlimeSend1 import ' . modulename
+    " exec 'SlimeSend1 import Helpers'
+  else
+    if has('nvim')
+      exec ':InteroReload'
     else
-      if has('nvim')
-        exec ':InteroReload'
-      else
-        exec 'SlimeSend1 :r'
-        exec 'SlimeSend1 :l ' . modulename
-      endif
+      exec 'SlimeSend1 :r'
+      exec 'SlimeSend1 :l ' . modulename
     endif
+  endif
 endfun
 
 function! InsertTypeAnnotation()
-    " exec ':up'
-    if IsPurs()
-      " exec ':PSCIDEaddTypeAnnotation'
-      call PSCIDEaddTypeAnnotation(matchstr(getline(line(".")), '^\s*\zs\k\+\ze'))
+  " exec ':up'
+  if IsPurs()
+    " exec ':PSCIDEaddTypeAnnotation'
+    call PSCIDEaddTypeAnnotation(matchstr(getline(line(".")), '^\s*\zs\k\+\ze'))
+  else
+    if has('nvim')
+      exec ':InteroTypeInsert'
     else
-      if has('nvim')
-        exec ':InteroTypeInsert'
-      else
-        exec ':GhcModTypeInsert'
-      endif
+      exec ':GhcModTypeInsert'
     endif
-    " call PurescriptUnicode()
+  endif
+  call PurescriptUnicode()
 endfun
 
 function! ImportIdentifier()
-    if IsPurs()
-      exec ':PSCIDEimportIdentifier'
-    else
-      " TODO
-    endif
+  if IsPurs()
+    exec ':PSCIDEimportIdentifier'
+  else
+    " TODO
+  endif
 endfun
 
 function! PsciReload()
-    let modulename = GetModuleName()
-    exec ':w'
-    exec 'SlimeSend1 :r'
-    exec 'SlimeSend1 import ' . modulename
-    " import is for purescript / psci
-    " exec 'SlimeSend1 :l ' . modulename
-    " :l is for haskell / ghci
+  let modulename = GetModuleName()
+  exec ':w'
+  exec 'SlimeSend1 :r'
+  exec 'SlimeSend1 import ' . modulename
+  " import is for purescript / psci
+  " exec 'SlimeSend1 :l ' . modulename
+  " :l is for haskell / ghci
 endfun
 
 
@@ -1951,7 +1958,7 @@ nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
 " (cursor-column is only significant for gew)
 
 " Extract a (repl-) evaluable expression-string from current line
-" nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
+nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
 " vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
 
 " Evaluate the entire line
@@ -1977,7 +1984,8 @@ nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 nnoremap dr :call ReplReload()<cr>
 
 " nnoremap tr :call TraceTopLevelValue()<cr>
-nnoremap ta :call TraceTopLevelValue()<cr>
+" Todo: where did this come from?
+" nnoremap ta :call TraceTopLevelValue()<cr>
 " nnoremap tf :call TraceComLine()<cr>
 
 
