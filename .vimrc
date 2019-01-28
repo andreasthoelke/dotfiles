@@ -87,7 +87,7 @@ Plug 'itchyny/lightline.vim'
 " Plug 'pacha/vem-statusline'
 
 Plug 'gcavallanti/vim-noscrollbar'
-Plug 'drzel/vim-line-no-indicator'
+" Plug 'drzel/vim-line-no-indicator'
 
 " Outside Of Vim:
 " Creates tmux colors e.g. at ".tmuxline.conf"
@@ -247,7 +247,8 @@ Plug 'w0rp/ale'
 Plug 'neomake/neomake'
 Plug 'vim-syntastic/syntastic'
 
-Plug 'parsonsmatt/intero-neovim'
+" Plug 'parsonsmatt/intero-neovim'
+Plug 'andreasthoelke/intero-neovim'
 
 Plug 'Twinside/vim-hoogle'
 
@@ -424,84 +425,88 @@ endif
 " }}} Oni: ----------------------------------
 
 
-" VeoNim: {{{-------------------------------
-
-if exists('veonim')
-
-let g:vn_font = 'SauceCodePro Nerd Font'
-let g:vn_font_size = 11
-let g:vn_line_height = '1.4'
-
-set guicursor=n:block-CursorNormal,i:hor10-CursorInsert,v:block-CursorVisual
-hi! CursorNormal guibg=#846385
-hi! CursorInsert guibg=#f3a082
-hi! CursorVisual guibg=#6d33ff
-
-" built-in plugin manager
-Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-
-" extensions for web dev
-VeonimExt 'veonim/ext-css'
-VeonimExt 'veonim/ext-json'
-VeonimExt 'veonim/ext-html'
-VeonimExt 'vscode:extension/sourcegraph.javascript-typescript'
-
-" workspace management
-let g:vn_project_root = '~/proj'
-nno <silent> <c-t>p :call Veonim('vim-create-dir', g:vn_project_root)<cr>
-nno <silent> ,r :call Veonim('change-dir', g:vn_project_root)<cr>
-
-" multiplexed vim instance management
-nno <silent> <c-t>c :Veonim vim-create<cr>
-nno <silent> <c-g> :Veonim vim-switch<cr>
-nno <silent> <c-t>, :Veonim vim-rename<cr>
-
-" workspace functions
-nno <silent> ,f :Veonim files<cr>
-nno <silent> ,e :Veonim explorer<cr>
-nno <silent> ,b :Veonim buffers<cr>
-nno <silent> ,d :Veonim change-dir<cr>
-
-" searching text
-nno <silent> <space>fw :Veonim grep-word<cr>
-vno <silent> <space>fw :Veonim grep-selection<cr>
-nno <silent> <space>fa :Veonim grep<cr>
-nno <silent> <space>ff :Veonim grep-resume<cr>
-nno <silent> <space>fb :Veonim buffer-search<cr>
-
-" color picker
-nno <silent> sc :Veonim pick-color<cr>
-
-" language server functions
-nno <silent> sr :Veonim rename<cr>
-nno <silent> sd :Veonim definition<cr>
-nno <silent> st :Veonim type-definition<cr>
-nno <silent> si :Veonim implementation<cr>
-nno <silent> sf :Veonim references<cr>
-nno <silent> sh :Veonim hover<cr>
-nno <silent> sl :Veonim symbols<cr>
-nno <silent> so :Veonim workspace-symbols<cr>
-nno <silent> sq :Veonim code-action<cr>
-nno <silent> sp :Veonim show-problem<cr>
-nno <silent> sk :Veonim highlight<cr>
-nno <silent> sK :Veonim highlight-clear<cr>
-nno <silent> <c-n> :Veonim next-problem<cr>
-nno <silent> <c-p> :Veonim prev-problem<cr>
-nno <silent> ,n :Veonim next-usage<cr>
-nno <silent> ,p :Veonim prev-usage<cr>
-nno <silent> <space>pt :Veonim problems-toggle<cr>
-nno <silent> <space>pf :Veonim problems-focus<cr>
-nno <silent> <d-o> :Veonim buffer-prev<cr>
-nno <silent> <d-i> :Veonim buffer-next<cr>
-
-endif
-" }}}
 
 
 " Lightline Settings: -------------------------------
 
+" To reload config data, then change tab to refresh
+" call lightline#init()
+" call lightline#update()
+" call lightline#colorscheme()
+
+let g:lightline = {}
+let g:lightline.colorscheme = 'wombat1'
+
+let g:lightline.active = {}
+let g:lightline.inactive = {}
+let g:lightline.active.left = [ ['relativepath'] ]
+
+" let g:lightline.active.right = [ ['lineinfo', 'percent']
+"                              \ , ['fpathBNum', 'percent']
+"                              \ , ['filename', 'fpathBNum'] ]
+
+let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
+" let g:lightline.active.right = [ ['line', 'percent'] ]
+let g:lightline.inactive.right = [  ]
+" \ , ['gitbranch']
+" \ ]
+
+let g:lightline.tabline = {}
+let g:lightline.tabline.left  = [ [ 'tabs' ] ]
+let g:lightline.tabline.right = []
+
+let g:lightline.tab = {
+      \ 'active':   [ 'tabnum', 'filename', 'modified' ],
+      \ 'inactive': [ 'tabnum', 'filename', 'modified' ] }
+
+" let g:lightline.subseparator = { 'left': '|', 'right': '|' }
+let g:lightline.subseparator = { 'left': '', 'right': '|' }
+
+" {noscrollbar#statusline(30,'\ ','■')}
+
+let g:lightline.component = {}
+let g:lightline.component.helloworld = 'hi there!'
+let g:lightline.component.fpathBNum = '%f%n'
+
+let g:lightline.component_function = {}
+let g:lightline.component_function.gitbranch = 'fugitive#head'
+let g:lightline.component_function.scrollbar = "LightlineScrollbar"
+
+func! LightlineScrollbar()
+  return noscrollbar#statusline(20,' ','■')
+endfunc
+
+" Powerline symbols (work)
+" let g:lightline = {
+"   \ 'component': {
+"   \   'lineinfo': ' %3l:%-2v',
+"   \ },
+"   \ 'component_function': {
+"   \   'readonly': 'LightlineReadonly',
+"   \   'fugitive': 'LightlineFugitive'
+"   \ },
+"   \ 'separator': { 'left': '', 'right': '' },
+"   \ 'subseparator': { 'left': '', 'right': '' }
+"   \ }
+" function! LightlineReadonly()
+"   return &readonly ? '' : ''
+" endfunction
+" function! LightlineFugitive()
+"   if exists('*fugitive#head')
+"     let branch = fugitive#head()
+"     return branch !=# '' ? ''.branch : ''
+"   endif
+"   return ''
+" endfunction
+
+
+" Example: Overwriting the readonly component function
+" let g:lightline.component_function.readonly = 'LightlineReadonly'
+" Show a vim var dependant to the filetype var
+func! LightlineReadonly()
+  " return &readonly && &filetype !=# 'gitcommit' ? 'RO' : '-|-'
+  return &readonly && &filetype !~# '\v(help|gitcommit)' ? 'RO' : ''
+endfunc
 
 " Lightline Settings: -------------------------------
 
@@ -1697,7 +1702,8 @@ function! InsertTypeAnnotation()
       exec ':GhcModTypeInsert'
     endif
   endif
-  call PurescriptUnicode()
+  " This has no effect/comes too early as the text will be inserted by Intero asynced/later
+  " call PurescriptUnicode()
 endfun
 
 function! ImportIdentifier()
@@ -1896,7 +1902,8 @@ let g:intero_start_immediately = 0
 " let g:intero_use_neomake = 0
 " This show ghi warnings as opposed to hlint warnings:
 " TODO: toggle warnings without restart vim!
-let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
+let g:intero_ghci_options = '-Wall -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
+" let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 " let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 " https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
 
@@ -1966,7 +1973,7 @@ nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') 
 
 " Eval the current keyword
 " nnoremap gew :call ReplEvalExpr_Insert( PSCIDEgetKeyword() )<cr>
-" nnoremap gew :call ReplEvalExpr_Insert( expand("<cword>") )<cr>
+nnoremap gew :call ReplEvalExpr_Insert( expand("<cword>") )<cr>
 " Repl Eval Insert: ------------------------------------------------
 
 
@@ -2341,7 +2348,15 @@ endfunction
 nnoremap <leader>ccu "td}:call TransfTRegAndAppend( function('StripNewlinesAndMultispaces') )<cr>k
 
 " Get the type of do-binds by producing a type error:
-nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>"tp^
+" nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>"tp^
+nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>$"tp^
+" "$" is needed because EasyClip jumps back
+" Note: It's easier to see the type with this, but then it requires 3 keypesses to undo
+nmap <leader>cci wi∷ _ <esc>^dr
+nmap <leader>ccu wdwdw^dr
+" These work fine
+nmap ,ti wi∷ _ <esc>^dr
+nmap ,tu wdwdw^dr
 
 
 " Apply 'fn' to the 't'/temp and append the result after the current line
@@ -3153,71 +3168,21 @@ nnoremap <leader>oa :CtrlPArgs<cr>
 " -----------------------------------------------------------------
 " -----------------------------------------------------------------
 
-let g:lightline = {}
-" let g:lightline.colorscheme = 'PaperColor'
-
-let g:lightline.active = {}
-let g:lightline.active.left = [ []
-                            \ , ['relativepath'] ]
-
-" let g:lightline.active.right = [ ['lineinfo', 'percent']
-"                              \ , ['fpathBNum', 'percent']
-"                              \ , ['filename', 'fpathBNum'] ]
-
-let g:lightline.active.right = [ ['line', 'percent'] ]
-                             " \ , ['gitbranch']
-                             " \ ]
-
-let g:lightline.component = {}
-let g:lightline.component.helloworld = 'hi there!'
-let g:lightline.component.fpathBNum = '%f%n'
-
-let g:lightline.component_function = {}
-let g:lightline.component_function.gitbranch = 'fugitive#head'
-
-" Powerline symbols (work)
-" let g:lightline = {
-"   \ 'component': {
-"   \   'lineinfo': ' %3l:%-2v',
-"   \ },
-"   \ 'component_function': {
-"   \   'readonly': 'LightlineReadonly',
-"   \   'fugitive': 'LightlineFugitive'
-"   \ },
-"   \ 'separator': { 'left': '', 'right': '' },
-"   \ 'subseparator': { 'left': '', 'right': '' }
-"   \ }
-" function! LightlineReadonly()
-"   return &readonly ? '' : ''
-" endfunction
-" function! LightlineFugitive()
-"   if exists('*fugitive#head')
-"     let branch = fugitive#head()
-"     return branch !=# '' ? ''.branch : ''
-"   endif
-"   return ''
-" endfunction
-
-
-" Example: Overwriting the readonly component function
-" let g:lightline.component_function.readonly = 'LightlineReadonly'
-" Show a vim var dependant to the filetype var
-func! LightlineReadonly()
-  " return &readonly && &filetype !=# 'gitcommit' ? 'RO' : '-|-'
-  return &readonly && &filetype !~# '\v(help|gitcommit)' ? 'RO' : ''
-endfunc
 
 " function! StatuslineArglistIndicator()
 
 " Statusline: -----------------------------------------------------
+" The setup I like
+" set statusline=%<%f\ %h%m%r%=%.(%l,%c%V%)\%{noscrollbar#statusline(30,'\ ','■')}
+
+
 " https://hackernoon.com/the-last-statusline-for-vim-a613048959b2
 " set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %{noscrollbar#statusline()}
+" Highres
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %{noscrollbar#statusline(20,'■','◫',['◧'],['◨'])}
 
-" set statusline=%<%f\ %h%m%r%=%.(%l,%c%V%)\%{noscrollbar#statusline(30,'\ ','■')}
-" set statusline=%<%f\ %h%m%r%=%.(%l,%c%V%)\%{noscrollbar#statusline(30,'\ ','■')}
 " set statusline=%f
 " set statusline=%{StatuslineArglistIndicator()}
 " set statusline=[%n]
@@ -3235,7 +3200,7 @@ endfunc
 
 
 " Vem Tabline: ---------------
-let g:vem_tabline_show = 1
+" let g:vem_tabline_show = 1
 
 " highlight TabLine                    cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
 " highlight TabLineSel                 cterm=bold ctermfg=235 ctermbg=255 guifg=#242424 guibg=#ffffff gui=bold

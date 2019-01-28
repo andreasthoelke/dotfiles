@@ -115,6 +115,8 @@
 "
 "   tt or tw or tg to insert type
 "   gei to insert return val → works also on commented lines
+"   gew to just run a symbol
+"   `,ti` to insert type hole to get the type of a do bind. `,tu` to undo
 "   <leader>kk run it in the vim-terminal mode:
 "                            use i to type and c-\ c-n to leave insert mode
 " use this to format imports/code
@@ -140,6 +142,10 @@
 " run <leader>ii to import the identifier (confirm the import section of your source file has added the identifier)
 " See HoogleImportIdentifier in vimrc and /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
 " also note the "HOOGLE INCLUDE NEW LIBS:" comment in vimrc
+
+" Ghc Warnings:
+" let g:intero_ghci_options = '-Wall -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
+" https://downloads.haskell.org/~ghc/7.8.3/docs/html/users_guide/flag-reference.html
 
 " GHCID:
 " RELOAD WEBSERVER:

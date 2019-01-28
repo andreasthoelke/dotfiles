@@ -288,6 +288,7 @@ use <c-o> open menu?
   * Deleting marks:
   `delm G-Z` to clear a range of marks
   `c-x` in markbar to delete selected mark
+  :DelGlobalMarks
 
 [config](../../.vimrc#Marks:)
 
@@ -517,6 +518,8 @@ see/align with Github wiki repository
     * the `q` to close tagbar and have the cursor on the heading in the left window
 
 ### Create hyperlink to header
+
+text [link to header in other .md file](notes29-09.md# Rich Text) next text
 
 use `c-]` (not `ge`) on the link text to navigate hyperlinks and `c-o` to jump back
   text [link to header in other .md file](notes29-09.md# Rich Text) next text

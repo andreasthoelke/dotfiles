@@ -19,7 +19,7 @@ set background=dark
 
 hi vimString guifg=#009900
 
-hi Boolean         guifg=#AE81FF
+hi Boolean         guifg=#AE81FF"{{{
 hi Character       guifg=#E6DB74
 hi Number          guifg=#AE81FF
 hi String          guifg=#E6DB74
@@ -33,15 +33,19 @@ hi Delimiter       guifg=#8F8F8F
 hi DiffAdd                       guibg=#13354A
 hi DiffChange      guifg=#89807D guibg=#4C4745
 hi DiffDelete      guifg=#960050 guibg=#1E0010
-hi DiffText                      guibg=#4C4745 gui=italic,bold
+hi DiffText                      guibg=#4C4745 gui=italic,bold"}}}
 
 hi Directory       guifg=#A6E22E               gui=bold
 hi Error           guifg=#E6DB74 guibg=#1E0010
 hi ErrorMsg        guifg=#F92672 guibg=#232526 gui=bold
 hi Exception       guifg=#A6E22E               gui=bold
 hi Float           guifg=#AE81FF
+
+" hi FoldColumn      guifg=#465457 guibg=#000000
+" hi Folded          guifg=#465457 guibg=#000000
 hi FoldColumn      guifg=#465457 guibg=#000000
-hi Folded          guifg=#465457 guibg=#000000
+hi Folded          guifg=#465457 guibg=#111111
+
 hi Keyword        guifg=#2C9E71
 hi Identifier      guifg=#FD971F
 hi Ignore          guifg=#808080 guibg=bg
@@ -73,8 +77,12 @@ if has("spell")
     hi SpellRare   guisp=#FFFFFF gui=undercurl
 endif
 hi Statement       guifg=#F92672               gui=bold
-hi StatusLine      guifg=#455354 guibg=fg
-hi StatusLineNC    guifg=#808080 guibg=#080808
+" hi StatusLine      guifg=#455354 guibg=fg
+" hi StatusLineNC    guifg=#808080 guibg=#080808
+hi StatusLine guibg=#000000 gui=bold
+hi StatusLineNC guibg=#000000 gui=bold
+
+
 hi StorageClass    guifg=#FD971F               gui=italic
 hi Structure       guifg=#66D9EF
 hi Tag             guifg=#F92672               gui=italic
@@ -92,7 +100,10 @@ hi WildMenu        guifg=#66D9EF guibg=#000000
 hi TabLineFill     guifg=#1B1D1E guibg=#1B1D1E
 hi TabLine         guibg=#1B1D1E guifg=#808080 gui=none
 
-hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
+" This is where to set the main background color
+" hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
+hi Normal          guifg=#F8F8F2 guibg=#151719
+
 hi Comment         guifg=#60777C
 hi CursorLine                    guibg=#222525
 hi CursorLineNr    guifg=#FD971F               gui=none

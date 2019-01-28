@@ -197,7 +197,6 @@ A simple big JSON file `Library/Application\ Support/Google/Chrome/Default/Bookm
   * How can I address/select a column in table data using s/..
   * How to set up conditions for that value, to add/change something in that line
 
-
 ## NOTES .MD EDITOR
 
 Current state (29-12-2018):
@@ -813,7 +812,11 @@ make `rm -r` commands move to trash?
 
   AsyncRun plugin may be useful: AsyncRun git push origin master
 
+
 ### Current Todos
+
+document chrome-cli.vim usage
+  find some useful applications, make extendable
 
 put notes in separate files?
 https://github.com/rhysd/vim-notes-cli
@@ -821,6 +824,14 @@ https://github.com/rhysd/notes-cli
 
 * scroll indicator https://www.reddit.com/r/vim/comments/6xkjz9/presenting_vimlinenoindicator_see_your_position/
 
+indicate that intero is running
+
+try hasell language server client
+
+don't need a tabline close button on the top right
+
+show num of errors
+jump to first error
 
 * Update Readme
   * vim setup focused on
@@ -908,13 +919,26 @@ push text to the right currently requires two undos
 typing in insert mode sometimes gets jumpy - gone after restart
 
 
+## Haskell Todos
+syntax highlighting in comments
+  literal haskell files?
+where to put haskell notes?
+save in a learning repo?
+search through this?
+
+test quickfix autoexpand on errors:
+  function! QuickfixRefeshStyle()
+
+
 ## Temp next
+easyclip setting causes redundant undo step
 
 ## Release notes v1.0.6
 * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
 * add to jumplist on updatetime and ex-command (;/:)
 * camelCaseMotion use `,` leader e.g. `v2i,w`, `vi,e`, `v,b,b,b`
 * go to insert start at InsertLeave, save insert end to jumplist
+* `,ti` to insert type hole to get the type of a do bind. `,tu` to undo
 
 ## Release notes v1.0.5
   * close win above, below, left, right with `<c-w>d`: `k/j/h/l`
