@@ -929,16 +929,31 @@ search through this?
 test quickfix autoexpand on errors:
   function! QuickfixRefeshStyle()
 
+test effects of vim2hs
+
+run the current line through typeOf cmd-line prog.
+  -- execute ".!typeOf %"
+  problem: cabal install does not produce a global executable
+
 
 ## Temp next
-easyclip setting causes redundant undo step
+easyclip setting causes redundant undo step at insert leave
+show quickfix process (1 of 4) in statusbar of inactive quickfix list. 
+  currently c-g does output the state in the command line
 
-## Release notes v1.0.6
+easyMotion for paragraph, similar to \w
+
+
+## Release notes v1.1.1
+
+
+## Release notes v1.1.0
 * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
 * add to jumplist on updatetime and ex-command (;/:)
 * camelCaseMotion use `,` leader e.g. `v2i,w`, `vi,e`, `v,b,b,b`
 * go to insert start at InsertLeave, save insert end to jumplist
 * `,ti` to insert type hole to get the type of a do bind. `,tu` to undo
+* intero neovim custom functions e.g. `InsertEvalExpressionRes` are now in forked repo
 
 ## Release notes v1.0.5
   * close win above, below, left, right with `<c-w>d`: `k/j/h/l`

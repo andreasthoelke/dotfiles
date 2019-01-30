@@ -105,7 +105,12 @@ hi TabLine         guibg=#1B1D1E guifg=#808080 gui=none
 hi Normal          guifg=#F8F8F2 guibg=#151719
 
 hi Comment         guifg=#60777C
-hi CursorLine                    guibg=#222525
+
+" Contrast Of CursorLine:
+" hi CursorLine                    guibg=#222525
+" hi CursorLine                    guibg=#202424
+hi CursorLine                    guibg=#1C2020
+
 hi CursorLineNr    guifg=#FD971F               gui=none
 " hi LineNr          guifg=#303030
 hi NonText         guifg=#465457

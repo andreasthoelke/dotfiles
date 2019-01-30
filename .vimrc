@@ -180,7 +180,8 @@ Plug 'tpope/vim-scriptease'
 Plug 'chrisbra/csv.vim'
 
 " Code Navagation Editing: ---------------------------------------------
-Plug 'easymotion/vim-easymotion'
+" Plug 'easymotion/vim-easymotion'
+Plug 'andreasthoelke/vim-easymotion'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
@@ -208,7 +209,9 @@ Plug 'andreasthoelke/purescript-vim'
 
 " lookup ":h vim2hs", e.g. Tabularize haskell_types is useful
 " this also has two conceal replacements for "." and "::"
-Plug 'goolord/vim2hs'
+" Plug 'goolord/vim2hs'
+" TODO temp off, just to see of it hinder performance and where i really need the features
+" Plug 'andreasthoelke/vim2hs'
 " This does show some nice unicode symbols (see "conceal" screenshots).
 " TODO customize some symbols e.g return looks not destinct enough. also apply to purescript
 Plug 'enomsg/vim-haskellConcealPlus'
@@ -429,6 +432,14 @@ endif
 
 " Lightline Settings: -------------------------------
 
+command! CursorColumnInStatusline call CursorColumnInStatusline()
+
+func! CursorColumnInStatusline()
+  let g:lightline.active.right = [ ['scrollbar'], ['column', 'line'] ]
+  call lightline#init()
+  call lightline#update()
+endfunc
+
 " To reload config data, then change tab to refresh
 " call lightline#init()
 " call lightline#update()
@@ -446,6 +457,7 @@ let g:lightline.active.left = [ ['relativepath'] ]
 "                              \ , ['filename', 'fpathBNum'] ]
 
 let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
+" let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
 " let g:lightline.active.right = [ ['line', 'percent'] ]
 let g:lightline.inactive.right = [  ]
 " \ , ['gitbranch']
@@ -1108,13 +1120,18 @@ nnoremap k gk
 " nnoremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
 " nnoremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
 " Modified to not add to the jumplist
-nnoremap <expr> { len(getline(line('.')-1)) > 0 ? ":exec 'keepjumps normal! {+'<cr>" :  ":exec 'keepjumps normal! {-'<cr>"
-nnoremap <expr> } len(getline(line('.')+1)) > 0 ? ":exec 'keepjumps normal! }-'<cr>" :  ":exec 'keepjumps normal! }+'<cr>"
-vnoremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
-vnoremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
+nnoremap <expr> ,{ len(getline(line('.')-1)) > 0 ? ":exec 'keepjumps normal! {+'<cr>" :  ":exec 'keepjumps normal! {-'<cr>"
+nnoremap <expr> ,} len(getline(line('.')+1)) > 0 ? ":exec 'keepjumps normal! }-'<cr>" :  ":exec 'keepjumps normal! }+'<cr>"
+vnoremap <expr> ,{ len(getline(line('.')-1)) > 0 ? '{+' : '{-'
+vnoremap <expr> ,} len(getline(line('.')+1)) > 0 ? '}-' : '}+'
 
 " nnoremap } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
 " nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
+
+" I still want the normal behavior
+" nnoremap ,} }
+" nnoremap ,{ {
+
 
 " Some settings for when the file type is not set
 function! PlainText()
@@ -2535,6 +2552,11 @@ map <localleader>w <Plug>(easymotion-w)
 map <localleader>b <Plug>(easymotion-b)
 map <localleader>j <Plug>(easymotion-j)
 map <localleader>k <Plug>(easymotion-k)
+" Jump to paragraphs and sentences
+map <localleader>} :call EasyMotion#Paragraph(0, 0)<cr>
+map <localleader>{ :call EasyMotion#Paragraph(0, 1)<cr>
+map <localleader>) :call EasyMotion#Sentence(0, 0)<cr>
+map <localleader>( :call EasyMotion#Sentence(0, 1)<cr>
 " Jump to typical spots
 map <localleader>l <Plug>(easymotion-lineforward)
 map <localleader>h <Plug>(easymotion-linebackward)
@@ -2564,6 +2586,8 @@ hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
 "   \ '(\l)\zs(\u)' . '|' .
 "   \ '(_\zs.)' . '|' .
 "   \ '(#\zs.)'
+
+
 " Easymotion Code Navigation: ------------------------------------------------
 
 
@@ -2755,7 +2779,11 @@ let g:haskell_classic_highlighting = 1
 " Quickfix List: -------------------------------------------------
 
 " Refesh/force some style on the quickfix list:
-autocmd! QuickFixCmdPost * :call QuickfixRefeshStyle()
+" autocmd! QuickFixCmdPost * :call QuickfixRefeshStyle()
+" autocmd! QuickFixCmdPost * botright copen 8
+" autocmd! QuickFixCmdPost * echom "hii"
+" TODO test this
+autocmd! User NeomakeJobFinished call QuickfixRefeshStyle()
 
 function! QuickfixRefeshStyle()
   if len( filter(getqflist(), 'v:val.type == "e"') ) > 0
