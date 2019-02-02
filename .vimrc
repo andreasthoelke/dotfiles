@@ -250,10 +250,22 @@ Plug 'w0rp/ale'
 Plug 'neomake/neomake'
 Plug 'vim-syntastic/syntastic'
 
+
+" IDE Features: ------------------------------------------
 " Plug 'parsonsmatt/intero-neovim'
 Plug 'andreasthoelke/intero-neovim'
 
-Plug 'Twinside/vim-hoogle'
+" Plug 'Twinside/vim-hoogle'
+Plug 'andreasthoelke/vim-hoogle'
+
+" Haskell IDE Engine HIE:
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
+      \ }
+
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" IDE Features: ------------------------------------------
 
 " Plug 'ervandew/supertab'
 " did not work with omnicomplete so far
@@ -298,6 +310,8 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 " /Users/andreas.thoelke/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py
 " let abj = '~/.vim/plugged/vim-textobj-haskell/python/haskell-textobj.py'
 
+" Nice Python Integration Tutorial:
+" https://vimways.org/2018/a-python-interface-cookbook/
 
 " NyaoVim Markdown: ------------------------
 let g:markdown_preview_eager = 1
@@ -1421,12 +1435,39 @@ endfun
 " https://github.com/ndmitchell/hoogle/blob/master/docs/Install.md
 " Todo: get hoogle libs from cabal file
 
-let g:hoogle_search_buf_size = 15
+let g:hoogle_search_buf_size = 10
 let g:hoogle_search_count = 30
 
+" Split module into separate, commented line
+func! HoogleFormatOutput()
+  " call PurescriptUnicode()
+  set syntax=purescript
+  exec "g/--/d"
+  " For all lines: line break after big-word (no training whitespace), comment the module line
+  exec "g/./normal Whi0i-- "
+  normal gg
+endfunc
+" Note: need to source this with line select - because of the special chars?
+
+func! HoogleAlignSinatures()
+  GTabularize /∷/
+  GTabularize /⇒/
+  GTabularize /.*\zs→/
+endfunc
 
 
-" ALIGNING COLUMS OF HASKELL SIGS:
+"
+func! HoogleFormatInfoOutput()
+  let l:sig = getline( '.' )
+  normal! ddi-- 
+  call append( 1, l:sig)
+  normal! jo{-
+  call PurescriptUnicode()
+  set syntax=purescript
+  normal gg
+endfunc
+
+" ALIGNING COLUMS OF HASKELL SIGS:{{{
 " run: :browse Data.List.Split in GHCi and copy into a vim buffer
 "
 " align right to ∷ with padding 1:
@@ -1443,20 +1484,20 @@ let g:hoogle_search_count = 30
 " to
 " -- Prelude
 " print ∷ Show a ⇒ a → IO ()
-let @o = 'f Jki-- jk^jj'
+" let @o = 'f Jki-- jk^jj'
 " align the type-signature with EasyAlign
-let @p = 'gcaap '
+" let @p = 'gcaap '
 " changed this from gaap to gcaap to have 'ga' as fee mapping
-
+" Wi\0i-- jj
 " used in hoogle.vim: (!) (TODO: refactor this)
 " if a:args != ' --info'
 "   normal gg
 "   normal 10@o
 "   normal gg
 "   normal @p
-" endif
+" endif}}}
 
-" Import Haskell Identifiers Using Hoogle And Hsimport:
+" Import Haskell Identifiers Using Hoogle And Hsimport:{{{
 " 1. Use "gsd" ("go search docs") on a missing identifier
 " 2. In the hoogle list of available identifiers, go to the line/version you
 " want to import and run <leader>ii to import the identifier (confirm the import
@@ -1464,30 +1505,90 @@ let @p = 'gcaap '
 " See HoogleImportIdentifier in vimrc and
 " /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
 " also note the "HOOGLE INCLUDE NEW LIBS:" comment in vimrc
-fun! HoogleImportIdentifier() "{{{
+" Sparse Hoogle Infos: https://github.com/ndmitchell/hoogle/blob/master/docs/Install.md}}}
+
+" EXAMPLES:{{{
+" Can import this (which is split in two lines in the Hoggle result window)
+" Prelude putStrLn ∷ String → IO ()
+" Hoogle TODO support these:
+" Data.Aeson data Value
+" Data.Aeson type Array = Vector Value
+" Data.Aeson class ToJSON a
+" Data.Aeson (.=) ∷ (KeyValue kv, ToJSON v) ⇒ Text → v → kv}}}
+func! HoogleImportIdentifier() "{{{
   let l:prev_line = getline(line('.') -1)
   let l:cur_line  = getline('.')
   let l:split_line_prev = split(l:prev_line)
   let l:split_line      = split(l:cur_line)
   call HoogleCloseSearch()
-  normal! <c-w>k
-  if &mod
-    echo "Please save before importing!"
-    return
-  endif
-  let l:imp1 = l:split_line[0]
-  let l:imp2 = l:split_line[1]
-  if l:imp2 == "data" || l:imp2 == "type" || l:imp2 == "class"
-    let l:imp2 = l:split_line[2]
-  endif
-  if l:imp2[0] == "("
-    let l:imp2 = StripString( l:imp2, "(" )
-    let l:imp2 = StripString( l:imp2, ")" )
-  endif
-  call Hsimp( l:imp1, l:imp2)
-  "update format of the import list
+  let l:module     = l:split_line_prev[ 1 ]
+  let l:identifier = l:split_line[ 0 ]
+  call Hsimp( l:module, l:identifier )
+  " normal! <c-w>k{{{
+  " if &mod
+  "   echo "Please save before importing!"
+  "   return
+  " endif
+  " let l:imp1 = l:split_line[0]
+  " let l:imp2 = l:split_line[1]
+  " if l:imp2 == "data" || l:imp2 == "type" || l:imp2 == "class"
+  "   let l:imp2 = l:split_line[2]
+  " endif
+  " if l:imp2[0] == "("
+  "   let l:imp2 = StripString( l:imp2, "(" )
+  "   let l:imp2 = StripString( l:imp2, ")" )
+  " endif
+  " call Hsimp( l:imp1, l:imp2)
+  "update format of the import list}}}
   call StylishHaskell()
 endfunction "}}}
+
+func! HoogleInsert( symbolOrModulePath, args )
+  let l:cmd = 'hoogle ' . a:symbolOrModulePath . a:args
+  let l:resultLines = split( system( l:cmd ), '\n' )
+  " Don't need to repeat the function signature
+  " call remove( l:resultLines, 0 )
+  " echo split( system( 'hoogle Data.Conduit.List.replicateM --info' ), '\n' )
+  " echo split( system( 'hoogle zipwith --info' ), '\n' )
+  " Remove empty lines at the end --------------
+  let l:idx_lastLine = len( l:resultLines ) - 1
+  let l:lastLineText = l:resultLines[ l:idx_lastLine ]
+  if l:lastLineText == ''
+    call remove( l:resultLines, l:idx_lastLine )
+  endif
+  let l:idx_lastLine = len( l:resultLines ) - 1
+  let l:lastLineText = l:resultLines[ l:idx_lastLine ]
+  if l:lastLineText == ''
+    call remove( l:resultLines, l:idx_lastLine )
+  endif
+  " Remove empty lines at the end --------------
+  " Open comment at the end of the last line
+  let l:resultLines[ 1 ] = '{- ' . l:resultLines[ 1 ]
+  " Close comment at the end of the last line
+  let l:idx_lastLine = len( l:resultLines ) - 1
+  let l:text_lastLine = l:resultLines[ l:idx_lastLine ]
+  let l:resultLines[ l:idx_lastLine ] = l:text_lastLine . ' -}'
+  call append( line('.'), l:resultLines )
+  " call append( line('.'), split( system( 'hoogle Data.Conduit.List.replicateM --info' ), '\n' ) )
+endfunc
+
+
+func! HoogleLineJump() "{{{
+  let l:prev_line = getline(line('.') -1)
+  let l:cur_line  = getline('.')
+  let l:split_line_prev = split(l:prev_line)
+  let l:split_line      = split(l:cur_line)
+  let l:module     = l:split_line_prev[ 1 ]
+  let l:identifier = l:split_line[ 0 ]
+  let l:module_symbol_str = l:module . '.' . l:identifier
+  " since results are given in the format `Data.IntMap.Strict lookup :: Key -> IntMap a -> Maybe a`
+  " this results in a search of `Data.IntMap.Strict.lookup`
+  " call HoogleLookup( l:module_symbol_str, ' --info' )
+  call HoogleInsert( l:module_symbol_str, ' --info' )
+endfunction "}}}
+" To go back to the search results overview, just run the previous search again
+" nnoremap <silent> <buffer> <localleader><c-o> <esc>:call HoogleLookup( g:hoogle_prev_search, '' )<cr>
+" nnoremap <silent> <buffer> <localleader><c-o> :call HoogleGoBack()<cr>
 
 " call Hsimp("Control.Monad", "replicateM")
 fun! Hsimp(module, symbol)
@@ -1554,6 +1655,16 @@ nnoremap <leader>sx y$:echom <c-r>"<cr>
 " EDIT VIM SCRIPT: ---------------------------------------------------------------------
 
 " EDIT VIM SCRIPT: ---------------------------------------------------------------------
+
+
+" Language Client HIE: -----------------------------------------------------------------
+
+" status: can't get HIE (hie --lsp) installed
+" waiting for homebrew formular
+
+
+" Language Client HIE: -----------------------------------------------------------------
+
 
 " General: -----------------------------------------------------------------------------
 
@@ -2174,6 +2285,39 @@ let g:easy_align_ignore_groups = ['Comment', 'String']
 " "<,'>EasyAlign */(go/"
 " "<,'>EasyAlign */(/"
 
+" GTabularize applies only to lines that match!
+" Regex ".*\zs," matches the last comma in the line
+" Running the following will align the type signatures as shown below
+" GTabularize /∷/
+" GTabularize /⇒/
+" GTabularize /.*\zs→/
+
+" -- Control.Monad
+" replicateM ∷ (Applicative m) ⇒ Int → abc a → m [a]
+" -- Data.Sequence
+" replicateM ∷ Monad m ⇒ Int → m a → m (Seq a)
+" -- Data.Sequence.Internal
+" replicateM ∷ Monad m ⇒ Int → m a → m (Seq a)
+" -- Data.Conduit.List
+" replicateM ∷ Monad m ⇒ Int → m a → Producer m a
+" -- Control.Monad
+" replicateM_ ∷ (Applicative m) ⇒ Int → m a → m ()
+" -- Data.Conduit.Internal.List.Stream
+" replicateMS ∷ Monad m ⇒ Int → m a → StreamProducer m a
+"
+" -- Control.Monad
+" replicateM  ∷ (Applicative m) ⇒ Int → abc a → m [a]
+" -- Data.Sequence
+" replicateM  ∷ Monad m         ⇒ Int → m a   → m (Seq a)
+" -- Data.Sequence.Internal
+" replicateM  ∷ Monad m         ⇒ Int → m a   → m (Seq a)
+" -- Data.Conduit.List
+" replicateM  ∷ Monad m         ⇒ Int → m a   → Producer m a
+" -- Control.Monad
+" replicateM_ ∷ (Applicative m) ⇒ Int → m a   → m ()
+" -- Data.Conduit.Internal.List.Stream
+" replicateMS ∷ Monad m         ⇒ Int → m a   → StreamProducer m a
+
 
 " Insert line comment
 nnoremap <leader>mll i----------------------------------------------------------------------------------<esc>^
@@ -2699,8 +2843,9 @@ command! ColorPicker VCoolor
 
 "  --- Project Root --------------------------------------------
 
-" let g:rootmarkers = ['.projectroot', 'package.json', 'bower.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
-let g:rootmarkers = ['.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
+" let g:rootmarkers = ['.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
+" Prioritise looking for git repo roots
+let g:rootmarkers = ['.projectroot', '.git', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md']
 
 "
 " open file relative to project-root
@@ -3702,9 +3847,10 @@ fun! HoogleForCursorWord()
     if IsPurs()
       call PSCIDEpursuit(PSCIDEgetKeyword())
     else
-      let keyw = expand("<cword>")
-      let comm = 'Hoogle ' . keyw
-      exec comm
+      let l:keyw = expand("<cword>")
+      call HoogleLookup( l:keyw, '' )
+      " let comm = 'Hoogle ' . keyw
+      " exec comm
       " exec 'w!'
       wincmd j
     endif
@@ -3730,9 +3876,7 @@ endfun
 
 
 command! -nargs=1 Docs  :call Docs(<args>)
-
 command! -nargs=1 Docsp :call Docsp(<args>)
-
 command! -nargs=1 Docsh :call Docsh(<args>)
 
 

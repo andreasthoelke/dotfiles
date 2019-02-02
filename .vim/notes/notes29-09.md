@@ -685,9 +685,8 @@ what are buffertags?
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
 ## Completion
-   * eins
-   * zwei
-   * drei
+  see nav-containers.md#/Completion
+
 ## Low priority
 
 a start screen?
@@ -715,6 +714,9 @@ learn about conceal feature
 usecaes:
   * haskell lambda, Integer/String symbols (example plugin)
   * hide quotes?
+
+ related?
+ Specific Neovim features: nvim_buf_add_highlight nvim_buf_set_virtual_text
 
 Toggle map for: set foldcolumn=1 set foldcolumn=0 to show markdown foldlevels
 
@@ -814,6 +816,10 @@ make `rm -r` commands move to trash?
 
 
 ### Current Todos
+
+Feature: create vim-rel link for word under the cursor!
+  * could be conceiled?
+  * plus map
 
 document chrome-cli.vim usage
   find some useful applications, make extendable
@@ -941,10 +947,10 @@ easyclip setting causes redundant undo step at insert leave
 show quickfix process (1 of 4) in statusbar of inactive quickfix list. 
   currently c-g does output the state in the command line
 
-easyMotion for paragraph, similar to \w
-
 
 ## Release notes v1.1.1
+* easymotion for paragraph and sentence: `<localleader>}`, `<localleader>)`
+* show no-scrollbar-vim in lightline
 
 
 ## Release notes v1.1.0

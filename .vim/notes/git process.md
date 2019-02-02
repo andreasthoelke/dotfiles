@@ -25,6 +25,14 @@ will create a folder `dotfiles` with the following filestructure:
   └── README.md
 
 ### Remote setup
+
+If I did changes to a repo I cloned from Github ..
+  - fork that repo on Github
+  - then in the local repo overwrite the origin URL to your forked repo:
+    * `git remote set-url origin https://github.com/andreasthoelke/vim-hoogle`
+  - you may need to `git pull` from origin and then merge.
+
+Link a local repo to a github repo:
   * `git remote add origin` https://github.com/andreasthoelke/somerepo.git
   * `git remote add upstream` ..
   * `git remote -v` to view remote repos
