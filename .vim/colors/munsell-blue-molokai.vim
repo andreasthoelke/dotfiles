@@ -321,9 +321,9 @@ hi! def link mkdLink Underlined2
 " hi! def link htmlBold htmlBold
 " hi! def link htmlItalic htmlItalic
 
-" Dirvish
+" Dirvish{{{
 hi! def link DirvishPathTail Function
-hi! def link DirvishArg DataConstructor
+hi! def link DirvishArg DataConstructor"}}}
 
 " Markbar
 exec 'hi! DarkHeader guifg=' . g:color_ming_green_dark
@@ -333,7 +333,7 @@ hi! link markbarID Highlight1
 " Editor & Quickfix
 hi LineNr guifg=#404040
 hi FoldColumn guibg=gray10 guifg=gray20
-hi Folded     guifg=#4B5B61 guibg=#0B0B0B
-
+" hi Folded     guifg=#4B5B61 guibg=#0B0B0B
+hi Folded     guifg=#4B5B61 guibg=#0F0F0F
 
 

@@ -911,7 +911,10 @@ set numberwidth=2
 set nonumber
 
 " Don't show the Pipe "|" character vertical window split borders
-set fillchars+=vert:\  
+" set fillchars+=vert:\  
+" This is to allow a <Space> at the end of an expression
+" Note that the \ to escape the ' ' also needs to be escaped, hence the \\
+exec "set fillchars+=vert:\\ "
 "hsl(348, 100%, 83%) Could also use the "VertSplit" highlight group
 
 " Trailing Whitespace:
@@ -2634,12 +2637,17 @@ function! GoToOpenFold(direction)
   call cursor(start, 0)
 endfunction
 
-" set foldtext=MyFoldText()
-" function! MyFoldText()
-"   let line = getline(v:foldstart)
-"   " let sub  = substitute(line, '/\*\|\*/\|{ *JUST BLOCK THIS* {{\d\=', '', 'g')
-"   return line
-" endfunction
+set foldtext=DefaultFoldtext()
+func! DefaultFoldtext()
+  let l:line = getline(v:foldstart)
+  let l:subs = substitute(l:line, '{{{\|"', '', 'g')
+  return '  ' . l:subs
+endfunc
+
+" Don't show the default '.' in the fold text
+exec "setlocal fillchars=fold:\\ "
+" exec .. is to allow a <Space> at the end of an expression
+" Note that the \ to escape the ' ' also needs to be escaped, hence the \\
 
 " Folding: ------------------------------------------------
 

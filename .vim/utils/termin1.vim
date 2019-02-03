@@ -1065,12 +1065,12 @@ fun! OpenRangeInExcel ( origDelim ) range
 endfun
 
 fun! SubstituteInLines ( lines, origDelim, newDelim )
-	let l:idx = 0
-	while l:idx < len(a:lines)
-	   let l:line = a:lines[l:idx]
-	   let a:lines[l:idx] = substitute(l:line, a:origDelim, a:newDelim, 'ge')
-	   let l:idx = l:idx + 1
-	endwhile
+  let l:idx = 0
+  while l:idx < len(a:lines)
+    let l:line = a:lines[l:idx]
+    let a:lines[l:idx] = substitute(l:line, a:origDelim, a:newDelim, 'ge')
+    let l:idx = l:idx + 1
+  endwhile
   return a:lines
 endfun
 " Substitute flags: "g" = all occurances, "e" = surpress/continue at errors

@@ -827,6 +827,9 @@ make `rm -r` commands move to trash?
 
 ### Current Todos
 
+Problem: Currently I may not strip whitespace in .vimrc!
+         set fillchars sets a space
+
 Feature: create vim-rel link for word under the cursor!
   * could be conceiled?
   * plus map
@@ -962,7 +965,7 @@ show quickfix process (1 of 4) in statusbar of inactive quickfix list.
 * easymotion for paragraph and sentence: `<localleader>}`, `<localleader>)`
 * next/pre arguments movement with `,a`, `,A` - localleader for current arg
 * show no-scrollbar-vim in lightline
-
+* set foldtext=DefaultFoldtext()
 
 ## Release notes v1.1.0
 * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
