@@ -25,8 +25,6 @@ hi Number          guifg=#AE81FF
 hi String          guifg=#E6DB74
 hi Conditional     guifg=#F92672               gui=bold
 hi Constant        guifg=#AE81FF               gui=bold
-hi Cursor          guifg=#000000 guibg=#F8F8F0
-hi iCursor         guibg=#808080
 hi Debug           guifg=#BCA3A3               gui=bold
 hi Define          guifg=#66D9EF
 hi Delimiter       guifg=#8F8F8F
@@ -332,6 +330,16 @@ hi Normal          guifg=#F8F8F2 guibg=#151719
 " hi Comment         guifg=#60777C
 " hi Comment         guifg=#335562
 hi Comment         guifg=#3D5862
+
+" Note: Cursor is show with inverted bg-fg colors by alacritty. 
+" Could alternatively activate custom colors in alacretty settings
+" No sure when this is unsed
+hi Cursor          guifg=#000000 guibg=#F8F8F0
+" Only bg color seems to have an effect in nvim + Alacritty
+" hi iCursor         guibg=#808080
+" hi iCursor         guibg=#DDEE00
+" hi iCursor         guibg=#D3D3D3
+hi iCursor         guibg=#727272
 
 " Contrast Of CursorLine:
 " hi CursorLine                    guibg=#222525

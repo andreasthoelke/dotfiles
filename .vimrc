@@ -1366,7 +1366,7 @@ augroup JumplistTimeout
 augroup END
 " TODO try this with updatime
 " Issue: this interval is also used for tagbar loc update
-set updatetime=3000
+set updatetime=2000
 " Note: This also defines the time you have to c-o to get to the insert end location. And after this time the jumplist
 " will also get cleaned up/ suffled a bit. Typically c-i is not useful *after* this time - the jumps then basically become c-o jumps
 
