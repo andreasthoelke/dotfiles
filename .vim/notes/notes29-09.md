@@ -960,6 +960,8 @@ easyclip setting causes redundant undo step at insert leave
 show quickfix process (1 of 4) in statusbar of inactive quickfix list. 
   currently c-g does output the state in the command line
 
+after doublicating a line and then commenting the orig line and moving down with 'j'
+  it jumps to the beginning of the line while it should stay in the same column
 
 ## Release notes v1.1.1
 * easymotion for paragraph and sentence: `<localleader>}`, `<localleader>)`

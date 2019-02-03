@@ -100,21 +100,6 @@ hi WildMenu        guifg=#66D9EF guibg=#000000
 hi TabLineFill     guifg=#1B1D1E guibg=#1B1D1E
 hi TabLine         guibg=#1B1D1E guifg=#808080 gui=none
 
-" This is where to set the main background color
-" hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
-hi Normal          guifg=#F8F8F2 guibg=#151719
-
-hi Comment         guifg=#60777C
-
-" Contrast Of CursorLine:
-" hi CursorLine                    guibg=#222525
-" hi CursorLine                    guibg=#202424
-hi CursorLine                    guibg=#1C2020
-
-hi CursorLineNr    guifg=#FD971F               gui=none
-" hi LineNr          guifg=#303030
-hi NonText         guifg=#465457
-hi SpecialKey      guifg=#465457
 
 " Copied from https://github.com/dim13/smyck.vim ----------------------------------------------------------------------
 " ----------------------------------------------------------------------------
@@ -183,8 +168,6 @@ function! s:h(group, style)
     \ "cterm="   (!empty(s:ctermformat) ? s:ctermformat   : "NONE")
 endfunction
 
-hi Search guibg=#3E3E3E guifg=#DDDDDD
-hi Visual guibg=#3E3E3E gui=none
 
 
 
@@ -334,6 +317,90 @@ hi! link markbarID Highlight1
 hi LineNr guifg=#404040
 hi FoldColumn guibg=gray10 guifg=gray20
 " hi Folded     guifg=#4B5B61 guibg=#0B0B0B
-hi Folded     guifg=#4B5B61 guibg=#0F0F0F
+" hi Folded     guifg=#4B5B61 guibg=#0F0F0F
+" hi Folded     guifg=#264B58 guibg=#121212
+" hi Folded     guifg=#2C4C58 guibg=#121212
+" hi Folded     guifg=#335562 guibg=#121212
+hi Folded     guifg=#3D5862 guibg=#121212
 
+
+" Custom Native Groups: Changed vas for native highlightgroups ---------------------------------
+" This is where to set the main background color
+" hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
+hi Normal          guifg=#F8F8F2 guibg=#151719
+
+" hi Comment         guifg=#60777C
+" hi Comment         guifg=#335562
+hi Comment         guifg=#3D5862
+
+" Contrast Of CursorLine:
+" hi CursorLine                    guibg=#222525
+" hi CursorLine                    guibg=#202424
+hi CursorLine                    guibg=#1C2020
+
+hi CursorLineNr    guifg=#FD971F               gui=none
+" hi LineNr          guifg=#303030
+hi NonText         guifg=#465457
+hi SpecialKey      guifg=#465457
+
+" Seach
+" hi Search guibg=#3E3E3E guifg=#DDDDDD
+hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
+" hi Search guibg=#3E3E3E gui=bold
+" hi Search guibg=#3E3E3E gui=none
+" hi Search guibg=#807500 gui=bold
+" hi Search guibg=#464646 guifg=none gui=bold
+" hi Search guibg=#C77171 guifg=none gui=bold
+" hi Search guibg=#807F73 guifg=none gui=bold
+" hi Search guibg=#43433D guifg=none gui=bold,underline
+" hi Search guibg=#43433D guifg=none gui=bold,underline
+
+" Visual selection
+" hi Visual guibg=#3E3E3E gui=none
+hi Visual guibg=#2E2E2E gui=none
+
+
+"    From Vimrc: ---------------------------------
+" run: RedirMessagesBuf hi Folded
+" to get:
+" guifg=#4B5B61 guibg=#0B0B0B
+" Folded         xxx ctermfg=4 ctermbg=248 guifg=#0087af guibg=#afd7ff
+" → write command so input color into code
+" JSON colors for ".vim/plugged/vim-json/syntax/json.vim" syntax file
+hi link jsonPadding   Operator
+hi link jsonString    vimString
+hi link jsonTest			Label
+hi link jsonEscape		Special
+hi! link jsonNumber		Function
+hi link jsonBraces		Delimiter
+hi link jsonNull			Include
+hi link jsonBoolean		Boolean
+hi link jsonKeyword		Keyword
+hi link jsonCommentError				Error
+
+" Custom Coloring: --
+" Examples: 1. run "leader hh / SyntaxStack" to get the syntax group under the cursor
+"           2. this links the vimCommentTitle systax group to the Error highlight group
+" highlight! def link vimCommentTitle Error
+" This removes any highlighs (colors) defined for the syntax group
+" highlight! link vimCommentTitle NONE
+
+" Overwrite the 'Normal' highlight group
+" highlight! Normal guifg=Yellow guibg=Green
+" highlight! Normal guifg=White guibg=Black
+
+highlight! def link vimMapRhs Macro
+
+" highlight! Normal guifg=Yellow guibg=Green
+" Function       xxx ctermfg=10 guifg=#D1FA71
+
+"    From Vimrc: ---------------------------------
+
+
+" This does not work ..?
+" syn match Conceal '--' conceal cchar=∘
+" syn match haskellLambda '\\' conceal cchar=λ
+
+
+" call matchadd('HConceal', '\v-- ', 10, -1, {'conceal': ''})
 

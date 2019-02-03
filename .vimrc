@@ -930,43 +930,33 @@ nnoremap <leader>sw :StripWhitespace<cr>
 " set list
 " set listchars=tab:>-,trail:_,extends:#,nbsp:_
 
-" run: RedirMessagesBuf hi Folded
-" to get:
-" guifg=#4B5B61 guibg=#0B0B0B
-" Folded         xxx ctermfg=4 ctermbg=248 guifg=#0087af guibg=#afd7ff
-" → write command so input color into code
-" JSON colors for ".vim/plugged/vim-json/syntax/json.vim" syntax file
-hi link jsonPadding   Operator
-hi link jsonString    vimString
-hi link jsonTest			Label
-hi link jsonEscape		Special
-hi! link jsonNumber		Function
-hi link jsonBraces		Delimiter
-hi link jsonNull			Include
-hi link jsonBoolean		Boolean
-hi link jsonKeyword		Keyword
-hi link jsonCommentError				Error
-
-" Custom Coloring: --
-" Examples: 1. run "leader hh / SyntaxStack" to get the syntax group under the cursor
-"           2. this links the vimCommentTitle systax group to the Error highlight group
-" highlight! def link vimCommentTitle Error
-" This removes any highlighs (colors) defined for the syntax group
-" highlight! link vimCommentTitle NONE
-
-" Overwrite the 'Normal' highlight group
-" highlight! Normal guifg=Yellow guibg=Green
-" highlight! Normal guifg=White guibg=Black
-
-highlight! def link vimMapRhs Macro
-
-" highlight! Normal guifg=Yellow guibg=Green
-" Function       xxx ctermfg=10 guifg=#D1FA71
 
 
+
+" Syntax Color Haskell: --------------------
+
+" hi! Conceal         guifg=#FFFFFF guibg=#000000
+
+autocmd! BufEnter *.hs call HaskellSyntaxAdditions()
+
+func! HaskellSyntaxAdditions()
+  " Conceals
+  call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
+  " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely
+  set conceallevel=2
+  " When the concealcursor is *not* set, the conceald text will reveal when the cursor is in the line
+  " concealcursor=n would keeps the text conceald even if the cursor is on the line 
+  set concealcursor=n
+  " Run this line to see the concealed text if curso is on line
+  " set concealcursor=
+  set syntax=purescript
+endfunc
+
+
+" Experiments:
+let g:haskell_classic_highlighting = 1
 " syn match haskellCompose ' \zs\.' conceal cchar=∘
 " syn match haskellLambda '\\' conceal cchar=λ
-
 " This conceals "->" into unicode "→". and is supposed to trun :: into big ":" - but is that char not available?
 " Not needed?
 " let g:haskell_conceal_wide = 1
@@ -977,6 +967,10 @@ let g:haskell_conceal = 1
 " function! vim2hs#haskell#conceal#wide() " {_{{
 " function! vim2hs#haskell#conceal#bad() " {_{{
 let g:idris_conceal = 1
+
+
+
+" Syntax Color Haskell: --------------------
 
 
 " Style Colors: ----------------------------
@@ -2717,10 +2711,8 @@ map <localleader>b <Plug>(easymotion-b)
 map <localleader>j <Plug>(easymotion-j)
 map <localleader>k <Plug>(easymotion-k)
 " Jump to paragraphs and sentences
-map <localleader>} :call EasyMotion#Paragraph(0, 0)<cr>
-map <localleader>{ :call EasyMotion#Paragraph(0, 1)<cr>
-map <localleader>) :call EasyMotion#Sentence(0, 0)<cr>
-map <localleader>( :call EasyMotion#Sentence(0, 1)<cr>
+map <localleader>e :call EasyMotion#Paragraph(0, 0)<cr>
+map <localleader>r :call EasyMotion#Paragraph(0, 1)<cr>
 " Jump to typical spots
 map <localleader>l <Plug>(easymotion-lineforward)
 map <localleader>h <Plug>(easymotion-linebackward)
@@ -2932,14 +2924,6 @@ function! <SID>AutoProjectRootCD()
 endfunction
 
 
-" use purescript syntax on haskell buffers.
-" Todo: what's the proper way to do this?
-autocmd! BufEnter *.hs set syntax=purescript
-" this would show vim help with wrong syntax?
-" autocmd BufReadPost *.txt set syntax=markdown
-" autocmd some entry FileType help set syntax=help
-
-let g:haskell_classic_highlighting = 1
 
 " Quickfix List: -------------------------------------------------
 
@@ -3767,7 +3751,7 @@ autocmd! FileType GrepperSide
 " xmap gs  <plug>(GrepperOperator)
 
 highlight GrepperSideFile gui=italic guifg=#C34371 guibg=#000000
-highlight Conceal         guifg=#FFFFFF guibg=#000000
+" highlight Conceal         guifg=#FFFFFF guibg=#000000
 
 fun! GrepSearch(selType, mode)
     if a:selType == "word"
