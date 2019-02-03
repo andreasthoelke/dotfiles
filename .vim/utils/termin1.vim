@@ -342,6 +342,51 @@ endfunction
 
 " Specific Neovim features: nvim_buf_add_highlight nvim_buf_set_virtual_text
 
+" Conceal: TODO
+
+" NVim Virtual Text: ------------------
+if has('nvim-0.3.2')
+  let g:nsid_def = nvim_create_namespace('default')
+endif
+function! VirtualtextClear()
+  let l:buffer = bufnr('')
+  call nvim_buf_clear_highlight(l:buffer, g:nsid_def, 0, -1)
+endfunction
+function! VirtualtextShowMessage(message, hlgroup)
+  let l:cursor_position = getcurpos()
+  let l:line = line('.')
+  let l:buffer = bufnr('')
+  call nvim_buf_set_virtual_text(l:buffer, g:nsid_def, l:line-1, [[a:message, a:hlgroup]], {})
+endfunction
+
+" call VirtualtextClear()
+" call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'SpecialKey')
+" call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'Folded')
+" call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'WildMenu')
+
+" Multiple text chunks would allow to recreate syntax highlighting
+" call nvim_buf_set_virtual_text( bufnr(''), g:nsid_def, line('.'), [[ '⇒ first ∷ ', 'Folded'], [ 'sec ← (nd)', 'WildMenu']],)
+" Shows Demo Here: →
+
+" Example for nvim_buf_add_highlight: Highlight/mark the char under the cursor
+nnoremap <leader>mc :call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])<cr>
+" Clear nvim virtual highlights and text 
+nnoremap <leader>cv :call VirtualtextClear()<cr>
+
+function! Get_visual_selection()
+  " Destructuring the 4 item position array
+  let [l:lineNumStart, l:columnStart] = getpos("'<")[1:2]
+  let [l:lineNumEnd,   l:columnEnd]   = getpos("'>")[1:2]
+
+  call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])<cr>
+
+endfunction
+
+
+vnoremap <leader>ab :<c-u>echo getpos("'<")<cr>
+vnoremap <leader>ab :<c-u>echo getpos("'>")<cr>
+
+
 " VIM WORKFLOW: ----------------------------------------------------------------------
 
 
@@ -857,7 +902,7 @@ endfunc
 " New Vs Split: - "new", "vnew", "tabnew" (and "tabe") create an empty new buffer even if no filename is provided
 "               - "split", "vs[plit]" behave the same if a new file name is provided
 " Ranges Of Lines:
-" ".,.+5s/er/XXXX/g" Repleace in the following 5 lines. A range to the "s" command is ","-separeted tuple of (interpreted) Ints/linenumbers
+" ".,.+5s/er/XXXX/g" Replace in the following 5 lines. A range to the "s" command is ","-separeted tuple of (interpreted) Ints/linenumbers
 " ".,.+5write temp.txt" Write the following 5 lines to a file
 " ".,$g/vim" show/select all following lines that contain "vim"
 " "'a,'bs/in/XXXX" substitute from marker 'a' to marker 'b'

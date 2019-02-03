@@ -147,6 +147,10 @@ Populate arglist with Dirvish, then use `##` special symbol to search through th
   3. `$` is only matched if it's at the end of a line.
   http://regexr.com/40v3p
 
+  just source the next line to read/learn about regex in vim
+  help pattern.txt
+
+
 
 ## FZF
   `Files ~/.vim`
@@ -384,7 +388,12 @@ TODO some tricks from FZF:
   `:BLines` is super useful alternative to search/navigate `/something` as it's not cluttering the jumplist!
 
 
-## Karabiner
+## Key Maps - Mappings
+### Free mappings
+  > `)` is a free mapping!
+  > `L` is also a free mapping!
+
+### Karabiner
 
 Config path
   * `~/.config/karabiner/karabiner.json`
@@ -706,7 +715,6 @@ show browser win at location -
 
 goyo for notes taking?
 
-" `)` is a free mapping!
 
 review:  EXTRACT SIGNATURES:
 
@@ -724,6 +732,8 @@ move section? `Utility And Example Commands:`
 go to the end of pasted text - similar to end of insert - via jumplist - easyclip has a related map
 consolidate vim Tips "Tip" is redundant?!
 align vim tips to after ":"
+
+Vim Additional Documentation: https://github.com/mhinz/vim-galore
 
 ## Todos
 
@@ -950,6 +960,7 @@ show quickfix process (1 of 4) in statusbar of inactive quickfix list.
 
 ## Release notes v1.1.1
 * easymotion for paragraph and sentence: `<localleader>}`, `<localleader>)`
+* next/pre arguments movement with `,a`, `,A` - localleader for current arg
 * show no-scrollbar-vim in lightline
 
 

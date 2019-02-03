@@ -1254,6 +1254,14 @@ func! InsertLeave()
   endif
 endfunc
 
+" Argument Movement: Note the is Vim-targets related
+" Move to current-next argument - the B before the next ','
+nnoremap <localleader>a f,B
+" Move to the next argument - the B before the next ',' after the next ','
+nnoremap ,a f,;B
+" Move to the previous argument - the B before the previous ','
+nnoremap ,A F,B
+
 
 " Example: {{{ This saves the cursor pos to the jumplist when the cursor rested for 4 seconds. See ISSUE below.
 " augroup JumplistTimeout
@@ -1959,9 +1967,13 @@ hi NeomakeWarningSign ctermfg=white
 hi NeomakeIntoSign    ctermfg=white
 hi NeomakeMessageSign ctermfg=white
 
+" Autoexpand quickfix list not always wanted? controlling this elsewhere
 " let g:neomake_open_list=2
 " let g:neomake_list_height=10
 
+let g:neomake_highlight_columns = 1
+let g:neomake_highlight_line = 1
+" Uses NVIMs nvim_buf_add_highlight feature
 
 command! SignsClear :sign unplace *
 " Neomake defaults
@@ -3080,6 +3092,7 @@ nnoremap <c-w>S :vs<cr>
 nnoremap <c-w>N :vnew<cr>
 " Note: the standard map "<c-w>s" & "<c-w>n" will split below
 
+" Vim Rel Links:
 " ":h rel-links" - "gk" split right. though "c-w f" splits below - TODO
 let g:rel_open = 'vsplit'
 
