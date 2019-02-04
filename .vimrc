@@ -650,6 +650,7 @@ let g:mundo_inline_undo = 1
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_silent = 1  " do not display the auto-save notification
 let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
+let g:auto_save_events = ["CursorHold"]
 " Maybe need this?
 " let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
 " Note: Plugin will "set updatetime=200"
@@ -1271,11 +1272,12 @@ nnoremap zz m'zz
 
 " Go back to insert start (+ jumplist)
 " autocmd! InsertLeave * exec "normal! m'`["
-" autocmd! InsertLeave * call InsertLeave()
+autocmd! InsertLeave * call InsertLeave()
+" autocmd! InsertEnter * exec "normal! m'"
 
 func! InsertLeave()
   " Put end of inserted text into jumplist, then go to the beginning of the insert
-  " normal! m'`[
+  normal! m'`[
   " normal! `[
   " Test if character under cursor is a <space>
   if getline('.')[col('.')-1] == ' '

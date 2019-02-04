@@ -782,6 +782,8 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 
+vimscript conceal "
+
 Problem: Currently I may not strip whitespace in .vimrc!
          set fillchars sets a space
 
