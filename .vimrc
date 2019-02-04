@@ -893,12 +893,12 @@ nnoremap <leader>hcc :,ColorHighlight<CR>
 nnoremap <leader>hcd :ColorClear<CR>
 
 
-" Style Colors: ----------------------------
+" Style Colors: ----------------------------{{{
 " Change colors in the colorscheme: Open vimfiles/colors/molokai
 " save and run colorscheme molokai
 " colorscheme molokai
 " colorscheme OceanicNext
-" let g:rehash256 = 1
+" let g:rehash256 = 1}}}
 
 " TODO: show some colors e.g. for TODO: in purescript comments
 "       show syntax highlight in purescript comments (within `..code..`)
@@ -933,40 +933,71 @@ nnoremap <leader>sw :StripWhitespace<cr>
 
 
 
-" Syntax Color Haskell: --------------------
+" Syntax Color: --------------------
 
 " hi! Conceal         guifg=#FFFFFF guibg=#000000
+hi! Conceal guibg=#000000
 
 autocmd! BufEnter *.hs call HaskellSyntaxAdditions()
 
 func! HaskellSyntaxAdditions()
   " Conceals
   call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '--', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '}}}', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '{{{', -1, -1, {'conceal': ' '})
+  call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})
+  call matchadd('Conceal', '\\\%([^\\]\+→\)\@=', -1, -1, {'conceal': 'λ'}) |
+  " Note: Text can now only
+  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
   " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely
   set conceallevel=2
   " When the concealcursor is *not* set, the conceald text will reveal when the cursor is in the line
   " concealcursor=n would keeps the text conceald even if the cursor is on the line 
-  set concealcursor=n
+  set concealcursor=ni
   " Run this line to see the concealed text if curso is on line
   " set concealcursor=
   set syntax=purescript
 endfunc
 
+autocmd! BufEnter *.vim,*.vimrc call VimSyntaxAdditions()
+func! VimSyntaxAdditions()
+  call matchadd('Conceal', '" ', -1, -1, {'conceal': ''})
+  set conceallevel=2
+  set concealcursor=ni
+endfunc
+
+" TODO find out if this alternative approach is needed
+" This cleans up the matchadd if every Enter event
+" au FileType haskell set concealcursor=ni
+" au WinEnter,BufEnter,BufRead,FileType,Colorscheme *
+"       \ if exists('w:lambda_conceal')                                                                  |
+"       \     call matchdelete(w:lambda_conceal)                                                         |
+"       \     unlet w:lambda_conceal                                                                     |
+"       \ endif                                                                                          |
+"       \ if &ft == 'haskell'                                                                         |
+"       \     let w:lambda_conceal = matchadd('Conceal', '\\\%([^\\]\+→\)\@=', 10, -1, {'conceal': 'λ'}) |
+"       \     hi! link Conceal Operator                                                                  |
+"       \ endif
+
 
 " Experiments:
-let g:haskell_classic_highlighting = 1
+" let g:haskell_classic_highlighting = 1
 " syn match haskellCompose ' \zs\.' conceal cchar=∘
 " syn match haskellLambda '\\' conceal cchar=λ
 " This conceals "->" into unicode "→". and is supposed to trun :: into big ":" - but is that char not available?
 " Not needed?
 " let g:haskell_conceal_wide = 1
 " goolord/vim2hs us using this to display lambda symbol and fn compose dot
-let g:haskell_conceal = 1
+" let g:haskell_conceal = 1
 " TODO use this for purescript syntax?
 " TODO test these:
 " function! vim2hs#haskell#conceal#wide() " {_{{
 " function! vim2hs#haskell#conceal#bad() " {_{{
-let g:idris_conceal = 1
+" let g:idris_conceal = 1
 
 
 
@@ -1240,11 +1271,12 @@ nnoremap zz m'zz
 
 " Go back to insert start (+ jumplist)
 " autocmd! InsertLeave * exec "normal! m'`["
-autocmd! InsertLeave * call InsertLeave()
+" autocmd! InsertLeave * call InsertLeave()
 
 func! InsertLeave()
   " Put end of inserted text into jumplist, then go to the beginning of the insert
-  normal! m'`[
+  " normal! m'`[
+  " normal! `[
   " Test if character under cursor is a <space>
   if getline('.')[col('.')-1] == ' '
     normal! w
@@ -2634,7 +2666,7 @@ endfunction
 set foldtext=DefaultFoldtext()
 func! DefaultFoldtext()
   let l:line = getline(v:foldstart)
-  let l:subs = substitute(l:line, '{{{\|"', '', 'g')
+  let l:subs = substitute(l:line, '{\|"\|--', '', 'g')
   return '  ' . l:subs
 endfunc
 
@@ -2807,8 +2839,12 @@ func! FindFiles(filename)
   call delete(error_file)
 endfunc
 
-nnoremap / :set hlsearch<cr>:noh<cr>/\v
-vnoremap / /\v
+" set hlsearch
+
+" nnoremap / :set hlsearch<cr>:noh<cr>/\v
+" this seems needed to reactivate hlsearch after nohlsearch
+nnoremap / :set hlsearch<cr>:noh<cr>/
+" vnoremap / /\v
 " nnoremap <M-/> /
 
 " Search visually selected text
@@ -2818,6 +2854,7 @@ vnoremap // y/<C-R>"<CR>
 
 " HOW TO SEARCH:
 
+" http://vimdoc.sourceforge.net/htmldoc/pattern.html
 
 " Silver searcher
 " --------------------------------------------------------------------------------
@@ -3213,6 +3250,7 @@ nnoremap <leader>pi :PlugInstall<cr>
 
 " Exit insert mode
 " inoremap <c-[> <esc>l
+
 
 " General: ----------------------------------------------------------
 

@@ -331,7 +331,7 @@ hi Normal          guifg=#F8F8F2 guibg=#151719
 " hi Comment         guifg=#335562
 hi Comment         guifg=#3D5862
 
-" Note: Cursor is show with inverted bg-fg colors by alacritty. 
+" Note: Cursor is show with inverted bg-fg colors by alacritty.
 " Could alternatively activate custom colors in alacretty settings
 " No sure when this is unsed
 hi Cursor          guifg=#000000 guibg=#F8F8F0

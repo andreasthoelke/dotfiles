@@ -293,6 +293,7 @@ use <c-o> open menu?
 [config](../../.vimrc#Marks:)
 
 ## Folds, Folding
+  `zf` `zd` create/delete fold markers via motions/vis select
   `zk` `zj` to navigate
   `zo` `zc` `z<space>` to open/close/toggle individual folds
   `zM`  `zR` to close/open all folds
@@ -428,10 +429,55 @@ location could be a
 
 ### Quick browse
  * want to explore/insight/confirm related code
-#### Tags
+### Tags
  - `gf`, `c-w` `f/gf` to open tab/split?
-#### Search
-[notes](notes29-09.md# Searching)
+
+## Search
+
+1. `:Find <searchword>`
+    * only in git files
+    * on sidebar, with context
+    * in new tab
+    * based on project root
+
+    see ~/.vimrc#/Search%20Config:
+
+    2. search vimconf and notes
+    `vim /andreasthoelke/ ~/.vimrc ~/.vim/utils/** ~/.vim/notes/**`
+    `Ag andreasthoelke ~/.vimrc ~/.vim/utils/** ~/.vim/notes/**`
+
+    3. the fastest way to seach an entire project folder:
+    `nvim -q<(ag "new BrowserWindow" **)`
+    → use quickfix to navigate results
+
+  * a recursive grep + fzf
+  `grep -r nyaovim ~/.vim | fzf` or `grep -r nyaovim . | fzf`
+  then type "init Plug" and `j/k` select this path
+  /Users/andreas.thoelke/.vim/init.vim:Plug 'andreasthoelke/nyaovim-markdown-preview'
+
+  * `q/` search history
+  * `HelpGrep` to seach vim help (rename?)
+
+  " This works pretty well. could reuse for other purposes
+  command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
+
+  Populate arglist with Dirvish, then use `##` special symbol to search through these files
+  read: Tip 13: Searching Files with Grep-Alikes
+
+  document regex/wildcards in search. e.g. "/eins.*zwei"
+  how is this consistent with ctrlp filename search?
+  → there is a note about globs already
+  Regex example:
+  `/(^cr|exe$)/gm`
+  1. the global and multiline expression flags are on
+  2. `^` defines that the `cr` string is only matched at a *beginning* of a line
+  3. `$` is only matched if it's at the end of a line.
+  http://regexr.com/40v3p
+
+  just source the next line to read/learn about regex in vim
+  help pattern.txt
+  http://vimdoc.sourceforge.net/htmldoc/pattern.html
+
 
 #### CtrlP - Args, Buffers, other visit workspaces?
   * how to go back and/or pin/reference the code found?
