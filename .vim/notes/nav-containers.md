@@ -474,6 +474,28 @@ location could be a
   3. `$` is only matched if it's at the end of a line.
   http://regexr.com/40v3p
 
+  Examples
+* Match at beginning of line with optional whitespace
+  source next line!
+/\v^(\s+)?read
+  note that there are other 'read's, see:
+/read
+* Lookarounds
+  are just asserting the presense of groups, they dont consume/return the characters
+This will match 'e's when followed by a space, but dont match the space
+/\ve(\s)@=
+/\ve(\s)
+/e
+* Testing with `matchadd`
+  this only highlights the 'e's not the following (obligatory!) space!
+call matchadd('MatchParen', '\ve(\s)@=', -1, -1 )
+call clearmatches()
+
+* Set start of match with `\sz` (use `\se` to set end of match)
+call matchadd('MatchParen', '\v^\s*\zs(t|r|a)', -1, -1 )
+call clearmatches()
+
+
   just source the next line to read/learn about regex in vim
   help pattern.txt
   http://vimdoc.sourceforge.net/htmldoc/pattern.html

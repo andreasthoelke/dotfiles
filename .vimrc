@@ -313,7 +313,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 " Nice Python Integration Tutorial:
 " https://vimways.org/2018/a-python-interface-cookbook/
 
-" NyaoVim Markdown: ------------------------
+" NyaoVim Markdown: ------------------------{{{
 let g:markdown_preview_eager = 1
 let g:markdown_preview_auto = 0
 let g:markdown_preview_no_default_mapping = 1
@@ -417,8 +417,7 @@ function! Devdocs(query) abort
   execute 'MiniBrowser!' 'http://devdocs.io/#q='.escape(a:query, ' \')
 endfunction
 command! -nargs=* DevDocs call Devdocs(<q-args>)
-" NyaoVim MiniBrowser: ------------------------
-
+" NyaoVim MiniBrowser: ------------------------}}}
 
 " Oni: {{{----------------------------------
 if exists('g:gui_oni')
@@ -442,11 +441,10 @@ endif
 " }}} Oni: ----------------------------------
 
 
-
-
-" Lightline Settings: -------------------------------
+" Lightline Settings: -------------------------------{{{
 
 command! CursorColumnInStatusline call CursorColumnInStatusline()
+" Can also just use "g<c-g>" to output the cursor position
 
 func! CursorColumnInStatusline()
   let g:lightline.active.right = [ ['scrollbar'], ['column', 'line'] ]
@@ -534,7 +532,7 @@ func! LightlineReadonly()
   return &readonly && &filetype !~# '\v(help|gitcommit)' ? 'RO' : ''
 endfunc
 
-" Lightline Settings: -------------------------------
+" Lightline Settings: -------------------------------}}}
 
 
 
@@ -944,7 +942,6 @@ autocmd! BufEnter *.hs call HaskellSyntaxAdditions()
 func! HaskellSyntaxAdditions()
   " Conceals
   call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '--', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
@@ -966,10 +963,15 @@ endfunc
 
 autocmd! BufEnter *.vim,*.vimrc call VimSyntaxAdditions()
 func! VimSyntaxAdditions()
-  call matchadd('Conceal', '" ', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '\v^\s*\zs"\s', -1, -1, {'conceal': ''})
   set conceallevel=2
   set concealcursor=ni
 endfunc
+
+" Testing:
+" call matchadd('MatchParen', '\v"(\s)@=', -1, -1 )
+" call matchadd('MatchParen', '\v^\s*\zs"\s', -1, -1 )
+" call clearmatches()
 
 " TODO find out if this alternative approach is needed
 " This cleans up the matchadd if every Enter event
@@ -1463,187 +1465,6 @@ endfun
 " Indenting: -------------------------------------
 
 
-
-
-" HOOGLE INCLUDE NEW LIBS:
-" "hoogle generate base lense" will download and install only the base and
-" lense libs.
-" open ":e hoogle-defaults" from the root of the project folder, add/delete
-" libs, then <backspace> in first line to have everything in one row, and
-" copy-paste into terminal
-" https://github.com/ndmitchell/hoogle/blob/master/docs/Install.md
-" Todo: get hoogle libs from cabal file
-
-let g:hoogle_search_buf_size = 10
-let g:hoogle_search_count = 30
-
-" Split module into separate, commented line
-func! HoogleFormatOutput()
-  " call PurescriptUnicode()
-  set syntax=purescript
-  exec "g/--/d"
-  " For all lines: line break after big-word (no training whitespace), comment the module line
-  exec "g/./normal Whi0i-- "
-  normal gg
-endfunc
-" Note: need to source this with line select - because of the special chars?
-
-func! HoogleAlignSinatures()
-  GTabularize /∷/
-  GTabularize /⇒/
-  GTabularize /.*\zs→/
-endfunc
-
-
-"
-func! HoogleFormatInfoOutput()
-  let l:sig = getline( '.' )
-  normal! ddi-- 
-  call append( 1, l:sig)
-  normal! jo{-
-  call PurescriptUnicode()
-  set syntax=purescript
-  normal gg
-endfunc
-
-" ALIGNING COLUMS OF HASKELL SIGS:{{{
-" run: :browse Data.List.Split in GHCi and copy into a vim buffer
-"
-" align right to ∷ with padding 1:
-" '<,'>Tabularize /::/r1c1l1
-" move lines that contain "Splitter" to the bottom of the file!
-" g/Splitter/m$
-" move lines with two occurences of "Splitter" to the bottom
-" g/Splitter.*Splitter/m$
-" move lines with "Eq" to line 22!
-" '<,'>g/Eq/m22
-
-" format hoogle output from
-" Prelude print ∷ Show a ⇒ a → IO ()
-" to
-" -- Prelude
-" print ∷ Show a ⇒ a → IO ()
-" let @o = 'f Jki-- jk^jj'
-" align the type-signature with EasyAlign
-" let @p = 'gcaap '
-" changed this from gaap to gcaap to have 'ga' as fee mapping
-" Wi\0i-- jj
-" used in hoogle.vim: (!) (TODO: refactor this)
-" if a:args != ' --info'
-"   normal gg
-"   normal 10@o
-"   normal gg
-"   normal @p
-" endif}}}
-
-" Import Haskell Identifiers Using Hoogle And Hsimport:{{{
-" 1. Use "gsd" ("go search docs") on a missing identifier
-" 2. In the hoogle list of available identifiers, go to the line/version you
-" want to import and run <leader>ii to import the identifier (confirm the import
-" section of your source file has added the identifier)
-" See HoogleImportIdentifier in vimrc and
-" /Users/andreas.thoelke/.vim/plugged/vim-hoogle/plugin/hoogle.vim
-" also note the "HOOGLE INCLUDE NEW LIBS:" comment in vimrc
-" Sparse Hoogle Infos: https://github.com/ndmitchell/hoogle/blob/master/docs/Install.md}}}
-
-" EXAMPLES:{{{
-" Can import this (which is split in two lines in the Hoggle result window)
-" Prelude putStrLn ∷ String → IO ()
-" Hoogle TODO support these:
-" Data.Aeson data Value
-" Data.Aeson type Array = Vector Value
-" Data.Aeson class ToJSON a
-" Data.Aeson (.=) ∷ (KeyValue kv, ToJSON v) ⇒ Text → v → kv}}}
-func! HoogleImportIdentifier() "{{{
-  let l:prev_line = getline(line('.') -1)
-  let l:cur_line  = getline('.')
-  let l:split_line_prev = split(l:prev_line)
-  let l:split_line      = split(l:cur_line)
-  call HoogleCloseSearch()
-  let l:module     = l:split_line_prev[ 1 ]
-  let l:identifier = l:split_line[ 0 ]
-  call Hsimp( l:module, l:identifier )
-  " normal! <c-w>k{{{
-  " if &mod
-  "   echo "Please save before importing!"
-  "   return
-  " endif
-  " let l:imp1 = l:split_line[0]
-  " let l:imp2 = l:split_line[1]
-  " if l:imp2 == "data" || l:imp2 == "type" || l:imp2 == "class"
-  "   let l:imp2 = l:split_line[2]
-  " endif
-  " if l:imp2[0] == "("
-  "   let l:imp2 = StripString( l:imp2, "(" )
-  "   let l:imp2 = StripString( l:imp2, ")" )
-  " endif
-  " call Hsimp( l:imp1, l:imp2)
-  "update format of the import list}}}
-  call StylishHaskell()
-endfunction "}}}
-
-func! HoogleInsert( symbolOrModulePath, args )
-  let l:cmd = 'hoogle ' . a:symbolOrModulePath . a:args
-  let l:resultLines = split( system( l:cmd ), '\n' )
-  " Don't need to repeat the function signature
-  " call remove( l:resultLines, 0 )
-  " echo split( system( 'hoogle Data.Conduit.List.replicateM --info' ), '\n' )
-  " echo split( system( 'hoogle zipwith --info' ), '\n' )
-  " Remove empty lines at the end --------------
-  let l:idx_lastLine = len( l:resultLines ) - 1
-  let l:lastLineText = l:resultLines[ l:idx_lastLine ]
-  if l:lastLineText == ''
-    call remove( l:resultLines, l:idx_lastLine )
-  endif
-  let l:idx_lastLine = len( l:resultLines ) - 1
-  let l:lastLineText = l:resultLines[ l:idx_lastLine ]
-  if l:lastLineText == ''
-    call remove( l:resultLines, l:idx_lastLine )
-  endif
-  " Remove empty lines at the end --------------
-  " Open comment at the end of the last line
-  let l:resultLines[ 1 ] = '{- ' . l:resultLines[ 1 ]
-  " Close comment at the end of the last line
-  let l:idx_lastLine = len( l:resultLines ) - 1
-  let l:text_lastLine = l:resultLines[ l:idx_lastLine ]
-  let l:resultLines[ l:idx_lastLine ] = l:text_lastLine . ' -}'
-  call append( line('.'), l:resultLines )
-  " call append( line('.'), split( system( 'hoogle Data.Conduit.List.replicateM --info' ), '\n' ) )
-endfunc
-
-
-func! HoogleLineJump() "{{{
-  let l:prev_line = getline(line('.') -1)
-  let l:cur_line  = getline('.')
-  let l:split_line_prev = split(l:prev_line)
-  let l:split_line      = split(l:cur_line)
-  let l:module     = l:split_line_prev[ 1 ]
-  let l:identifier = l:split_line[ 0 ]
-  let l:module_symbol_str = l:module . '.' . l:identifier
-  " since results are given in the format `Data.IntMap.Strict lookup :: Key -> IntMap a -> Maybe a`
-  " this results in a search of `Data.IntMap.Strict.lookup`
-  " call HoogleLookup( l:module_symbol_str, ' --info' )
-  call HoogleInsert( l:module_symbol_str, ' --info' )
-endfunction "}}}
-" To go back to the search results overview, just run the previous search again
-" nnoremap <silent> <buffer> <localleader><c-o> <esc>:call HoogleLookup( g:hoogle_prev_search, '' )<cr>
-" nnoremap <silent> <buffer> <localleader><c-o> :call HoogleGoBack()<cr>
-
-" call Hsimp("Control.Monad", "replicateM")
-fun! Hsimp(module, symbol)
-  call hsimport#imp_symbol(a:module, a:symbol)
-endfun
-
-command! Run    :call HaskellStackRun()
-command! Style  :call StylishHaskell()
-command! Indent :call StylishHaskell()
-
-noremap <leader>ci :call StylishHaskell()<cr>
-
-setlocal formatprg=stylish-haskell
-" use <motion>gq
-" .. but not working properly, e.g. messing up line breaks
-" free mapping: <c-g> - currently show the current filename
 
 
 " EDIT VIM SCRIPT: ---------------------------------------------------------------------
@@ -3886,37 +3707,37 @@ fun! DocsForVisSel()
 endfun
 
 fun! HoogleForCursorWord()
-    let g:originFile = expand('%')
-    " why did I use this? turns out this or 'w!' crashes vim!
-    " originFile is needed for hsimport to work!
-    if IsPurs()
-      call PSCIDEpursuit(PSCIDEgetKeyword())
-    else
-      let l:keyw = expand("<cword>")
-      call HoogleLookup( l:keyw, '' )
-      " let comm = 'Hoogle ' . keyw
-      " exec comm
-      " exec 'w!'
-      wincmd j
-    endif
+  let g:originFile = expand('%')
+  " why did I use this? turns out this or 'w!' crashes vim!
+  " originFile is needed for hsimport to work!
+  if IsPurs()
+    call PSCIDEpursuit(PSCIDEgetKeyword())
+  else
+    let l:keyw = expand("<cword>")
+    call HoogleLookup( l:keyw, '' )
+    " let comm = 'Hoogle ' . keyw
+    " exec comm
+    " exec 'w!'
+    wincmd j
+  endif
 endfun
 
 fun! HoogleForVisSel()
-    let g:originFile = expand('%')
-    exec 'silent! s/\%V→/->'
-    exec 'silent! s/\%V∷/::'
-    exec 'silent! s/\%V⇒/=>'
-    let keyw = Get_visual_selection()
-    " exec 'silent! s/\%V->/→'
-    " exec 'silent! s/\%V::/∷'
-    " exec 'silent! s/\%V=>/⇒'
-    " use undo instead to prevent adding this to the undo list!
-    " exec 'u'
-    " let comm = 'silent Hoogle ' . keyw
-    let comm = 'Hoogle ' . keyw
-    exec comm
-    " exec 'w!'
-    wincmd j
+  let g:originFile = expand('%')
+  exec 'silent! s/\%V→/->'
+  exec 'silent! s/\%V∷/::'
+  exec 'silent! s/\%V⇒/=>'
+  let keyw = Get_visual_selection()
+  " exec 'silent! s/\%V->/→'
+  " exec 'silent! s/\%V::/∷'
+  " exec 'silent! s/\%V=>/⇒'
+  " use undo instead to prevent adding this to the undo list!
+  " exec 'u'
+  " let comm = 'silent Hoogle ' . keyw
+  let comm = 'Hoogle ' . keyw
+  exec comm
+  " exec 'w!'
+  wincmd j
 endfun
 
 
@@ -3974,21 +3795,21 @@ endfun
 " ➜  pragmaticServant git:(master) ✗ stack runghc src/Lib.hs
 " 2. Launch a terminal with "glt" + "ghcid -T :main"
 fun! HaskellStackRun()
-    " let Cbs2 = {
-    " \ 'on_stdout': function('OnEv1'),
-    " \ 'on_stderr': function('OnEv1'),
-    " \ 'on_exit': function('OnEv1')
-    " \ }
+  " let Cbs2 = {
+  " \ 'on_stdout': function('OnEv1'),
+  " \ 'on_stderr': function('OnEv1'),
+  " \ 'on_exit': function('OnEv1')
+  " \ }
 
-    " let commandBaseString = "!stack build && stack exec "
-    let projectName = HaskellProjectName1()
-    " let commString = commandBaseString . projectName . "-exe"
-    " let commString = "stack build"
-    let commString = "20Term stack build && stack exec " . projectName . "-exe"
-    " let StackRunIO = jobstart(commString, Cbs2)
-    " exec "20Term stack build"
+  " let commandBaseString = "!stack build && stack exec "
+  let projectName = HaskellProjectName1()
+  " let commString = commandBaseString . projectName . "-exe"
+  " let commString = "stack build"
+  let commString = "20Term stack build && stack exec " . projectName . "-exe"
+  " let StackRunIO = jobstart(commString, Cbs2)
+  " exec "20Term stack build"
 
-    exec commString
+  exec commString
 endfun
 " example command:
 " "stack build && stack exec pragmaticServant-exe"
@@ -4002,65 +3823,65 @@ endfun
 
 
 fun! GithubSearch(selType)
-    if a:selType == "word"
-      let keyw = expand("<cword>")
-    else
-      let keyw = Get_visual_selection()
-    endif
+  if a:selType == "word"
+    let keyw = expand("<cword>")
+  else
+    let keyw = Get_visual_selection()
+  endif
 
-    let extension = GetExtension()
+  let extension = GetExtension()
 
-    if extension == "purs"
-      let lang = 'PureScript'
-    elseif extension == "hs"
-      let lang = 'Haskell'
-    else
-      let lang = ''
-    endif
-    exec RunGithubSearch(keyw, lang)
+  if extension == "purs"
+    let lang = 'PureScript'
+  elseif extension == "hs"
+    let lang = 'Haskell'
+  else
+    let lang = ''
+  endif
+  exec RunGithubSearch(keyw, lang)
 endfun
 
 fun! RunGithubSearch(keyw, lang)
-    let enckw = UrlEncode(a:keyw)
-    let base = 'https://github.com/search\?l\='
-    let baseLang = base . a:lang . '\&q\='
-    let search = baseLang . enckw . '\&type\=Code'
-    let comm = 'silent !open ' . search
-    return comm
+  let enckw = UrlEncode(a:keyw)
+  let base = 'https://github.com/search\?l\='
+  let baseLang = base . a:lang . '\&q\='
+  let search = baseLang . enckw . '\&type\=Code'
+  let comm = 'silent !open ' . search
+  return comm
 endfun
 
 
 fun! IsPurs()
-    let extension = expand("%:e")
-    " echom expand("%:e")
-    if extension == "purs"
-      return 1
-    else
-      return 0
-    endif
+  let extension = expand("%:e")
+  " echom expand("%:e")
+  if extension == "purs"
+    return 1
+  else
+    return 0
+  endif
 endfun
 
 fun! GetExtension()
-    let extension = expand("%:e")
-    return extension
+  let extension = expand("%:e")
+  return extension
 endfun
 " vim
 
 fun! EncodeChar(char)
-   if a:char == '%'
-       return '%%'
-   elseif a:char == ' '
-       return '+'
-   else
-       " Taken from eval.txt
-       let n = char2nr(a:char)
-       let r = ''
-       while n
-           let r = '0123456789ABCDEF'[n % 16] . r
-           let n = n / 16
-       endwhile
-       return '%'. r
-   endif
+  if a:char == '%'
+    return '%%'
+  elseif a:char == ' '
+    return '+'
+  else
+    " Taken from eval.txt
+    let n = char2nr(a:char)
+    let r = ''
+    while n
+      let r = '0123456789ABCDEF'[n % 16] . r
+      let n = n / 16
+    endwhile
+    return '%'. r
+  endif
 endf
 
 fun! EncodeURL(url)
@@ -4069,25 +3890,25 @@ endf
 
 " URL encode a string. ie. Percent-encode (actually backslash!) characters as necessary.
 function! UrlEncode(string)
-    let result = ""
-    let characters = split(a:string, '.\zs')
-    for character in characters
-        if character == " "
-            let result = result . "+"
-        elseif CharacterRequiresUrlEncoding(character)
-            let result = result . '\' . character
-            " let i = 0
-            " while i < strlen(character)
-            "     let byte = strpart(character, i, 1)
-            "     let decimal = char2nr(byte)
-            "     let result = result . "%" . printf("%02x", decimal)
-            "     let i += 1
-            " endwhile
-        else
-            let result = result . character
-        endif
-    endfor
-    return result
+  let result = ""
+  let characters = split(a:string, '.\zs')
+  for character in characters
+    if character == " "
+      let result = result . "+"
+    elseif CharacterRequiresUrlEncoding(character)
+      let result = result . '\' . character
+      " let i = 0
+      " while i < strlen(character)
+      "     let byte = strpart(character, i, 1)
+      "     let decimal = char2nr(byte)
+      "     let result = result . "%" . printf("%02x", decimal)
+      "     let i += 1
+      " endwhile
+    else
+      let result = result . character
+    endif
+  endfor
+  return result
 endfunction
 
 " Returns 1 if the given character should be percent-encoded in a URL encoded
