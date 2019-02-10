@@ -387,9 +387,9 @@ function! Todoaa()
   " Destructuring the 4 item position array
   let [l:lineNumStart, l:columnStart] = getpos("'<")[1:2]
   let [l:lineNumEnd,   l:columnEnd]   = getpos("'>")[1:2]
-  call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])<cr>
+  call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])
 endfunction
-" call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'Search', line('.')-3, 1, 100)<cr>
+" call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'Search', line('.')-3, 1, 100)
 
 " Flash Highlight A Region: Note the nvim highlight does not easily work across lines
 " call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'char', 1000)
@@ -823,7 +823,7 @@ command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
 noremap <expr> <leader>sn demo4 == 'ein' ? ":echo 'ja'<cr>" : ":echo 'nein'<cr>"
 let demo4 = 'eins'
 " calling a function to get a condition:
-noremap <expr> <leader>sn Demo5() ? ":echo 'ja'<cr>" : ":echo 'nein'<cr>"
+" noremap <expr> <leader>aab Demo5() ? ":echo 'ja'<cr>" : ":echo 'nein'<cr>"
 func! Demo5()
   return 0
 endfunc

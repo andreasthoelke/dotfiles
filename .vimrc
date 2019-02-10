@@ -193,6 +193,7 @@ Plug 'kana/vim-textobj-user'
 " Plug 'gilligan/vim-rextobj-haskell'
 " TODO test/document this
 Plug 'kana/vim-textobj-fold'
+Plug 'kana/vim-textobj-function'
 " Provides around/inner line 'al'/'il' objects
 Plug 'kana/vim-textobj-line'
 " Plug 'kana/vim-operator-user'
@@ -1477,6 +1478,8 @@ nnoremap <silent><leader>sv :so $MYVIMRC<cr>
 " the following paragraph/lines
 nnoremap <leader>s} "ty}:@t<cr>
 nnoremap <leader>sip m'"tyip:@t<cr>``
+" Uses "h textobj-function"
+" nmap     <leader>saf m'"tyaf:@t<cr>``
 " TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
 " the current line
 nnoremap <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
@@ -1495,13 +1498,52 @@ nnoremap <leader>cf (Wyw:call <c-r>"()<cr>^
 " find next testarg line, "Wy[to some other register])"
 " nnoremap <leader>caf (Wyw:call <c-r>"(<c-r>[other reg])<cr>^
 
-function! SourceRange() range
+func! SourceRange() range
   let tmpsofile = tempname()
   call writefile(getline(a:firstline, a:lastline), l:tmpsofile)
   execute "source " . l:tmpsofile
   call delete(l:tmpsofile)
-endfunction
+endfunc
 " TIP: Range example function
+
+func! SourceLines( lines )
+  let tmpsofile = tempname()
+  call writefile( a:lines, l:tmpsofile)
+  execute "source " . l:tmpsofile
+  call delete(l:tmpsofile)
+endfunc
+
+nnoremap <silent> <leader>s :set opfunc=OpSourceVimL<cr>g@
+vnoremap <silent> <leader>s :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
+
+func! OpSourceVimL( motionType, ...)
+  " Line and column of start+end of either vis-sel or motion
+  let [startLine, startColumn] = getpos(a:0 ? "'<" : "'[")[1:2]
+  let [endLine,   endColumn]   = getpos(a:0 ? "'>" : "']")[1:2]
+  let selectedVimCode = GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
+  " call append( line('.'), GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn ) )
+  call SourceLines( l:selectedVimCode )
+  normal! ``
+  echo 'Selection sourced!'
+endfunc
+
+func! GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
+  let lines = getline( a:startLine, a:endLine )
+  " The last (-1) line
+  let lines[-1] = lines[-1][: a:endColumn - 1]
+  let lines[0]  = lines[0][a:startColumn - 1:]
+  return lines
+endfunc
+
+function! Demo1()
+  " Why is this not a built-in Vim script function?!
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0]  = lines[0][col1 - 1:]
+  return join(lines, "\n")
+endfunction
 
 " Source a range
 command! -range Source <line1>,<line2>call SourceRange()
@@ -2700,8 +2742,8 @@ func! HiSearchCursorWord()
   normal! m'
   let cword = expand('<cword>')
   let @/= l:cword
-  set hlsearch
   call histadd( 'search', l:cword )
+  set hlsearch
 endfunc
 
 " The Silver Searcher

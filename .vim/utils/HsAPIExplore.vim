@@ -76,6 +76,7 @@ func! ReplaceLastPattern( motionType, ...)
   " Line and column of start+end of either vis-sel or motion
   let [startLine, startColumn] = getpos(a:0 ? "'<" : "'[")[1:2]
   let [endLine,   endColumn]   = getpos(a:0 ? "'>" : "']")[1:2]
+
   if a:motionType == 'char'
     let substCmdAccum .= '\%>' . startColumn . 'c\%<' . endColumn . 'c'
   endif
@@ -106,7 +107,7 @@ func! ExecKeepView(arg)
 endfunc
 
 
-function! Get_visual_selection()
+function! Demo1()
   " Why is this not a built-in Vim script function?!
   let [lnum1, col1] = getpos("'<")[1:2]
   let [lnum2, col2] = getpos("'>")[1:2]
@@ -115,7 +116,6 @@ function! Get_visual_selection()
   let lines[0]  = lines[0][col1 - 1:]
   return join(lines, "\n")
 endfunction
-
 
 
 func! MakeBufferDisposable()
