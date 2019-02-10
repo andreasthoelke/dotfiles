@@ -742,7 +742,7 @@ set viewdir=~/vimtmp/view//
 
 " Shada: (Shared Persistence) ---------
 command! ShadaClear :call ClearShada()
-abbrev sc ShadaClear
+" abbrev sc ShadaClear
 function! ClearShada()
     echo "Shada file deleted!"
     silent exec "!rm" . ' ~/.local/share/nvim/shada/main.shada'
@@ -2666,7 +2666,8 @@ endfunc
 
 " nnoremap / :set hlsearch<cr>:noh<cr>/\v
 " this seems needed to reactivate hlsearch after nohlsearch
-nnoremap / :set hlsearch<cr>:noh<cr>/
+" also the "\v" flag makes sure that I can type regex consistent with other regex engines
+nnoremap / :set hlsearch<cr>:noh<cr>/\v
 " vnoremap / /\v
 " nnoremap <M-/> /
 
@@ -2686,7 +2687,8 @@ let g:ag_highlight=1
 " --------------------------------------------------------------------------------
 
 " Search next: Select, deselect. Similar to "*" / "#"
-nnoremap <silent> ga m':let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+" nnoremap <silent> ga m':let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+nnoremap <silent> ga :call HiSearchCursorWord()<cr>
 nnoremap <silent> g- m':set nohlsearch<cr>
 
 " Don't add seach next/prev to the jumplist
@@ -2694,6 +2696,13 @@ nnoremap <silent> n :keepjumps normal! n<cr>
 nnoremap <silent> N :keepjumps normal! N<cr>
 " Note "normal!" ignores all mappings - to prevent recursion
 
+func! HiSearchCursorWord()
+  normal! m'
+  let cword = expand('<cword>')
+  let @/= l:cword
+  set hlsearch
+  call histadd( 'search', l:cword )
+endfunc
 
 " The Silver Searcher
 if executable('ag')
@@ -3395,7 +3404,8 @@ nmap ,P <plug>EasyClipPasteUnformattedBefore
 
 " Vim Highlighedhank:
 let g:highlightedyank_highlight_duration = 700
-hi! HighlightedyankRegion guibg=#585858
+" hi! HighlightedyankRegion guibg=#585858
+hi! link HighlightedyankRegion Search
 
 
 " Marks: ----------------------------------------------------------------
@@ -3962,7 +3972,7 @@ function! Get_visual_selection()
   let [lnum2, col2] = getpos("'>")[1:2]
   let lines = getline(lnum1, lnum2)
   let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
-  let lines[0] = lines[0][col1 - 1:]
+  let lines[0]  = lines[0][col1 - 1:]
   return join(lines, "\n")
 endfunction
 

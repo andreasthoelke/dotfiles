@@ -474,18 +474,24 @@ location could be a
   3. `$` is only matched if it's at the end of a line.
   http://regexr.com/40v3p
 
-  Examples
+### Search Examples
 * Match at beginning of line with optional whitespace
-  source next line!
 /\v^(\s+)?read
   note that there are other 'read's, see:
 /read
+
+* AND: matches in a line containing both "co" and "fi"
+/.*co\&.*fi
+* OR: match 'co' or 'fi'
+/co\|fi
+
 * Lookarounds
   are just asserting the presense of groups, they dont consume/return the characters
 This will match 'e's when followed by a space, but dont match the space
 /\ve(\s)@=
 /\ve(\s)
 /e
+
 * Testing with `matchadd`
   this only highlights the 'e's not the following (obligatory!) space!
 call matchadd('MatchParen', '\ve(\s)@=', -1, -1 )
@@ -495,10 +501,34 @@ call clearmatches()
 call matchadd('MatchParen', '\v^\s*\zs(t|r|a)', -1, -1 )
 call clearmatches()
 
+* Search Motion Examples:
+> Move cursor to +2 chars after the end of the match
+exec "normal! /hi/e+2\r"
+> Move cursor to the end of the match and return the line num
+echo search( 'get', 'e' )
+> Jump to a line/column - this does not work with exec normal
+echo search( '\%79l\%18c...' )
+* Pre-selection: This will highlight a block! Do "/" <esc> before to make sure searchhighlight is on
+exec '/\%>500l\%<510l\%>15c'
+* Search in block/selecton: This will find 'a's *only* in this block
+exec '/\%>500l\%<510l\%>15ca'
+> but it works in a map
+nnoremap <leader>abb /\%79l\%18c...<cr>
+> match only in a range of columns!
+> echo search( '\%>10c.\%<20cab' )
+> ab ab xx ab xx xx ab ab
+> ab ab xx ab xx xx ab ab
+> Replace within a range of columns
+.+2s/\%>7caa/XX/g
+.+1s/\%>2c\%<7caa/XX/g
+> xx aa cc aa xx
 
-  just source the next line to read/learn about regex in vim
-  help pattern.txt
-  http://vimdoc.sourceforge.net/htmldoc/pattern.html
+/\v\w{4}
+exec "normal! " '/\v\w{4}"
+
+read/learn about regex in vim
+help pattern.txt
+http://vimdoc.sourceforge.net/htmldoc/pattern.html
 
 
 #### CtrlP - Args, Buffers, other visit workspaces?

@@ -780,6 +780,8 @@ make `rm -r` commands move to trash?
 
   i could use a vimscript function text object, it would allow to 'source around function' with blank lines
 
+  vim-subversive allows to rename a variable within a function or what is currently visible of the buffer
+
 ## Current Todos
 
 
@@ -912,6 +914,8 @@ run the current line through typeOf cmd-line prog.
 
 
 ## Temp next
+operator pending map/motion for vimscript func
+
 easyclip setting causes redundant undo step at insert leave
 show quickfix process (1 of 4) in statusbar of inactive quickfix list. 
   currently c-g does output the state in the command line

@@ -1,5 +1,4 @@
 
-let g:ScratchBuffername = 'HsAPIExplore'
 
 " UTILS: --------------------------------------------------------------
 
@@ -12,17 +11,112 @@ func! FlipListList ( listList )
 endfunc
 " echo FlipListList( [[11, 22], [33, 44]] )
 
-func! MapStringsInRange( listListMap ) range
+func! ReplaceStringsInRange( listListMap ) range
   let rangeStr = a:firstline . ',' . a:lastline
   for [target, replacement] in a:listListMap
-    exec 'silent ' . rangeStr 's/' . target . '/' . replacement . '/ge'
+    " Note the "\%V" flag/atom makes the pattern effective only in the visual selection
+    exec 'silent ' . rangeStr 's/\%V' . target . '/' . replacement . '/ge'
   endfor
 endfunc
-command! -range -nargs=1 MapStringsInRange :<line1>,<line2>call MapStringsInRange( <args> )
+command! -range -nargs=1 ReplaceStringsInRange :<line1>,<line2>call ReplaceStringsInRange( <args> )
 " source (<leader>se) the following line to test
 " .+1,.+2MapStringsInRange [['ab', 'CD'], ['x', 'Y']]
 " test ab cd ef xyz
 " test gh ab xf xab
+" Note the "\%V" flag/atom makes the pattern effective only in the visual selection
+" %s/\%Vab/XX/g
+
+  " operator for motion/ range/selection of text
+  " can transform this text in place
+  "   - replace all chars with _
+  "   - hs unicode replace
+  " side effect/action with this text/string (or further filtered) as input
+    " copy motion below paragraph
+" ====
+
+" Operator And Movement:{{{
+" Operator pending map: to fill in the movement after an operator key has been pressed
+" - If your operator-pending mapping ends with some text visually selected, Vim will operate on that text.
+" - Otherwise, Vim will operate on the text between the original cursor position and the new position.
+" Search to the prev ===..= regex, then at the line above set a visual highlight to the end of the line
+noremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+" Find vimcommentTitle then visualselect till end of the line
+noremap ih :<c-u>execute "normal! ?^.*:$\rv$"<cr>
+" Exec will substitute special characters before running. \r means "carriage return". The double backslash puts a literal backslash in the string.
+" call append( 39, '**')
+" exe sl.','.el 's/\%'.sc.'c\|\%'.ec.'c.\zs/\=s/g|norm!``'
+" .+1s/aa/bb
+" xx aa cc
+" let g:aab = 'XY'
+" .+1s/aa/\=g:aab
+" xx aa cc
+" Replace within a range of columns
+" .+2s/\%>7caa/XX/g
+" .+1s/\%>2c\%<7caa/XX/g
+" xx aa cc aa xx
+" exec ".+2s/\\%>2c\\%<7caa/XX/g"
+" exec ".+1s/aa/XX/g"
+" xx aa cc ee ll aa xx
+" .+1s//XX/g
+" xx aa cc ee ll aa xx
+" Run A Regex Search: Note this uses literal strings *only* for the regex part
+" exec "normal! gg" . '/for .\+ in .\+:' . "\<cr>"
+" Note Question: why does the very magic mode not work here? vimscript book chapter 31
+" exec "normal! gg" . '/\vfor .\+ in .\+:' . "\<cr>"
+" }}}
+
+nnoremap <silent> <leader>at :set opfunc=ReplaceLastPattern<cr>g@
+vnoremap <silent> <leader>at :<c-u>call ReplaceLastPattern(visualmode(), 1)<cr>
+
+func! ReplaceLastPattern( motionType, ...)
+  let lastPattern = histget( 'search', -1 )
+  let replacementText = input('Enter replacement text: ')
+  let linesRangeMarkersStr = a:0 ? "'<,'>" : "'[,']"
+  let substCmdAccum = l:linesRangeMarkersStr . 's/'
+  " Line and column of start+end of either vis-sel or motion
+  let [startLine, startColumn] = getpos(a:0 ? "'<" : "'[")[1:2]
+  let [endLine,   endColumn]   = getpos(a:0 ? "'>" : "']")[1:2]
+  if a:motionType == 'char'
+    let substCmdAccum .= '\%>' . startColumn . 'c\%<' . endColumn . 'c'
+  endif
+  let substCmdAccum .= lastPattern . "/" . replacementText . "/ge"
+  call ExecKeepView( substCmdAccum )
+  " Notes:{{{
+  " call ExecKeepView( "'[,']s/\\%>15c/_/ge|norm!``" )
+  " let debugStr = startLine . ' ' . endLine . ' ' . startColumn . ' ' . endColumn
+  " let insertChar = nr2char( getchar() )
+  " Issue: this does not work in this function
+  " call highlightedyank#highlight#add( 'Search', getpos("'<"), getpos("'>"), 'char', 4000)
+  " this does work
+  " call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'Search', line('.')-3, 1, 100)
+  " if a:motionType == 'line' || a:motionType == 'V'
+  " elseif a:motionType == 'block' || a:motionType == "\<c-v>"}}}
+endfunc
+" Regex Demo: run next line then put cursor on 'aa' in next line, them opfunction = $ motion
+" call histadd( 'search', '[ew]\s' )
+" xx ww aa at cc ee ax ww ll aa xx
+" xx ww aa at cc ee ax ww ll aa xx
+
+
+" Make sure the cursor position and view does not change when running the ex-command
+func! ExecKeepView(arg)
+  let l:winview = winsaveview()
+  exec a:arg
+  call winrestview(l:winview)
+endfunc
+
+
+function! Get_visual_selection()
+  " Why is this not a built-in Vim script function?!
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0]  = lines[0][col1 - 1:]
+  return join(lines, "\n")
+endfunction
+
+
 
 func! MakeBufferDisposable()
   setl buftype=nofile
@@ -35,6 +129,7 @@ endfunc
 " Like <cword> but includes Haskell symbol characters
 func! HsCursorKeyword()
   let isk = &l:isk
+  " Tempoarily extend the isKeyword character range
   setl isk+=.,<,>,$,#,+,-,*,/,%,',&,=,!,:,124,~,?,^
   let keyword = expand("<cword>")
   let &l:isk = isk
@@ -63,19 +158,35 @@ nnoremap cug :%s/>#>/>=>/ge<cr>
 " restore Kleisi!
 
 func! PreserveKleisliInUnicodeReplace( listListMap )
-  return
-
+  call insert( a:listListMap, ['>=>', '>#>'] )
+  call add   ( a:listListMap, ['>#>', '>=>'] )
+  return a:listListMap
 endfunc
+" echo PreserveKleisliInUnicodeReplace( [['=>', '⇒'], ['c', 'd']] )
 
-let g:HsReplacemMap_CharsToUnicode = [['->', '→'], ['=>', '⇒'], ['::', '∷']]
+func! RequireSpaceBeforeOperatorChars( listListMap )
+  let augmentedListList = []
+  for [fst, snd] in a:listListMap
+    call add( augmentedListList, [ '\s\zs' . fst, snd ] )
+  endfor
+  return augmentedListList
+endfunc
+" echo RequireSpaceBeforeOperatorChars( [['aa', 'bb'], ['=>', '⇒']] )
+
+let g:ScratchBuffername = 'HsAPIExplore'
+
+let g:HsReplacemMap_CharsToUnicode = [['->', '→'], ['=>', '⇒'], ['::', '∷'], ['forall', '∀'], ["<-", "←"]]
 let g:HsReplacemMap_UnicodeToChars = FlipListList( g:HsReplacemMap_CharsToUnicode )
 
-command! -range=% HsReplaceCharsToUnicode :<line1>,<line2>call MapStringsInRange( g:HsReplacemMap_CharsToUnicode )
-command! -range=% HsReplaceUnicodeToChars :<line1>,<line2>call MapStringsInRange( g:HsReplacemMap_UnicodeToChars )
-" .+2HsReplaceCharsToUnicode
-" .,+2HsReplaceCharsToUnicode
+command! -range=% HsReplaceCharsToUnicode :<line1>,<line2>call ReplaceStringsInRange( RequireSpaceBeforeOperatorChars( g:HsReplacemMap_CharsToUnicode ) )
+command! -range=% HsReplaceUnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:HsReplacemMap_UnicodeToChars )
+" .+3HsReplaceCharsToUnicode
+" .,+6HsReplaceCharsToUnicode
+" .,+6HsReplaceUnicodeToChars
 " Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
 " unfold :: Monad m => (b -> Maybe (a, b)) -> b -> Producer m a
+" kleisli :: forall e. Example e >=> Line
+" kleisli = do aa <- example
 
 " UTILS: --------------------------------------------------------------
 

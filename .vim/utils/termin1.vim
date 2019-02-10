@@ -296,12 +296,22 @@
 
 " Substitute Replace Text: - ":s/zwei/xx/g" -  Examp text: eins zwei drei vier zwei acht
 " Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
+" Substitute With Expression: Instead to replacing the matched pattern with a string, use expression after "\="
+let g:aab = 'XY'
+" .+1s/aa/\=g:aab
+" xx aa cc
+" The "\%V" flag/atom makes the pattern effective only in the visual selection
+" This will only replace aa in the next line when there was a vis-selection before → 'gv' will be used if there isn't any
+" %s/\%Vaa/XX/g
+" xx aa cc
 " in a range of files: ":argdo %s//Practical/g"
-" TODO what is: "g," - "g-;"
 " Prepolulate Command Map With Positioned Moved Cursor:
 " Substitute Replace Selected String:
 xnoremap <localleader>su y:%s/<C-r>"//g<Left><Left>
-
+" Let assignment accum strings
+let g:aab = 'A'
+let g:aab .= 'B'
+" echo g:aab
 " Normal KeyCmds As Command: - "normal c3whi" runs c2w- "hi" on the current line
 " Copy To T Dublicate Command: - "\t." to dublicate line below, ".,.+1t$" short: ",+t$", "t0" to linenum, uns "m" /move to move lines
 " Range Linewise Commands: - "[range]delete, yank, put" (from register), "[range] copy, move" to target line, "[range]join" lines, "[range]normal <cmds>"
@@ -373,15 +383,16 @@ nnoremap <leader>mc :call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMe
 " Clear nvim virtual highlights and text 
 nnoremap <leader>cv :call VirtualtextClear()<cr>
 
-function! Get_visual_selection()
+function! Todoaa()
   " Destructuring the 4 item position array
   let [l:lineNumStart, l:columnStart] = getpos("'<")[1:2]
   let [l:lineNumEnd,   l:columnEnd]   = getpos("'>")[1:2]
-
   call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])<cr>
-
 endfunction
+" call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'Search', line('.')-3, 1, 100)<cr>
 
+" Flash Highlight A Region: Note the nvim highlight does not easily work across lines
+" call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'char', 1000)
 
 vnoremap <leader>ab :<c-u>echo getpos("'<")<cr>
 vnoremap <leader>ab :<c-u>echo getpos("'>")<cr>
@@ -907,6 +918,11 @@ endfunc
 " ".,$g/vim" show/select all following lines that contain "vim"
 " "'a,'bs/in/XXXX" substitute from marker 'a' to marker 'b'
 " ".,.+2move $" move the following lines to the end of the file. "'<,'>copy 0" copy visual selection to before the fist line
+" Visual Selection:
+" Note the "\%V" flag/atom makes the pattern effective only in the visual selection
+" test aabb cd ef xyz
+" test gh aabb xf xaabb
+" %s/\%Vaabb/XX/g
 " Example Collecting Lines:
 " "'<,'>! >> .vim/notes/acd2.md | cat" - creates a new file if needed, respects linebreaks, updates/write also to open buffer, however it only works on a line, not a selection basis.
 " Same as "'<,'>!cat >> .vim/notes/acd2.md | cat" note the echo-like behavior of 'cat'
