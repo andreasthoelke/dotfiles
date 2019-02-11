@@ -679,7 +679,7 @@ endfunc
 
 " Cleanup: ----------------------------------------------------------------------------
 " NOTE This might slow down exiting vim
-autocmd! VimLeavePre * call VimLeaveCleanup()
+au ag VimLeavePre * call VimLeaveCleanup()
 func! VimLeaveCleanup()
   " TODO close all Markbar wins, other tool windows?
   " tabdo windo if &buftype == 'nofile' | close | endif
@@ -966,7 +966,7 @@ func! HaskellSyntaxAdditions()
   set syntax=purescript
 endfunc
 
-autocmd! BufEnter *.vim,*.vimrc call VimSyntaxAdditions()
+au ag BufEnter *.vim,*.vimrc call VimSyntaxAdditions()
 func! VimSyntaxAdditions()
   call matchadd('Conceal', '\v^\s*\zs"\s', -1, -1, {'conceal': ''})
   set conceallevel=2
@@ -1059,7 +1059,7 @@ set autoread
 
 " This seems needed to reload files that have changed outside of vim (https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044)
 " autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
-autocmd FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+au ag FocusGained,BufEnter * if mode() != 'c' | checktime | endif
 " autocmd FileChangedShellPost *
 "   \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 " Issue: This is throwing an error in Command history window
@@ -1279,7 +1279,7 @@ nnoremap zz m'zz
 
 " Go back to insert start (+ jumplist)
 " autocmd! InsertLeave * exec "normal! m'`["
-autocmd! InsertLeave * call InsertLeave()
+au ag InsertLeave * call InsertLeave()
 " autocmd! InsertEnter * exec "normal! m'"
 
 func! InsertLeave()
@@ -2507,8 +2507,8 @@ set foldenable
 set foldmethod =marker
 
 " Partially expand syntax and expression based folding (of markdown and gitv plugins)
-autocmd Syntax git set foldlevel=1
-autocmd FileType markdown set foldlevel=1
+au ag Syntax git set foldlevel=1
+au ag FileType markdown set foldlevel=1
 
 nnoremap z<space> za
 nnoremap z] zo
@@ -2802,7 +2802,7 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 " TODO Test Bufenter - TabNewEntered is only for nvim
 " Whenever a new tab is created, set the tab-working dir accordingly
 " autocmd! TabNewEntered * call OnTabEnter(expand("<amatch>"))
-autocmd! BufEnter * call OnTabEnter(expand("<amatch>"))
+au ag BufEnter * call OnTabEnter(expand("<amatch>"))
 func! OnTabEnter(path)
   if isdirectory(a:path)
     let dirname = a:path
@@ -2815,7 +2815,7 @@ func! OnTabEnter(path)
   execute "lcd ". dirname
 endfunc
 
-autocmd! BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
+au ag BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
 func! SetWorkingDirectory(path)
   let dirname = projectroot#guess( a:path )
     " let dirname = fnamemodify(a:path, ":h")
@@ -2851,7 +2851,7 @@ endfunction
 " autocmd! QuickFixCmdPost * botright copen 8
 " autocmd! QuickFixCmdPost * echom "hii"
 " TODO test this
-autocmd! User NeomakeJobFinished call QuickfixRefeshStyle()
+au ag User NeomakeJobFinished call QuickfixRefeshStyle()
 
 function! QuickfixRefeshStyle()
   if len( filter(getqflist(), 'v:val.type == "e"') ) > 0
@@ -3084,7 +3084,7 @@ if !exists('g:lasttab')
   let g:lasttab = 1
 endif
 
-autocmd! TabLeave * let g:lasttab = tabpagenr()
+au ag TabLeave * let g:lasttab = tabpagenr()
 
 
 " Tabs: -----------------------------------------
@@ -3334,7 +3334,7 @@ let g:Gitv_CustomMappings = {
 let g:fugitive_force_bang_command = 1
 
 " Deletes hidden fugitive buffers when I hide them?
-autocmd! BufReadPost fugitive://* set bufhidden=delete
+au ag BufReadPost fugitive://* set bufhidden=delete
 
 " Fugitive Gitv: -----------------------------------------------------------
 
@@ -3590,7 +3590,7 @@ augroup END
 
 " Quickfix loclist ----
 " Quickfix Navigation: - "leader qq", "]q" with cursor in code, "c-n/p" and "go" with cursor in quickfix list
-autocmd! BufWinEnter quickfix call QuickfixMaps()
+au ag BufWinEnter quickfix call QuickfixMaps()
 func! QuickfixMaps()
   nnoremap <buffer> go :.cc<cr>:wincmd p<cr>
   nnoremap <buffer> <c-n> :cnext<cr>:wincmd p<cr>
@@ -3657,7 +3657,7 @@ command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
 runtime plugin/grepper.vim    " initialize g:grepper with default values
 let g:grepper.stop = 20
 
-autocmd! FileType GrepperSide
+au ag FileType GrepperSide
   \  silent execute 'keeppatterns v#'.b:grepper_side.'#'
   " \| set syntax=purescript
 " TODO make this use the syntax of the (first?) buffer filetype
