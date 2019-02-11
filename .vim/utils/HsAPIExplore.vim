@@ -107,17 +107,6 @@ func! ExecKeepView(arg)
 endfunc
 
 
-function! Demo1()
-  " Why is this not a built-in Vim script function?!
-  let [lnum1, col1] = getpos("'<")[1:2]
-  let [lnum2, col2] = getpos("'>")[1:2]
-  let lines = getline(lnum1, lnum2)
-  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
-  let lines[0]  = lines[0][col1 - 1:]
-  return join(lines, "\n")
-endfunction
-
-
 func! MakeBufferDisposable()
   setl buftype=nofile
   setl bufhidden=hide
@@ -146,16 +135,6 @@ endfunc
 " echo HsExtractTypeFromLine( line('.')-1 )
 " Control.Monad replicateM ∷ (Applicative m) => Int -> m a -> m [a]
 " echo HsExtractTypeFromLine( line('.')-1 )
-
-nnoremap cuf :%s/forall/<c-k>FA/ge<cr>
-nnoremap cuc :%s/::/<c-k>::/ge<cr>
-nnoremap cua :%s/->/<c-k>->/ge<cr>
-nnoremap cub :%s/<-/<c-k><-/ge<cr>
-nnoremap cue :%s/>=>/>#>/ge<cr>
-" safe Kleisi!
-nnoremap cud :%s/=>/<c-k>=>/ge<cr>
-nnoremap cug :%s/>#>/>=>/ge<cr>
-" restore Kleisi!
 
 func! PreserveKleisliInUnicodeReplace( listListMap )
   call insert( a:listListMap, ['>=>', '>#>'] )
@@ -198,12 +177,12 @@ endfunc
 
 
 
-fun! HoogleForVisSel()
-  let g:originFile = expand('%')
-  exec 'silent! s/\%V→/->'
-  exec 'silent! s/\%V∷/::'
-  exec 'silent! s/\%V⇒/=>'
-  let keyw = Get_visual_selection()
+" fun! HoogleForVisSel()
+"   let g:originFile = expand('%')
+"   exec 'silent! s/\%V→/->'
+"   exec 'silent! s/\%V∷/::'
+"   exec 'silent! s/\%V⇒/=>'
+"   let keyw = Get_visual_selection()
 
 
 " Create or just activate/focus a disposable window
@@ -238,58 +217,58 @@ func! QueryCmdStr( query, limit, description )
 endfunc
 
 
-1. activate scratch win
-call ActivateScratchWindow('Test2')
-
-2.1 get keyword, operator, type signature
-2.2 assemble cmd string with options for 3 main usecases
-" browse long list in buffer 
-let g:cmd1 = 'hoogle replicateM -n=20'
-" description
-let g:cmd1 = 'hoogle Control.Monad.replicateM --info'
-" short inline api 
-let g:cmd1 = 'hoogle replicateM -n=3'
-
-3.1 clear any previous content
-3.2. run cmd and fill buffer with results
-call append( 25, split( system( g:cmd1 ), '\n' ) )
-
-4. align tabularize
-
-5. conceal style
-
-6. setup local maps
+" 1. activate scratch win
+" call ActivateScratchWindow('Test2')
+"
+" 2.1 get keyword, operator, type signature
+" 2.2 assemble cmd string with options for 3 main usecases
+" " browse long list in buffer 
+" let g:cmd1 = 'hoogle replicateM -n=20'
+" " description
+" let g:cmd1 = 'hoogle Control.Monad.replicateM --info'
+" " short inline api 
+" let g:cmd1 = 'hoogle replicateM -n=3'
+"
+" 3.1 clear any previous content
+" 3.2. run cmd and fill buffer with results
+" call append( 25, split( system( g:cmd1 ), '\n' ) )
+"
+" 4. align tabularize
+"
+" 5. conceal style
+"
+" 6. setup local maps
 
 
 
 " Check whether the scratch buffer is already created
-let scr_bufnum = bufnr(g:ScratchBufferName)
-if scr_bufnum == -1
-  " open a new scratch buffer
-  if split_win
-    exe "new " . g:ScratchBufferName
-  else
-    exe "edit " . g:ScratchBufferName
-  endif
-else
-  " Scratch buffer is already created. Check whether it is open
-  " in one of the windows
-  let scr_winnum = bufwinnr(scr_bufnum)
-  if scr_winnum != -1
-    " Jump to the window which has the scratch buffer if we are not
-    " already in that window
-    if winnr() != scr_winnum
-      exe scr_winnum . "wincmd w"
-    endif
-  else
-    " Create a new scratch buffer
-    if split_win
-      exe "split +buffer" . scr_bufnum
-    else
-      exe "buffer " . scr_bufnum
-    endif
-  endif
-endif
+" let scr_bufnum = bufnr(g:ScratchBufferName)
+" if scr_bufnum == -1
+"   " open a new scratch buffer
+"   if split_win
+"     exe "new " . g:ScratchBufferName
+"   else
+"     exe "edit " . g:ScratchBufferName
+"   endif
+" else
+"   " Scratch buffer is already created. Check whether it is open
+"   " in one of the windows
+"   let scr_winnum = bufwinnr(scr_bufnum)
+"   if scr_winnum != -1
+"     " Jump to the window which has the scratch buffer if we are not
+"     " already in that window
+"     if winnr() != scr_winnum
+"       exe scr_winnum . "wincmd w"
+"     endif
+"   else
+"     " Create a new scratch buffer
+"     if split_win
+"       exe "split +buffer" . scr_bufnum
+"     else
+"       exe "buffer " . scr_bufnum
+"     endif
+"   endif
+" endif
 
 
 

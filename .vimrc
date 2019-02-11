@@ -189,8 +189,8 @@ Plug 'bkad/camelcasemotion'
 Plug 'tomtom/tcomment_vim'
 
 Plug 'kana/vim-textobj-user'
-" TODO test this: (works in nvim but conflicts with vim?)
-" Plug 'gilligan/vim-rextobj-haskell'
+" This does fail many function types - search alternative
+" Plug 'gilligan/vim-textobj-haskell'
 " TODO test/document this
 Plug 'kana/vim-textobj-fold'
 Plug 'kana/vim-textobj-function'
@@ -279,6 +279,11 @@ Plug 'radenling/vim-dispatch-neovim'
 
 call plug#end()
 " ----------------------------------------------------------------------------------
+
+" This deletes all autocmds of that have the 'ag' tag/group so they aren't registered again when the vimrc is re-sourced
+augroup ag
+  au!
+augroup end
 
 " General Settings: ---------------------------------------
 
@@ -649,7 +654,7 @@ let g:mundo_inline_undo = 1
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_silent = 1  " do not display the auto-save notification
 let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
-let g:auto_save_events = ["CursorHold"]
+let g:auto_save_events = ["CursorHold", "WinLeave", "VimLeave"]
 " Maybe need this?
 " let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
 " Note: Plugin will "set updatetime=200"
@@ -686,7 +691,7 @@ endfunc
 " Not needed? now after plugin/gitv.vim
 " nnoremap <leader>sd :OpenSession! default<cr>:call OpenSessionCleanup()<cr>
 nnoremap <leader>sd :OpenSession! default<cr>
-nnoremap <leader>sl :OpenSession!<cr>
+nnoremap <leader>so :OpenSession!<cr>
 " Load locked session after a vim crash
 command! SessionLoadLocked OpenSession!
 command! SessionShowName echo xolox#session#find_current_session()
@@ -932,13 +937,12 @@ nnoremap <leader>sw :StripWhitespace<cr>
 
 
 
-
 " Syntax Color: --------------------
 
 " hi! Conceal         guifg=#FFFFFF guibg=#000000
 hi! Conceal guibg=#000000
 
-autocmd! BufEnter *.hs call HaskellSyntaxAdditions()
+au ag BufEnter *.hs call HaskellSyntaxAdditions()
 
 func! HaskellSyntaxAdditions()
   " Conceals
@@ -1480,8 +1484,6 @@ nnoremap <leader>s} "ty}:@t<cr>
 nnoremap <leader>sip m'"tyip:@t<cr>``
 " Uses "h textobj-function"
 " nmap     <leader>saf m'"tyaf:@t<cr>``
-" TODO have "<leader>sf" to source a function. Note a function might have empty lines, otherwise one could use "..s}"
-" the current line
 nnoremap <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
 nnoremap <leader>se :exec getline('.')<cr>
 " same as above, but clutters the register
@@ -1516,15 +1518,21 @@ endfunc
 nnoremap <silent> <leader>s :set opfunc=OpSourceVimL<cr>g@
 vnoremap <silent> <leader>s :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
 
+" Uses "h textobj-function"
+" * SourceVimL Operator function allows e.g.
+" * <leader>saf "source around function"
+" * <leader>si" "source inside quotes"
 func! OpSourceVimL( motionType, ...)
+  " Use either the vis-select or the motion marks
+  let [startMark, endMark] = a:0 ? ["'<", "'>"] : ["'[", "']"]
   " Line and column of start+end of either vis-sel or motion
-  let [startLine, startColumn] = getpos(a:0 ? "'<" : "'[")[1:2]
-  let [endLine,   endColumn]   = getpos(a:0 ? "'>" : "']")[1:2]
+  let [startLine, startColumn] = getpos( startMark )[1:2]
+  let [endLine,   endColumn]   = getpos( endMark )[1:2]
   let selectedVimCode = GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
   " call append( line('.'), GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn ) )
   call SourceLines( l:selectedVimCode )
   normal! ``
-  echo 'Selection sourced!'
+  call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos(startMark), getpos(endMark), a:motionType, 500)
 endfunc
 
 func! GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
