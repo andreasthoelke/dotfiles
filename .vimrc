@@ -945,6 +945,7 @@ nnoremap <leader>sw :StripWhitespace<cr>
 " Syntax Color: --------------------
 
 hi! Conceal guibg=#000000
+hi! FoldExpander guibg=#000000
 
 " au ag BufEnter *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead *.hs call HaskellSyntaxAdditions()
@@ -958,18 +959,23 @@ func! HaskellTools()
 endfunc
 
 func! HaskellSyntaxAdditions()
-  " Conceals
+  " Conceal comment marker string
   call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', '--}}}', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', '--{{{', -1, -1, {'conceal': ' '})
   call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
+
+  " Conceal foldmarker strings and display icon to indicate fold expanding
+  " Note: escaping {'s instead of literal '' {'s avoids accidental folding
+  call matchadd('Conceal', "\{\{\{", -1, -1, {'conceal': '■'})
   call matchadd('Conceal', '}}}', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '}}}', -1, -1, {'conceal': ''})
   " call matchadd('Conceal', '{{{', -1, -1, {'conceal': ' '})
-  " Special symbols for composition and lambda
-  call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})
-  call matchadd('Conceal', '\\\%([^\\]\+→\)\@=', -1, -1, {'conceal': 'λ'}) |
+
+  " Special symbols for composition and lambda - non syntax file
+  " call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})
+  " call matchadd('Conceal', '\\\%([^\\]\+→\)\@=', -1, -1, {'conceal': 'λ'}) |
+
   " Don't show quotes around text. note you can only identify text via the syntax coloring!
   call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
   " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely
@@ -981,10 +987,11 @@ func! HaskellSyntaxAdditions()
   " set concealcursor=
   set syntax=purescript
   " This will add one space before the foldmarker comment with doing "zfaf"
-  set commentstring=\ --%s
+  set commentstring=\ --\ %s
   " This refresh of the highlight is needed to have a black icon/indicator for a folded function, e.g the following line
   " call matchadd('Conceal', '--{{{', -1, -1, {'conceal': ' '})
-  hi! Conceal guibg=#000000
+  " hi! Conceal guibg=#000000
+  " Issue: this also set the bg of other conceal chars
 endfunc
 
 au ag BufEnter *.vim,*.vimrc call VimSyntaxAdditions()
@@ -1238,6 +1245,13 @@ map <leader>. @:
 " Edit Partially Typed Commands: When you are stuck writing out e.g. a path on the command line,
 " type "<c-f>" then e.g. "yy" to later either "q:jP" or ':<c-r>"'
 " Find in all user commands: - ":filter Intero command" or just ":command"
+
+nnoremap <silent> <leader>pe :call PasteLastEchoText()<cr>
+func! PasteLastEchoText()
+  exec "RedirMessagesBuf" histget("cmd", -1)
+endfunc
+
+
 " COMMAND HISTORY: --------------------------------------------
 
 
