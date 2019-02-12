@@ -19,7 +19,7 @@ set background=dark
 
 hi vimString guifg=#009900
 
-hi Boolean         guifg=#AE81FF"{{{
+hi Boolean         guifg=#AE81FF
 hi Character       guifg=#E6DB74
 hi Number          guifg=#AE81FF
 hi String          guifg=#E6DB74
@@ -31,7 +31,7 @@ hi Delimiter       guifg=#8F8F8F
 hi DiffAdd                       guibg=#13354A
 hi DiffChange      guifg=#89807D guibg=#4C4745
 hi DiffDelete      guifg=#960050 guibg=#1E0010
-hi DiffText                      guibg=#4C4745 gui=italic,bold"}}}
+hi DiffText                      guibg=#4C4745 gui=italic,bold"
 
 hi Directory       guifg=#A6E22E               gui=bold
 hi Error           guifg=#E6DB74 guibg=#1E0010
@@ -314,36 +314,24 @@ hi! link markbarID Highlight1
 " Editor & Quickfix
 hi LineNr guifg=#404040
 hi FoldColumn guibg=gray10 guifg=gray20
-" hi Folded     guifg=#4B5B61 guibg=#0B0B0B
-" hi Folded     guifg=#4B5B61 guibg=#0F0F0F
-" hi Folded     guifg=#264B58 guibg=#121212
-" hi Folded     guifg=#2C4C58 guibg=#121212
-" hi Folded     guifg=#335562 guibg=#121212
 hi Folded     guifg=#3D5862 guibg=#121212
 
 
-" Custom Native Groups: Changed vas for native highlightgroups ---------------------------------
+" Vim Native HighlighGroups:
 " This is where to set the main background color
 " hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
 hi Normal          guifg=#F8F8F2 guibg=#151719
 
-" hi Comment         guifg=#60777C
-" hi Comment         guifg=#335562
 hi Comment         guifg=#3D5862
 
 " Note: Cursor is show with inverted bg-fg colors by alacritty.
 " Could alternatively activate custom colors in alacretty settings
-" No sure when this is unsed
+" Not sure when this is unsed
 hi Cursor          guifg=#000000 guibg=#F8F8F0
 " Only bg color seems to have an effect in nvim + Alacritty
-" hi iCursor         guibg=#808080
-" hi iCursor         guibg=#DDEE00
-" hi iCursor         guibg=#D3D3D3
 hi iCursor         guibg=#727272
 
 " Contrast Of CursorLine:
-" hi CursorLine                    guibg=#222525
-" hi CursorLine                    guibg=#202424
 hi CursorLine                    guibg=#1C2020
 
 hi CursorLineNr    guifg=#FD971F               gui=none
@@ -352,19 +340,9 @@ hi NonText         guifg=#465457
 hi SpecialKey      guifg=#465457
 
 " Seach
-" hi Search guibg=#3E3E3E guifg=#DDDDDD
 hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
-" hi Search guibg=#3E3E3E gui=bold
-" hi Search guibg=#3E3E3E gui=none
-" hi Search guibg=#807500 gui=bold
-" hi Search guibg=#464646 guifg=none gui=bold
-" hi Search guibg=#C77171 guifg=none gui=bold
-" hi Search guibg=#807F73 guifg=none gui=bold
-" hi Search guibg=#43433D guifg=none gui=bold,underline
-" hi Search guibg=#43433D guifg=none gui=bold,underline
 
 " Visual selection
-" hi Visual guibg=#3E3E3E gui=none
 hi Visual guibg=#2E2E2E gui=none
 
 
@@ -404,11 +382,4 @@ highlight! def link vimMapRhs Macro
 
 "    From Vimrc: ---------------------------------
 
-
-" This does not work ..?
-" syn match Conceal '--' conceal cchar=∘
-" syn match haskellLambda '\\' conceal cchar=λ
-
-
-" call matchadd('HConceal', '\v-- ', 10, -1, {'conceal': ''})
 

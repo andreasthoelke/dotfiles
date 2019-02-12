@@ -931,6 +931,8 @@ after duplicating a line and then commenting the orig line and moving down with 
 * SourceVimL Operator function allows e.g.
   * <leader>saf "source around function"
   * <leader>si" "source inside quotes"
+* `glt` in dirvish buffers cds new terminal into dirvish folder
+* black conceal character indicating hs-function foldmarkers
 
 ## Release notes v1.1.0
 * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)

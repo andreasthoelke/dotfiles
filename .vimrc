@@ -141,6 +141,7 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 " Restore folding
 " Plug 'vim-scripts/restore_view.vim'
+" TODO test this
 " Plug 'Twinside/vim-haskellFold'
 Plug 'dbakker/vim-projectroot'
 " Plug 'xolox/vim-shell'
@@ -208,11 +209,13 @@ Plug 'andreasthoelke/purescript-vim'
 " Plug 'FrigoEU/psc-ide-vim'
 " Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
 
+" Haskell: -------------------------------------------------------------
 " lookup ":h vim2hs", e.g. Tabularize haskell_types is useful
-" this also has two conceal replacements for "." and "::"
 " Plug 'goolord/vim2hs'
-" TODO temp off, just to see of it hinder performance and where i really need the features
-" Plug 'andreasthoelke/vim2hs'
+Plug 'andreasthoelke/vim2hs'
+Plug 'andreasthoelke/haskell-env'
+" Interact with Hoogle Haskell API
+Plug 'andreasthoelke/HsAPIExplore'
 " This does show some nice unicode symbols (see "conceal" screenshots).
 " TODO customize some symbols e.g return looks not destinct enough. also apply to purescript
 Plug 'enomsg/vim-haskellConcealPlus'
@@ -242,8 +245,10 @@ Plug 'itchyny/vim-haskell-indent'
 
 " compliant with brittany
 Plug 'sbdchd/neoformat'
+" Haskell: -------------------------------------------------------------
 
 
+" Syntax Checkers: -----------------------------------------------------
 " Plug 'jaspervdj/stylish-haskell'
 Plug 'w0rp/ale'
 " Just 10 lines of code. uses "to" default map
@@ -939,22 +944,33 @@ nnoremap <leader>sw :StripWhitespace<cr>
 
 " Syntax Color: --------------------
 
-" hi! Conceal         guifg=#FFFFFF guibg=#000000
 hi! Conceal guibg=#000000
 
-au ag BufEnter *.hs call HaskellSyntaxAdditions()
+" au ag BufEnter *.hs call HaskellSyntaxAdditions()
+au ag BufNewFile,BufRead *.hs call HaskellSyntaxAdditions()
+au ag BufNewFile,BufRead *.hs call HaskellTools()
+
+func! HaskellTools()
+  call haskellenv#start()
+  call vim2hs#haskell#editing#includes()
+  call vim2hs#haskell#editing#keywords()
+  call vim2hs#haskell#editing#formatting()
+endfunc
 
 func! HaskellSyntaxAdditions()
   " Conceals
   call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '--}}}', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '--{{{', -1, -1, {'conceal': ' '})
   call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '}}}', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', '{{{', -1, -1, {'conceal': ' '})
+  " call matchadd('Conceal', '{{{', -1, -1, {'conceal': ' '})
+  " Special symbols for composition and lambda
   call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})
   call matchadd('Conceal', '\\\%([^\\]\+→\)\@=', -1, -1, {'conceal': 'λ'}) |
-  " Note: Text can now only
+  " Don't show quotes around text. note you can only identify text via the syntax coloring!
   call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
   " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely
   set conceallevel=2
@@ -964,14 +980,21 @@ func! HaskellSyntaxAdditions()
   " Run this line to see the concealed text if curso is on line
   " set concealcursor=
   set syntax=purescript
+  " This will add one space before the foldmarker comment with doing "zfaf"
+  set commentstring=\ --%s
+  " This refresh of the highlight is needed to have a black icon/indicator for a folded function, e.g the following line
+  " call matchadd('Conceal', '--{{{', -1, -1, {'conceal': ' '})
+  hi! Conceal guibg=#000000
 endfunc
 
 au ag BufEnter *.vim,*.vimrc call VimSyntaxAdditions()
-func! VimSyntaxAdditions()
+func! VimSyntaxAdditions() "{{{
   call matchadd('Conceal', '\v^\s*\zs"\s', -1, -1, {'conceal': ''})
   set conceallevel=2
   set concealcursor=ni
-endfunc
+  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
+  set commentstring=\ \"%s
+endfunc "}}}
 
 " Testing:
 " call matchadd('MatchParen', '\v"(\s)@=', -1, -1 )
@@ -1390,6 +1413,11 @@ fun! ParagPrev()
 endfun
 " }}} Move to next paragraph/fn ------------------------------------------------------
 
+" Textobjects: -----------------------------------
+" ie = inner entire buffer
+onoremap ie :<c-u>exec "normal! ggVG"<cr>
+" iv = current viewable text in the buffer
+onoremap iv :<c-u>exec "normal! HVL"<cr>
 
 " Movement Naviagation:  ---------------------------------------------------------------------
 
@@ -2654,12 +2682,6 @@ hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
 
 " ------------------------------------------------------
 
-" Movement mappings
-"
-" Insight parantheses
-" onoremap p i(
-" onoremap b /return<cr>
-" onoremap in( :<c-u>normal! f(vi(<cr>
 
 " ------------------------------------------------------
 " omni complete
@@ -2776,7 +2798,7 @@ command! ColorPicker VCoolor
 
 " let g:rootmarkers = ['.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
 " Prioritise looking for git repo roots
-let g:rootmarkers = ['.projectroot', '.git', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md']
+let g:rootmarkers = ['.git', '.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md']
 
 "
 " open file relative to project-root
@@ -3124,6 +3146,8 @@ nnoremap <localleader>t. :t.<cr>
 nnoremap <leader>pc :PlugClean<cr>
 nnoremap <leader>pi :PlugInstall<cr>
 
+nnoremap <leader>op :tabe ~/.vim/plugged/<cr>
+
 " General Leader Cmd Shortcut Maps: ---------------------------------
 
 
@@ -3160,22 +3184,6 @@ nnoremap zh 7zh
 nnoremap zl 7zl
 " Scrolling: ------------------------
 
-" make '=' easier to type in haskell
-" inoremap <c-\> =
-" TODO test this ..
-" cnoremap <c-\> =
-" onoremap <c-\> =
-" lnoremap <c-\> =
-" nnoremap <c-\> =
-
-" make '=' easier to type in haskell
-" inoremap <c-\> =
-" TODO test this ..
-" cnoremap <c-\> =
-" onoremap <c-\> =
-" lnoremap <c-\> =
-" nnoremap <c-\> =
-
 " Show syntax highlighting groups for word under cursor
 nnoremap <F4> :call <SID>SynStack()<CR>
 function! <SID>SynStack()
@@ -3184,7 +3192,6 @@ function! <SID>SynStack()
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
-
 
 " ---------------------------------------------------------
 " Edit MACRO:
@@ -3201,14 +3208,10 @@ endfunc
 " you can now run the macro by typing @d
 " ---------------------------------------------------------
 
-
-
 " Delete-CUT element and black hole delete the space after it, to
 " be able to paste the cut element
 " Todo: ? does not work
 " nmap de die"_dl
-
-
 
 " Diffing: --------------------------------------------------------
 nnoremap <silent> <F5><F5> :call DiffToggle()<CR>
@@ -3254,10 +3257,8 @@ let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 " Don't show "-- INSERT --" in command line when in insert mode?
 set noshowmode
 
-
 " Unicode: -----------------
 " https://unicode-table.com
-
 
 " Arglist: -----------------
 nnoremap <leader>oa :CtrlPArgs<cr>
@@ -3295,27 +3296,6 @@ nnoremap <leader>oa :CtrlPArgs<cr>
 
 " Tabline: -----------------------
 
-
-
-" Vem Tabline: ---------------
-" let g:vem_tabline_show = 1
-
-" highlight TabLine                    cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
-" highlight TabLineSel                 cterm=bold ctermfg=235 ctermbg=255 guifg=#242424 guibg=#ffffff gui=bold
-" highlight TabLineFill                cterm=none ctermfg=255 ctermbg=240 guifg=#e6e3d8 guibg=#404040 gui=italic
-" highlight VemTablineNormal           cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
-" highlight VemTablineLocation         cterm=none ctermfg=255 ctermbg=240 guifg=#666666 guibg=#cdcdcd gui=none
-" highlight VemTablineSelected         cterm=bold ctermfg=235 ctermbg=255 guifg=#242424 guibg=#ffffff gui=bold
-" highlight VemTablineLocationSelected cterm=bold ctermfg=235 ctermbg=255 guifg=#666666 guibg=#ffffff gui=bold
-" highlight VemTablineShown            cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
-" highlight VemTablineLocationShown    cterm=none ctermfg=255 ctermbg=240 guifg=#666666 guibg=#cdcdcd gui=none
-" highlight VemTablineSeparator        cterm=none ctermfg=246 ctermbg=240 guifg=#e6e3d8 guibg=#404040 gui=italic
-" highlight VemTablineTabNormal        cterm=none ctermfg=255 ctermbg=240 guifg=#242424 guibg=#cdcdcd gui=none
-" highlight VemTablineTabSelected      cterm=bold ctermfg=235 ctermbg=255 guifg=#242424 guibg=#ffffff gui=bold
-
-" Tabbar plugin (kcsongor/vim-tabbar) -----------
-" set tabline=%!tabbar#tabline()
-" -----------------------------------------------------------------
 
 " Fugitive Gitv: -----------------------------------------------------------
 
@@ -3364,11 +3344,15 @@ command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 
 " Terminal: ------------------------------------------------------------------------
 " open a terminal window
-nnoremap <silent> glt :below 20Term<cr>
+" nnoremap <silent> glt :below 20Term<cr>
+" Demo Expression Map:
+" In dirvish buffers use the filename % to cd terminal to this folder
+nnoremap <expr> glt (&ft=='dirvish') ? ':below 20Term cd %<CR>' : ':below 20Term<CR>'
+" uses the Term command: .vim/utils/termin1.vim#/^comman.*%20Term%20
 
 " Terminal util functions
 " and lots of documentations (TODO refactor this)
-source /Users/andreas.thoelke/.vim/utils/termin1.vim
+source .vim/utils/termin1.vim
 
 hi! TermCursorNC guibg=grey guifg=white
 

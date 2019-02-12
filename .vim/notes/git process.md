@@ -2,7 +2,6 @@
 ## Setting Up Repo
   * `git init` (in root folder)
   * `git clone <ulr>`
-  * could just so yes this is text I can just put in here!
 
 **git clone** `https://github.com/andreasthoelke/dotfiles`
 will create a folder `dotfiles` with the following filestructure:
@@ -186,7 +185,7 @@ So this additionally "unstages" the changes of the last commit. This is a rollba
 "git reset --hard HEAD~" additionally undos all the work/changes in the working directory! It basically goes back to the state of the last commit *and* thows away everything that has been done (working dir changes, staging of those and commit) since then.
 Reset Index To HEAD: - "git reset HEAD" (implies --mixed) updates/resets the index/stage with the content of the HEAD commit/snapshot
 Copy File In HEAD Snapshot To Index: - "git reset --mixed HEAD file.txt" or simply "git reset file.txt" - 
-it's basically unstaging that file. E.g. the opposite of "git add file.txt".
+its basically unstaging that file. E.g. the opposite of "git add file.txt".
 Commit An Old File Version Without Loosing Past Commits And Without Changing Working Dir: 
 "git reset <commitID> -- file.txt" - this just copies that file version into the index (not the working dir!), then you can "commit" that index.
 Patch Option: - "git add", "git reset" and "git checkout" accept the "--patch" option to stage/unstage/overwrite parts/hunks of a file/tree.
@@ -311,4 +310,7 @@ On the right side move the cursor to the first conflicted hunk (e.g. using “]c
   * note this caused an error last time I tried. even `--allow-unrelated-histories` dit not work
   * `gs` shows what needs to be done to still do a merge. basically merge conflict markups in some files have to be resolved manually.
 
+## Open Github repo in browser
+  * `glt`, `git remote -v` shows URL, then `c-\ n` to have termial text as normal buffer text
+  * vis-select the url of the repo, the `glb` (`gx` does not work)
 
