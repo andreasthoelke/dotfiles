@@ -100,16 +100,6 @@ Plug 'edkolev/promptline.vim'
 " Tabline Statusline: -----------------------------------------------------------
 
 
-" NyaoVim: {{{-----------------------
-Plug 'andreasthoelke/nyaovim-markdown-preview'
-Plug 'andreasthoelke/nyaovim-mini-browser'
-Plug 'andreasthoelke/nyaovim-popup-tooltip'
-
-" Plug 'rhysd/nyaovim-popup-tooltip'
-" Plug 'rhysd/nyaovim-mini-browser'
-" Plug 'rhysd/nyaovim-markdown-preview'
-" Plug 'rhysd/nyaovim-tree-view'
-" }}}
 
 " Colorschemes: ------------------
 " Plug 'tomasr/molokai'
@@ -194,7 +184,11 @@ Plug 'kana/vim-textobj-user'
 " Plug 'gilligan/vim-textobj-haskell'
 " TODO test/document this
 Plug 'kana/vim-textobj-fold'
-Plug 'kana/vim-textobj-function'
+Plug 'coachshea/vim-textobj-markdown'
+" Plug 'kana/vim-textobj-function'
+" Plug 'blackheaven/vim-textobj-function'
+" Add haskell function textobject
+Plug 'andreasthoelke/vim-textobj-function'
 " Provides around/inner line 'al'/'il' objects
 Plug 'kana/vim-textobj-line'
 " Plug 'kana/vim-operator-user'
@@ -218,7 +212,8 @@ Plug 'andreasthoelke/haskell-env'
 Plug 'andreasthoelke/HsAPIExplore'
 " This does show some nice unicode symbols (see "conceal" screenshots).
 " TODO customize some symbols e.g return looks not destinct enough. also apply to purescript
-Plug 'enomsg/vim-haskellConcealPlus'
+" TODO this has some nice unicode conceal suggestions  ~/.vim/plugged/vim-haskellConcealPlus/after/syntax/haskell.vim
+" Plug 'enomsg/vim-haskellConcealPlus'
 Plug 'eagletmt/ghcmod-vim', {'for': 'haskell'}
 " Plug 'eagletmt/ghcmod-vim'
 Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
@@ -323,133 +318,6 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
 " Nice Python Integration Tutorial:
 " https://vimways.org/2018/a-python-interface-cookbook/
-
-" NyaoVim Markdown: ------------------------{{{
-let g:markdown_preview_eager = 1
-let g:markdown_preview_auto = 0
-let g:markdown_preview_no_default_mapping = 1
-nnoremap <leader>mp :call MarkdownPreviewToggle()<cr>
-func! MarkdownPreviewToggle()
-  if exists( "g:markdown_preview_active" )
-    StopMarkdownPreview
-    unlet g:markdown_preview_active
-  else
-    StartMarkdownPreview
-    let g:markdown_preview_active = 1
-  endif
-endfunc
-nnoremap <leader>kk <Plug>(markdown-preview-scroll-up)
-nnoremap <leader>jj <Plug>(markdown-preview-scroll-down)
-command! -nargs=1 NyaoVim exec ':Dispatch' 'npm run app --prefix ~/Documents/NyaoVim --' <q-args>
-command! OpenInNyaoVim exec ':Dispatch' 'npm run app --prefix ~/Documents/NyaoVim --' expand('%:p')
-nnoremap gln :OpenInNyaoVim<cr>
-
-
-" This works. But scolling the current line to the top of the markdown preview. Would need to center screen and
-" highlight that line. Problem is that Nyaovim lags a bit and the fonts are not as nice as in Alacritty
-" augroup Mardownpreview
-"   au!
-"   autocmd CursorHold *.md call rpcnotify( 0, 'markdown-preview:scrollToLine', line('.') )
-" augroup end
-
-
-" NyaoVim Markdown: ------------------------
-
-" NyaoVim Popup: ------------------------
-let g:nyaovim_popup_tooltip_default_mapping = 1
-" nnoremap <silent><leader>gi <Plug>(nyaovim-popup-tooltip-open)
-" vmap <silent><localleader>gi <Plug>(nyaovim-popup-tooltip-open)
-" Test: ~/Documents/logo.png
-" NyaoVim Popup: ------------------------
-
-" Scroll NyaoVim split wins with the same map, only if they are active
-func! NyaoSplitScroll(direction)
-  if exists( "g:markdown_preview_active" )
-    call markdown_preview#scroll( a:direction )
-  endif
-  if exists( "g:mini_browser_active" )
-    if a:direction == 'up'
-      call rpcnotify( 0, 'mini-browser:scrollBy', 0, -50)
-    else
-      call rpcnotify( 0, 'mini-browser:scrollBy', 0, 50)
-    endif
-  endif
-endfunc
-
-func! NyaoSplitScrollTo(direction)
-  if exists( "g:markdown_preview_active" )
-    call markdown_preview#scroll( a:direction )
-  endif
-  if exists( "g:mini_browser_active" )
-    if a:direction == 'top'
-      call rpcnotify( 0, 'mini-browser:scrollTo', 0, 0)
-    else
-      call rpcnotify( 0, 'mini-browser:scrollTo', 0, 4000)
-    endif
-  endif
-endfunc
-
-" NyaoVim MiniBrowser: ------------------------
-" nnoremap <leader>gx :<c-u>MiniBrowser! <c-r><c-p><cr>
-" nnoremap <leader>gx :<c-u>Chromium <c-r><c-p><cr>
-" TODO clean up
-nnoremap <leader>gx :<c-u>Chromium1 <c-r><c-p><cr>
-nnoremap <leader>bo :MiniBrowser!<cr>
-nnoremap <leader>bc :MiniBrowserClose<cr>
-
-" Note: have to copy these maps to ~/.vim/after/plugin/zmaps.vim because EasyClip is diffcult to control
-" nnoremap <silent> Y :call NyaoSplitScroll('up')<cr>
-" nnoremap <silent> E :call NyaoSplitScroll('down')<cr>
-" nnoremap Y :call rpcnotify( 0, 'mini-browser:scrollBy', 0, -50)<cr>
-" nnoremap E :call rpcnotify( 0, 'mini-browser:scrollBy', 0, 50)<cr>
-" TODO map \e to 'big' E
-
-nnoremap <silent> ,gg :call NyaoSplitScrollTo('top')<cr>
-nnoremap <silent> ,G  :call NyaoSplitScrollTo('bottom')<cr>
-" nnoremap ,gg :call rpcnotify( 0, 'mini-browser:scrollTo', 0, 0)<cr>
-" nnoremap ,G  :call rpcnotify( 0, 'mini-browser:scrollTo', 0, 4000)<cr>
-
-" Launch DevTools
-nnoremap gld :call nyaovim#open_devtools('undocked')<cr>
-nnoremap <leader>do :call nyaovim#open_devtools('undocked')<cr>
-" Require Electorn API, close DevTools
-nnoremap <leader>dc :call nyaovim#execute_javascript('(function(){ var win1 = require("electron").remote.getCurrentWindow(); win1.closeDevTools()})()')<cr>
-
-function! Devdocs(query) abort
-  if a:query ==# ''
-    let cword = expand('<cword>')
-    if cword ==# ''
-      MiniBrowser! http://devdocs.io/
-    else
-      execute 'MiniBrowser!' 'http://devdocs.io/#q='.escape(cword, ' \')
-    endif
-    return
-  endif
-  execute 'MiniBrowser!' 'http://devdocs.io/#q='.escape(a:query, ' \')
-endfunction
-command! -nargs=* DevDocs call Devdocs(<q-args>)
-" NyaoVim MiniBrowser: ------------------------}}}
-
-" Oni: {{{----------------------------------
-if exists('g:gui_oni')
-  set nocompatible              " be iMproved, required
-  filetype off                  " required
-
-  set number
-  set noswapfile
-  set smartcase
-
-  " Enable GUI mouse behavior
-  set mouse=a
-
-  " If using Oni's externalized statusline, hide vim's native statusline, 
-  set noshowmode
-  set noruler
-  set laststatus=0
-  set noshowcmd
-endif
-
-" }}} Oni: ----------------------------------
 
 
 " Lightline Settings: -------------------------------{{{
@@ -942,35 +810,43 @@ nnoremap <leader>sw :StripWhitespace<cr>
 
 
 
-" Syntax Color: --------------------
 
-hi! Conceal guibg=#000000
-hi! FoldExpander guibg=#000000
-
-" au ag BufEnter *.hs call HaskellSyntaxAdditions()
+" Filetype Specific Maps Tools Syntax: -------
 au ag BufNewFile,BufRead *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead *.hs call HaskellTools()
+au ag BufNewFile,BufRead *.hs call HaskellMaps()
+
+au ag BufNewFile,BufRead *.vim,*.vimrc call VimScriptSyntaxAdditions()
+au ag BufNewFile,BufRead *.vim,*.vimrc call VimScriptMaps()
+
+" Filetype Specific Maps Tools Syntax: -------
+
+
+" Syntax Color: --------------------
+
+" This defines the color of the cchar
+" hi! Conceal guibg=#000000
+hi! link Conceal Operator
+
 
 func! HaskellTools()
-  call haskellenv#start()
+  " call haskellenv#start()
   call vim2hs#haskell#editing#includes()
   call vim2hs#haskell#editing#keywords()
   call vim2hs#haskell#editing#formatting()
 endfunc
 
-func! HaskellSyntaxAdditions()
+func! HaskellSyntaxAdditions() "{{{
   " Conceal comment marker string
   call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
 
   " Conceal foldmarker strings and display icon to indicate fold expanding
   " Note: escaping {'s instead of literal '' {'s avoids accidental folding
   call matchadd('Conceal', "\{\{\{", -1, -1, {'conceal': '■'})
-  call matchadd('Conceal', '}}}', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '}}}', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '{{{', -1, -1, {'conceal': ' '})
+  call matchadd('Conceal', '\}\}\}', -1, -1, {'conceal': ''})
 
   " Special symbols for composition and lambda - non syntax file
   " call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})
@@ -989,13 +865,13 @@ func! HaskellSyntaxAdditions()
   " This will add one space before the foldmarker comment with doing "zfaf"
   set commentstring=\ --\ %s
   " This refresh of the highlight is needed to have a black icon/indicator for a folded function, e.g the following line
-  " call matchadd('Conceal', '--{{{', -1, -1, {'conceal': ' '})
+  " call matchadd('Conceal', '--{\{{', -1, -1, {'conceal': ' '})
   " hi! Conceal guibg=#000000
   " Issue: this also set the bg of other conceal chars
-endfunc
+endfunc "}}}
 
-au ag BufEnter *.vim,*.vimrc call VimSyntaxAdditions()
-func! VimSyntaxAdditions() "{{{
+
+func! VimScriptSyntaxAdditions() "{{{
   call matchadd('Conceal', '\v^\s*\zs"\s', -1, -1, {'conceal': ''})
   set conceallevel=2
   set concealcursor=ni
@@ -1003,11 +879,10 @@ func! VimSyntaxAdditions() "{{{
   set commentstring=\ \"%s
 endfunc "}}}
 
-" Testing:
+" Testing:{{{
 " call matchadd('MatchParen', '\v"(\s)@=', -1, -1 )
 " call matchadd('MatchParen', '\v^\s*\zs"\s', -1, -1 )
 " call clearmatches()
-
 " TODO find out if this alternative approach is needed
 " This cleans up the matchadd if every Enter event
 " au FileType haskell set concealcursor=ni
@@ -1019,10 +894,10 @@ endfunc "}}}
 "       \ if &ft == 'haskell'                                                                         |
 "       \     let w:lambda_conceal = matchadd('Conceal', '\\\%([^\\]\+→\)\@=', 10, -1, {'conceal': 'λ'}) |
 "       \     hi! link Conceal Operator                                                                  |
-"       \ endif
+"       \ endif}}}
 
 
-" Experiments:
+" Experiments:{{{
 " let g:haskell_classic_highlighting = 1
 " syn match haskellCompose ' \zs\.' conceal cchar=∘
 " syn match haskellLambda '\\' conceal cchar=λ
@@ -1035,7 +910,7 @@ endfunc "}}}
 " TODO test these:
 " function! vim2hs#haskell#conceal#wide() " {_{{
 " function! vim2hs#haskell#conceal#bad() " {_{{
-" let g:idris_conceal = 1
+" let g:idris_conceal = 1}}}
 
 
 
@@ -1192,46 +1067,6 @@ set history =40
 " workaround may be to double/ "qq" or to "q<space" instead.
 " Issue: needs two c-c to exit?
 
-" Go up/down in wrapped lines mode as well
-nnoremap j gj
-nnoremap k gk
-
-" Jump to the first and then last line of a paragrapth instead of the blank line after a paragraph
-" nnoremap <expr> { len(getline(line('.')-1)) > 0 ? '{+' : '{-'
-" nnoremap <expr> } len(getline(line('.')+1)) > 0 ? '}-' : '}+'
-" Modified to not add to the jumplist
-nnoremap <expr> ,{ len(getline(line('.')-1)) > 0 ? ":exec 'keepjumps normal! {+'<cr>" :  ":exec 'keepjumps normal! {-'<cr>"
-nnoremap <expr> ,} len(getline(line('.')+1)) > 0 ? ":exec 'keepjumps normal! }-'<cr>" :  ":exec 'keepjumps normal! }+'<cr>"
-vnoremap <expr> ,{ len(getline(line('.')-1)) > 0 ? '{+' : '{-'
-vnoremap <expr> ,} len(getline(line('.')+1)) > 0 ? '}-' : '}+'
-
-" nnoremap } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
-" nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
-
-" I still want the normal behavior
-" nnoremap ,} }
-" nnoremap ,{ {
-
-
-" Some settings for when the file type is not set
-function! PlainText()
-  " We don't have a notion of comments in plain text.
-  " This also improves the use of '*' in formatlistpat.
-  setlocal comments=
-  " Use comment string for quoting
-  setlocal commentstring=>\ %s
-endfunction
-
-" Set a pseudo filetype upon opening a buffer if filetype is not set.
-" autocmd BufRead,BufNewFile * setfiletype txt
-" autocmd FileType txt call PlainText()
-
-
-" This is supposed to "unmap" the native "q" map to record macros (i don't need this often), to allow me to double "qq"
-" to quit a plugin dialog instead of "q.." wait for timeout because I use "q.." as a sort of leader key (see ":map q")
-" nnoremap <silent> q :<cr>
-" This is sort of a black hole map. But not needed as I can currently live without 'q ..' leader key maps
-
 " Repeat last command
 " To Learn: use "@:"
 map <leader>. @:
@@ -1251,12 +1086,7 @@ func! PasteLastEchoText()
   exec "RedirMessagesBuf" histget("cmd", -1)
 endfunc
 
-
 " COMMAND HISTORY: --------------------------------------------
-
-
-
-
 
 " Unicode: ---------------------------------------------------
 
@@ -1299,6 +1129,10 @@ endfun
 
 " Movement Navigation:  ---------------------------------------------------------------------
 
+" Go up/down in wrapped lines mode as well
+nnoremap j gj
+nnoremap k gk
+
 " Add start of visual mode to jumplist
 nnoremap v m'v
 
@@ -1312,7 +1146,6 @@ nnoremap ^ m'^
 nnoremap 0 m'0
 
 nnoremap zz m'zz
-
 
 " Go back to insert start (+ jumplist)
 " autocmd! InsertLeave * exec "normal! m'`["
@@ -1361,6 +1194,7 @@ nnoremap ,A F,B
 " endfunction
 " " call JumplistTimeout_WaitStart( 3 )
 " }}}
+
 " {{{ Add a location (a list as returned by getpos() - [bufnum, lnum, col, off]) to the jumplist, 
 " restoring the cursor pos. (Note: this fills in to what I think setpos("''", <loc>) is supposed to do)
 func! AddLocToJumplist ( loc )
@@ -1375,6 +1209,87 @@ func! AddLocToJumplist ( loc )
 endfunc
 " Test: This is the loc of this >> X << character: [0,1158,30,0]. Run the next the next line, then <c-o> to jump to that char
 " }}} call AddLocToJumplist([0,1158,30,0])
+
+" Paragraph Movement: ----------------
+
+" Next Paragraph:
+nnoremap <silent> <c-l> :call ParagNext()<cr>
+vnoremap <silent> <c-l> }
+fun! ParagNext()
+  exec "silent keepjumps normal! }"
+  call JumpNextNonEmptyLine()
+endfun
+fun! JumpNextNonEmptyLine()
+  call search('^.\+')
+  " Jump to next word if the line is indented. Test if character under cursor is a <space>
+  if getline('.')[col('.')-1] == ' '
+    normal! w
+  endif
+endfun
+
+" Previous Paragraph:
+nnoremap <silent> <c-h> :call ParagPrev()<cr>
+vnoremap <silent> <c-h> {k$
+fun! ParagPrev()
+  let startLineNum = line('.')
+  exec "silent keepjumps normal! {w"
+  if line('.') == startLineNum
+    exec "silent keepjumps normal! {{w"
+  endif
+endfun
+
+
+" End Of Paragraph:
+nnoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}-"<CR>
+vnoremap <silent> ,<c-l> }-
+nnoremap <silent> ,<c-h> :<C-u>exec "keepjumps norm! " . v:count1 . "{{}-"<CR>
+
+" Keep jumps with native paragraph motions
+nnoremap } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
+nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
+
+
+
+
+
+" Haskell Movement: ----------
+
+func! HaskellMaps()
+  nnoremap ( :call HsPrevSignature()<cr>
+
+endfunc
+
+
+func! HsPrevSignature()
+  call search('^[^ -].*\s∷\s', 'bW')
+endfunc
+
+snoremap ) :call HsNextSignature()<cr>
+func! HsNextSignature()
+  call search('^[^ -].*\s∷\s', 'W')
+  " Auto sets the cursor to the beginning of the line
+  " call cursor(line('.'), 1)
+  " Could then also check at cursor pos with:
+  " echo match( 'y', '\v(x|y)')
+endfunc
+
+func! HsPrevBlockLastLine()
+  call search('\v^(\s*--.*)@!\s*.', 'bW')
+endfunc
+
+" nmap .. what is consitent map for this?
+func! HsBlockLastLine()
+  call HsNextSignature()
+  call HsPrevBlockLastLine()
+endfunc
+
+onoremap ih :call HsBlockVisSel()<cr>
+func! HsBlockVisSel()
+  call HsPrevSignature()
+  normal! V
+  call HsBlockLastLine()
+endfunc
+
 " {{{ move in haskell function signature ---------------------------------------------
 " nnoremap <silent> - :call FindArrow()<cr>w
 " fun! FindArrow()
@@ -1394,44 +1309,26 @@ endfunc
 " }}}
 
 
-" {{{ Move to next paragraph/fn ------------------------------------------------------
-nnoremap <silent> <c-l> :call ParagNext()<cr>
-vnoremap <silent> <c-l> }
-" nnoremap <silent> ) :call ParagNext()<cr>
-fun! ParagNext()
-  exec "silent normal! }"
-  call JumpNextNonEmptyLine()
-endfun
+" Vimscript Movement: -------------
 
-fun! JumpNextNonEmptyLine()
-  call search('^.\+')
-  " Jump to next word if the line is indented
-  " Test if character under cursor is a <space>
-  if getline('.')[col('.')-1] == ' '
-    normal! w
-  endif
-endfun
-" TODO maybe jump to only lines that have a char in row 0
+func! VimScriptMaps()
 
+endfunc
 
-" move to previous paragraph/fn
-nnoremap <silent> <c-h> :call ParagPrev()<cr>
-vnoremap <silent> <c-h> {k$
-" nnoremap <silent> ( :call ParagPrev()<cr>
-fun! ParagPrev()
-  let startLineNum = line('.')
-  exec "silent normal! {w"
-  if line('.') == startLineNum
-    exec "silent normal! {{w"
-  endif
-endfun
-" }}} Move to next paragraph/fn ------------------------------------------------------
+" c-n to next vim comment title
+
 
 " Textobjects: -----------------------------------
 " ie = inner entire buffer
 onoremap ie :<c-u>exec "normal! ggVG"<cr>
 " iv = current viewable text in the buffer
 onoremap iv :<c-u>exec "normal! HVL"<cr>
+
+" Needed for textobj-markdown because of conflict with textobj-function?
+omap <buffer> af <plug>(textobj-markdown-chunk-a)
+omap <buffer> if <plug>(textobj-markdown-chunk-i)
+omap <buffer> aF <plug>(textobj-markdown-Bchunk-a)
+omap <buffer> iF <plug>(textobj-markdown-Bchunk-i)
 
 " Movement Naviagation:  ---------------------------------------------------------------------
 

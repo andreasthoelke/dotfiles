@@ -523,8 +523,25 @@ nnoremap <leader>abb /\%79l\%18c...<cr>
 .+1s/\%>2c\%<7caa/XX/g
 > xx aa cc aa xx
 
+> Test if char is space OR '-'
+  > if getline('.')[0] =~ '\v(\s|-)'
+  > echo match( 'y', '\v(x|y)')
+
+> two empty lines/ three consecutive \n: 
+/\v\n{3,}
+
+> Consecutive alphanumeric chars
 /\v\w{4}
-exec "normal! " '/\v\w{4}"
+exec "normal! " '/\v\w{4}'
+
+* Lines that NOT/Don't contain/start with a pattern
+/\v^(\s*\*)@!
+> find lines that don't start with this pattern: ^( )@!
+> any number of spaces \s* followed by either * or >
+> and then still have a non empty char after that
+/\v^(\s*(\*|\>))@!.
+/\v^(\s*\*)@!(\s*\>)@!
+
 
 read/learn about regex in vim
 help pattern.txt

@@ -650,6 +650,12 @@ let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 ## Completion
   see nav-containers.md#/Completion
 
+## Unicode symbols
+* List of haskell unicode library symbols (use those!)
+  - https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions/basic-syntax-extensions
+* this has some nice unicode conceal suggestions  ~/.vim/plugged/vim-haskellConcealPlus/after/syntax/haskell.vim
+
+
 ## Low priority
 
 a start screen?
@@ -727,9 +733,6 @@ navigate .md /markdown files. e.g. next bulletpoint/not bullet point
 
 make `rm -r` commands move to trash?
 
-* set up unicode mappings (purescript unicode in vimrc) for these lib functions:
-  - https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions/basic-syntax-extensions
-
   gitgutter and ale toggles as `yog/a`?
 
   test out Ctrlp undo, line, dir(!) mode!!
@@ -784,6 +787,8 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 
+markbar could hold vimCommentTitles
+markbar should autoexpand any accidential folds (because there is marker text in the example text)
 
 Problem: Currently I may not strip whitespace in .vimrc!
          set fillchars sets a space
@@ -924,7 +929,7 @@ after duplicating a line and then commenting the orig line and moving down with 
   it jumps to the beginning of the line while it should stay in the same column
 
 ## Release notes v1.1.1
-* easymotion for paragraph and sentence: `<localleader>}`, `<localleader>)`
+* easymotion for paragraph: `<localleader>e/r`
 * next/pre arguments movement with `,a`, `,A` - localleader for current arg
 * show no-scrollbar-vim in lightline
 * set foldtext=DefaultFoldtext()
@@ -932,7 +937,7 @@ after duplicating a line and then commenting the orig line and moving down with 
   * <leader>saf "source around function"
   * <leader>si" "source inside quotes"
 * `glt` in dirvish buffers cds new terminal into dirvish folder
-* black conceal character indicating hs-function foldmarkers
+* conceal character indicating hs-function foldmarkers
 * `<leader>pe` does PasteLastEchoText
 
 ## Release notes v1.1.0
