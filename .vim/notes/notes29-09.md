@@ -787,7 +787,13 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 
-issue:
+after restart I need several undos until the latest change is undone
+
+going back the changelist via `g;` seems to have these issues (sometimes):
+  - sometimes get alert that there are no changes
+  - at some point the cursor alternates/gets stuck between two posisions
+
+issue: (fixed!)
   when buffer (e.g. vimrc) is open in another win, then the first win
   is scrolled to the top when reloaded in another window
 

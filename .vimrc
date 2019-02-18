@@ -34,6 +34,7 @@ Plug 'skywind3000/vim-preview'
 Plug 'junegunn/vim-peekaboo'
 " Vim clipboard features: Delete is not yank, substitute operator, yank buffer
 " Plug 'svermeulen/vim-easyclip'
+" " Changes: Add every yank position to the jumplist, comment out 'repeat#invalidate()' as it seems to cause jump to the top of the file
 Plug 'andreasthoelke/vim-easyclip'
 " TODO replace with smaller plugins
 " Briefly highlight the yanked region
@@ -291,6 +292,8 @@ augroup end
 let mapleader="\<Space>"
 let maplocalleader="\\"
 
+
+" finish
 
 " Increase this for debugging
 set verbose=0
