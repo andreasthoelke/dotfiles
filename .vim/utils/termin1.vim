@@ -256,7 +256,7 @@
 " Debug Test With Mini VIMRC One Plugin: - Start nvim loading vimrc from Gist!: nvim -Nu <(curl https://gist.githubusercontent.com/junegunn/6936bf79fedd3a079aeb1dd2f3c81ef5/raw/vimrc) "https://gist.githubusercontent.com/andreasthoelke/f223558ed5d89341c0f21c41868c92b0/raw/27028c93e046aa4a021fc97f8a59e60b774e0e38"
 " Not Yet Read This: https://vimways.org/2018/debugging-your-vim-config/
 " Logging Autocommands: - :set verbose=9 - set verbosefile=filename.txt - session_autosave_periodic - http://inlehmansterms.net/2014/10/31/debugging-vim/
-" set verbosefile=~/.vim/logs/autocmds112018-1.log
+" set verbosefile= ~/.vim/logs/autocmds0220194.log
 " set verbosefile=''
 " Show Source Of Autocmds: - "verbose autocmd BufWritePost *"
 " Debug a function: ":debug call FunctionName(arg)"

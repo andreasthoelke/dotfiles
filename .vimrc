@@ -56,7 +56,7 @@ Plug 'andreasthoelke/vim-EnhancedJumps'
 
 
 " Git: --------------------------------------------------
-Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv', {'on': ['Gitv']}
@@ -149,12 +149,12 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 
 " Language Support: -----------------------------------------------------
-Plug 'jelera/vim-javascript-syntax'
-Plug 'elzr/vim-json'
-Plug 'leafgarland/typescript-vim'
+" Plug 'jelera/vim-javascript-syntax'
+" Plug 'elzr/vim-json'
+" Plug 'leafgarland/typescript-vim'
 Plug 'mityu/vim-applescript'
-Plug 'bendavis78/vim-polymer'
-Plug 'vmchale/dhall-vim'
+" Plug 'bendavis78/vim-polymer'
+" Plug 'vmchale/dhall-vim'
 
 " Markdown: -------------
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
@@ -166,7 +166,7 @@ Plug 'tmux-plugins/vim-tmux'
 " Allows listening to Tmux focus events to allow autoloading files changed outside vim
 Plug 'tmux-plugins/vim-tmux-focus-events'
 " Vimscript debugging
-Plug 'tpope/vim-scriptease'
+" Plug 'tpope/vim-scriptease'
 " This works, but not sure I need it often
 Plug 'chrisbra/csv.vim'
 
@@ -245,7 +245,7 @@ Plug 'sbdchd/neoformat'
 
 " Syntax Checkers: -----------------------------------------------------
 " Plug 'jaspervdj/stylish-haskell'
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 " Just 10 lines of code. uses "to" default map
 " Plug 'mpickering/hlint-refactor-vim'
 Plug 'neomake/neomake'
@@ -260,10 +260,10 @@ Plug 'andreasthoelke/intero-neovim'
 Plug 'andreasthoelke/vim-hoogle'
 
 " Haskell IDE Engine HIE:
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-      \ }
+" Plug 'autozimu/LanguageClient-neovim', {
+"       \ 'branch': 'next',
+"       \ 'do': 'bash install.sh',
+"       \ }
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " IDE Features: ------------------------------------------
@@ -527,7 +527,8 @@ let g:mundo_inline_undo = 1
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_silent = 1  " do not display the auto-save notification
 let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
-let g:auto_save_events = ["CursorHold", "WinLeave", "VimLeave"]
+let g:auto_save_events = ["CursorHold", "WinLeave", "VimLeavePre"]
+" VimLeavePre does not save before Vim displays it's alerts
 " Maybe need this?
 " let g:auto_save_postsave_hook = 'TagsGenerate'  " this will run :TagsGenerate after each save
 " Note: Plugin will "set updatetime=200"
@@ -593,7 +594,7 @@ set sessionoptions-=buffers
 
 let g:session_persist_font = 0
 let g:session_persist_colors = 0
-let session_autosave_periodic = 0
+let g:session_autosave_periodic = 0
 
 " Falls back to writing undo file into cwd if "vimtmp/undo" is not available(?)
 set undodir=~/vimtmp/undo,.
@@ -809,15 +810,13 @@ nnoremap <leader>sw :StripWhitespace<cr>
 " set listchars=tab:>-,trail:_,extends:#,nbsp:_
 
 
-
-
 " Filetype Specific Maps Tools Syntax: -------
-au ag BufNewFile,BufRead *.hs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead *.hs call HaskellTools()
-au ag BufNewFile,BufRead *.hs call HaskellMaps()
+au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
+au ag BufNewFile,BufRead        *.hs call HaskellTools()
+au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
-au ag BufNewFile,BufRead *.vim,*.vimrc call VimScriptSyntaxAdditions()
-au ag BufNewFile,BufRead *.vim,*.vimrc call VimScriptMaps()
+au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
+au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
 
 " Filetype Specific Maps Tools Syntax: -------
 
@@ -896,7 +895,6 @@ endfunc "}}}
 "       \     hi! link Conceal Operator                                                                  |
 "       \ endif}}}
 
-
 " Experiments:{{{
 " let g:haskell_classic_highlighting = 1
 " syn match haskellCompose ' \zs\.' conceal cchar=∘
@@ -911,7 +909,6 @@ endfunc "}}}
 " function! vim2hs#haskell#conceal#wide() " {_{{
 " function! vim2hs#haskell#conceal#bad() " {_{{
 " let g:idris_conceal = 1}}}
-
 
 
 " Syntax Color Haskell: --------------------
@@ -1215,29 +1212,31 @@ endfunc
 " Next Paragraph:
 nnoremap <silent> <c-l> :call ParagNext()<cr>
 vnoremap <silent> <c-l> }
-fun! ParagNext()
+func! ParagNext()
   exec "silent keepjumps normal! }"
   call JumpNextNonEmptyLine()
-endfun
-fun! JumpNextNonEmptyLine()
+endfunc
+func! JumpNextNonEmptyLine()
   call search('^.\+')
-  " Jump to next word if the line is indented. Test if character under cursor is a <space>
+  call IfOnSpaceGoWord()
+endfunc
+func! IfOnSpaceGoWord()
+  " Jump to next word if cursor is on space
   if getline('.')[col('.')-1] == ' '
     normal! w
   endif
-endfun
+endfunc
 
 " Previous Paragraph:
 nnoremap <silent> <c-h> :call ParagPrev()<cr>
 vnoremap <silent> <c-h> {k$
-fun! ParagPrev()
+func! ParagPrev()
   let startLineNum = line('.')
   exec "silent keepjumps normal! {w"
   if line('.') == startLineNum
     exec "silent keepjumps normal! {{w"
   endif
-endfun
-
+endfunc
 
 " End Of Paragraph:
 nnoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}-"<CR>
@@ -1250,37 +1249,48 @@ nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
 
 
-
-
-" Haskell Movement: ----------
+" Haskell Movement Textobjects: -----------------------
 
 func! HaskellMaps()
-  nnoremap ( :call HsPrevSignature()<cr>
+  nnoremap <silent><buffer> <c-p> :call HsPrevSignature()<cr>
+  nnoremap <silent><buffer> <c-n> :call HsNextSignature()<cr>
+  nnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>
 
 endfunc
 
+" Haskell Patterns:
+" Line starts in col 1 and is not a comment (non consuming lookaround)
+let g:Ptn_TopLevCode = '^[^ -]@=.*'
+let g:Ptn_HsTypeSignatur = '\s∷\s'
+let g:Ptn_HsMainDeclKeys = '('.g:Ptn_HsTypeSignatur.'|instance|data|newtype)'
+let g:Ptn_HsMainDefinition = g:Ptn_TopLevCode . g:Ptn_HsMainDeclKeys
+
+" call search('\v(∷|instance)')
+" call search( '\v' . g:Ptn_HsMainDefinition )
 
 func! HsPrevSignature()
-  call search('^[^ -].*\s∷\s', 'bW')
+  call search('\v' . g:Ptn_HsMainDefinition, 'bW')
 endfunc
 
-snoremap ) :call HsNextSignature()<cr>
 func! HsNextSignature()
-  call search('^[^ -].*\s∷\s', 'W')
+  call search('\v' . g:Ptn_HsMainDefinition, 'W')
+  " call search('^[^ -].*\s∷\s', 'W'){{{
+  " call search('\v^[^ -]@=.*(\s∷\s|instance|data)', 'W')
   " Auto sets the cursor to the beginning of the line
   " call cursor(line('.'), 1)
   " Could then also check at cursor pos with:
-  " echo match( 'y', '\v(x|y)')
+  " echo match( 'y', '\v(x|y)')}}}
 endfunc
 
 func! HsPrevBlockLastLine()
+  " Seach back to a line that does not start with a comment
   call search('\v^(\s*--.*)@!\s*.', 'bW')
 endfunc
 
-" nmap .. what is consitent map for this?
 func! HsBlockLastLine()
   call HsNextSignature()
   call HsPrevBlockLastLine()
+  call IfOnSpaceGoWord()
 endfunc
 
 onoremap ih :call HsBlockVisSel()<cr>
@@ -2448,16 +2458,18 @@ set foldmethod =marker
 " Partially expand syntax and expression based folding (of markdown and gitv plugins)
 au ag Syntax git set foldlevel=1
 au ag FileType markdown set foldlevel=1
+" au ag FileType vim set foldlevel=1
+" au ag FileType haskell set foldlevel=1
 
-nnoremap z<space> za
-nnoremap z] zo
-nnoremap z[ zc
+" Go to the beginning not the end of a previous fold section
+nnoremap zk zk[z
 
+" nnoremap z<space> za
 " Use this on top of "zj" and "zk"?
-nnoremap ]z :cal GoToOpenFold("next")
-nnoremap [z :cal GoToOpenFold("prev")
+" nnoremap ]z :call GoToOpenFold("next")<cr>
+" nnoremap [z :call GoToOpenFold("prev")<cr>
 
-" set ]z and [z go to find open folds
+" set ]z and [z go to find open folds{{{
 function! GoToOpenFold(direction)
   if (a:direction == "next")
     normal zj
@@ -2473,7 +2485,7 @@ function! GoToOpenFold(direction)
     endwhile
   endif
   call cursor(start, 0)
-endfunction
+endfunction "}}}
 
 set foldtext=DefaultFoldtext()
 func! DefaultFoldtext()
@@ -2675,7 +2687,7 @@ nnoremap <silent> ga :call HiSearchCursorWord()<cr>
 nnoremap <silent> g- m':set nohlsearch<cr>
 
 " Don't add seach next/prev to the jumplist
-nnoremap <silent> n :keepjumps normal! n<cr>
+nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(24)<cr>
 nnoremap <silent> N :keepjumps normal! N<cr>
 " Note "normal!" ignores all mappings - to prevent recursion
 
@@ -2694,7 +2706,7 @@ if executable('ag')
   " let g:ctrlp_use_caching = 0
 endif
 
-
+" call ScrollOff(24)
 
 " Color: ----------------------------------
 
@@ -3045,7 +3057,7 @@ nnoremap <leader>bD :bd!<cr>
 
 " General Leader Cmd Shortcut Maps: ---------------------------------
 
-nnoremap <localleader>qa :qa<cr>
+nnoremap <localleader>qa :wqa<cr>
 nnoremap <localleader>qq :q<cr>
 
 " nnoremap gw :w<cr>
@@ -3076,6 +3088,13 @@ nnoremap <leader>op :tabe ~/.vim/plugged/<cr>
 
 " Cursor offset from window top and buttom
 set scrolloff=8
+
+" Scroll the current cursor line into view with <offset> lines
+func! ScrollOff( offset )
+  let scof = &scrolloff
+  exec 'set scrolloff=' . a:offset
+  exec 'set scrolloff=' . l:scof
+endfunc
 
 " Move when using "c-d" (down) and "c-u" (up)
 set scroll=4
@@ -3225,7 +3244,7 @@ let g:Gitv_CustomMappings = {
 let g:fugitive_force_bang_command = 1
 
 " Deletes hidden fugitive buffers when I hide them?
-au ag BufReadPost fugitive://* set bufhidden=delete
+" au ag BufReadPost fugitive://* set bufhidden=delete
 
 " Fugitive Gitv: -----------------------------------------------------------
 

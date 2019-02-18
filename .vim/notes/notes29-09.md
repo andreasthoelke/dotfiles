@@ -787,6 +787,10 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 
+issue:
+  when buffer (e.g. vimrc) is open in another win, then the first win
+  is scrolled to the top when reloaded in another window
+
 markbar could hold vimCommentTitles
 markbar should autoexpand any accidential folds (because there is marker text in the example text)
 

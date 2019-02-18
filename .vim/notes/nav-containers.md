@@ -295,6 +295,7 @@ use <c-o> open menu?
 ## Folds, Folding
   `zf` `zd` create/delete fold markers via motions/vis select
   `zk` `zj` to navigate
+  `]z` `[z` go to end/beginning of current fold
   `zo` `zc` `z<space>` to open/close/toggle individual folds
   `zM`  `zR` to close/open all folds
   `zm`  `zr` progressively close/open the fold levels (of nested folds)
