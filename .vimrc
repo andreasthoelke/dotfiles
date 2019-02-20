@@ -1241,9 +1241,14 @@ func! ParagPrev()
   endif
 endfunc
 
-" End Of Paragraph:
+" End Of Paragraph Motions And OpPending:
+" The motion jumps to the *beginning* of the last line
 nnoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}-"<CR>
-vnoremap <silent> ,<c-l> }-
+" The OpPending map spans to the *end* of the last line
+onoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}-g_"<CR>
+" The VisSel map spans to the *end* of the last line
+vnoremap <silent> ,<c-l> }-g_
+" Jump to the beginning of the last line of the previous paragraph
 nnoremap <silent> ,<c-h> :<C-u>exec "keepjumps norm! " . v:count1 . "{{}-"<CR>
 
 " Keep jumps with native paragraph motions
@@ -1255,9 +1260,13 @@ nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 " Haskell Movement Textobjects: -----------------------
 
 func! HaskellMaps()
-  nnoremap <silent><buffer> <c-p> :call HsPrevSignature()<cr>
-  nnoremap <silent><buffer> <c-n> :call HsNextSignature()<cr>
-  nnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>
+  nnoremap <silent><buffer> <c-p> :call HsPrevSignature()<cr>:call ScrollOff(10)<cr>
+  vnoremap <silent><buffer> <c-p> :call HsPrevSignature('v')<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <c-n> :call HsNextSignature()<cr>:call ScrollOff(16)<cr>
+  vnoremap <silent><buffer> <c-n> :call HsNextSignature(1)<cr>:call ScrollOff(16)<cr>
+  vnoremap <silent> <c-n> :call HsNextSignature(1)<cr>
+  nnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>:call ScrollOff(10)<cr>
+  vnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>
 
 endfunc
 
@@ -1265,7 +1274,7 @@ endfunc
 " Line starts in col 1 and is not a comment (non consuming lookaround)
 let g:Ptn_TopLevCode = '^[^ -]@=.*'
 let g:Ptn_HsTypeSignatur = '\s∷\s'
-let g:Ptn_HsMainDeclKeys = '('.g:Ptn_HsTypeSignatur.'|instance|data|newtype)'
+let g:Ptn_HsMainDeclKeys = '('.g:Ptn_HsTypeSignatur.'|instance\s|data\s|newtype\s)'
 let g:Ptn_HsMainDefinition = g:Ptn_TopLevCode . g:Ptn_HsMainDeclKeys
 
 " call search('\v(∷|instance)')
@@ -1275,7 +1284,8 @@ func! HsPrevSignature()
   call search('\v' . g:Ptn_HsMainDefinition, 'bW')
 endfunc
 
-func! HsNextSignature()
+func! HsNextSignature(...)
+    normal! gv
   call search('\v' . g:Ptn_HsMainDefinition, 'W')
   " call search('^[^ -].*\s∷\s', 'W'){{{
   " call search('\v^[^ -]@=.*(\s∷\s|instance|data)', 'W')
@@ -1364,7 +1374,7 @@ set updatetime=2000
 " will also get cleaned up/ suffled a bit. Typically c-i is not useful *after* this time - the jumps then basically become c-o jumps
 
 " Skip cursor-rest jump if cursor hasn't moved (unfortunate fix) 
-noremap <c-o> :call JumpBackSkipCurrentLoc()<cr>
+noremap <silent> <c-o> :call JumpBackSkipCurrentLoc()<cr>
 func! JumpBackSkipCurrentLoc ()
   let l:origCursorPos = getpos('.')
   exec 'normal!' "\<C-o>"
@@ -1467,7 +1477,7 @@ func! SourceLines( lines )
   call delete(l:tmpsofile)
 endfunc
 
-nnoremap <silent> <leader>s :set opfunc=OpSourceVimL<cr>g@
+nnoremap <silent> <leader>s m':set opfunc=OpSourceVimL<cr>g@
 vnoremap <silent> <leader>s :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
 
 " Uses "h textobj-function"
@@ -1482,10 +1492,26 @@ func! OpSourceVimL( motionType, ...)
   let [endLine,   endColumn]   = getpos( endMark )[1:2]
   let selectedVimCode = GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
   " call append( line('.'), GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn ) )
+  " call CallKeepView( 'SourceLines', [l:selectedVimCode] )
   call SourceLines( l:selectedVimCode )
-  normal! ``
+  " Flash the sourced text for 500ms
   call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos(startMark), getpos(endMark), a:motionType, 500)
 endfunc
+
+" Make sure the cursor position and view does not change when calling the function
+func! CallKeepView( fnname, args )
+  let l:winview = winsaveview()
+  " Calls function of this name with the args in the list (length must be == fn args)
+  call call( a:fnname, a:args )
+  call winrestview(l:winview)
+endfunc
+" Tests{{{
+" echo call( "Test3", ["aber"])
+" echo CallKeepView('Test3', ['eins'])
+" func! Test3( ar )
+"   echo ('the arg: ' . a:ar)
+" endfunc}}}
+
 
 func! GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
   let lines = getline( a:startLine, a:endLine )
@@ -2690,7 +2716,7 @@ nnoremap <silent> ga :call HiSearchCursorWord()<cr>
 nnoremap <silent> g- m':set nohlsearch<cr>
 
 " Don't add seach next/prev to the jumplist
-nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(24)<cr>
+nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(14)<cr>
 nnoremap <silent> N :keepjumps normal! N<cr>
 " Note "normal!" ignores all mappings - to prevent recursion
 
@@ -2708,8 +2734,6 @@ if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
   " let g:ctrlp_use_caching = 0
 endif
-
-" call ScrollOff(24)
 
 " Color: ----------------------------------
 
@@ -3095,7 +3119,9 @@ set scrolloff=8
 " Scroll the current cursor line into view with <offset> lines
 func! ScrollOff( offset )
   let scof = &scrolloff
+  echo l:scof
   exec 'set scrolloff=' . a:offset
+  redraw
   exec 'set scrolloff=' . l:scof
 endfunc
 

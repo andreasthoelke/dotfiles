@@ -940,6 +940,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 ## Release notes v1.1.1
 * easymotion for paragraph: `<localleader>e/r`
+* end of paragraph motion/OpPending `,<c-h/l`
 * next/pre arguments movement with `,a`, `,A` - localleader for current arg
 * show no-scrollbar-vim in lightline
 * set foldtext=DefaultFoldtext()
@@ -949,6 +950,8 @@ after duplicating a line and then commenting the orig line and moving down with 
 * `glt` in dirvish buffers cds new terminal into dirvish folder
 * conceal character indicating hs-function foldmarkers
 * `<leader>pe` does PasteLastEchoText
+* fix bug in easyclip that scrolled buffer to the top
+* `c-n/p` jumps to main haskell definitions applying a useful scrolloffset
 
 ## Release notes v1.1.0
 * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
