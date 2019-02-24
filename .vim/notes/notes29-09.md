@@ -910,6 +910,7 @@ push text to the right currently requires two undos
 
 typing in insert mode sometimes gets jumpy - gone after restart
 
+when uncommenting a line, that lines becomes the most recent visual selection
 
 ## Haskell Todos
 syntax highlighting in comments
@@ -927,8 +928,16 @@ run the current line through typeOf cmd-line prog.
   -- execute ".!typeOf %"
   problem: cabal install does not produce a global executable
 
+change DocsForCursorWord() to hoogle.hackage.org not hackage/hoogle
+
 
 ## Temp next
+make HsNextSignature motions vis-selection compliant
+then use this for the haskell function text object
+this could then be used for unicode replace - and rename of vars
+
+next vim title comment
+
 operator pending map/motion for vimscript func
 
 easyclip setting causes redundant undo step at insert leave
@@ -938,8 +947,15 @@ show quickfix process (1 of 4) in statusbar of inactive quickfix list.
 after duplicating a line and then commenting the orig line and moving down with 'j'
   it jumps to the beginning of the line while it should stay in the same column
 
+`dip` dap does not work -> easyclip? d- map
+
+
 ## Release notes v1.1.1
-* easymotion for paragraph: `<localleader>e/r`
+* easymotion for paragraph: `<localleader><c-h/l>`
+* `,L` `,H` for to jump bottom/top of visible area
+* `Viv` selects the visual area, `yis` copies the visual area. See Textobjects
+* so a regex search then `\r`+`ie``iv``if` to replace matches with prompted text. see ReplaceLastPattern
+* `ga` on a word and then `\riv` replaces that word with prompted text
 * end of paragraph motion/OpPending `,<c-h/l`
 * next/pre arguments movement with `,a`, `,A` - localleader for current arg
 * show no-scrollbar-vim in lightline
@@ -952,6 +968,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 * `<leader>pe` does PasteLastEchoText
 * fix bug in easyclip that scrolled buffer to the top
 * `c-n/p` jumps to main haskell definitions applying a useful scrolloffset
+* `zH` `zL` shifts cursor line to the top/bottom of visible area
 
 ## Release notes v1.1.0
 * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)

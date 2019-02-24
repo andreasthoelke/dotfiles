@@ -346,6 +346,19 @@ hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
 hi Visual guibg=#2E2E2E gui=none
 
 
+" Comment syntax additions
+" hi BlackBG guibg=#000000
+" hi CommentSection guifg=#3D5862 guibg=#0B0B0B
+hi CommentSection guifg=#42606B guibg=#0B0B0B
+" hi CommentLabel guifg=#2E6B69 guibg=#030303
+" hi CommentLabel guifg=#306C6F guibg=#030303
+" hi CommentLabel guifg=#3C7C80 guibg=#030303
+" hi CommentLabel guifg=#4C8588 guibg=#030303
+hi CommentLabel guifg=#42606B guibg=#030303
+" hi CommentLabel guifg=#466571 guibg=#030303
+" hi CommentLabel guifg=#419398 guibg=#030303
+" hi CommentLabel guifg=#69DFE6 guibg=#030303
+
 "    From Vimrc: ---------------------------------
 " run: RedirMessagesBuf hi Folded
 " to get:

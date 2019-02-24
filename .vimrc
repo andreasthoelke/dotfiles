@@ -57,7 +57,7 @@ Plug 'andreasthoelke/vim-EnhancedJumps'
 
 
 " Git: --------------------------------------------------
-" Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv', {'on': ['Gitv']}
@@ -65,7 +65,7 @@ Plug 'gregsexton/gitv', {'on': ['Gitv']}
 " Search: -----------------------------------------------
 " Currently using this via "Find"
 Plug 'mhinz/vim-grepper'
-Plug 'mileszs/ack.vim'
+" Plug 'mileszs/ack.vim'
 " Search integration
 Plug 'rking/ag.vim'
 
@@ -106,7 +106,7 @@ Plug 'edkolev/promptline.vim'
 " Plug 'tomasr/molokai'
 Plug 'NLKNguyen/papercolor-theme'
 " Another colorscheme used (where?)
-Plug 'dim13/smyck.vim'
+" Plug 'dim13/smyck.vim'
 Plug 'yosiat/oceanic-next-vim'
 Plug 'cormacrelf/vim-colors-github'
 
@@ -812,19 +812,18 @@ nnoremap <leader>sw :StripWhitespace<cr>
 " set list
 " set listchars=tab:>-,trail:_,extends:#,nbsp:_
 
-
-" Filetype Specific Maps Tools Syntax: -------
+" ─   Filetype Specific Maps Tools Syntax             ──
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellTools()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
+" ─^  Filetype Specific Maps Tools Syntax              ──
 
-" Filetype Specific Maps Tools Syntax: -------
 
 
-" Syntax Color: --------------------
+" ─   Syntax Color                                     ──
 
 " This defines the color of the cchar
 " hi! Conceal guibg=#000000
@@ -838,7 +837,20 @@ func! HaskellTools()
   call vim2hs#haskell#editing#formatting()
 endfunc
 
+func! CommentSyntaxAdditions()
+" ─   Comment Section Example                            ──
+" Comment sections use the unicode dash at the start and end of the line
+  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──$', -1, -1 )
+" Comment sections can be terminated using the ^ char
+" ─^  Comment Section Example end                        ──
+" Comment label: This is a simple label for some highlighted info to come
+"                                         limit length!
+  call matchadd('CommentLabel', '\v^" \u.*:', -1, -1 )
+endfunc
+
+
 func! HaskellSyntaxAdditions() "{{{
+  call CommentSyntaxAdditions()
   " Conceal comment marker string
   call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
@@ -872,8 +884,12 @@ func! HaskellSyntaxAdditions() "{{{
   " Issue: this also set the bg of other conceal chars
 endfunc "}}}
 
+" Syntax Color Haskell: --------------------
+
 
 func! VimScriptSyntaxAdditions() "{{{
+  call CommentSyntaxAdditions()
+  " Hide comment character "
   call matchadd('Conceal', '\v^\s*\zs"\s', -1, -1, {'conceal': ''})
   set conceallevel=2
   set concealcursor=ni
@@ -914,7 +930,6 @@ endfunc "}}}
 " let g:idris_conceal = 1}}}
 
 
-" Syntax Color Haskell: --------------------
 
 
 " Style Colors: ----------------------------
@@ -1147,6 +1162,13 @@ nnoremap 0 m'0
 
 nnoremap zz m'zz
 
+" Note L and H are used for Sneak
+noremap ,L L
+noremap ,H H
+vnoremap ,L L
+vnoremap ,H H
+
+
 " Go back to insert start (+ jumplist)
 " autocmd! InsertLeave * exec "normal! m'`["
 au ag InsertLeave * call InsertLeave()
@@ -1257,18 +1279,19 @@ nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
 
 
-" Haskell Movement Textobjects: -----------------------
+" ⎼⎼⎼⎼ Haskell Movement Textobjects ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼
 
 func! HaskellMaps()
   nnoremap <silent><buffer> <c-p> :call HsPrevSignature()<cr>:call ScrollOff(10)<cr>
+  " TODO inc visual maps
   vnoremap <silent><buffer> <c-p> :call HsPrevSignature('v')<cr>:call ScrollOff(10)<cr>
   nnoremap <silent><buffer> <c-n> :call HsNextSignature()<cr>:call ScrollOff(16)<cr>
-  vnoremap <silent><buffer> <c-n> :call HsNextSignature(1)<cr>:call ScrollOff(16)<cr>
-  vnoremap <silent> <c-n> :call HsNextSignature(1)<cr>
+  vnoremap <silent><buffer> <c-n> :call HsNextSignature(1)<cr>
   nnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>:call ScrollOff(10)<cr>
   vnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>
 
 endfunc
+
 
 " Haskell Patterns:
 " Line starts in col 1 and is not a comment (non consuming lookaround)
@@ -1277,15 +1300,14 @@ let g:Ptn_HsTypeSignatur = '\s∷\s'
 let g:Ptn_HsMainDeclKeys = '('.g:Ptn_HsTypeSignatur.'|instance\s|data\s|newtype\s)'
 let g:Ptn_HsMainDefinition = g:Ptn_TopLevCode . g:Ptn_HsMainDeclKeys
 
-" call search('\v(∷|instance)')
-" call search( '\v' . g:Ptn_HsMainDefinition )
+
 
 func! HsPrevSignature()
   call search('\v' . g:Ptn_HsMainDefinition, 'bW')
 endfunc
 
 func! HsNextSignature(...)
-    normal! gv
+    " normal! gv
   call search('\v' . g:Ptn_HsMainDefinition, 'W')
   " call search('^[^ -].*\s∷\s', 'W'){{{
   " call search('\v^[^ -]@=.*(\s∷\s|instance|data)', 'W')
@@ -1335,10 +1357,22 @@ endfunc
 " Vimscript Movement: -------------
 
 func! VimScriptMaps()
+  nnoremap <silent><buffer> <c-p> :call VimPrevCommentTitle()<cr>:call ScrollOff(10)<cr>
+  nnoremap <silent><buffer> <c-n> :call VimNextCommentTitle()<cr>:call ScrollOff(16)<cr>
 
 endfunc
 
-" c-n to next vim comment title
+" Vim Patterns:
+let g:Ptn_VimCommentTitle = '^"\s\u\a*(\s+\u\a*)*:'
+
+func! VimPrevCommentTitle()
+  call search('\v' . g:Ptn_VimCommentTitle, 'bW')
+endfunc
+
+func! VimPrevCommentTitle()
+  call search('\v' . g:Ptn_VimCommentTitle, 'W')
+endfunc
+
 
 
 " Textobjects: -----------------------------------
@@ -1346,6 +1380,7 @@ endfunc
 onoremap ie :<c-u>exec "normal! ggVG"<cr>
 " iv = current viewable text in the buffer
 onoremap iv :<c-u>exec "normal! HVL"<cr>
+vmap iv ,Ho,L
 
 " Needed for textobj-markdown because of conflict with textobj-function?
 omap <buffer> af <plug>(textobj-markdown-chunk-a)
@@ -1477,8 +1512,8 @@ func! SourceLines( lines )
   call delete(l:tmpsofile)
 endfunc
 
-nnoremap <silent> <leader>s m':set opfunc=OpSourceVimL<cr>g@
-vnoremap <silent> <leader>s :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
+nnoremap <silent> ,s m':set opfunc=OpSourceVimL<cr>g@
+vnoremap <silent> ,ss :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
 
 " Uses "h textobj-function"
 " * SourceVimL Operator function allows e.g.
@@ -1490,13 +1525,23 @@ func! OpSourceVimL( motionType, ...)
   " Line and column of start+end of either vis-sel or motion
   let [startLine, startColumn] = getpos( startMark )[1:2]
   let [endLine,   endColumn]   = getpos( endMark )[1:2]
+  " echo a:motionType . ' ' . startLine . ' ' . startColumn . ' ' . endLine . ' ' . endColumn
+  let [startColumn, endColumn] = (a:motionType == 'line') ? [1, 200] : [startColumn, endColumn]
   let selectedVimCode = GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
   " call append( line('.'), GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn ) )
+  " call append( line('.'), startMark . ' - ' . endMark )
   " call CallKeepView( 'SourceLines', [l:selectedVimCode] )
   call SourceLines( l:selectedVimCode )
   " Flash the sourced text for 500ms
   call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos(startMark), getpos(endMark), a:motionType, 500)
 endfunc
+" Tests: `leader s$` on [e]cho and visual-sel echo ..{{{
+" Some text echo 'hi 2'
+" Vis-Sel the following lines, also `leader sj` or `leader s\j..`
+" echo 'hi 1'
+" echo 'hi 2'
+" call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'char', 500)
+" call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'line', 500)}}}
 
 " Make sure the cursor position and view does not change when calling the function
 func! CallKeepView( fnname, args )
@@ -1520,6 +1565,7 @@ func! GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColu
   let lines[0]  = lines[0][a:startColumn - 1:]
   return lines
 endfunc
+" echo GetTextWithinLineColumns_asLines( 1575, 1, 1577, 10 )
 
 function! Demo1()
   " Why is this not a built-in Vim script function?!
@@ -2498,7 +2544,11 @@ nnoremap zk zk[z
 " nnoremap ]z :call GoToOpenFold("next")<cr>
 " nnoremap [z :call GoToOpenFold("prev")<cr>
 
-" set ]z and [z go to find open folds{{{
+" Go to beginning/end of the current fold
+nnoremap z] ]z
+nnoremap z[ [z
+
+" Example (not used) set ]z and [z go to find open folds{{{
 function! GoToOpenFold(direction)
   if (a:direction == "next")
     normal zj
@@ -2595,9 +2645,9 @@ map <localleader>w <Plug>(easymotion-w)
 map <localleader>b <Plug>(easymotion-b)
 map <localleader>j <Plug>(easymotion-j)
 map <localleader>k <Plug>(easymotion-k)
-" Jump to paragraphs and sentences
-map <localleader>e :call EasyMotion#Paragraph(0, 0)<cr>
-map <localleader>r :call EasyMotion#Paragraph(0, 1)<cr>
+" Jump to paragraphs
+map <localleader><c-l> :call EasyMotion#Paragraph(0, 0)<cr>
+map <localleader><c-h> :call EasyMotion#Paragraph(0, 1)<cr>
 " Jump to typical spots
 map <localleader>l <Plug>(easymotion-lineforward)
 map <localleader>h <Plug>(easymotion-linebackward)
@@ -3139,8 +3189,14 @@ vnoremap <C-k> kkk
 " nnoremap <C-H> {{j
 " nnoremap <C-L> }}{j
 
+" Vertical scrolling
 nnoremap zh 7zh
 nnoremap zl 7zl
+
+" Shift cursor line to the top or bottom
+nnoremap zH zt
+nnoremap zL zb
+
 " Scrolling: ------------------------
 
 " Show syntax highlighting groups for word under cursor

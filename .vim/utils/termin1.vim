@@ -164,7 +164,7 @@
 
 " Just run an app based on a mobule file: xstack runghc helloworld.hs"
 
-
+" ─    Comment Section Example                            ──
 " Ale: -------------------------------------------------------------------------------
 " shows the underlined warning (Data.Char)
 " and the listing in the loclist
@@ -1090,6 +1090,7 @@ fun! SubstituteInLines ( lines, origDelim, newDelim )
   endwhile
   return a:lines
 endfun
+
 " Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
 " Range To CSV: -----------------------------------------------------------------------
 
@@ -1185,61 +1186,4 @@ endfunction
 " Codeformatting Examples: -----------------------------------------------------
 " from: https://github.com/sdothum/dotfiles/blob/master/vim/.vim/config/buffer.vim
 " TODO there must be a script the facilites this ..
-
-" Keyboard
-" ▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂
-
-"   Keyboard (re)mappings ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-
-"     .................................................................... Setup
-
-" let mapleader   = "\<Space>"          " remap <leader> a la spacemacs
-" let g:mapleader = "\<Space>"
-
-" augroup kbd
-"   autocmd!
-" augroup END
-
-"   Cursor ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-
-"     ....................................................... Backspace settings
-
-" set backspace=indent,eol,start        " allow backspace in insert mode
-" set whichwrap=b,s,h,l,<,>,[,]         " backspace and cursor keys wrap
-
-"     ......................................................... Cursor movements
-
-" up/down by screen lines, not file lines
-" nnoremap k         gk
-" vnoremap k         gk
-
-
-" Keyboard
-" ▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂
-
-  " Keyboard (re)mappings ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-
-    " .................................................................... Setup
-
-      " let mapleader   = "\<Space>"          " remap <leader> a la spacemacs
-      " let g:mapleader = "\<Space>"
-      "
-      " augroup kbd
-      "   autocmd!
-      " augroup END
-
-  " Cursor ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-
-    " ....................................................... Backspace settings
-
-      " set backspace=indent,eol,start        " allow backspace in insert mode
-      " set whichwrap=b,s,h,l,<,>,[,]         " backspace and cursor keys wrap
-
-    " ......................................................... Cursor movements
-
-      " up/down by screen lines, not file lines
-      " nnoremap k         gk
-      " vnoremap k         gk
-
-
 
