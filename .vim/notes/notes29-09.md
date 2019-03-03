@@ -912,6 +912,8 @@ typing in insert mode sometimes gets jumpy - gone after restart
 
 when uncommenting a line, that lines becomes the most recent visual selection
 
+when reloading with `:e` it seems there is an undo point is set
+
 ## Haskell Todos
 syntax highlighting in comments
   literal haskell files?
@@ -932,6 +934,9 @@ change DocsForCursorWord() to hoogle.hackage.org not hackage/hoogle
 
 
 ## Temp next
+
+douplicating line with \t. then edit and j/go down jumps to the beginning of the line - should stay in the same row
+
 make HsNextSignature motions vis-selection compliant
 then use this for the haskell function text object
 this could then be used for unicode replace - and rename of vars

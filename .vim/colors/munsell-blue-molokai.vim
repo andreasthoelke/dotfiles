@@ -350,6 +350,7 @@ hi Visual guibg=#2E2E2E gui=none
 " hi BlackBG guibg=#000000
 " hi CommentSection guifg=#3D5862 guibg=#0B0B0B
 hi CommentSection guifg=#42606B guibg=#0B0B0B
+hi CommentSection guifg=#42606B guibg=#0E0E0E
 " hi CommentLabel guifg=#2E6B69 guibg=#030303
 " hi CommentLabel guifg=#306C6F guibg=#030303
 " hi CommentLabel guifg=#3C7C80 guibg=#030303

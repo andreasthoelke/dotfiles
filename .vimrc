@@ -832,15 +832,17 @@ hi! link Conceal Operator
 
 func! HaskellTools()
   " call haskellenv#start()
-  call vim2hs#haskell#editing#includes()
-  call vim2hs#haskell#editing#keywords()
-  call vim2hs#haskell#editing#formatting()
+  " TODO test these
+  " call vim2hs#haskell#editing#includes()
+  " call vim2hs#haskell#editing#keywords()
+  " call vim2hs#haskell#editing#formatting()
 endfunc
 
 func! CommentSyntaxAdditions()
 " ─   Comment Section Example                            ──
 " Comment sections use the unicode dash at the start and end of the line
-  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──$', -1, -1 )
+  " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──$', -1, -1 )
+  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
 " Comment sections can be terminated using the ^ char
 " ─^  Comment Section Example end                        ──
 " Comment label: This is a simple label for some highlighted info to come
@@ -885,19 +887,33 @@ func! HaskellSyntaxAdditions() "{{{
 endfunc "}}}
 
 " Syntax Color Haskell: --------------------
+" Syntax Color Haskell: "{{{
+" eins zwei "}}}
 
 
-func! VimScriptSyntaxAdditions() "{{{
+" only needs to look good in haskell!
+func! VimScriptSyntaxAdditions()
   call CommentSyntaxAdditions()
-  " Hide comment character "
+  " Hide comment character
   call matchadd('Conceal', '\v^\s*\zs"\s', -1, -1, {'conceal': ''})
+  " Conceal foldmarker strings and display icon to indicate fold expanding
+  " Note: escaping {'s instead of literal '' {'s avoids accidental folding
+  " call matchadd('Conceal', "\"\{\{\{", -1, -1, {'conceal': 'x'})
+  call matchadd('Conceal', '\"\(■\|▲\)', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '■\ze■', -1, -1, {'conceal': ' '})
+  call matchadd('Conceal', '▲\ze▲', -1, -1, {'conceal': ' '})
+
   set conceallevel=2
   set concealcursor=ni
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
+  " set commentstring=\ \"%s
   set commentstring=\ \"%s
-endfunc "}}}
+  " Original vim foldmarker string
+  " set foldmarker={{{,}}}
+  set foldmarker=■■,▲▲
+endfunc
 
-" Testing:{{{
+" Testing:
 " call matchadd('MatchParen', '\v"(\s)@=', -1, -1 )
 " call matchadd('MatchParen', '\v^\s*\zs"\s', -1, -1 )
 " call clearmatches()
@@ -912,7 +928,7 @@ endfunc "}}}
 "       \ if &ft == 'haskell'                                                                         |
 "       \     let w:lambda_conceal = matchadd('Conceal', '\\\%([^\\]\+→\)\@=', 10, -1, {'conceal': 'λ'}) |
 "       \     hi! link Conceal Operator                                                                  |
-"       \ endif}}}
+"       \ endif
 
 " Experiments:{{{
 " let g:haskell_classic_highlighting = 1
@@ -1529,8 +1545,6 @@ func! OpSourceVimL( motionType, ...)
   let [startColumn, endColumn] = (a:motionType == 'line') ? [1, 200] : [startColumn, endColumn]
   let selectedVimCode = GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
   " call append( line('.'), GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn ) )
-  " call append( line('.'), startMark . ' - ' . endMark )
-  " call CallKeepView( 'SourceLines', [l:selectedVimCode] )
   call SourceLines( l:selectedVimCode )
   " Flash the sourced text for 500ms
   call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos(startMark), getpos(endMark), a:motionType, 500)
@@ -2569,7 +2583,7 @@ endfunction "}}}
 set foldtext=DefaultFoldtext()
 func! DefaultFoldtext()
   let l:line = getline(v:foldstart)
-  let l:subs = substitute(l:line, '{\|"\|--', '', 'g')
+  let l:subs = substitute(l:line, '{\|"\|--\|▲\|■', '', 'g')
   return '  ' . l:subs
 endfunc
 
