@@ -35,7 +35,8 @@ hi DiffText                      guibg=#4C4745 gui=italic,bold"
 
 hi Directory       guifg=#A6E22E               gui=bold
 hi Error           guifg=#E6DB74 guibg=#1E0010
-hi ErrorMsg        guifg=#F92672 guibg=#232526 gui=bold
+" hi ErrorMsg        guifg=#F92672 guibg=#232526 gui=bold
+hi ErrorMsg        guifg=#F6DC69 guibg=#151719
 hi Exception       guifg=#A6E22E               gui=bold
 hi Float           guifg=#AE81FF
 
@@ -191,6 +192,8 @@ endfunction
 " `nnoremap <leader>hcc :,ColorHighlight<CR>`
 " `nnoremap <leader>hcd :ColorClear<CR>`
 
+" Get syntax group
+" echo synIDattr( synID( line('.'), col('.'), 0), 'name' )
 
 " PURESCRIPT HASKELL COLORS: ---------------------------
 
@@ -347,7 +350,7 @@ hi Visual guibg=#2E2E2E gui=none
 
 
 " Comment syntax additions
-" hi BlackBG guibg=#000000
+hi BlackBG guibg=#000000
 " hi CommentSection guifg=#3D5862 guibg=#0B0B0B
 hi CommentSection guifg=#42606B guibg=#0B0B0B
 hi CommentSection guifg=#42606B guibg=#0E0E0E

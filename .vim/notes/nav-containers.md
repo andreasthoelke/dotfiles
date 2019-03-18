@@ -490,15 +490,30 @@ location could be a
   are just asserting the presense of groups, they dont consume/return the characters
 This will match 'e's when followed by a space, but dont match the space
 /\ve(\s)@=
+/\ve(\s)@!
 /\ve(\s)
 /e
+
+* ignore text in brackets
+/\ve([\[\]]*\])@!
+
+call search('on\@!')
+
+/\ve[{]*\@
+
+e { ase } fde
+
+ some elem <in elim br> and end elem
+
+ some elem <in elem br> and end elem
+
 
 * Testing with `matchadd`
   this only highlights the 'e's not the following (obligatory!) space!
 call matchadd('MatchParen', '\ve(\s)@=', -1, -1 )
 call clearmatches()
 
-* Set start of match with `\sz` (use `\se` to set end of match)
+* Set start of match with `\sz` [use `\se` to set end of match]
 call matchadd('MatchParen', '\v^\s*\zs(t|r|a)', -1, -1 )
 call clearmatches()
 
@@ -547,6 +562,14 @@ exec "normal! " '/\v\w{4}'
 read/learn about regex in vim
 help pattern.txt
 http://vimdoc.sourceforge.net/htmldoc/pattern.html
+
+### Demo Seachpair
+> Skip to the next 'e' when on a lowercase 'e'
+>   a E b e a (f E a e d) d E a e f E
+nnoremap <leader>bb :echo searchpair('(', 'e', ')', 'W', 'IsE()')<cr>
+func! IsE()
+  return GetCharAtCursor() ==# 'e'
+endfunc
 
 
 #### CtrlP - Args, Buffers, other visit workspaces?

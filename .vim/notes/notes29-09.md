@@ -914,6 +914,10 @@ when uncommenting a line, that lines becomes the most recent visual selection
 
 when reloading with `:e` it seems there is an undo point is set
 
+when `ga` highlight only appears after first `n`
+
+`0` or `^` should go the begin of the text, not start of comment string
+
 ## Haskell Todos
 syntax highlighting in comments
   literal haskell files?

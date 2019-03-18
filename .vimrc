@@ -812,15 +812,23 @@ nnoremap <leader>sw :StripWhitespace<cr>
 " set list
 " set listchars=tab:>-,trail:_,extends:#,nbsp:_
 
-" ─   Filetype Specific Maps Tools Syntax             ──
+" Try this approach:■■
+" augroup myTodo
+"   autocmd!
+"   autocmd Syntax * syntax match myTodo /\v\_.<(TODO|FIXME).*/hs=s+1 containedin=.*Comment
+" augroup END
+" highlight link myTodo Todo
+" https://vi.stackexchange.com/questions/15505/highlight-whole-todo-comment-line
+ "▲▲
+
+" ─   Filetype Specific Maps Tools Syntax               ──
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellTools()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
-" ─^  Filetype Specific Maps Tools Syntax              ──
-
+" ─^  Filetype Specific Maps Tools Syntax               ──
 
 
 " ─   Syntax Color                                     ──
@@ -841,12 +849,12 @@ endfunc
 func! CommentSyntaxAdditions()
 " ─   Comment Section Example                            ──
 " Comment sections use the unicode dash at the start and end of the line
-  " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──$', -1, -1 )
-  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
+  " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
+  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\w.*', 11, -1 )
 " Comment sections can be terminated using the ^ char
 " ─^  Comment Section Example end                        ──
 " Comment label: This is a simple label for some highlighted info to come
-"                                         limit length!
+" TODO limit length!
   call matchadd('CommentLabel', '\v^" \u.*:', -1, -1 )
 endfunc
 
@@ -861,8 +869,8 @@ func! HaskellSyntaxAdditions() "{{{
 
   " Conceal foldmarker strings and display icon to indicate fold expanding
   " Note: escaping {'s instead of literal '' {'s avoids accidental folding
-  call matchadd('Conceal', "\{\{\{", -1, -1, {'conceal': '■'})
-  call matchadd('Conceal', '\}\}\}', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', "\{\{\{", -1, -1, {'conceal': '■'})
+  " call matchadd('Conceal', '\}\}\}', -1, -1, {'conceal': ''})
 
   " Special symbols for composition and lambda - non syntax file
   " call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})
@@ -892,29 +900,32 @@ endfunc "}}}
 
 
 " only needs to look good in haskell!
-func! VimScriptSyntaxAdditions()
+func! VimScriptSyntaxAdditions() " ■
   call CommentSyntaxAdditions()
-  " Hide comment character
-  call matchadd('Conceal', '\v^\s*\zs"\s', -1, -1, {'conceal': ''})
+  " Hide comment character at beginning of line
+  call matchadd('Conceal', '\v^\s*\zs"\s', 12, -1, {'conceal': ''})
+  " Hilde \" before comment after code
+  call matchadd('Conceal', '\s\zs\"\ze\s', 12, -1, {'conceal': ''})
   " Conceal foldmarker strings and display icon to indicate fold expanding
   " Note: escaping {'s instead of literal '' {'s avoids accidental folding
   " call matchadd('Conceal', "\"\{\{\{", -1, -1, {'conceal': 'x'})
-  call matchadd('Conceal', '\"\(■\|▲\)', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', '■\ze■', -1, -1, {'conceal': ' '})
-  call matchadd('Conceal', '▲\ze▲', -1, -1, {'conceal': ' '})
+  " call matchadd('Conceal', '\"\(■\|▲\)', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '■\ze■', 12, -1, {'conceal': ' '})
+  " call matchadd('Conceal', '▲\ze▲', 12, -1, {'conceal': ' '})
 
-  set conceallevel=2
-  set concealcursor=ni
+  set conceallevel=2 " ■
+  set concealcursor=ni " ▲
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
   " set commentstring=\ \"%s
   set commentstring=\ \"%s
   " Original vim foldmarker string
   " set foldmarker={{{,}}}
-  set foldmarker=■■,▲▲
-endfunc
+  " set foldmarker=■■,▲▲
+  set foldmarker=\ ■,\ ▲
+endfunc " ▲
 
-" Testing:
-" call matchadd('MatchParen', '\v"(\s)@=', -1, -1 )
+" Testing: ■
+" call matchadd('MatchParen', '\v"(\s)@=', -1, -1 ) ▲
 " call matchadd('MatchParen', '\v^\s*\zs"\s', -1, -1 )
 " call clearmatches()
 " TODO find out if this alternative approach is needed
@@ -1158,8 +1169,9 @@ fun! PurescriptUnicode()
 endfun
 
 
-" Movement Navigation:  ---------------------------------------------------------------------
+" ─   Movement                                          ──
 
+" ─   General                                           ──
 " Go up/down in wrapped lines mode as well
 nnoremap j gj
 nnoremap k gk
@@ -1209,7 +1221,8 @@ nnoremap ,a f,;B
 nnoremap ,A F,B
 
 
-" Example: {{{ This saves the cursor pos to the jumplist when the cursor rested for 4 seconds. See ISSUE below.
+" Example autocmd timeout jumplist:■■
+" This saves the cursor pos to the jumplist when the cursor rested for 4 seconds. See ISSUE below.
 " augroup JumplistTimeout
 "   au!
 "   autocmd CursorHold,CursorMoved * call JumplistTimeout_WaitStart( 5 )
@@ -1230,10 +1243,10 @@ nnoremap ,A F,B
 "     endif
 "   endif
 " endfunction
-" " call JumplistTimeout_WaitStart( 3 )
-" }}}
+" call JumplistTimeout_WaitStart( 3 )
+ "▲▲
 
-" {{{ Add a location (a list as returned by getpos() - [bufnum, lnum, col, off]) to the jumplist, 
+" Add a location (a list as returned by getpos() - [bufnum, lnum, col, off]) to the jumplist, 
 " restoring the cursor pos. (Note: this fills in to what I think setpos("''", <loc>) is supposed to do)
 func! AddLocToJumplist ( loc )
   let l:maintainedCursorPos = getpos('.')
@@ -1246,7 +1259,7 @@ func! AddLocToJumplist ( loc )
   " This does the same but requires indivitual arg handling: call cursor(a:cursor_pos[1], a:cursor_pos[2])
 endfunc
 " Test: This is the loc of this >> X << character: [0,1158,30,0]. Run the next the next line, then <c-o> to jump to that char
-" }}} call AddLocToJumplist([0,1158,30,0])
+" call AddLocToJumplist([0,1158,30,0])
 
 " Paragraph Movement: ----------------
 
@@ -2023,15 +2036,15 @@ nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
 
 " Type Inserts: ----------------------------------------------------
 " nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
-nnoremap tt :call TypeInsert( )<cr>
+nnoremap <localleader>tt :call TypeInsert( )<cr>
 " vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
 " TODO: problem: PSCIDEgetKeyword only work when PSCIDE is started/ throws error with Haskell
-nnoremap tg :InteroGenTypeInsert<cr>
-vnoremap tg :InteroGenTypeInsert<cr>
-nnoremap ti :InteroInfoInsert<cr>
-vnoremap ti :InteroInfoInsert<cr>
+nnoremap <localleader>tg :InteroGenTypeInsert<cr>
+vnoremap <localleader>tg :InteroGenTypeInsert<cr>
+nnoremap <localleader>ti :InteroInfoInsert<cr>
+vnoremap <localleader>ti :InteroInfoInsert<cr>
 
-nnoremap <silent> tw :call InsertTypeAnnotation()<cr>
+nnoremap <silent> <localleader>tw :call InsertTypeAnnotation()<cr>
 " Type Inserts: ----------------------------------------------------
 
 
@@ -2628,12 +2641,12 @@ xmap F <Plug>Sneak_F
 omap f <Plug>Sneak_f
 omap F <Plug>Sneak_F
 " 1-character enhanced 't'
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
-xmap t <Plug>Sneak_t
-xmap T <Plug>Sneak_T
-omap t <Plug>Sneak_t
-omap T <Plug>Sneak_T
+nmap ,t <Plug>Sneak_t
+nmap ,T <Plug>Sneak_T
+xmap ,t <Plug>Sneak_t
+xmap ,T <Plug>Sneak_T
+omap ,t <Plug>Sneak_t
+omap ,T <Plug>Sneak_T
 " Use L/H for next so ";" and "," can be used elsewhere
 map L <Plug>Sneak_;
 map H <Plug>Sneak_,
@@ -3393,7 +3406,7 @@ hi! TermCursorNC guibg=grey guifg=white
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
 " nnoremap to :TagbarOpen j<cr>
-nnoremap to :TagbarToggle<cr>
+nnoremap <localleader>to :TagbarToggle<cr>
 " discontinued maps
 " nnoremap <leader>th :TagbarClose<cr>
 " nnoremap <leader>to :TagbarOpen j<cr>
@@ -4297,6 +4310,38 @@ endfunction
 
 
 " Utilities: --------------------------------------------------------------------------
+
+" Return the character under the cursor
+func! GetCharAtCursor()
+  return getline('.')[col('.')-1]
+endfunc
+" echo GetCharAtCursor()
+
+" Returns Ascii code of multi-byte charaters like '→'
+func! GetCharAtCursorAscii()
+  return strgetchar( getline('.'), virtcol('.')-1 )
+endfunc
+" echo GetCharAtCursorAscii() " a → ( b → c) [()] ⇒ d "
+
+command! SyntaxIDShow echo GetSyntaxIDAtCursor()
+func! GetSyntaxIDAtCursor()
+  return synIDattr( synID( line('.'), col('.'), 0), 'name' )
+endfunc
+" nnoremap <leader>bn :echo GetSyntaxIDAtCursor()<cr>
+
+func! CursorIsInsideString()
+  let curCar = GetCharAtCursor()
+  if curCar == '"' || curCar == "'"
+    " Cursor is on quote/ start/end of the string
+    return 0
+  else
+    return GetSyntaxIDAtCursor() =~ 'string'
+  endif
+endfunc
+" nnoremap <leader>bb :echo searchpair('(', 'e', ')', 'W', 'CursorIsInString()')<cr>
+" Demo: Note how the 'e' in the 'vimCommentString' gets skipped
+" a E b e a (f E a e d) d E "a e" f E
+
 function! HandleURL()
   let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;"]*')
   " See https://regexr.com/41u3c

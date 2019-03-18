@@ -355,6 +355,9 @@ endfunction
 
 " Conceal: TODO
 
+" Get syntax group id
+" echo synIDattr( synID( line('.'), col('.'), 0), 'name' )
+
 " NVim Virtual Text: ------------------
 if has('nvim-0.3.2')
   let g:nsid_def = nvim_create_namespace('default')
@@ -381,14 +384,24 @@ endfunction
 
 " Example for nvim_buf_add_highlight: Highlight/mark the char under the cursor
 nnoremap <leader>mc :call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])<cr>
-" Clear nvim virtual highlights and text 
+vnoremap <leader>mv :call HighlightVisualSelection(0)<cr>
+" Clear nvim virtual highlights and text
 nnoremap <leader>cv :call VirtualtextClear()<cr>
 
-function! Todoaa()
+function! HighlightVisualSelection( idx )
+  let l:highlights = [ 'Normal', 'BlackBG', 'Visual', 'WildMenu' ]
+  " Todo: This check is not working
+  " let l:idx = (a:idx == 0) ? inputlist( l:highlights ) : a:idx
+  " let l:idx = a:idx ? a:idx : inputlist( l:highlights )
+  if a:idx == 0
+    let l:idx = inputlist( l:highlights )
+  else
+    let l:idx = a:idx
+  endif
   " Destructuring the 4 item position array
   let [l:lineNumStart, l:columnStart] = getpos("'<")[1:2]
   let [l:lineNumEnd,   l:columnEnd]   = getpos("'>")[1:2]
-  call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])
+  call nvim_buf_add_highlight( bufnr(''), g:nsid_def, l:highlights[ l:idx ], l:lineNumStart-1, l:columnStart-1, l:columnEnd)
 endfunction
 " call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'Search', line('.')-3, 1, 100)
 
@@ -828,6 +841,10 @@ let demo4 = 'eins'
 func! Demo5()
   return 0
 endfunc
+" Testing expressions:
+" echo (3==4) ? 11 : 22
+" echo (3==4 || 2==3) ? 11 : 22
+" echo (3==3 && 2==2) ? 11 : 22
 
 " Mappings: 
 " https://vimways.org/2018/for-mappings-and-a-tutorial/
