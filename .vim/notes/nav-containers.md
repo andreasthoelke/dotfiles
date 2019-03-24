@@ -539,6 +539,12 @@ nnoremap <leader>abb /\%79l\%18c...<cr>
 .+1s/\%>2c\%<7caa/XX/g
 > xx aa cc aa xx
 
+* Limit matches by line and column
+call matchadd( 'MatchParen', '\(\s\)\@<=\S\%'.line('.').'l\%>'.(col('.')).'c' )
+call matchadd( 'MatchParen', '\(\s\)\@<=\S' )
+call clearmatches()
+
+
 > Test if char is space OR '-'
   > if getline('.')[0] =~ '\v(\s|-)'
   > echo match( 'y', '\v(x|y)')

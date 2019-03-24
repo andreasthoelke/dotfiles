@@ -8,6 +8,13 @@
 "   highlights
 "   motions and textobjects
 
+" HsMotions:
+" Think top-down, alongside the hierachies of composed expressions
+" not wordwise
+" the cursor is a point of focus, reference - moving it can expand/highlight a structure - help your thinking
+" avoid mental switching
+" 
+
 " Status quo/ Approaches:
 " " <--  intuition ....... thinking - learning automating -->
   " 1. mouse scrolling and pointing
@@ -43,6 +50,7 @@
 
 " ─   Description        
 " - Top level dev
+"     - Indented Labels! (new!)
 " - Headers
 " - Labels
 " - Sections
@@ -135,8 +143,6 @@
 "   |               |      |              |     v            .    v  v                |
 " { runActionCtxT ∷ ErrorT ActionInterupt (RWST (RequestInfo ctx) () ResponseState m) a }
 
-eins zwei May (May a) u f
-drei vier
 
 "               |         v         |            v
 emailFormat ∷ ∀ form m. Monad m ⇒ F.Validation form m FormError String Email
@@ -147,6 +153,8 @@ emailFormat = F.hoistFnE_ $ map Email <<< cond (String.contains (String.Pattern 
 decode ∷ ∀ m a. LogMessages m ⇒ Now m [Aa, Bb] ⇒ (Json → Either String a) → Maybe sson a
 decode _ Nothing = logError "Response mal <*> formed" <*> pure Nothing
 "                    |        ^                 ^           |
+ab (ab) abc (["abc"]) {dcfd} abb 
+aa "abc" ghi (["abc ddba"]) jkl
 
 " type delims and operators will rarely mix - only in type level programming
 " but there may sometimes/rarely be
@@ -158,7 +166,7 @@ partition p xs == (filter p xs, filter (not . p) xs)
 " Delimiter: if a ({[ is found before →, then go the closing )]} and search next
 "         |                s    |               |
 (<*>) ∷ ReaderT r m (a → b) → ReaderT r m a → ReaderT r m b
-ReaderT rmab <*> ReaderT rma = ReaderT $ \r → rmab r <*> rma r
+ReaderT rmab <*> ReaderT rma = ReaderT $ \r → rmab r <*> rma ar
 "                  |             |         |    |          |
 
 
@@ -167,10 +175,10 @@ ReaderT rmab <*> ReaderT rma = ReaderT $ \r → rmab r <*> rma r
 
 " i'm ok with not skipping literal string content
 " "   |          |               |
-   "hello" ++ Just "ab + cd" ++ "world"
-   "hello" + Just "ab, cd" + "world"
-   "hello" <*> Just "ab, cd" <*> "world"
-   "hello" `so` Just "ab, cd" `cd` "world"
+   hello ++ Just "ab + cd" ++ "world"
+   hello + Just "ab, cd" + "world"
+   hello <*> Just "ab, cd" <*> "world"
+   hello `so` Just "ab, cd" `cd` "world"
 "
 "   44 `add` Just 44 `sub` 44 44 `kk` "as"
 "
@@ -180,11 +188,11 @@ ReaderT rmab <*> ReaderT rma = ReaderT $ \r → rmab r <*> rma r
    Just 2 <*> Some 4 (3, 4) <$> More "a"
    Just 2 <>  Some 4 (3, 4 <*> 4) <$> More "a"
 "   " |          |          ^     ^      |
-   44 `add` Just 44 `sub` 44 44 `kk` "as"
+   44 `add` Just 44 `sub` 44 44 `kk` aa "as"
 " " This works!
 "
 "   " |          |                              |
-   " "hello" ++ Just "ab cd" ("a" <> "b b") <> Some 4
+   hello" ++ Just "ab cd" ("a" <> "b b") <> Some 4
 "
 " "   |                         |                 |
    Just ['w' ++ 'b', 'o'] ++ Just ['o','t'] ++ Just ['b', 'c']
@@ -192,12 +200,16 @@ ReaderT rmab <*> ReaderT rma = ReaderT $ \r → rmab r <*> rma r
    Just ['w' ++ 'b', 'o'],   Just ['o','t'],   Just ['b', 'c']
 
 
-" inRange ∷ Int → (Int, Int) → Bool
-" inRange val (start, end) = val >= start && val <= end
+inRange ∷ Int → (Int, Int) → Bool
+inRange val (start, end) = val >= start && val <= end
 "                            |      |        |      |
 
-" countElem ∷ Eq a ⇒ [a] → a → Int
-" countElem l e = length $ filter (== e) l
+countElem ∷ Eq a ⇒ [a] → a → Int
+countElem l e = length $ filter (== e) l
+
+  <*> (hm .: "c")
+  <*> (hm .: "d")
+
 
 " from the term function start you have these options:
 
@@ -236,45 +248,65 @@ ReaderT rmab <*> ReaderT rma = ReaderT $ \r → rmab r <*> rma r
 "   - case
 "   - let
 
+call matchadd( 'MatchParen', '\(\s\)\@<=\S\%'.line('.').'l\%>'.(col('.')).'c' )
+call matchadd( 'MatchParen', '\(\s\)\@<=\S' )
+call matchadd( 'MatchParen', '\(\<\k\|\>\S\|\s\zs\S\)\%'.line('.').'l\%>'.(col('.')).'c' )
+call matchadd( 'MatchParen', '\(\s\)\@<=\S\%'.line('.').'l\%<'.(col('.')+2).'c' )
+call matchadd( 'MatchParen', '\(\S\ze\s\)\%'.line('.').'l\%>'.(col('.')).'c' )
+call clearmatches()
+
+myfoldr f b l = step l b
+myfoldr f b l = step l b
+  where
+    step ∷ [a] → b
+    step aks ac     = ac
+    step (x:xs) ac = f x $ step xs ac
 
 
-" postFollowR :: Ab c -> [Char] → Handler Value
-" postFollowR (Ab x) username = do
-"   (Entity userId _) <- runDB $ getBy404 $ UniqueUserUsername username
-"   mCurrentUserId <- maybeAuthId
-"   case mCurrentUserId of
-"     Nothing -> notFound
-"     Just currentUserId -> do
-"       let follower = UserFollower userId currentUserId
-"       void $ runDB $ insertUnique follower
-"       getProfilesR username
+postFollowR :: Ab c -> [Char] → Handler Value
+postFollowR (Ab x) username = do
+  (Entity userId _) <- runDB $ getBy404 $ UniqueUserUsername username
+  mCurrentUserId <- maybeAuthId
+  case mCurrentUserId of
+      Nothing -> notFound -> test
+    Just currentUserId -> do
+      let follower = UserFollower userId currentUserId
+      void $ runDB $   insertUnique follower
+      getProfilesR username
 
 
 " | Request an Int within a range, reject non-complient and
 " | and confirm success.
-" intRangeDialog ∷ (Int, Int) → String → String → String → IO Int
-" intRangeDialog (rStart, rEnd) prompt alert confirm = go 2
-"   where
-"     go a = do
-"       print prompt
-"       inSt ← getLine
-"       case readMaybe inSt ∷ Maybe Int of
-"         Just x | inRange x (rStart, rEnd)
-"           → print (confirm <> show x) >> return x
-"         _ → print alert               >> go
+intRangeDialog ∷ (Int, Int) → String → String → String → IO Int
+intRangeDialog (rStart, rEnd[])   prompt alert confirm = go 2
+intRangeDialog (rStart, rEnd[]) prompt alert confirm = go 2
+intRangeDialog "rStart, rEnd[]" prompt alert confirm = go 2
+intRangeDialog A.[3]replay34 prompt alert confirm = go 2
+intRangeDialog [Areplay34] prompt alert confirm = go 2
+intRangeDialog "rStart, rEnd" prompt alert confirm = go 2
+  where
+    go a = do
+      print prompt
+      inSt ← getLine
+      case readMaybe inSt ∷ Maybe Int of
+        Just x | inRange x (rStart, rEnd)
+          → print (confirm <> show x) >> return x
+        _ → print alert               >> go
 " -- intRangeDialog (1,3) "From 1 to 3" "Arg!" "I got: "
 "
 " -- | Request a non-blank string, reject non-complient and
 " -- | and confirm success.
-" nonBlankStringDialog ∷ String → String → String → IO String
-" nonBlankStringDialog prompt alert confirm = go
-"   where
-"     go = do       - - so is similar to let - you edit consider the expression more than the var name? - you don't need the finger as a pointer on the name?
-"       print prompt
-"       inSt ← getLine
-"       if notBlank inSt
-"          then print confirm >> return inSt
-"          else print alert   >> go
+nonBlankStringDialog ∷ String → String → String → IO String
+nonBlankStringDialog prompt alert confirm = go
+  where
+    go = do       -- so is similar to let-you edit consider the expression more than the var name?-you don't need the finger as a pointer on the name?
+      print prompt
+      inSt ← getLine
+      do
+        ab ← bc
+        if notBlank inSt
+           then print confirm >> return inSt
+           else print alert   >> go
 " -- nonBlankStringDialog "Please enter:" "Arg!" "Thanks!"
 "
 "
@@ -282,18 +314,20 @@ ReaderT rmab <*> ReaderT rma = ReaderT $ \r → rmab r <*> rma r
 "
 " -- | Repeatedly accum 'action' result (a) into a list,
 " -- apply the list to 'eval' after each turn and stop/return 'm b' if 'p' holds.
-" actionIdxLogEvalUntil ∷ ∀ a b m. Monad m
-"                       ⇒ (Int → m a) -- action (receiving index)
-"                       → ([a] → b)   -- eval
-"                       → (b → Bool)  -- p
-"                       → m b         -- return 'b' only if p holds, else cont. action
-" actionIdxLogEvalUntil action eval p = go 1 []
-"   where
-"     go ∷ Int → [a] → m b
-"     go idx xs = action idx >>= evalTestReturnOrRecurse . (: xs)
-"       where
-"         evalTestReturnOrRecurse ∷ [a] → m b
-"         evalTestReturnOrRecurse = ifResElse eval p $ go (idx+1)
+actionIdxLogEvalUntil ∷ ∀ a b m. Monad m
+                      ⇒ (Int → m a) -- action (receiving index) Abd
+                      ⇒ (Int → m a) -- action (receiving index)
+                      → ([a] → b)   -- eval
+                      → (b → Bool)  -- p
+                      → m abc
+                      → m b
+actionIdxLogEvalUntil action eval p = go []
+  where
+    go ∷ Int → [a] → [] m b
+    go idx xs = action idx >>= evalTestReturnOrRecurse . (: xs)
+      where
+        evalTestReturnOrRecurse ∷ [a] → m b
+        evalTestReturnOrRecurse = ifResElse eval p $ go (idx+1)
 "
 "
 " -- | Repeatedly accum 'action' result 'a' into a list,
@@ -343,40 +377,52 @@ ReaderT rmab <*> ReaderT rma = ReaderT $ \r → rmab r <*> rma r
 "
 "
 " -- | Return 'action a' if 'p' holds on the result, else run 'alt a'
-" ifResElseM ∷ Monad m ⇒ (a → m b) → (b → Bool) → (a → m b) → (a → m b)
-" ifResElseM action p alt a = do b ← action a
-"                                if p b
-"                                   then return b
-"                                   else alt a
-" -- ifResElseM (Just . length) (>4) (Just . (const 0)) "eins-zwei"
-" t_ifResElseM1 ∷ String → IO Int
-" t_ifResElseM1 inStr = ifResElseM
-"                          (\accSt → length . (accSt++) <$> getLine)
-"                          (>10) -- pred tests the result of eval
-"                          t_ifResElseM1
-"                          inStr
+ifResElseM ∷ Monad m ⇒ (a → m b) → (b → Bool) → (a → m b) → (a → m b)
+ifResElseM action p alt a = do b ← action a
+                               if p b
+                                  then return b
+                                  else alt a
+
+-- ifResElseM (Just . length) (>4) (Just . (const 0)) "eins-zwei"
+t_ifResElseM1 ∷ String → IO Int
+t_ifResElseM1 inStr = ifResElseM
+                         (\accSt → length . (accSt++) <$> getLine)
+                         (>10) -- pred tests the result of eval
+                         t_ifResElseM1
+                         inStr
 "
 "
 " -- | Return 'eval a' if 'p' holds on the result, else run 'alt a'
-" ifResElse ∷ Monad m
-"           ⇒ (a → b)
-"           → (b → Bool)
-"           → (a → m b)
-"           → (a → m b)
-" ifResElse eval p alt a = let res = eval a
-"                              res2 = test 2 3
-"                           in if p res
-"                                 then return res
-"                                 else alt a
+ifResElse ∷ Monad m
+          ⇒ (a → b)
+          → (b → Bool) → [Ab a] → String
+          → (a → b) → Ma a
+          <*> [Maybe Int] → Maybe String
+          → String as
+ifResElse eval p alt a = let res = eval a
+                             res2 =     test 2 3
+                          in if p res
+                                then return res
+                                else alt a
 " -- ifResElse length (>4) (Just . (const 0)) "eins-zwei"
-" t_ifResElse1 ∷ IO Int
-" t_ifResElse1 = go ""
-"   where
-"     go accSt = do
-"       st ← (accSt++) <$> getLine
-"       ifResElse length (>10) -- pred tests the result of eval
-"             go -- aternative action / recurse to base action
-"             st
+t_ifResElse1 ∷ IO Int
+t_ifResElse1 = go ""
+  where
+    go accSt = do ()
+      st ← (accSt++) <$> getLine
+      ifResElse length (>10) -- pred tests the result of eval
+            go -- aternative action / recurse to base action
+            st
+
+      something
+         <*> Just more
+         <*> Just even
+         >>= test
+
+      Test [ 11
+           , Just 2
+           , 22
+           ] deriving Show
 
 " Fn Wireframe:
 " do, let, if, case, function, before function signature 

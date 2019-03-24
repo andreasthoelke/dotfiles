@@ -3406,7 +3406,7 @@ hi! TermCursorNC guibg=grey guifg=white
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
 " nnoremap to :TagbarOpen j<cr>
-nnoremap <localleader>to :TagbarToggle<cr>
+nnoremap <leader>to :TagbarToggle<cr>
 " discontinued maps
 " nnoremap <leader>th :TagbarClose<cr>
 " nnoremap <leader>to :TagbarOpen j<cr>
@@ -4317,6 +4317,42 @@ func! GetCharAtCursor()
 endfunc
 " echo GetCharAtCursor()
 
+func! GetCharAtColRelToCursor( offset )
+  return getline('.')[ col('.') + a:offset -1 ]
+endfunc
+" echo GetCharAtColRelToCursor( -1 )
+
+func! IsEmptyLine( linenum )
+  return getline( a:linenum ) == ''
+endfunc
+
+
+func! ColOfFirstChar()
+  return searchpos('^\s*\zs', 'cnb')[1]
+endfunc
+
+func! IsColOfFirstChar( col )
+  return ColOfFirstChar() == a:col
+endfunc
+" echo IsColOfFirstChar( col('.') )
+
+
+func! ColOfLastChar()
+  return strlen(getline('.'))
+endfunc
+" echo ColOfLastChar()
+
+func! IsColOfLastChar( col )
+  return ColOfLastChar() == a:col
+endfunc
+" echo IsColOfLastChar( col('.') )
+
+
+
+func! CursorIsAtStartOfWord()
+  return GetCharAtColRelToCursor( -1 ) =~ '\s'
+endfunc
+
 " Returns Ascii code of multi-byte charaters like '→'
 func! GetCharAtCursorAscii()
   return strgetchar( getline('.'), virtcol('.')-1 )
@@ -4341,6 +4377,10 @@ endfunc
 " nnoremap <leader>bb :echo searchpair('(', 'e', ')', 'W', 'CursorIsInString()')<cr>
 " Demo: Note how the 'e' in the 'vimCommentString' gets skipped
 " a E b e a (f E a e d) d E "a e" f E
+
+func! IsInsideString( line, col )
+  return synIDattr( synID( a:line, a:col, 0), 'name' ) =~ 'string'
+endfunc
 
 function! HandleURL()
   let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;"]*')
