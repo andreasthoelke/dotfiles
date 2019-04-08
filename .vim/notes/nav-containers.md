@@ -540,16 +540,23 @@ nnoremap <leader>abb /\%79l\%18c...<cr>
 > xx aa cc aa xx
 
 * Limit matches by line and column
-call matchadd( 'MatchParen', '\(\s\)\@<=\S\%'.line('.').'l\%>'.(col('.')).'c' )
-call matchadd( 'MatchParen', '\(\s\)\@<=\S' )
+let abc = matchadd( 'MatchParen', '\(\s\)\@<=\S\%'.line('.').'l\%>'.(col('.')).'c' )
+let abc = matchadd( 'MatchParen', '\(\s\)\@<=\S' )
+call matchdelete( abc )
 call clearmatches()
 
+* match multiline between div
+let abc = matchadd( 'MatchParen', '<div>\_.\{-}</div>' )
+note that \_.* would match all text till the end of the buffer!
+instead use \{-} after a multiline atom to match asap
 
+<div>
 > Test if char is space OR '-'
   > if getline('.')[0] =~ '\v(\s|-)'
   > echo match( 'y', '\v(x|y)')
+</div>
 
-> two empty lines/ three consecutive \n: 
+> two empty lines/ three consecutive \n:
 /\v\n{3,}
 
 > Consecutive alphanumeric chars

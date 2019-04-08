@@ -23,7 +23,8 @@ hi Boolean         guifg=#AE81FF
 hi Character       guifg=#E6DB74
 hi Number          guifg=#AE81FF
 hi String          guifg=#E6DB74
-hi Conditional     guifg=#F92672               gui=bold
+" hi Conditional     guifg=#F92672               gui=bold
+hi Conditional     guifg=#F92672
 hi Constant        guifg=#AE81FF               gui=bold
 hi Debug           guifg=#BCA3A3               gui=bold
 hi Define          guifg=#66D9EF
@@ -201,6 +202,8 @@ endfunction
 " hi! Function guifg=#0087AF "munsell blue"
 hi! Function guifg=#008EB8 "munsell blue"
 
+hi! purescriptFunction guifg=#008EB8 guibg=#000000
+
 " purescriptIdentifier > purescriptIdentifier
 " hi! purescriptIdentifier guifg=#E7F4F7 "anti flash white"
 hi! purescriptIdentifier guifg=#BECACD "white-grey"
@@ -252,6 +255,8 @@ exec 'hi! Delimiter guifg=' . g:color_ming_green
 
 " purescriptStatement (do and let) > Statement
 exec 'hi! Statement guifg=' . g:color_ming_green
+
+exec 'hi! fnWireframe guifg=' . g:color_ming_green . ' guibg=#000000'
 
 " purescriptConditional > Conditional
 exec 'hi! Conditional guifg=' . g:color_ming_green
@@ -351,6 +356,7 @@ hi Visual guibg=#2E2E2E gui=none
 
 " Comment syntax additions
 hi BlackBG guibg=#000000
+hi GreyBG guibg=#262626
 " hi CommentSection guifg=#3D5862 guibg=#0B0B0B
 hi CommentSection guifg=#42606B guibg=#0B0B0B
 hi CommentSection guifg=#42606B guibg=#0E0E0E

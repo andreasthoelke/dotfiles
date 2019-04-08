@@ -45,7 +45,7 @@ Link a local repo to a github repo:
 ## Find Search in deleted code
   * `git log -c -S'abc' | nvim -` , then `/abc` in vim. TODO could make this into one command using vim startup command (the search) using a shell var
       * could i use this with neovim remote to the output into the current vim instance?
-  * `git log -c -S'missingtext' [pathToFile]` or `git log -p` and then `/missing code` in less using `n`/`N` to navigate
+  * `git log -c -S'missingtext' [pathToFile]` or `git log -p` and then `/missing code` in the 'less' app using `n`/`N` to navigate
 
 ## Make a git commit to dotfiles of .vimrc
   etc to https://github.com/andreasthoelke/dotfiles  

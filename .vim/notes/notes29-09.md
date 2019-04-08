@@ -961,7 +961,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 ## Release notes v1.1.1
 * easymotion for paragraph: `<localleader><c-h/l>`
-* `,L` `,H` for to jump bottom/top of visible area
+* `,L` `,H` to jump bottom/top of visible area
 * `Viv` selects the visual area, `yis` copies the visual area. See Textobjects
 * so a regex search then `\r`+`ie``iv``if` to replace matches with prompted text. see ReplaceLastPattern
 * `ga` on a word and then `\riv` replaces that word with prompted text
