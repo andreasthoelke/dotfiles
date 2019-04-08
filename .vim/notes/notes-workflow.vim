@@ -351,66 +351,6 @@ endfunction
 " Get Count To A Keymap: - use "v:count1". e.g. noremap <silent> <s-F8> :<c-u>exe 'norm 0f\|e' . v:count1 . 'W'<cr>
 " Ignore Range: The CTRL-U is used to remove the range that Vim may insert.
 
-" Specific Neovim features: nvim_buf_add_highlight nvim_buf_set_virtual_text
-
-" Conceal: TODO
-
-" Get syntax group id
-" echo synIDattr( synID( line('.'), col('.'), 0), 'name' )
-
-" NVim Virtual Text: ------------------
-if has('nvim-0.3.2')
-  let g:nsid_def = nvim_create_namespace('default')
-endif
-function! VirtualtextClear()
-  let l:buffer = bufnr('')
-  call nvim_buf_clear_highlight(l:buffer, g:nsid_def, 0, -1)
-endfunction
-function! VirtualtextShowMessage(message, hlgroup)
-  let l:cursor_position = getcurpos()
-  let l:line = line('.')
-  let l:buffer = bufnr('')
-  call nvim_buf_set_virtual_text(l:buffer, g:nsid_def, l:line-1, [[a:message, a:hlgroup]], {})
-endfunction
-
-" call VirtualtextClear()
-" call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'SpecialKey')
-" call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'Folded')
-" call VirtualtextShowMessage('← some ∷ sig ⇒ nd (s)', 'WildMenu')
-
-" Multiple text chunks would allow to recreate syntax highlighting
-" call nvim_buf_set_virtual_text( bufnr(''), g:nsid_def, line('.'), [[ '⇒ first ∷ ', 'Folded'], [ 'sec ← (nd)', 'WildMenu']],)
-" Shows Demo Here: →
-
-" Example for nvim_buf_add_highlight: Highlight/mark the char under the cursor
-nnoremap <leader>mc :call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])<cr>
-vnoremap <leader>mv :call HighlightVisualSelection(0)<cr>
-" Clear nvim virtual highlights and text
-nnoremap <leader>cv :call VirtualtextClear()<cr>
-
-function! HighlightVisualSelection( idx )
-  let l:highlights = [ 'Normal', 'BlackBG', 'Visual', 'WildMenu' ]
-  " Todo: This check is not working
-  " let l:idx = (a:idx == 0) ? inputlist( l:highlights ) : a:idx
-  " let l:idx = a:idx ? a:idx : inputlist( l:highlights )
-  if a:idx == 0
-    let l:idx = inputlist( l:highlights )
-  else
-    let l:idx = a:idx
-  endif
-  " Destructuring the 4 item position array
-  let [l:lineNumStart, l:columnStart] = getpos("'<")[1:2]
-  let [l:lineNumEnd,   l:columnEnd]   = getpos("'>")[1:2]
-  call nvim_buf_add_highlight( bufnr(''), g:nsid_def, l:highlights[ l:idx ], l:lineNumStart-1, l:columnStart-1, l:columnEnd)
-endfunction
-" call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'Search', line('.')-3, 1, 100)
-
-" Flash Highlight A Region: Note the nvim highlight does not easily work across lines
-" call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'char', 1000)
-
-vnoremap <leader>ab :<c-u>echo getpos("'<")<cr>
-vnoremap <leader>ab :<c-u>echo getpos("'>")<cr>
-
 
 " VIM WORKFLOW: ----------------------------------------------------------------------
 
@@ -470,24 +410,6 @@ vnoremap <leader>ab :<c-u>echo getpos("'>")<cr>
 
 " Tmux Workflow: -----------------------------------------------------------------------
 
-" NEOVIM TERMINAL MODE: ----------------------------------------------------------
-if has('nvim')
-  " nnoremap <leader>af ipwd<cr><C-\><C-n>kyy:cd <c-r>"<cr>
-  nnoremap <leader>af ipwd<cr><C-\><C-n>yy
-  nnoremap <leader>ag :cd <c-r>"<cr>
-
-  " jump window up from terminal mode
-  tnoremap <c-w>k <C-\><C-n><c-w>k
-  " jump window down from terminal mode
-  tnoremap <c-w>j <C-\><C-n><c-w>j
-  " Wipe the terminal buffer
-  tnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
-  nnoremap <silent><c-\>x <C-\><C-n>:bw!<cr>
-  tnoremap <c-w>c <C-\><C-n>:bw!<cr>
-endif
-
-command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<CR>")
-
 " TIP:  --------------------------------------------------------------------------
 " NEOVIM REMOTE: start nvim like this: "NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim"
 " "nvr -l thefilename.hs" from terminal mode to open file in other window.
@@ -534,91 +456,6 @@ command! RestartNodeJs call jobsend( b:terminal_job_id, "\<C-c>npm run server\<C
 
 
 
-function! OnEv1(job_id, data, event) dict
-  normal }k
-
-  "TODO: echoe a:data, if =~ '>' → filter out these lines
-
-  if a:event == 'stdout'
-    " call append(line('.'), a:data[0])
-    if a:data[0] =~ 'Error'
-      call append(line('.'), a:data)
-    else
-      call append(line('.'), a:data)
-      " call append(line('.'), a:data[0])
-    endif
-
-  elseif a:event == 'stderr'
-    call append(line('.'), a:data)
-    " let str = self.shell.' stderr: '.join(a:data)
-  else
-    call append(line('.'), "Unknown event?!")
-    " let str = self.shell.' exited'
-  endif
-
-  call PurescriptUnicode()
-endfunction
-
-" jobsend(7, "ls\n")
-
-" TODO:
-" function! PursPaste(expr)
-"   call jobsend(g:PursReplID, ":paste " . a:expr . "^D\n")
-" endfun
-
-function! PursEval(expr)
-  call jobsend(g:PursReplID, a:expr . "\n")
-endfun
-
-function! PursType(expr)
-  call jobsend(g:PursReplID, ":type " . a:expr . "\n")
-endfun
-
-let Cbs1 = {
-\ 'on_stdout': function('OnEv1'),
-\ 'on_stderr': function('OnEv1'),
-\ 'on_exit': function('OnEv1')
-\ }
-
-command! PursRepl :let PursReplID = jobstart("pulp repl", Cbs1)
-
-" let Tid = jobstart("ls")
-
-"--*
-
-" echo jobsend(g:Tid, "ls /n")
-
-"--*
-
-" ----------------------------------------------------------------------------------
-
-
-
-" INSTALLING A PACKAGE REQUIRES:
-" "bower install --save <packagename> | pulp build"
-command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
-         \ PursInstall
-         \ echom jobstart("bower install --save purescript-" . <q-args> . " && pulp build", Cbs1)
-
-
-" nnoremap <leader>sx y$:echom <c-r>"<cr>
-
-"com! -buffer -nargs=* -complete=custom,PSCIDEcompleteIdentifier
-"       \ Ptype
-"       \ call PSCIDEtype(len(<q-args>) ? <q-args> : PSCIDEgetKeyword(), v:true)
-" com! -buffer -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
-"       \ Psearch
-"       \ call PSCIDEsearch(len(<q-args>) ? <q-args> : PSCIDEgetKeyword())
-
-
-" ----------------------------------------------------------------------------------
-" 1. <leader>su to compile this script
-" 2. run this line with <leader>sx
-" jobstart("pulp repl", Cbs1)
-" 3. check that the returned int is 7
-" ----------------------------------------------------------------------------------
-
-
 " DO THIS TO PUT A FILTERED ERROR LIST FROM NEOMAKE INTO A BUFFER:
 " 1. create an empty buffer:
 " :e temp2
@@ -641,36 +478,6 @@ command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
 
 
 
-" MARKDOWN: -----------------------------------------------------------------------
-
-" This works! Opens a terminal with the running grip server process and moves the cursor to the browser
-command! Demo1Markdown Dispatch grip -b %
-
-" function! OpenMarkdownPreview() abort
-"   " stops any previous/running job!
-"   if exists('s:markdown_job_id')
-"     silent! call jobstop(s:markdown_job_id)
-"     unlet s:markdown_job_id
-"   endif
-"   let s:markdown_job_id = jobstart(
-"     \ 'grip ' . shellescape(expand('%:p')) . " 0 2>&1 | awk '/Running/ { printf $4 }'",
-"     \ { 'pty': 1, 'on_stdout': {_, output → system('open ' . output[0])} }
-"     \ )
-" endfunction
-
-" a simpler version of the above
-function! OpenMarkdownPreview() abort
-  if exists('g:markdown_job_id') && g:markdown_job_id > 0
-    call jobstop(g:markdown_job_id)
-    unlet g:markdown_job_id
-  endif
-  let g:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
-  if g:markdown_job_id <= 0 | return | endif
-  " call system('open http://localhost:6419')
-  call LaunchChromium( 'http://localhost:6419' )
-endfunction
-
-" MARKDOWN: -----------------------------------------------------------------------
 
 " Vim Anywhere:
 command! CopyAndQuit :%y+ | :q!
@@ -682,82 +489,6 @@ nnoremap <leader>ccl :CopyAndQuit<cr>
 
 " ----------------------------------------------------------------------------------
 
-" Tested Terminal Examples:
-" ":sp term://zsh"
-" echo termopen('zsh')
-" echo chansend(3,['ls', 'date', ''])
-" let g:testvar2 = system( "date" ) | echo g:testvar2
-
-" Launch a terminal in split: ":DemoTermArgs npm search purescript"
-command! -nargs=* DemoTermArgs split | resize 20 | terminal <args>
-" Quotes args example: ":DemoQ eins zwei" note no quotes are needed!
-command! -nargs=* DemoQArgs echo split(<q-args>)
-
-" new | resize 20 | let g:latest_term_id = termopen('zsh') | call chansend( g:latest_term_id,['ls', ''] )
-
-command! -nargs=* T new | resize 20 | let g:latest_term_id = termopen('zsh') | call chansend( g:latest_term_id, [<q-args>, ''] )
-
-command! -nargs=* Ts call chansend( g:latest_term_id, [<q-args>, ''] )
-
-" source a JS function in a running node repl
-" send visual selection chars as command and replace the selection with the return val.
-" - or should this rather append after a "⇒"?
-
-" Open Terminal buffer in horizontal split
-command! -count -nargs=* Term call Term(<q-args>, <count>)
-fun! Term(args, count)
-  let cmd = "split "
-  let cmd = a:count ? a:count . cmd : cmd
-  if a:args == ""
-    let cmd = cmd . 'term://zsh'
-  else
-    let cmd = cmd . 'term://' . a:args . "&& zsh"
-  " Note that only "&& zsh" allows to use the terminal after the first command has finished.
-  endif
-  exec cmd
-  exe 'startinsert'
-  call OnTermOpen()
-endf
-
-" TODO consider using https://github.com/kassio/neoterm
-
-" helpers from https://github.com/jeromedalbert/dotfiles/blob/master/.vim/init.vim
-if has('nvim')
-  augroup on_display_events
-    autocmd!
-    autocmd TermOpen * call OnTermOpen()
-  augroup end
-endif
-
-
-
-function! OnTermOpen()
-  if &buftype != 'terminal' | return | endif
-  setlocal nonumber norelativenumber colorcolumn=
-  nnoremap <silent><buffer> G G{}
-  " tnoremap <buffer> <Esc> <C-\><C-n>
-endfunction
-
-command! -range=0 FocusSelection call FocusSelection(<count>)
-cabbrev focus FocusSelection
-function! FocusSelection(visual)
-  if !a:visual | return | endif
-  let filetype = &filetype
-  normal gv"zy
-  enew
-  exe 'set filetype=' . filetype
-  normal "zpggdd
-endfunction
-
-
-noremap <leader>ytw :call ToggleOption('wrap')<cr>
-function! ToggleOption(option_name, ...)
-  let option_scope = 'local'
-  if a:0 | let option_scope = '' | endif
-  exe 'let enabled = &' . a:option_name
-  let option_prefix = enabled ? 'no' : ''
-  exe 'set' . option_scope . ' ' . option_prefix . a:option_name
-endfunction
 
                      
 " ----------------------------------------------------------------------------------
@@ -778,36 +509,6 @@ nnoremap <localleader>sp :set syntax=purescript<cr>
 " demos:
 abbrev mul Multiple<CR>lines
 
-" Launching Chromium: ---------------------------------------------------------------
-" Using the full path on MacOS: "/Applications/Chromium.app/Contents/MacOS/Chromium --window-size=200,500 --window-position=0,20"
-" Using an alias: "chromium --window-size=800,400 --window-position=222,222"
-" Dedined in "~/.zshrc" file: alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
-" Chromium switches are listed here: https://peter.sh/experiments/chromium-command-line-switches/
-" Switches are only effective when launching the first window - one needs to close the window, and then open it again, to move it?
-" Using mini bar and start URL: "chromium --app=http://purescript.org --window-position=200,50 --window-size=60,60"
-" Closing The Window: End the terminal session? Use "call jobstop(s:markdown_job_id)"
-
-" Terminal win opens
-command! -nargs=1 Chromium exec ':Dispatch' '/Applications/Chromium.app/Contents/MacOS/Chromium --app=' . <q-args> '--window-size=500,400 --window-position=800,20'
-" With addressbar and terminal in other tab
-command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/MacOS/Chromium ' . <q-args>
-
-" let Tid = jobstart("/Applications/Chromium.app/Contents/MacOS/Chromium http://purescript.org")
-
-" command! -nargs=1 Chromium :let  = jobstart("pulp repl", Cbs1)
-" TODO try chromium-browser --force-device-scale-factor=0.79 - but can also set this globally in Chromium app settings
-
-let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
-
-function! LaunchChromium( url ) abort
-  if exists('g:launchChromium_job_id') && (g:launchChromium_job_id) > 0
-    call jobstop( g:launchChromium_job_id )
-    unlet g:launchChromium_job_id
-  endif
-  let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
-endfunction
-
-" Launching Chromium: ---------------------------------------------------------------
 
 
 
@@ -955,30 +656,6 @@ endfunc
 " Delete A Range Of Files: - "'<,'>call delete(getline('.'))"
 
 
-" LINE COLLECTOR: ---------------
-" "leader cli" To start collecting lines, "leader cll" to collect the visual selection
-nnoremap <leader>cli :call CollectLinesInit()<cr>
-func! CollectLinesInit()
-  " let g:colLinesFileName = tempname()
-  let g:colLinesFileName = $HOME . '/.vim/notes/CollectedLines7.txt'
-  exe 'vsplit' g:colLinesFileName
-  " let g:colLineBufNr = bufnr('%')
-  write
-  call writefile( ['# Collected Lines 10:', ''], g:colLinesFileName, 'a' )
-  edit
-  " checktime
-  wincmd p
-endfunc
-vnoremap <leader>cll :call CollectLine()<cr>
-func! CollectLine() range
-  let l:selText = Get_visual_selection()
-  " * This actually uses the selected text not the lines
-  " * This preserves the line breaks of multiline selections
-  " * This can update the file while it's loaded in a buffer
-  call system( 'echo ' . shellescape(l:selText) . ' >> ' . g:colLinesFileName )
-  checktime
-endfunc
-" LINE COLLECTOR: ---------------
 
 " echo join( getline(".", line(".") + 3), "\n" )
 " Piping Text Selection To Shell Command: Select the following lines:
@@ -998,158 +675,10 @@ command! -range=% -nargs=0 DemoPipeRange1 :<line1>,<line2>call DemoPipeRange()
 " Running Commands: ------------------------------------------------------------
 
 
-" Running AppleScript: ----------------------------------------------------------------
-func! AppleScriptRunAndForget (ascode)
-  silent exec      '!osascript' '-e' shellescape( a:ascode ) | redraw!
-endfunc
-" testarg: 'tell application "Finder" to make new Finder window'
-" find next testarg line, "Wy[to some other register])"
 
-func! AppleScriptRunAndForgetAsync (ascode)
-  exec 'Dispatch!' 'osascript' '-e' shellescape( a:ascode )
-endfunc
-
-" call AppleScriptRunAndForget('tell application "Google Chrome" to open location "http://github.com"'){{{
-" call AppleScriptRunAndForget('tell application "Finder" to make new Finder window')
-" call AppleScriptRunAndForget('tell application "System Events" to key code 124 using {control down}')
-" call AppleScriptRunAndForgetAsync('tell application "Finder" to make new Finder window')
-" call AppleScriptRunAndForgetAsync('tell application "System Events" to key code 124 using {control down}')
-" Running AppleScript: ----------------------------------------------------------------}}}
-
-
-
-" Range To CSV: -----------------------------------------------------------------------
-" Copies paragraph into split (of filetype=csv) using csv.vim
-fun! CSVBufferFromParagraph ()
-  exec 'silent normal! y}'
-  exec 'vnew'
-  exec 'normal! P'
-  set filetype=csv
-endfun
-" call CSVBufferFromParagraph()
-" eins,zwei,drei
-" 1,23,334
-" 44,6,6
-
-" Detect CSV delimiter in paragraph using a temp csv.vim buffer
-fun! FindCSVDelimiterInParagraph ()
-  call CSVBufferFromParagraph()
-  let l:detectedDelim = b:delimiter
-  exec 'bd!'
-  return l:detectedDelim
-endfun
-" echo FindCSVDelimiter()
-
-" Example for automating common processes:
-fun! ShowAsciiTableOfVisualSelection () range
-  " This process will involve temp windows/buffers, we need this var to go back:
-  let l:startWindowNr = winnr()
-  " Paste the visual selection into a new split buffer
-  let l:visSelLines = getline( a:firstline, a:lastline)
-  exec 'vnew'
-  call append( 1, l:visSelLines )
-  exec 'normal dd'
-  " Activate csv.vim plugin
-  set filetype=csv
-  exec 'normal VG'
-  " Produces the Asciitable in a split below and jump to it
-  exec 'CSVTabularize'
-  " Copy then dispose the buffer
-  let g:asciiLines = getline( 1, line('$') )
-  exec 'bd!'
-  " Also dispose the csv.vim buffer
-  " Issue: Is this save? / Can never dispose the original buffer?
-  exec 'bd!'
-  " This is not needed anymore as we have closed the other wins/buffers
-  exec l:startWindowNr . 'wincmd w'
-  " call append(line('.'), g:asciiLines)
-  call append( a:lastline, g:asciiLines)
-endfun
-" Example Use: Visually select the 3 CSV lines, then run
-" '<,'>call ShowAsciiTableOfVisualSelection()
-" eins,zwei,drei
-" 1,23,334
-" 44,6,6
-" This will then paste this Ascii table just below the CSV lines
-" ┌─────┬─────┬─────┐
-" │ eins│ zwei│ drei│
-" ├─────┼─────┼─────┤
-" │    1│   23│  334│
-" │   44│    6│   6 │
-" └─────┴─────┴─────┘
-
-" Commmands Range Args Example Usage:
-" Run: '<,'>OpenRangeInExcel ','
-" on this csv text:
-" eins,zwei,drei
-" 1,23,334
-" 44,6,6
-command! -range -nargs=1 OpenRangeInExcel <line1>,<line2>call OpenRangeInExcel( <args> )
-fun! OpenRangeInExcel ( origDelim ) range
-  " get CSV text from range in current buffer
-  let l:linesCSV = getline( a:firstline, a:lastline)
-  " Substitute the orig delimiter to Excels preferred one
-  let l:linesExcelCSV = SubstituteInLines( l:linesCSV, a:origDelim, ';' )
-  "
-  let l:tmpFn = tempname() . '.csv'
-  " let l:tmpFn = 'apropername1.csv'
-  call writefile( l:linesExcelCSV, l:tmpFn )
-  exec "silent !open " . l:tmpFn . " -a 'Microsoft Excel'"
-  " call delete(l:tmpsofile)
-endfun
-
-fun! SubstituteInLines ( lines, origDelim, newDelim )
-  let l:idx = 0
-  while l:idx < len(a:lines)
-    let l:line = a:lines[l:idx]
-    let a:lines[l:idx] = substitute(l:line, a:origDelim, a:newDelim, 'ge')
-    let l:idx = l:idx + 1
-  endwhile
-  return a:lines
-endfun
-
-" Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
-" Range To CSV: -----------------------------------------------------------------------
-
-
-" does not work in nvim!
-function! RangerExplorer()
-    exec "!ranger --choosefile=/tmp/vim_ranger_current_file " . expand("%:p:h")
-    if filereadable('/tmp/vim_ranger_current_file')
-        exec 'edit ' . system('cat /tmp/vim_ranger_current_file')
-        call system('rm /tmp/vim_ranger_current_file')
-    endif
-    redraw!
-endfun
-
-" nvim terminal works!
-function! OpenRanger()
-  let rangerCallback = { 'name': 'ranger' }
-  function! rangerCallback.on_exit(id, code)
-    try
-      if filereadable('/tmp/chosenfile')
-          exec 'edit ' . readfile('/tmp/chosenfile')[0]
-          call system('rm /tmp/chosenfile')
-      endif
-    endtry
-  endfunction
-  enew
-  call termopen('ranger --choosefile=/tmp/chosenfile', rangerCallback)
-  startinsert
-endfunction
 
 
 " Testfunctions: -------------------------------------------------------------
-func! DemoBackForth ()
-  silent exec      '!osascript' '-e' shellescape( 'tell application "System Events" to key code 124 using {control down}' ) | redraw!
-  silent exec      '!osascript' '-e' shellescape( 'tell application "System Events" to key code 123 using {control down}' ) | redraw!
-endfunc
-" call DemoBackForth()
-
-func! DemoBackForth2 ()
-  silent exec 'Dispatch!'    '!osascript' '-e' shellescape( 'tell application "System Events" to key code 124 using {control down}' ) | redraw!
-  silent exec 'Dispatch!'    '!osascript' '-e' shellescape( 'tell application "System Events" to key code 123 using {control down}' ) | redraw!
-endfunc
 
 " Example function moving cursor
 function! GoToSelErrorLine()

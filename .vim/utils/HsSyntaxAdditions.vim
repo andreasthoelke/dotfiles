@@ -1,0 +1,151 @@
+
+" ─   Filetype Specific Maps Tools Syntax               ──
+au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
+au ag BufNewFile,BufRead        *.hs call HaskellTools()
+" au ag BufNewFile,BufRead        *.hs call HaskellMaps()
+
+au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
+" au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
+" ─^  Filetype Specific Maps Tools Syntax               ──
+
+
+" ─   Syntax Color                                     ──
+
+" This defines the color of the cchar
+" hi! Conceal guibg=#000000
+hi! link Conceal Operator
+
+
+func! HaskellTools()
+  " call haskellenv#start()
+  " TODO test these
+  " call vim2hs#haskell#editing#includes()
+  " call vim2hs#haskell#editing#keywords()
+  " call vim2hs#haskell#editing#formatting()
+endfunc
+
+func! CommentSyntaxAdditions()
+  " ─   Comment Section Example                            ──
+  " Comment sections use the unicode dash at the start and end of the line
+  " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
+  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\w.*', 11, -1 )
+  " Comment sections can be terminated using the ^ char
+  " ─^  Comment Section Example end                        ──
+  " Comment label: This is a simple label for some highlighted info to come
+  " TODO limit length!
+  call matchadd('CommentLabel', '\v^" \u.*:', -1, -1 )
+endfunc
+
+
+func! HaskellSyntaxAdditions() "{{{
+  call CommentSyntaxAdditions()
+  " Conceal comment marker string
+  call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
+
+  " Conceal foldmarker strings and display icon to indicate fold expanding
+  " Note: escaping {'s instead of literal '' {'s avoids accidental folding
+  " call matchadd('Conceal', "\{\{\{", -1, -1, {'conceal': '■'})
+  " call matchadd('Conceal', '\}\}\}', -1, -1, {'conceal': ''})
+
+  " Special symbols for composition and lambda - non syntax file
+  " call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})
+  " call matchadd('Conceal', '\\\%([^\\]\+→\)\@=', -1, -1, {'conceal': 'λ'}) |
+
+  " Don't show quotes around text. note you can only identify text via the syntax coloring!
+  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely
+  set conceallevel=2
+  " When the concealcursor is *not* set, the conceald text will reveal when the cursor is in the line
+  " concealcursor=n would keeps the text conceald even if the cursor is on the line 
+  set concealcursor=ni
+  " Run this line to see the concealed text if curso is on line
+  " set concealcursor=
+  set syntax=purescript
+  " This will add one space before the foldmarker comment with doing "zfaf"
+  set commentstring=\ --\ %s
+  " This refresh of the highlight is needed to have a black icon/indicator for a folded function, e.g the following line
+  " call matchadd('Conceal', '--{\{{', -1, -1, {'conceal': ' '})
+  " hi! Conceal guibg=#000000
+  " Issue: this also set the bg of other conceal chars
+
+  " Highlight fn-wireframe keywords
+  " Note: This *does* actually have a performance hit when scrolling through a file!
+  " call matchadd('BlackBG', '\(\s\zswhere\ze\_s\|\s\zsdo\ze\_s\|\s\zsin\ze\_s\|\s\zscase\ze\_s\|\s\zsthen\ze\_s\|\s\zslet\ze\_s\)')
+  " call matchadd('BlackBG', '\(^\%(.*--\)\@!.*\zs\s\zswhere\ze\_s\|^\%(.*--\)\@!.*\zs\s\zsdo\ze\_s\|^\%(.*--\)\@!.*\zs\s\zsin\ze\_s\|^\%(.*--\)\@!.*\zs\s\zscase\ze\_s\|^\%(.*--\)\@!.*\zs\s\zsthen\ze\_s\|^\%(.*--\)\@!.*\zs\s\zslet\ze\_s\)')
+  " let g:fnWire2Pttns = PrependSpace( AppendExtSpace( ['where', 'do', 'in', 'case', 'then', 'let'] ))
+  " let g:fnWire2Pttns = NotInCommentLine( PrependSpace( AppendExtSpace( ['where', 'do', 'in', 'case', 'then', 'let'] )) )
+  " call append( line('.'), MakeOrPttn( g:fnWire2Pttns ) )
+endfunc "}}}
+
+" Syntax Color Haskell: --------------------
+" Syntax Color Haskell: "{{{
+" eins zwei "}}}
+
+
+" only needs to look good in haskell!
+func! VimScriptSyntaxAdditions() " ■
+  call CommentSyntaxAdditions()
+  " Hide comment character at beginning of line
+  call matchadd('Conceal', '\v^\s*\zs"\s', 12, -1, {'conceal': ''})
+  " Hilde \" before comment after code
+  call matchadd('Conceal', '\s\zs\"\ze\s', 12, -1, {'conceal': ''})
+  " Conceal foldmarker strings and display icon to indicate fold expanding
+  " Note: escaping {'s instead of literal '' {'s avoids accidental folding
+  " call matchadd('Conceal', "\"\{\{\{", -1, -1, {'conceal': 'x'})
+  " call matchadd('Conceal', '\"\(■\|▲\)', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '■\ze■', 12, -1, {'conceal': ' '})
+  " call matchadd('Conceal', '▲\ze▲', 12, -1, {'conceal': ' '})
+
+  set conceallevel=2 " ■
+  set concealcursor=ni " ▲
+  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
+  " set commentstring=\ \"%s
+  set commentstring=\ \"%s
+  " Original vim foldmarker string
+  " set foldmarker={{{,}}}
+  " set foldmarker=■■,▲▲
+  set foldmarker=\ ■,\ ▲
+endfunc " ▲
+
+" Testing: ■
+" call matchadd('MatchParen', '\v"(\s)@=', -1, -1 ) ▲
+" call matchadd('MatchParen', '\v^\s*\zs"\s', -1, -1 )
+" call clearmatches()
+" TODO find out if this alternative approach is needed
+" This cleans up the matchadd if every Enter event
+" au FileType haskell set concealcursor=ni
+" au WinEnter,BufEnter,BufRead,FileType,Colorscheme *
+"       \ if exists('w:lambda_conceal')                                                                  |
+"       \     call matchdelete(w:lambda_conceal)                                                         |
+"       \     unlet w:lambda_conceal                                                                     |
+"       \ endif                                                                                          |
+"       \ if &ft == 'haskell'                                                                         |
+"       \     let w:lambda_conceal = matchadd('Conceal', '\\\%([^\\]\+→\)\@=', 10, -1, {'conceal': 'λ'}) |
+"       \     hi! link Conceal Operator                                                                  |
+"       \ endif
+
+" Experiments:{{{
+" let g:haskell_classic_highlighting = 1
+" syn match haskellCompose ' \zs\.' conceal cchar=∘
+" syn match haskellLambda '\\' conceal cchar=λ
+" This conceals "->" into unicode "→". and is supposed to trun :: into big ":" - but is that char not available?
+" Not needed?
+" let g:haskell_conceal_wide = 1
+" goolord/vim2hs us using this to display lambda symbol and fn compose dot
+" let g:haskell_conceal = 1
+" TODO use this for purescript syntax?
+" TODO test these:
+" function! vim2hs#haskell#conceal#wide() " {_{{
+" function! vim2hs#haskell#conceal#bad() " {_{{
+" let g:idris_conceal = 1}}}
+
+
+
+
+
+
+
+

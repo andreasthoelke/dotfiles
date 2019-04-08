@@ -1,8 +1,4 @@
 
-
-
-
-
 function! T0()
   call PSCIDEtype('log', v:true)
   " call GetType(

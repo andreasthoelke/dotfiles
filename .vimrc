@@ -334,6 +334,12 @@ func! CursorColumnInStatusline()
   call lightline#update()
 endfunc
 
+command! StatuslineMoreInfos call StatuslineMoreInfos()
+func! StatuslineMoreInfos()
+  let g:lightline.inactive.right = [ ['scrollbar'], ['line'] ]
+  call CursorColumnInStatusline()
+endfunc
+
 " To reload config data, then change tab to refresh
 " call lightline#init()
 " call lightline#update()
@@ -353,7 +359,7 @@ let g:lightline.active.left = [ ['relativepath'] ]
 let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
 " let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
 " let g:lightline.active.right = [ ['line', 'percent'] ]
-let g:lightline.inactive.right = [  ]
+" let g:lightline.inactive.right = [ ['scrollbar'], ['line'] ]
 " \ , ['gitbranch']
 " \ ]
 
@@ -717,62 +723,6 @@ endif
 highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 
 
-" STEP1: FIND THE SYNATX GROUP YOU WANT TO CHANGE:
-" Show the syntax group(s) of the word under the cursor
-" The first pasted line is the outermost syntax group eg. vimLineComment, the last line is actual syntax group/id for the work
-" under the cursor, e.g. vimCommentTitle
-nnoremap <leader>hsg :call SyntaxStack()<CR>
-function! SyntaxStack()
-    let l:synList = map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')
-    call append(line('.'),  l:synList )
-endfunc
-
-" STEP2A: If you want a color that is already present in the in the colorscheme
-" you can just find the name of the highlight group/id (see below)
-" Show the syntax group and the related active highlightgroup
-nnoremap <leader>hhg :call SyntaxGroup()<CR>
-function! SyntaxGroup()
-    let l:s = synID(line('.'), col('.'), 1)
-    " echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-    call append(line('.'), synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name'))
-endfun
-" .. and then "hi! def link syntaxGroup Highlightgroup"
-" example: "highlight! def link vimCommentTitle Error"
-
-" When modifiable is off
-nnoremap <leader>hhh :call SyntaxGroupEcho()<CR>
-function! SyntaxGroupEcho()
-  let l:s = synID(line('.'), col('.'), 1)
-  echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-endfun
-
-" Overview of existing highlight groups:
-" Show a nice output of how all the vim-highlight groups are colored
-command! HighlightTest exec "source $VIMRUNTIME/syntax/hitest.vim"
-
-" STEP2B: FIND A NICE COLOR YOU WANT TO CHANGE TO
-" If you want to take a color from another coloscheme and/or modify that color
-" you will need the hex-color value of that color and set up a new/custom highlight group
-" Put cursor over a nice color, below pastes the highlight group/color values
-nnoremap <leader>hsc :call SyntaxColor()<CR>
-function! SyntaxColor()
-    let l:s = synID(line('.'), col('.'), 1)
-    let l:hlname = synIDattr(synIDtrans(l:s), 'name')
-    exec 'RedirMessagesBuf' 'highlight' l:hlname
-    " exec ',ColorHighlight'
-endfun
-
-" Highligh color values in the current line
-nnoremap <leader>hcc :,ColorHighlight<CR>
-" TODO range mapping
-
-" Example:
-" highlight! MyTest1 guifg=#E0306F
-" highlight! def link vimCommentTitle MyTest1
-" highlight! def link vimCommentTitle Function
-
-" Remove the highlighting (and related vim slowdown) of color values
-nnoremap <leader>hcd :ColorClear<CR>
 
 
 " Style Colors: ----------------------------{{{
@@ -820,142 +770,6 @@ nnoremap <leader>sw :StripWhitespace<cr>
 " highlight link myTodo Todo
 " https://vi.stackexchange.com/questions/15505/highlight-whole-todo-comment-line
  "▲▲
-
-" ─   Filetype Specific Maps Tools Syntax               ──
-au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead        *.hs call HaskellTools()
-au ag BufNewFile,BufRead        *.hs call HaskellMaps()
-
-au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
-au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
-" ─^  Filetype Specific Maps Tools Syntax               ──
-
-
-" ─   Syntax Color                                     ──
-
-" This defines the color of the cchar
-" hi! Conceal guibg=#000000
-hi! link Conceal Operator
-
-
-func! HaskellTools()
-  " call haskellenv#start()
-  " TODO test these
-  " call vim2hs#haskell#editing#includes()
-  " call vim2hs#haskell#editing#keywords()
-  " call vim2hs#haskell#editing#formatting()
-endfunc
-
-func! CommentSyntaxAdditions()
-" ─   Comment Section Example                            ──
-" Comment sections use the unicode dash at the start and end of the line
-  " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
-  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\w.*', 11, -1 )
-" Comment sections can be terminated using the ^ char
-" ─^  Comment Section Example end                        ──
-" Comment label: This is a simple label for some highlighted info to come
-" TODO limit length!
-  call matchadd('CommentLabel', '\v^" \u.*:', -1, -1 )
-endfunc
-
-
-func! HaskellSyntaxAdditions() "{{{
-  call CommentSyntaxAdditions()
-  " Conceal comment marker string
-  call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
-
-  " Conceal foldmarker strings and display icon to indicate fold expanding
-  " Note: escaping {'s instead of literal '' {'s avoids accidental folding
-  " call matchadd('Conceal', "\{\{\{", -1, -1, {'conceal': '■'})
-  " call matchadd('Conceal', '\}\}\}', -1, -1, {'conceal': ''})
-
-  " Special symbols for composition and lambda - non syntax file
-  " call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})
-  " call matchadd('Conceal', '\\\%([^\\]\+→\)\@=', -1, -1, {'conceal': 'λ'}) |
-
-  " Don't show quotes around text. note you can only identify text via the syntax coloring!
-  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
-  " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely
-  set conceallevel=2
-  " When the concealcursor is *not* set, the conceald text will reveal when the cursor is in the line
-  " concealcursor=n would keeps the text conceald even if the cursor is on the line 
-  set concealcursor=ni
-  " Run this line to see the concealed text if curso is on line
-  " set concealcursor=
-  set syntax=purescript
-  " This will add one space before the foldmarker comment with doing "zfaf"
-  set commentstring=\ --\ %s
-  " This refresh of the highlight is needed to have a black icon/indicator for a folded function, e.g the following line
-  " call matchadd('Conceal', '--{\{{', -1, -1, {'conceal': ' '})
-  " hi! Conceal guibg=#000000
-  " Issue: this also set the bg of other conceal chars
-endfunc "}}}
-
-" Syntax Color Haskell: --------------------
-" Syntax Color Haskell: "{{{
-" eins zwei "}}}
-
-
-" only needs to look good in haskell!
-func! VimScriptSyntaxAdditions() " ■
-  call CommentSyntaxAdditions()
-  " Hide comment character at beginning of line
-  call matchadd('Conceal', '\v^\s*\zs"\s', 12, -1, {'conceal': ''})
-  " Hilde \" before comment after code
-  call matchadd('Conceal', '\s\zs\"\ze\s', 12, -1, {'conceal': ''})
-  " Conceal foldmarker strings and display icon to indicate fold expanding
-  " Note: escaping {'s instead of literal '' {'s avoids accidental folding
-  " call matchadd('Conceal', "\"\{\{\{", -1, -1, {'conceal': 'x'})
-  " call matchadd('Conceal', '\"\(■\|▲\)', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '■\ze■', 12, -1, {'conceal': ' '})
-  " call matchadd('Conceal', '▲\ze▲', 12, -1, {'conceal': ' '})
-
-  set conceallevel=2 " ■
-  set concealcursor=ni " ▲
-  " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{
-  " set commentstring=\ \"%s
-  set commentstring=\ \"%s
-  " Original vim foldmarker string
-  " set foldmarker={{{,}}}
-  " set foldmarker=■■,▲▲
-  set foldmarker=\ ■,\ ▲
-endfunc " ▲
-
-" Testing: ■
-" call matchadd('MatchParen', '\v"(\s)@=', -1, -1 ) ▲
-" call matchadd('MatchParen', '\v^\s*\zs"\s', -1, -1 )
-" call clearmatches()
-" TODO find out if this alternative approach is needed
-" This cleans up the matchadd if every Enter event
-" au FileType haskell set concealcursor=ni
-" au WinEnter,BufEnter,BufRead,FileType,Colorscheme *
-"       \ if exists('w:lambda_conceal')                                                                  |
-"       \     call matchdelete(w:lambda_conceal)                                                         |
-"       \     unlet w:lambda_conceal                                                                     |
-"       \ endif                                                                                          |
-"       \ if &ft == 'haskell'                                                                         |
-"       \     let w:lambda_conceal = matchadd('Conceal', '\\\%([^\\]\+→\)\@=', 10, -1, {'conceal': 'λ'}) |
-"       \     hi! link Conceal Operator                                                                  |
-"       \ endif
-
-" Experiments:{{{
-" let g:haskell_classic_highlighting = 1
-" syn match haskellCompose ' \zs\.' conceal cchar=∘
-" syn match haskellLambda '\\' conceal cchar=λ
-" This conceals "->" into unicode "→". and is supposed to trun :: into big ":" - but is that char not available?
-" Not needed?
-" let g:haskell_conceal_wide = 1
-" goolord/vim2hs us using this to display lambda symbol and fn compose dot
-" let g:haskell_conceal = 1
-" TODO use this for purescript syntax?
-" TODO test these:
-" function! vim2hs#haskell#conceal#wide() " {_{{
-" function! vim2hs#haskell#conceal#bad() " {_{{
-" let g:idris_conceal = 1}}}
-
 
 
 
@@ -1212,16 +1026,8 @@ func! InsertLeave()
   endif
 endfunc
 
-" Argument Movement: Note the is Vim-targets related
-" Move to current-next argument - the B before the next ','
-nnoremap <localleader>a f,B
-" Move to the next argument - the B before the next ',' after the next ','
-nnoremap ,a f,;B
-" Move to the previous argument - the B before the previous ','
-nnoremap ,A F,B
 
-
-" Example autocmd timeout jumplist:■■
+" Example autocmd timeout jumplist:■
 " This saves the cursor pos to the jumplist when the cursor rested for 4 seconds. See ISSUE below.
 " augroup JumplistTimeout
 "   au!
@@ -1244,7 +1050,7 @@ nnoremap ,A F,B
 "   endif
 " endfunction
 " call JumplistTimeout_WaitStart( 3 )
- "▲▲
+ " ▲
 
 " Add a location (a list as returned by getpos() - [bufnum, lnum, col, off]) to the jumplist, 
 " restoring the cursor pos. (Note: this fills in to what I think setpos("''", <loc>) is supposed to do)
@@ -1261,163 +1067,8 @@ endfunc
 " Test: This is the loc of this >> X << character: [0,1158,30,0]. Run the next the next line, then <c-o> to jump to that char
 " call AddLocToJumplist([0,1158,30,0])
 
-" Paragraph Movement: ----------------
-
-" Next Paragraph:
-nnoremap <silent> <c-l> :call ParagNext()<cr>
-vnoremap <silent> <c-l> }
-func! ParagNext()
-  exec "silent keepjumps normal! }"
-  call JumpNextNonEmptyLine()
-endfunc
-func! JumpNextNonEmptyLine()
-  call search('^.\+')
-  call IfOnSpaceGoWord()
-endfunc
-func! IfOnSpaceGoWord()
-  " Jump to next word if cursor is on space
-  if getline('.')[col('.')-1] == ' '
-    normal! w
-  endif
-endfunc
-
-" Previous Paragraph:
-nnoremap <silent> <c-h> :call ParagPrev()<cr>
-vnoremap <silent> <c-h> {k$
-func! ParagPrev()
-  let startLineNum = line('.')
-  exec "silent keepjumps normal! {w"
-  if line('.') == startLineNum
-    exec "silent keepjumps normal! {{w"
-  endif
-endfunc
-
-" End Of Paragraph Motions And OpPending:
-" The motion jumps to the *beginning* of the last line
-nnoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}-"<CR>
-" The OpPending map spans to the *end* of the last line
-onoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}-g_"<CR>
-" The VisSel map spans to the *end* of the last line
-vnoremap <silent> ,<c-l> }-g_
-" Jump to the beginning of the last line of the previous paragraph
-nnoremap <silent> ,<c-h> :<C-u>exec "keepjumps norm! " . v:count1 . "{{}-"<CR>
-
-" Keep jumps with native paragraph motions
-nnoremap } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
-nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
 
-
-" ⎼⎼⎼⎼ Haskell Movement Textobjects ⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼⎼
-
-func! HaskellMaps()
-  nnoremap <silent><buffer> <c-p> :call HsPrevSignature()<cr>:call ScrollOff(10)<cr>
-  " TODO inc visual maps
-  vnoremap <silent><buffer> <c-p> :call HsPrevSignature('v')<cr>:call ScrollOff(10)<cr>
-  nnoremap <silent><buffer> <c-n> :call HsNextSignature()<cr>:call ScrollOff(16)<cr>
-  vnoremap <silent><buffer> <c-n> :call HsNextSignature(1)<cr>
-  nnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>:call ScrollOff(10)<cr>
-  vnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>
-
-endfunc
-
-
-" Haskell Patterns:
-" Line starts in col 1 and is not a comment (non consuming lookaround)
-let g:Ptn_TopLevCode = '^[^ -]@=.*'
-let g:Ptn_HsTypeSignatur = '\s∷\s'
-let g:Ptn_HsMainDeclKeys = '('.g:Ptn_HsTypeSignatur.'|instance\s|data\s|newtype\s)'
-let g:Ptn_HsMainDefinition = g:Ptn_TopLevCode . g:Ptn_HsMainDeclKeys
-
-
-
-func! HsPrevSignature()
-  call search('\v' . g:Ptn_HsMainDefinition, 'bW')
-endfunc
-
-func! HsNextSignature(...)
-    " normal! gv
-  call search('\v' . g:Ptn_HsMainDefinition, 'W')
-  " call search('^[^ -].*\s∷\s', 'W'){{{
-  " call search('\v^[^ -]@=.*(\s∷\s|instance|data)', 'W')
-  " Auto sets the cursor to the beginning of the line
-  " call cursor(line('.'), 1)
-  " Could then also check at cursor pos with:
-  " echo match( 'y', '\v(x|y)')}}}
-endfunc
-
-func! HsPrevBlockLastLine()
-  " Seach back to a line that does not start with a comment
-  call search('\v^(\s*--.*)@!\s*.', 'bW')
-endfunc
-
-func! HsBlockLastLine()
-  call HsNextSignature()
-  call HsPrevBlockLastLine()
-  call IfOnSpaceGoWord()
-endfunc
-
-onoremap ih :call HsBlockVisSel()<cr>
-func! HsBlockVisSel()
-  call HsPrevSignature()
-  normal! V
-  call HsBlockLastLine()
-endfunc
-
-" {{{ move in haskell function signature ---------------------------------------------
-" nnoremap <silent> - :call FindArrow()<cr>w
-" fun! FindArrow()
-"   exec "silent normal! /→\\|⇒\\|∷\<cr>"
-" endfun
-
-" nnoremap <silent> _ :call FindArrowB()<cr>w
-" fun! FindArrowB()
-"   exec "silent normal! ?→\\|⇒\\|∷\<cr>"
-" endfun
-
-" TODO do I need these?
-" nnoremap <silent> - ?[\(\$\∷\.\⇒\>\→\[\{]<cr>
-" nnoremap <silent> ) /[\(\$\∷\.\⇒\<\→\[\{\#]<cr>
-" nnoremap <silent> - ?[\(\∷\.\⇒\→\[\{]<cr>
-" nnoremap <silent> ) /[\(\∷\.\⇒\→\[\{\#]<cr>
-" }}}
-
-
-" Vimscript Movement: -------------
-
-func! VimScriptMaps()
-  nnoremap <silent><buffer> <c-p> :call VimPrevCommentTitle()<cr>:call ScrollOff(10)<cr>
-  nnoremap <silent><buffer> <c-n> :call VimNextCommentTitle()<cr>:call ScrollOff(16)<cr>
-
-endfunc
-
-" Vim Patterns:
-let g:Ptn_VimCommentTitle = '^"\s\u\a*(\s+\u\a*)*:'
-
-func! VimPrevCommentTitle()
-  call search('\v' . g:Ptn_VimCommentTitle, 'bW')
-endfunc
-
-func! VimPrevCommentTitle()
-  call search('\v' . g:Ptn_VimCommentTitle, 'W')
-endfunc
-
-
-
-" Textobjects: -----------------------------------
-" ie = inner entire buffer
-onoremap ie :<c-u>exec "normal! ggVG"<cr>
-" iv = current viewable text in the buffer
-onoremap iv :<c-u>exec "normal! HVL"<cr>
-vmap iv ,Ho,L
-
-" Needed for textobj-markdown because of conflict with textobj-function?
-omap <buffer> af <plug>(textobj-markdown-chunk-a)
-omap <buffer> if <plug>(textobj-markdown-chunk-i)
-omap <buffer> aF <plug>(textobj-markdown-Bchunk-a)
-omap <buffer> iF <plug>(textobj-markdown-Bchunk-i)
-
-" Movement Naviagation:  ---------------------------------------------------------------------
 
 
 " Jumplist: --------------------------------------
@@ -1498,126 +1149,6 @@ endfun
 
 
 
-" EDIT VIM SCRIPT: ---------------------------------------------------------------------
-
-" Sourcing Parts Of Vimscript:
-" the current file
-nnoremap <silent><leader>so :w<cr>:so %<cr>
-" the vimrc
-nnoremap <silent><leader>sv :so $MYVIMRC<cr>
-" the following paragraph/lines
-nnoremap <leader>s} "ty}:@t<cr>
-nnoremap <leader>sip m'"tyip:@t<cr>``
-" Uses "h textobj-function"
-" nmap     <leader>saf m'"tyaf:@t<cr>``
-nnoremap <leader>ss :exec getline('.')<cr>:echo 'Line sourced!'<cr>
-nnoremap <leader>se :exec getline('.')<cr>
-" same as above, but clutters the register
-" nnoremap <leader>si "tyy:@t<cr>
-
-" free mappings? <leader>s..
-" TODO these map don't seem ideal. mnemonic not destinct enough?
-command! SourceLine :normal yy:@"<cr>:echo 'Line sourced!'<cr>
-
-" Call Func: call the function name in cursor line, without args
-nnoremap <leader>cf (Wyw:call <c-r>"()<cr>^
-" Todo: Call function with testarg. Example line below of function:
-" testarg: 'tell application "Finder" to make new Finder window'
-" find next testarg line, "Wy[to some other register])"
-" nnoremap <leader>caf (Wyw:call <c-r>"(<c-r>[other reg])<cr>^
-
-func! SourceRange() range
-  let tmpsofile = tempname()
-  call writefile(getline(a:firstline, a:lastline), l:tmpsofile)
-  execute "source " . l:tmpsofile
-  call delete(l:tmpsofile)
-endfunc
-" TIP: Range example function
-
-func! SourceLines( lines )
-  let tmpsofile = tempname()
-  call writefile( a:lines, l:tmpsofile)
-  execute "source " . l:tmpsofile
-  call delete(l:tmpsofile)
-endfunc
-
-nnoremap <silent> ,s m':set opfunc=OpSourceVimL<cr>g@
-vnoremap <silent> ,ss :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
-
-" Uses "h textobj-function"
-" * SourceVimL Operator function allows e.g.
-" * <leader>saf "source around function"
-" * <leader>si" "source inside quotes"
-func! OpSourceVimL( motionType, ...)
-  " Use either the vis-select or the motion marks
-  let [startMark, endMark] = a:0 ? ["'<", "'>"] : ["'[", "']"]
-  " Line and column of start+end of either vis-sel or motion
-  let [startLine, startColumn] = getpos( startMark )[1:2]
-  let [endLine,   endColumn]   = getpos( endMark )[1:2]
-  " echo a:motionType . ' ' . startLine . ' ' . startColumn . ' ' . endLine . ' ' . endColumn
-  let [startColumn, endColumn] = (a:motionType == 'line') ? [1, 200] : [startColumn, endColumn]
-  let selectedVimCode = GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
-  " call append( line('.'), GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn ) )
-  call SourceLines( l:selectedVimCode )
-  " Flash the sourced text for 500ms
-  call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos(startMark), getpos(endMark), a:motionType, 500)
-endfunc
-" Tests: `leader s$` on [e]cho and visual-sel echo ..{{{
-" Some text echo 'hi 2'
-" Vis-Sel the following lines, also `leader sj` or `leader s\j..`
-" echo 'hi 1'
-" echo 'hi 2'
-" call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'char', 500)
-" call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'line', 500)}}}
-
-" Make sure the cursor position and view does not change when calling the function
-func! CallKeepView( fnname, args )
-  let l:winview = winsaveview()
-  " Calls function of this name with the args in the list (length must be == fn args)
-  call call( a:fnname, a:args )
-  call winrestview(l:winview)
-endfunc
-" Tests{{{
-" echo call( "Test3", ["aber"])
-" echo CallKeepView('Test3', ['eins'])
-" func! Test3( ar )
-"   echo ('the arg: ' . a:ar)
-" endfunc}}}
-
-
-func! GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColumn )
-  let lines = getline( a:startLine, a:endLine )
-  " The last (-1) line
-  let lines[-1] = lines[-1][: a:endColumn - 1]
-  let lines[0]  = lines[0][a:startColumn - 1:]
-  return lines
-endfunc
-" echo GetTextWithinLineColumns_asLines( 1575, 1, 1577, 10 )
-
-function! Demo1()
-  " Why is this not a built-in Vim script function?!
-  let [lnum1, col1] = getpos("'<")[1:2]
-  let [lnum2, col2] = getpos("'>")[1:2]
-  let lines = getline(lnum1, lnum2)
-  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
-  let lines[0]  = lines[0][col1 - 1:]
-  return join(lines, "\n")
-endfunction
-
-" Source a range
-command! -range Source <line1>,<line2>call SourceRange()
-" Run a VimScript function and insert the returned result below the paragraph
-nnoremap <leader>sh wwy$}i<c-r>=<c-r>"<cr><esc>{w
-" Run a VimScript snippet (til end of the line) and insert the returned result!
-nnoremap <leader>sy y$o<c-r>=<c-r>"<cr><esc>
-" Run a VimScript snippet (til end of the line) and echo the result in the command line
-nnoremap <leader>sx y$:echom <c-r>"<cr>
-
-" EDIT VIM SCRIPT: ---------------------------------------------------------------------
-
-" EDIT VIM SCRIPT: ---------------------------------------------------------------------
-
-
 " Language Client HIE: -----------------------------------------------------------------
 
 " status: can't get HIE (hie --lsp) installed
@@ -1668,6 +1199,29 @@ set guicursor=n:block-iCursor
 " Cursor Speed: run this in terminal (seemed to not have an effect when last tested): "defaults write NSGlobalDomain KeyRepeat -int 0" for max speed - "2" is the setting from system preferences
 
 " General: ---------------------------------------------------------------------------
+
+
+" TODO use runtimepath to lazyload
+
+" Haskell maps and syntax additions
+source .vim/utils/HsMotions.vim
+source .vim/utils/HsSyntaxAdditions.vim
+source .vim/utils/CodeMarkup.vim
+
+" General tools
+source .vim/utils/utils-terminal.vim
+source .vim/utils/utils-vimscript-tools.vim
+source .vim/utils/utils-markdown.vim
+
+" Helper functions
+source .vim/utils/utils-search-replace.vim
+source .vim/utils/utils-code-line-props.vim
+source .vim/utils/utils-syntax-color.vim
+
+" Minor
+source .vim/utils/utils-virtualtext.vim
+" source .vim/utils/utils-csv.vim
+" source .vim/utils/utils-applescript.vim
 
 
 
@@ -2480,9 +2034,9 @@ nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>$"tp^
 " Note: It's easier to see the type with this, but then it requires 3 keypesses to undo
 nmap <leader>cci wi∷ _ <esc>^dr
 nmap <leader>ccu wdwdw^dr
-" These work fine
-nmap ,ti wi∷ _ <esc>^dr
-nmap ,tu wdwdw^dr
+" These work fine - conflict with bracket/comma navigation
+" nmap ,ti wi∷ _ <esc>^dr
+" nmap ,tu wdwdw^dr
 
 
 " Apply 'fn' to the 't'/temp and append the result after the current line
@@ -2609,6 +2163,9 @@ exec "setlocal fillchars=fold:\\ "
 
 
 " Comments: --------------------------
+
+" Issue: this seems needed to prevent the cursor from jumping to the beginning of the line on the first vertical motion after commenting
+nnoremap <silent> gcc :TComment<cr>lh
 
 " Comments: --------------------------
 
@@ -3196,7 +2753,6 @@ set scrolloff=8
 " Scroll the current cursor line into view with <offset> lines
 func! ScrollOff( offset )
   let scof = &scrolloff
-  echo l:scof
   exec 'set scrolloff=' . a:offset
   redraw
   exec 'set scrolloff=' . l:scof
@@ -3384,21 +2940,6 @@ nnoremap glm :call OpenMarkdownPreview()<cr>
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 " ----------------------------------------------------------------------------------
 
-" Terminal: ------------------------------------------------------------------------
-" open a terminal window
-" nnoremap <silent> glt :below 20Term<cr>
-" Demo Expression Map:
-" In dirvish buffers use the filename % to cd terminal to this folder
-nnoremap <expr> glt (&ft=='dirvish') ? ':below 20Term cd %<CR>' : ':below 20Term<CR>'
-" uses the Term command: .vim/utils/termin1.vim#/^comman.*%20Term%20
-
-" Terminal util functions
-" and lots of documentations (TODO refactor this)
-source .vim/utils/termin1.vim
-
-hi! TermCursorNC guibg=grey guifg=white
-
-" Terminal: ------------------------------------------------------------------------
 
 
 " Tagbar: --------------------------------------------------------------------------
@@ -4311,76 +3852,28 @@ endfunction
 
 " Utilities: --------------------------------------------------------------------------
 
-" Return the character under the cursor
-func! GetCharAtCursor()
-  return getline('.')[col('.')-1]
+" Make sure the cursor position and view does not change when running the ex-command{{{
+func! ExecKeepView(arg)
+  let l:winview = winsaveview()
+  exec a:arg
+  call winrestview(l:winview)
+endfunc "}}}
+
+" Make sure the cursor position and view does not change when calling the function
+func! CallKeepView( fnname, args )
+  let l:winview = winsaveview()
+  " Calls function of this name with the args in the list (length must be == fn args)
+  call call( a:fnname, a:args )
+  call winrestview(l:winview)
 endfunc
-" echo GetCharAtCursor()
-
-func! GetCharAtColRelToCursor( offset )
-  return getline('.')[ col('.') + a:offset -1 ]
-endfunc
-" echo GetCharAtColRelToCursor( -1 )
-
-func! IsEmptyLine( linenum )
-  return getline( a:linenum ) == ''
-endfunc
+" Tests{{{
+" echo call( "Test3", ["aber"])
+" echo CallKeepView('Test3', ['eins'])
+" func! Test3( ar )
+"   echo ('the arg: ' . a:ar)
+" endfunc}}}
 
 
-func! ColOfFirstChar()
-  return searchpos('^\s*\zs', 'cnb')[1]
-endfunc
-
-func! IsColOfFirstChar( col )
-  return ColOfFirstChar() == a:col
-endfunc
-" echo IsColOfFirstChar( col('.') )
-
-
-func! ColOfLastChar()
-  return strlen(getline('.'))
-endfunc
-" echo ColOfLastChar()
-
-func! IsColOfLastChar( col )
-  return ColOfLastChar() == a:col
-endfunc
-" echo IsColOfLastChar( col('.') )
-
-
-
-func! CursorIsAtStartOfWord()
-  return GetCharAtColRelToCursor( -1 ) =~ '\s'
-endfunc
-
-" Returns Ascii code of multi-byte charaters like '→'
-func! GetCharAtCursorAscii()
-  return strgetchar( getline('.'), virtcol('.')-1 )
-endfunc
-" echo GetCharAtCursorAscii() " a → ( b → c) [()] ⇒ d "
-
-command! SyntaxIDShow echo GetSyntaxIDAtCursor()
-func! GetSyntaxIDAtCursor()
-  return synIDattr( synID( line('.'), col('.'), 0), 'name' )
-endfunc
-" nnoremap <leader>bn :echo GetSyntaxIDAtCursor()<cr>
-
-func! CursorIsInsideString()
-  let curCar = GetCharAtCursor()
-  if curCar == '"' || curCar == "'"
-    " Cursor is on quote/ start/end of the string
-    return 0
-  else
-    return GetSyntaxIDAtCursor() =~ 'string'
-  endif
-endfunc
-" nnoremap <leader>bb :echo searchpair('(', 'e', ')', 'W', 'CursorIsInString()')<cr>
-" Demo: Note how the 'e' in the 'vimCommentString' gets skipped
-" a E b e a (f E a e d) d E "a e" f E
-
-func! IsInsideString( line, col )
-  return synIDattr( synID( a:line, a:col, 0), 'name' ) =~ 'string'
-endfunc
 
 function! HandleURL()
   let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;"]*')
@@ -4482,33 +3975,3 @@ endfunction
 " Window Resize: -----------------------------------------------------------------
 
 
-command! -bar RangerChooser call RangeChooser()
-function! RangeChooser()
-    let temp = tempname()
-    " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
-    " with ranger 1.4.2 through 1.5.0 instead.
-    "exec 'silent !ranger --choosefile=' . shellescape(temp)
-    if has("gui_running")
-        exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
-    else
-        exec 'silent !ranger --choosefiles=' . shellescape(temp)
-    endif
-    if !filereadable(temp)
-        redraw!
-        " Nothing to read.
-        return
-    endif
-    let names = readfile(temp)
-    if empty(names)
-        redraw!
-        " Nothing to open.
-        return
-    endif
-    " Edit the first item.
-    exec 'edit ' . fnameescape(names[0])
-    " Add any remaning items to the arg list/buffer list.
-    for name in names[1:]
-        exec 'argadd ' . fnameescape(name)
-    endfor
-    redraw!
-endfunction
