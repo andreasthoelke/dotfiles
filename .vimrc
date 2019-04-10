@@ -2198,12 +2198,12 @@ xmap F <Plug>Sneak_F
 omap f <Plug>Sneak_f
 omap F <Plug>Sneak_F
 " 1-character enhanced 't'
-nmap ,t <Plug>Sneak_t
-nmap ,T <Plug>Sneak_T
-xmap ,t <Plug>Sneak_t
-xmap ,T <Plug>Sneak_T
-omap ,t <Plug>Sneak_t
-omap ,T <Plug>Sneak_T
+" nmap ,t <Plug>Sneak_t
+" nmap ,T <Plug>Sneak_T
+" xmap ,t <Plug>Sneak_t
+" xmap ,T <Plug>Sneak_T
+" omap ,t <Plug>Sneak_t
+" omap ,T <Plug>Sneak_T
 " Use L/H for next so ";" and "," can be used elsewhere
 map L <Plug>Sneak_;
 map H <Plug>Sneak_,
@@ -2752,6 +2752,9 @@ set scrolloff=8
 
 " Scroll the current cursor line into view with <offset> lines
 func! ScrollOff( offset )
+  if winline() < a:offset
+    return
+  endif
   let scof = &scrolloff
   exec 'set scrolloff=' . a:offset
   redraw
@@ -3209,14 +3212,26 @@ endfun
 " Search Config: -----------------------------------
 
 " Can just use 'vim' instead of 'vimgrep'
-cnoreabbrev vg vimgrep
-
 
 
 " Vim Grepper: ------------------------------
-" command! -nargs=1 Find  :Grepper -side -query <args>
-command! -nargs=1 Find  :tabe % | Grepper -tool git -side -query <args>
-command! -nargs=1 Findb :tabe % | Grepper -side -buffers -query <args>
+
+" Repo files:
+command! -nargs=1 Frepo     :tabe % | Grepper -tool git -side          -query <args>
+" Open buffers:
+command! -nargs=1 Fbuffers  :tabe % | Grepper           -side -buffers -query <args>
+
+" Notes:
+command! -nargs=1 Fnotes    :tabe % | Grepper -tool git -side          -query <args> /Users/andreas.thoelke/.vim/notes
+command! -nargs=1 FnotesAll :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/notes
+" Haskell code:
+command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/Documents/Haskell/4/hello44/** /Users/andreas.thoelke/Documents/Haskell/4/abc4/test1/**
+
+" Vim code:
+command! -nargs=1 Fvim      :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/utils/ /Users/andreas.thoelke/.vimrc
+" Plugin code:
+command! -nargs=1 Fplug     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/plugged/**
+
 
 " This works pretty well. could reuse for other purposes
 command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'

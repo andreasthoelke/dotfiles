@@ -84,7 +84,7 @@
 
 ## Cmdline
   `:find a<tab>` (e.g. in Haskell project folder) allows to:
-  * Reach into subfolders (usind `set path+=**`, but this includes other folders)
+  * Reach into subfolders (usind `set path+=**`, but this includes other folders)`
   * autocompl menu
   * fuzzy complete (e.g. `:find *hs<c-i>` will show all haskell files)
   (https://www.kwyse.com/posts/twid-vim-minimalism/)
@@ -118,9 +118,8 @@
       * `gf` or `<cr>` to `:e ` that file
       * `c-w f` to split view that file below
     * `yy` the path, then:
-      * go to buffer and `:read <c-r>"` the content of the yanked path
+      * go to buffer and `:read <c-r>" the content of the yanked path`
 
-  * ok, some new stuff in here
 
 ## Demo header with Purescript code
 and a *simple* line of text with `code in` there
@@ -272,7 +271,7 @@ use <c-o> open menu?
 ### Changes
     * `:changes`
     * back to last change (e.g. paste) `\`.`
-    * `g;` `g,` shuffle through changes
+    * `g;` `g,` shuffle through changes`
 
 ### Inserts
     * back to last insert
@@ -322,8 +321,19 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
 
 ## Align
 
+Example: Align the 3 lines below to the ':tabe' word:
+ - visually select the lines
+ 1. `:Tabularize /:tabe/`
+ or
+ 2. `:Easyalign`<cr> then `6 ` <cr> to align to the 6th space
+
+command! -nargs=1 Frepo :tabe % | Grepper -tool git -side -query <args>
+" Open buffers:
+command! -nargs=1 Fbuffers :tabe % | Grepper           -side -buffers -query <args>
+
  * `:Tabularize / /` to align to `" "`
      * uses smart paragraph
+
 
 
 ## Code Navigation
@@ -435,19 +445,33 @@ location could be a
 
 ## Search
 
-1. `:Find <searchword>`
-    * only in git files
+ 1. `:Find <searchword>`
+    * It's now:
+      * Frepo, Fbuffers, Fnotes, Fhask, Fvim, Fplug
+    * only in git files in case of repo, notes
     * on sidebar, with context
     * in new tab
     * based on project root
 
     see ~/.vimrc#/Search%20Config:
 
-    2. search vimconf and notes
+    Use `}`and `{` to jump to contexts. `o` opens the current context in the
+    last window. `<cr>` opens the current context in the last window, but closes the current window first.
+
+ 2. search vimconf and notes
     `vim /andreasthoelke/ ~/.vimrc ~/.vim/utils/** ~/.vim/notes/**`
     `Ag andreasthoelke ~/.vimrc ~/.vim/utils/** ~/.vim/notes/**`
+    TODO preconfigure search across notes
 
-    3. the fastest way to seach an entire project folder:
+ 3. Search in Dirvish folder
+  * `c-w v-` to get into Dirvish
+  * navigate to the folder you want to search in
+  * `:vim /searchterm/ %**`
+    * use quickfixlist to navigate search results
+  * `:Ag searchterm %**`
+    * use `c-n/p`, not in new tab but in the split that was originally opened
+
+ 4. the fastest way to seach an entire project folder:
     `nvim -q<(ag "new BrowserWindow" **)`
     → use quickfix to navigate results
 
