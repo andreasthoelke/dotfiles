@@ -2166,6 +2166,7 @@ exec "setlocal fillchars=fold:\\ "
 
 " Issue: this seems needed to prevent the cursor from jumping to the beginning of the line on the first vertical motion after commenting
 nnoremap <silent> gcc :TComment<cr>lh
+" → zmaps
 
 " Comments: --------------------------
 
@@ -2718,8 +2719,8 @@ nnoremap <leader>bD :bd!<cr>
 
 " General Leader Cmd Shortcut Maps: ---------------------------------
 
-nnoremap <localleader>qa :wqa<cr>
-nnoremap <localleader>qq :q<cr>
+nnoremap <localleader>QA :wqa<cr>
+nnoremap <localleader>QQ :q<cr>
 
 " nnoremap gw :w<cr>
 " nnoremap <localleader>w :w<cr>

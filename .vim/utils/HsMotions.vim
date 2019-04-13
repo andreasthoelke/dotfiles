@@ -24,6 +24,23 @@ func! PrependSpace( listOfPatterns )
   return res
 endfunc
 
+func! PrependSepWord( listOfPatterns )
+  let res = []
+  for pttn in a:listOfPatterns
+    call add( res, '\<' . pttn )
+  endfor
+  return res
+endfunc
+
+func! AsSeparateWord( listOfPatterns )
+  let res = []
+  for pttn in a:listOfPatterns
+    call add( res, '\<' . pttn . '\>' )
+  endfor
+  return res
+endfunc
+
+
 func! NotInCommentLine( listOfPatterns )
   let res = []
   for pttn in a:listOfPatterns
@@ -59,13 +76,20 @@ let g:multilineTilAfterEqual = '\_.\{-}\s=\_s\+\zs\S'
 let g:nextWordPttn = '\_s\+\zs\S'
 let g:infixOps = ['<$>', '<\*>', '\*>', '>>', '>>=', '++', '<>', ':']
 let g:typeArgs = ['::', '∷', '=>', '⇒', '->', '→']
-let g:syntax   = ['<-', '←', '=', '\$', '`\w*`', '->', '→', '|', ',', '=', 'let', 'in', 'do', 'where', 'if', 'then', 'else', 'case', 'instance']
+let g:columnSeps = ['=', '->', '→', '<-', '←', '>', '$', '\<then', '\<else', 'deriving']
+let g:syntaxSym = ['<-', '←', '=', '\$', '`\w*`', '->', '→', '|', ',', '=' ]
+let g:syntaxWords = PrependSepWord( ['let', 'in', 'do', 'where', 'if', 'then', 'else', 'case', 'instance'] )
 let g:numOps   = ['+', '-', '\*', '&&']
 " let g:fnWirePttn = MakeOrPttn( AppendSpace( ['^[^ -][^=(]*\zs∷', '^[^ -][^=(]*\zs::', 'where', 'do', ' \zsin', '^[^-].*\zsof', 'then', 'let'] ) )
-let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do', 'in', 'of', 'then', 'let'] )) )
+let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do', 'in', 'of', 'then', 'let', 'deriving'] )) )
 let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns )
-let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
-let g:exprDelimPttn = MakeOrPttn( AppendSpace(g:infixOps + g:typeArgs + g:syntax + g:numOps) )
+" let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
+let g:exprDelimPttn = MakeOrPttn( AppendSpace(g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
+" let g:exprDelimPttn = MakeOrPttn( AsSeparateWord(g:infixOps + g:typeArgs + g:syntax + g:numOps) )
+
+let g:columnSepsPttn = MakeOrPttn( AppendSpace( g:columnSeps ) )
+
+
 
 func! HaskellMaps()
   nnoremap <silent><buffer> <c-p> :call HsPrevSignature()<cr>:call ScrollOff(10)<cr>
@@ -78,7 +102,7 @@ func! HaskellMaps()
 endfunc
 
 
-nnoremap <silent> <c-n> :call TopLevForw()<cr>call ScrollOff(16)<cr>
+nnoremap <silent> <c-n> :call TopLevForw()<cr>:call ScrollOff(16)<cr>
 func! TopLevForw()
   call search( g:topLevCombined, 'W' )
 endfunc
@@ -285,6 +309,90 @@ let g:hlWireframeID = 0
 " call matchdelete( abc )
 " call clearmatches()
 
+" Column movement:
+nnoremap <silent> I :call ColumnMotionForw()<cr>
+nnoremap <silent> Y :call ColumnMotionBackw()<cr>
+func! ColumnMotionForw() " ■
+  if !search('\S', 'nW') " cancel recursive call at end of file
+    return
+  endif
+
+  normal! j0
+  let [oLine, oCol] = getpos('.')[1:2]
+
+  " Approach: Find column delimiter on the same bracket level, skip matches in Strings
+  let [sLine, sColumn] = searchpos( g:columnSepsPttn, 'nW' )
+  " echo 'Delim found at: ' . sLine . ' - ' . sColumn
+
+  if sLine == oLine
+    call setpos('.', [0, sLine, sColumn, 0] )
+    " echo 'Delim motion to: ' . sLine . ' - ' . sColumn
+    normal! W
+  else
+    " There is no column delimiter in the next/previous line → try again on the next line
+    call ColumnMotionForw()
+    return
+  endif
+
+  " Now that a column was found, test a few excape conditions:
+  if IsEmptyLine( line('.') ) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+    call ColumnMotionForw()
+  endif
+
+  " Skip to next column if on let/do and if there is another delim in the same line jump to after that delimiter
+  let cw = expand('<cword>')
+  if cw == 'do' || cw == 'let'
+    let [nLine, nColumn] = searchpairpos( '{\|\[\|(', g:columnSepsPttn, '}\|\]\|)', 'nW', 'CursorIsInsideStringOrComment()' )
+    if nLine == sLine
+      call setpos('.', [0, nLine, nColumn, 0] )
+      normal! W
+    endif
+  endif
+  if cw == 'deriving'
+    normal! W
+  endif
+endfunc " ▲
+
+
+func! ColumnMotionBackw() " ■
+  normal! k0
+  let [oLine, oCol] = getpos('.')[1:2]
+
+  " Approach: Find column delimiter on the same bracket level, skip matches in Strings
+  let [sLine, sColumn] = searchpos( g:columnSepsPttn, 'nW' )
+  " echo 'Delim found at: ' . sLine . ' - ' . sColumn
+
+  if sLine == oLine
+    call setpos('.', [0, sLine, sColumn, 0] )
+    " echo 'Delim motion to: ' . sLine . ' - ' . sColumn
+    normal! W
+  else
+    " call setpos('.', [0, sLine, sColumn, 0] )
+    " There is no column delimiter in the next/previous line → try again on the next line
+    call ColumnMotionBackw()
+    return
+  endif
+
+  " Now that a column was found, test a few excape conditions:
+  if IsEmptyLine( line('.') ) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+    call ColumnMotionBackw()
+  endif
+
+  " Skip to next column if on let/do and if there is another delim in the same line jump to after that delimiter
+  let cw = expand('<cword>')
+  if cw == 'do' || cw == 'let'
+    let [nLine, nColumn] = searchpairpos( '{\|\[\|(', g:columnSepsPttn, '}\|\]\|)', 'nW', 'CursorIsInsideStringOrComment()' )
+    if nLine == sLine
+      call setpos('.', [0, nLine, nColumn, 0] )
+      normal! W
+    endif
+  endif
+  if cw == 'deriving'
+    normal! W
+  endif
+endfunc " ▲
+
+
 
 " Search skip matches in comments and strings. E.g. search again when match is in string or comment
 " Note: LimitLine may prevent that an early match in a string/comment gets skipped. Basically limitLine and skipping do not work in case both is needed in one search
@@ -337,22 +445,42 @@ endfunc
 
 
 " Outer Expression:
-      " rename this to ExprOuter_VisSel_Inside / Around
 " Textobject to select inside an OuterExpression
-onoremap ie :call HsExprOuterVisSel()<cr>
-xnoremap ie :<c-u>call HsExprOuterVisSel()<cr>
-func! HsExprOuterVisSel()
+onoremap iW :call ExprOuter_VisSel_Inside()<cr>
+xnoremap iW :<c-u>call ExprOuter_VisSel_Inside()<cr>
+func! ExprOuter_VisSel_Inside()
+  normal! m'
   " Make sure the cursor is not at the start of the expression, as this would select the previous expression
   normal! l
   call ExprOuterStartBackw()
   normal! v
   call ExprOuterEndForw()
-  normal! o
+  " rolling back the 'l' in the ExprOuterEndForw()
+  normal! ho
 endfunc
 
+" Textobject to select around an OuterExpression
+onoremap aW :call ExprOuter_VisSel_Around()<cr>
+xnoremap aW :<c-u>call ExprOuter_VisSel_Around()<cr>
+func! ExprOuter_VisSel_Around()
+  normal! m'
+  " Make sure the cursor is not at the start of the expression, as this would select the previous expression
+  normal! l
+  call ExprOuterStartBackw()
+  normal! v
+  call ExprOuterStartForw()
+  normal! ho
+endfunc
+" Test: viW, vaW, yiW, yaW
+" hello >>= Just 123  >> Just 43 <*> map eins
+
 nnoremap <silent> W :call ExprOuterStartForw()<cr>
-nnoremap <silent> B :call ExprOuterStartBackw()<cr>
+onoremap <silent> W :call ExprOuterStartForw()<cr>
 func! ExprOuterStartForw() " ■
+  if !search('\S', 'nW') " cancel recursive call at end of file
+    return
+  endif
+
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
@@ -367,7 +495,6 @@ func! ExprOuterStartForw() " ■
     call setpos('.', [0, sLine, sColumn, 0] )
     " echo 'Delim motion to: ' . sLine . ' - ' . sColumn
     normal! W
-
     " Match found in a later line - move to the start of next line instead!
   else
     " Edge Case: When a () or [] occurs after the last delimiter, 'searchpair' below matches it
@@ -385,23 +512,24 @@ func! ExprOuterStartForw() " ■
     endif
     " The first char of a new line is not always a good landing place
     if CursorOnSkipNextWordCharOrWord()
-      " Just jump to the next word which another undesirable word ..
+      " Just jump to the next word, which might be another undesirable word ..
       normal! W
     endif
   endif
 
   " Escape Again: Additional escapes from unwanted spots
-  if expand('<cword>') =~ 'let\|case\|if\|where' " A 'let' appears after a delim (=)
+  if CursorOnSkipNextWordCharOrWord()
     normal! W
   endif
   if IsEmptyLine( line('.') )
     call ExprOuterStartForw()
   endif
-
-  " normal! lh
 endfunc " ▲
 
-nnoremap <silent> ,W :call ExprOuterEndForw()<cr>
+nnoremap <silent> ,W :call ExprOuterEndForw()<cr>h
+onoremap <silent> ,W :call ExprOuterEndForw()<cr>
+" Test: ,W   y,W   c,W
+" hello >>= Just 123  >> Just 43 <*> map eins
 func! ExprOuterEndForw() " ■
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
@@ -439,8 +567,11 @@ func! ExprOuterEndForw() " ■
       normal! ge
     endif
   endif
+  " Needed for the onoremap. needs to be undone for the inner textobject
+  normal! l
 endfunc " ▲
 
+nnoremap <silent> B :call ExprOuterStartBackw()<cr>
 func! ExprOuterStartBackw() " ■
   let [oLine, oCol] = getpos('.')[1:2]
   " Move backward to (presumably) the prev delim match, so it doesn't match again in this back motion
@@ -474,17 +605,21 @@ func! ExprOuterStartBackw() " ■
       else
         " Go to the demimiter match - the 'normal' jump back
         call setpos('.', [0, sLine, sCol, 0] )
-        normal! W
+        if CursorOnSkipBackwStopWord()
+          call ExprOuterStartBackw()
+        else
+          normal! W
+        endif
       endif
     endif
   endif
   " normal! lh
 
   " Escape Again: Additional escapes from unwanted spots
-  let cword = expand('<cword>')
-  if cword =~ 'let\|case\|if\|where' " A 'let' appears after a delim (=)
-      call ExprOuterStartBackw()
-  endif
+  " let cword = expand('<cword>')
+  " if cword == 'let\|case\|if\|where' " A 'let' appears after a delim (=)
+  "     call ExprOuterStartBackw()
+  " endif
 endfunc " ▲
 
 
@@ -502,7 +637,13 @@ endfunc
 " TODO ,q and then just W to include comma? is comma vs expression move often used? then →
 " or use localleader for normal comma move
 nnoremap <silent> q :call CommaItemStartForw()<cr>
+onoremap <silent> q :call CommaItemStartForw()<cr>
+" Just make the vim-targets maps consistent
+omap iq Ia
+omap aq aa
 nnoremap <silent> t :call CommaItemStartBackw()<cr>
+" Can't remap omap t, as this is the 't'ill map
+" onoremap <silent> t :call CommaItemStartBackw()<cr>
 func! CommaItemStartForw()
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
@@ -541,14 +682,16 @@ func! CommaItemStartBackw()
     return
   endif
   " Second step
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   if sLine && sLine > (oLine - 5)
     call setpos('.', [0, sLine, sCol, 0] )
-    normal! w
+    call search('\S')
   else
-    normal! w
+    call search('\S')
   endif
 endfunc
+
 
 nnoremap <silent> ,q :call BracketStartForw()<cr>
 nnoremap <silent> ,t :call BracketStartBackw()<cr>
@@ -564,7 +707,7 @@ func! BracketStartForw()
       normal! ll
       call BracketStartForw()
     else
-      normal! w
+      call search('\S')
     endif
   endif
 endfunc
@@ -584,6 +727,18 @@ func! BracketStartBackw()
   endif
 endfunc
 
+nnoremap <silent> <localleader>q :call BracketEndForw()<cr>
+" Move to the end of a list, ready to insert the next item.
+func! BracketEndForw()
+  " Don't be stuck at previous location
+  normal! l
+  let [oLine, oCol] = getpos('.')[1:2]
+  let [sLine, sCol] = searchpos( '}\|\]\|)', 'nW' )
+  if sLine && sLine < (oLine + 15)
+    call setpos('.', [0, sLine, sCol, 0] )
+    normal! BE
+  endif
+endfunc
 
 " - skip brackets and quotes
 " - skip lambda var
@@ -742,12 +897,17 @@ endfunc
 
 func! CursorOnSkipNextWordCharOrWord()
   let cw = expand('<cword>')
-  let skipKW = cw == 'let' || cw == 'in' || cw == 'do' || cw == 'if' || cw == 'then' || cw == 'else' || cw == 'case' || cw=='instance'
+  let skipKW = cw == 'let' || cw == 'in' || cw == 'do' || cw == 'if' || cw == 'then' || cw == 'else' || cw == 'case' || cw=='instance' || cw=='where'
   let ac = GetCharAtCursorAscii()
   return skipKW || ac == 8594 || ac == 8658 || ac == 60 || ac == 62 || ac == 43 || ac == 45 || ac == 124 || ac == 44 || ac == 61 || ac == 8759 || ac == 58 || ac == 96
 endfunc
 " echo CursorOnSkipNextWordCharOrWord()
 " Test: → X ⇒ < + > "- b | x , x } x { x = x ∷ a ` a
+
+func! CursorOnSkipBackwStopWord()
+  let cw = expand('<cword>')
+  return cw == 'where'
+endfunc
 
 func! CursorIsOnClosingBracket()
   let ac = GetCharAtCursorAscii()

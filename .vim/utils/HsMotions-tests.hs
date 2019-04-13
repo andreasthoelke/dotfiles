@@ -62,17 +62,17 @@ aa "abc" ghi (["abc, ddba"]) jkl
 "    |         v       |  .      v       |
   "   [Ab 'a' <> Ab 'c', Ab 'x' <> Ab 'd', Ab 'y']
 
-  ( eins, zwei, (drei, halb), more, ( Just 22, Nothing, [ Ab 22, Bc 33, Cd 33], Just 11), vier,
+  ( eins, zwei, drei, (drei, halb), more, ( Just 22, Nothing, [ Ab 22, Bc 33, Cd 33], Just 11), vier,
   fuenf, sechs ( sieben, acht, (neun, zehn)), elf
 
-  ( aa, bb, cc, dd )
+  ( aa, bb, cc, dd)
 
    more , stuff
 
 partition p xs == (filter p xs, filter (not . p) xs)
 " Delimiter: if a ({[ is found before →, then go the closing )]} and search next
-                                           "         |                s    |               |
-                                             (<*>) ∷ ReaderT r m (a → b) → ReaderT r m a → ReaderT r m b
+"         |                s    |               |
+(<*>) ∷ ReaderT r m (a → b) → ReaderT r m a → ReaderT r m b
 ReaderT rmab <*> ReaderT "eins" rma = ReaderT $ \r → rmab r <*> rma ar
 "                  |             |         |    |          |
 
@@ -93,7 +93,7 @@ CommaStartForw
  - same level:
 * if find ',' on the same () level within + 5 lines
      → move to word after comma
-* else find '[' (on same () level? within + 5 lines)
+* else find '' (on same () level? within + 5 lines)
   → move to word after bracket
 
 gq0 ∷ Value
@@ -109,7 +109,7 @@ uk1 = eitherDecode "[1,2,[3,true]]" ∷ Either String (Int, Int, (Int, Bool))
 
 val0 ∷ Value
 val0 = Object ((fromList [ -- convert a list of (Text, Value) items to a HashMap Text Value, (= "Object" type)
-  ("mynumbers", Array ((fromList [Number 1, Number 2, Number 3]) ∷ Vector Value)), -- convert a list of values to a Vector of values (= "Array" type)
+  ("mynumbers", Array ((fromList [Number 1, Number 3, Number 3]) ∷ Vector Value)), -- convert a list of values to a Vector of values (= "Array" type)
   ("myboolean", Bool True) ])                                    ∷ H.HashMap Text Value)
 -- Object (fromList [("mynumbers",Array [Number 1.0,Number 2.0,Number 3.0]),("myboolean",Bool True)])
 
@@ -193,7 +193,7 @@ data Package = Package
 --           , "mybool" = True
 
 -- toJSON can turn simple haskell types into Values
-nm0 ∷ Value
+nm0 ∷ [Abc]
 nm0 = toJSON ([2,3,4] ∷ [Int])
 -- Array [Number 2.0,Number 3.0,Number 4.0]
 
@@ -211,14 +211,16 @@ ke1 = fromList $ toJSON <$> [True, False]
 " i'm ok with not skipping literal string content
 " "   |          |               |
   hello ++ Just "ab + cd" ++ "world"
-   hello + Just "ab, cd" + "world"
+   hello + Just "ab cd"  + "world"
+   hello >>= Just 123  >> Just 43 <*> map eins
    hello <*> Just "ab, cd" <*> "world"
    hello `so` Just "ab, cd" `cd` "world"
 "
-"   44 `add` Just 44 `sub` 44 44 `kk` "as"
-"
-" "   |          |                 |
-  Just 2 <*> Some 4 [3, 4] <$> More "a"
+   44 `add` Just 44 `sub` 44 44 `kk` "as"
+
+eins
+
+   Just 2 >>= Some 4 [3, 4] <$> More "a"
    Just 2 >>= Some 4 [3, 4]  *> More "a" >> Some b < A b
    Just 2 <*> Some 4 (3, 4) <$> More "a"
    Just 2 <>  Some 4 (3, 4 <*> 4) <$> More "a"
@@ -229,7 +231,7 @@ ke1 = fromList $ toJSON <$> [True, False]
 "   " |          |                              |
   hello" ++ Just "ab cd" ("a" <> "b b") <> Some 4
 "
-" "   |                         |                 |
+" "   |                        |                 |
   Just ['w' ++ 'b', 'o'] ++ Just ['o','t'] ++ Just ['b', 'c']
 
    Just ['w' ++ 'b', 'o'],   Just ['o','t'],   Just ['b', 'c']
@@ -304,7 +306,7 @@ postFollowR (Ab x) username = do
   (Entity userId _) <- runDB $ getBy404 $ UniqueUserUsername username
   mCurrentUserId <- maybeAuthId
   case mCurrentUserId of
-    Nothing -> notFound -> test
+    Nothing -> notFound
     Just currentUserId -> do
       let follower = UserFollower userId currentUserId
       void $ runDB $   insertUnique follower
@@ -341,15 +343,103 @@ nonBlankStringDialog ∷ String
 nonBlankStringDialog prompt alert confirm = go
   where
     go = do
-      print prompt
-      inSt ← getLine
+      print ← prompt aa
+      inSt ← getLine bb
       do
         ab ← bc
         if notBlank inSt
            then print confirm >> return inSt
            else print alert   >> go
 " -- nonBlankStringDialog "Please enter:" "Arg!" "Thanks!"
-"
+
+doRounds2 ∷ AppIO GameReport
+doRounds2 = nextRound 1 []
+  where
+    nextRound ∷ Int → [RoundResult] → AppIO GameReport
+    nextRound idx rResults = do
+      result ← roundScheduler idx
+      players ← lift ask
+      -- flag fuer exit-game mit gameReport
+
+      case gameReport players (result:rResults) of
+        GameReport {winner=Nothing} → nextRound (idx +1) (result:rResults)
+        completeReport              → return completeReport
+
+
+data ProgrammingLanguage =
+        Haskell
+      | Agda
+      | Idris
+      | PureScript
+      deriving (Eq, Show)
+
+data Programmer = Programmer { os ∷ OperatingSystem
+                             , lang ∷ ProgrammingLanguage }
+                             deriving (Eq, Show)
+
+allOperatingSystems ∷ [OperatingSystem]
+allOperatingSystems = [ GnuPlusLinux
+                      , OpenBSDPlusNevermindJustBSDStill
+                      , Mac
+                      , Windows
+                      ]
+
+allLanguages ∷ [ProgrammingLanguage]
+allLanguages = [Haskell, Agda, Idris, PureScript]
+
+allProgrammers ∷ [Programmer]
+allProgrammers = do
+  oss ← allOperatingSystems
+  lng ← allLanguages
+  return (Programmer oss lng)
+-- length allProgrammers
+
+allProgrammers1 ∷ [Programmer]
+allProgrammers1 = concatMap (\oss → map (\lng → Programmer oss lng)
+                                        allLanguages)
+                            allOperatingSystems
+-- concatMap just maps a unaryFn over a collection.
+
+
+-- | Collect roundInput from players and log it to AppState,
+-- print out and return the RoundResult
+roundScheduler :: Int → AppIO RoundResult
+roundScheduler roundIdx = do
+  liftIO $ print $ "Round " <> show roundIdx <> " is about to start!"
+
+  -- Players will be propted in reverse order based on a random switch
+  players ← lift ask
+  playersRRev ← condAp reverse players <$> withStdGen random
+  let maxTotal = length players * 5
+
+  humanPlayersInput ∷ [PlayerRoundInput]
+      ← liftIO    $ traverse (playerRoundInputWizzard roundIdx maxTotal
+                              ∷ Player   → IO             PlayerRoundInput)
+                              $         filter ((== Human) . playerType) playersRRev
+
+  aiPlayersInput    ∷ [PlayerRoundInput]
+      ← hoist (hoist generalize)
+                  $ traverse (aiRoundInput            roundIdx
+                              ∷ PlayerId → StateT AppState (Reader Players) PlayerRoundInput)
+                              $ pid <$> filter ((== AI)    . playerType) players
+
+  let roundInput ∷ [PlayerRoundInput]
+                 = humanPlayersInput <> aiPlayersInput
+
+  -- | Append [PlayerRoundInput] to roundInputLog in AppState (sorted by rounds!)
+  modify $ \appSt → appSt { roundInputLog = roundInputLog appSt <> S.fromList roundInput }
+
+  let roundRes ∷ RoundResult
+      roundRes = roundResult roundInput
+
+  -- Show a report about the round to the user
+  lift $ printRoundReport roundInput roundRes
+
+  return roundRes
+
+
+
+
 "
 --------------------------------------------------------------------------------
 
@@ -368,9 +458,12 @@ actionIdxLogEvalUntil action eval p = go []
     go idx xs = action idx >>= evalTestReturnOrRecurse . (: xs)
       where
         evalTestReturnOrRecurse ∷ [a] → m b
-        evalTestReturnOrRecurse = ifResElse eval p $ go (idx+1)
+        evalTestReturnOrRecurse = fResElse eval p $ go (idx+1)
 "
 "
+
+evalTestReturnOrRecurse = ifResElse eval p <*> go (idx+1)
+
 -- | Repeatedly accum 'action' result 'a' into a list,
 -- 'eval' the list after each turn and stop/return 'm b' if 'p' holds.
 actionLogEvalUntil ∷ ∀ a b m. Monad m

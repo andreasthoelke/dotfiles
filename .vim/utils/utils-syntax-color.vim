@@ -63,3 +63,6 @@ nnoremap <leader>hcc :,ColorHighlight<CR>
 
 " Remove the highlighting (and related vim slowdown) of color values
 nnoremap <leader>hcd :ColorClear<CR>
+
+
+

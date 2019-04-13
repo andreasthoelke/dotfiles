@@ -14,3 +14,7 @@ nnoremap yot :TagbarToggle<cr>
 " nnoremap <silent> Y :call NyaoSplitScroll('up')<cr>
 " nnoremap <silent> E :call NyaoSplitScroll('down')<cr>
 
+" Issue: this seems needed to prevent the cursor from jumping to the beginning of the line on the first vertical motion after commenting
+nnoremap <silent> gcc :TComment<cr>lh
+
+

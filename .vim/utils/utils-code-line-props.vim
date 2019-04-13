@@ -36,6 +36,11 @@ func! IsEmptyLine( linenum )
   return getline( a:linenum ) == ''
 endfunc
 
+func! IsTypeSignLine( linenum )
+  return getline( a:linenum ) =~ '\(∷\|::\)'
+endfunc
+" echo IsTypeSignLine( line('.') )
+
 
 func! ColOfFirstChar()
   return searchpos('^\s*\zs', 'cnb')[1]
@@ -86,6 +91,18 @@ endfunc
 func! IsInsideString( line, col )
   return synIDattr( synID( a:line, a:col, 0), 'name' ) =~ 'string'
 endfunc
+
+func! IsInsideSyntaxStackId( line, col, testStr )
+  let synList = map(synstack( a:line, a:col ), 'synIDattr(v:val,"name")')
+  for synID in synList
+    if synID =~ a:testStr
+      return 1
+    endif
+  endfor
+  return 0
+endfunc
+" echo IsInsideSyntaxStackId( line('.'), col('.'), 'function' )
+" echo IsInsideSyntaxStackId( line('.'), col('.'), 'comm' )
 
 func! CursorIsInsideComment()
   return GetSyntaxIDAtCursor() =~ 'comment'

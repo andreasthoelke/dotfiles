@@ -99,11 +99,37 @@
 "  content
 
 
-" Fn Wireframe:
-" do, let, if, case, function, before function signature
-              " → basically delimiter?
-                " have textobj around those
 
 
+ 
+
+c-n/p
+c-i/m
+
+Y I
+J K
+
+Q T
+q t
+
+W B
+w b
+
+Heading, Section
+Label, Indented labels
+
+Toplevel
+
+c-lh  Paragraph
+
+q t  Wireframe
+W B  Expression
+w b  HsWord
+
+Q T  Comma, Into Comma
+Indent
+RHS
+
+        pin function and find orther rhs lhs exampes
 
 
