@@ -234,7 +234,8 @@ eins
 " "   |                        |                 |
   Just ['w' ++ 'b', 'o'] ++ Just ['o','t'] ++ Just ['b', 'c']
 
-   Just ['w' ++ 'b', 'o'],   Just ['o','t'],   Just ['b', 'c']
+
+  Just ['w' ++ 'b', 'o'],   Just ['o','t'],   Just ['b', 'c']
 
 
 inRange ∷ Int → (Int, Int) → Bool
@@ -385,7 +386,7 @@ allOperatingSystems = [ GnuPlusLinux
                       ]
 
 allLanguages ∷ [ProgrammingLanguage]
-allLanguages = [Haskell, Agda, Idris, PureScript]
+allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 
 allProgrammers ∷ [Programmer]
 allProgrammers = do
@@ -524,6 +525,24 @@ t_ifResElseM1 inStr = ifResElseM
                          (>10) -- pred tests the result of eval
                          t_ifResElseM1
                          inStr
+
+instance Monoid Package where
+  mempty = Package [] True T.empty T.empty [] Nothing
+    mappend (Package x1 x2 x3 x4 x5 x6) (Package y1 y2 y3 y4 y5 y6) =
+      Package (x1++y1) (x2||y2) (one x3 y3) (one x4 y4) (nubOrd $ x5 ++ y5) (x6 `mplus` y6)
+        where one a b = if T.null a then b else a
+
+
+data Dog =
+  Dog { dogsName    ∷ DogName
+      , dogsAddress ∷ Address
+      } deriving (Eq, Show)
+
+
+lili1 = Person { humanName = (HumanName "Lili")
+               , dogName   = (DogName "Suslik")
+               , address   = (Address "Berlin")
+               }
 
 
 -- | Return 'eval a' if 'p' holds on the result, else run 'alt a'

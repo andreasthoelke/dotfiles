@@ -1027,7 +1027,7 @@ func! InsertLeave()
 endfunc
 
 
-" Example autocmd timeout jumplist:■
+" Example autocmd timeout jumplist: ■
 " This saves the cursor pos to the jumplist when the cursor rested for 4 seconds. See ISSUE below.
 " augroup JumplistTimeout
 "   au!

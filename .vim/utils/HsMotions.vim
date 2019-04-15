@@ -309,6 +309,10 @@ let g:hlWireframeID = 0
 " call matchdelete( abc )
 " call clearmatches()
 
+" RHS movement:
+nnoremap J j^
+nnoremap K k^
+
 " Column movement:
 nnoremap <silent> I :call ColumnMotionForw()<cr>
 nnoremap <silent> Y :call ColumnMotionBackw()<cr>
@@ -335,7 +339,7 @@ func! ColumnMotionForw() " ■
   endif
 
   " Now that a column was found, test a few excape conditions:
-  if IsEmptyLine( line('.') ) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+  if IsEmptyLine( line('.') ) || IsTypeSignLine(line('.')) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
     call ColumnMotionForw()
   endif
 
@@ -355,6 +359,7 @@ endfunc " ▲
 
 
 func! ColumnMotionBackw() " ■
+  let origPos = getpos('.')
   normal! k0
   let [oLine, oCol] = getpos('.')[1:2]
 
@@ -374,7 +379,8 @@ func! ColumnMotionBackw() " ■
   endif
 
   " Now that a column was found, test a few excape conditions:
-  if IsEmptyLine( line('.') ) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+  if IsEmptyLine( line('.') ) || IsTypeSignLine(line('.')) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+    normal! k
     call ColumnMotionBackw()
   endif
 
@@ -389,6 +395,11 @@ func! ColumnMotionBackw() " ■
   endif
   if cw == 'deriving'
     normal! W
+  endif
+
+  if getpos('.') == origPos
+    normal! k
+    call ColumnMotionBackw()
   endif
 endfunc " ▲
 
@@ -448,6 +459,8 @@ endfunc
 " Textobject to select inside an OuterExpression
 onoremap iW :call ExprOuter_VisSel_Inside()<cr>
 xnoremap iW :<c-u>call ExprOuter_VisSel_Inside()<cr>
+" Test: viWo,W               v    |             v        ← cursor on "|", result sel on "v"
+                 " hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
 func! ExprOuter_VisSel_Inside()
   normal! m'
   " Make sure the cursor is not at the start of the expression, as this would select the previous expression
@@ -476,6 +489,9 @@ endfunc
 
 nnoremap <silent> W :call ExprOuterStartForw()<cr>
 onoremap <silent> W :call ExprOuterStartForw()<cr>
+vnoremap <silent> W <esc>:call ChangeVisSel(function('ExprOuterStartForw'))<cr>
+" Test: vB,WoW     v     |           v        ← cursor on "|", result sel on "v"
+" hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
 func! ExprOuterStartForw() " ■
   if !search('\S', 'nW') " cancel recursive call at end of file
     return
@@ -526,14 +542,21 @@ func! ExprOuterStartForw() " ■
   endif
 endfunc " ▲
 
+" Move to the end of an expression
 nnoremap <silent> ,W :call ExprOuterEndForw()<cr>h
+" Select till the end of an expression
 onoremap <silent> ,W :call ExprOuterEndForw()<cr>
-" Test: ,W   y,W   c,W
-" hello >>= Just 123  >> Just 43 <*> map eins
+" Test: W,W   y,W   c,W  ,W,W  vW,W,W
+" hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
+" Visual select does not work easyly, would require separate function
+" vnoremap <silent> ,W m':<c-u>call ExprOuterEndForw()<cr>v<c-o>
+vnoremap <silent> ,W <esc>:call ChangeVisSel(function('ExprOuterEndForw'))<cr>h
+" Test: v,W,W
 func! ExprOuterEndForw() " ■
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
+  normal! e
 
   " Approach: Find expression delimiter on the same bracket level, skip matches in Strings
   let [sLine, sColumn] = searchpairpos( '{\|\[\|(', g:exprDelimPttn, '}\|\]\|)', 'nW', 'CursorIsInsideString()' )
@@ -572,6 +595,7 @@ func! ExprOuterEndForw() " ■
 endfunc " ▲
 
 nnoremap <silent> B :call ExprOuterStartBackw()<cr>
+vnoremap <silent> B <esc>:call ChangeVisSel(function('ExprOuterStartBackw'))<cr>
 func! ExprOuterStartBackw() " ■
   let [oLine, oCol] = getpos('.')[1:2]
   " Move backward to (presumably) the prev delim match, so it doesn't match again in this back motion
@@ -633,18 +657,61 @@ endfunc
 " echo CursorIsOnEmptyList()
 " Test: ab () [] {}
 
+func! ChangeVisSel( fn_motion )
+  let [lineOther, colOther] = GetVisSelOtherEnd()
+  " Perform motion of the cursor
+  call a:fn_motion()
+  " Get the new cursor pos
+  let [nLine, nCol] = getpos('.')[1:2]
+  " Set the visual sel
+  call setpos( "'<", [0, lineOther, colOther, 0] )
+  call setpos( "'>", [0, nLine, nCol, 0] )
+  " activate the selection
+  normal! gv
+endfunc
+vmap <silent><leader>cn <esc>:call ChangeVisSel( function('ExprInnerStartForw') )<cr>
+" Test: Just ein >>= Some 4 [3, 4] <$> More "a"
 
-" TODO ,q and then just W to include comma? is comma vs expression move often used? then →
-" or use localleader for normal comma move
+func! SetVisSel( l1, c1, l2, c2 )
+  call setpos( "'<", [0, a:l1, a:c1, 0] )
+  call setpos( "'>", [0, a:l2, a:c2, 0] )
+  normal! gv
+endfunc
+" call SetVisSel( line('.'), col('.') +3, line('.'), col('.') -2 )
+" The "'>" always sets the focus in vis-sel
+
+" Considering the current cursor pos marks one end of the vis-sel, return the other end of the visual selection
+func! GetVisSelOtherEnd()
+  " The vis-sel needs to be canceled in order to be able to access the cursorpos
+  let cursorPos = getpos('.')[1:2]
+  let visStart = getpos("'<")[1:2]
+  let visEnd   = getpos("'>")[1:2]
+  return cursorPos == visStart ? visEnd : visStart
+endfunc
+" Test: Select a range - use 'o' to change cursor - unselect - running the line will still consider 'gv' selection
+" echo GetVisSelOtherEnd()
+vmap <silent><leader>cn :<c-u>call TestVisSel()<cr> " ■
+" The vis-sel needs to be canceled in order to be able to access the cursorpos
+vmap <silent><leader>cc <esc>:call TestVisSel()<cr> " ■
+nmap <silent><leader>cn :call TestVisSel()<cr> " ■
+vmap <silent><leader>cn :call TestVisSel()<cr> " ■
+func! TestVisSel()
+  echo GetVisSelOtherEnd()
+  normal! gv
+endfunc " ▲
+" Cursor pos is always == visual start
+
+" Next/prev in comma separated lists
 nnoremap <silent> q :call CommaItemStartForw()<cr>
 onoremap <silent> q :call CommaItemStartForw()<cr>
-" Just make the vim-targets maps consistent
-omap iq Ia
-omap aq aa
+vnoremap <silent> q <esc>:call ChangeVisSel(function('CommaItemStartForw'))<cr>
 nnoremap <silent> t :call CommaItemStartBackw()<cr>
+vnoremap <silent> t <esc>:call ChangeVisSel(function('CommaItemStartBackw'))<cr>
 " Can't remap omap t, as this is the 't'ill map
 " onoremap <silent> t :call CommaItemStartBackw()<cr>
-func! CommaItemStartForw()
+" Test: qqqlvtoq           v           |     v
+" allLanguages = [Haskell, Agda abc,  Idris, PureScript]
+func! CommaItemStartForw() " ■
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
@@ -661,7 +728,7 @@ func! CommaItemStartForw()
   else
     call BracketStartForw()
   endif
-endfunc
+endfunc " ▲
 
 func! CommaItemStartBackw()
   let [oLine, oCol] = getpos('.')[1:2]
@@ -682,7 +749,6 @@ func! CommaItemStartBackw()
     return
   endif
   " Second step
-  " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',\|{\|\[\|(', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
   if sLine && sLine > (oLine - 5)
     call setpos('.', [0, sLine, sCol, 0] )
@@ -693,8 +759,62 @@ func! CommaItemStartBackw()
 endfunc
 
 
+" Comma textobjects:
+onoremap <silent> aq :<c-u>call CommaItem_VisSel_Around()<cr>
+vnoremap <silent> aq :<c-u>call CommaItem_VisSel_Around()<cr>o
+onoremap <silent> iq :<c-u>call CommaItem_VisSel_Inside()<cr>
+vnoremap <silent> iq :<c-u>call CommaItem_VisSel_Inside()<cr>o
+" Test: caq, yaq, vaq, viq, yiq<c-o>
+" allLanguages = [Haskell, Agda abc,  Idris, PureScript]
+
+func! CommaItem_VisSel_Around()
+  normal! m'
+  " Move to the start of the item
+  call CommaItemStart()
+  " and save that position
+  let [sLine, sCol] = getpos('.')[1:2]
+  " now move to the end of the item, then to the start of the next and back one step
+  call CommaItemEnd()
+  normal! wh
+  let [eLine, eCol] = getpos('.')[1:2]
+  call setpos( "'<", [0, sLine, sCol, 0] )
+  call setpos( "'>", [0, eLine, eCol, 0] )
+  " activate the selection
+  normal! gv
+endfunc
+
+func! CommaItem_VisSel_Inside()
+  normal! m'
+  call CommaItemStart()
+  let [sLine, sCol] = getpos('.')[1:2]
+  call CommaItemEnd()
+  let [eLine, eCol] = getpos('.')[1:2]
+  call setpos( "'<", [0, sLine, sCol, 0] )
+  call setpos( "'>", [0, eLine, eCol, 0] )
+  normal! gv
+endfunc
+" Comma textobjects:
+
+" Note the difference to CommaItemStartBackward. This one is not meant to progressively move back
+nnoremap <silent> <localleader>t :call CommaItemStart()<cr>
+func! CommaItemStart()
+  call search( '\([\|(\|{\|,\)', 'bW')
+  normal! w
+endfunc
+
+nnoremap <silent> <localleader>q :call CommaItemEnd()<cr>
+vnoremap <silent> <localleader>q <esc>:call ChangeVisSel(function('CommaItemEnd'))<cr>
+func! CommaItemEnd()
+  call searchpair( '{\|\[\|(', '\(,\|}\|\]\|)\)', '}\|\]\|)', 'W' )
+  normal! h
+endfunc
+
+" Jump to the first item of the next/prev bracket
 nnoremap <silent> ,q :call BracketStartForw()<cr>
+vnoremap <silent> ,q <esc>:call ChangeVisSel(function('BracketStartForw'))<cr>
 nnoremap <silent> ,t :call BracketStartBackw()<cr>
+vnoremap <silent> ,t <esc>:call ChangeVisSel(function('BracketStartBackw'))<cr>
+" See the 'q' tests above. Note the visual maps will hardly be needed
 func! BracketStartForw()
   if CursorIsOnOpeningBracket() " If on opening bracket, make sure to jump into the bracket
     normal! h
@@ -727,8 +847,11 @@ func! BracketStartBackw()
   endif
 endfunc
 
-nnoremap <silent> <localleader>q :call BracketEndForw()<cr>
 " Move to the end of a list, ready to insert the next item.
+nnoremap <silent> <localleader>q :call BracketEndForw()<cr>
+vnoremap <silent> <localleader>q <esc>:call ChangeVisSel(function('BracketEndForw'))<cr>h
+" Test: q\qi,<space>JS<esc>
+allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 func! BracketEndForw()
   " Don't be stuck at previous location
   normal! l
@@ -749,6 +872,10 @@ endfunc
 " - skip empty lines
 nnoremap <silent> w :call ExprInnerStartForw()<cr>
 nnoremap <silent> b :call ExprInnerStartBackw()<cr>
+vnoremap <silent> w <esc>:call ChangeVisSel(function('ExprInnerStartForw'))<cr>
+vnoremap <silent> b <esc>:call ChangeVisSel(function('ExprInnerStartBackw'))<cr>
+" Test: vbbbowww      v        |                v     ← cursor on "|", result sel on "v"
+" hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
 func! ExprInnerStartForw()
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
