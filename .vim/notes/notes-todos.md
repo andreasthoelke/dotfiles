@@ -960,6 +960,9 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 
 ## Release notes v1.1.1
+* Command to search in deleted code: `Fdeleted someString`
+* Search in groups of files: `Frepo Fbuffers Fvim Flug Fhask Fnotes Fdeleted`
+* restucture vimrc into separate files
 * easymotion for paragraph: `<localleader><c-h/l>`
 * `,L` `,H` to jump bottom/top of visible area
 * `Viv` selects the visual area, `yis` copies the visual area. See Textobjects

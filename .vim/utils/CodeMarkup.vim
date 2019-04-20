@@ -31,7 +31,7 @@
 " sections
 
 " how can I unify jumps to objects and end of objects with the content/around/inside reference?
-" works, lines, paragraphs sort of have this
+" words, lines, paragraphs sort of have this
 " but not vim-targets? (other textobject examples? - there is def. reuse of the patters)
 
 " folds are sort of related to longer jumps or textobjects - can easily be created/deleted
@@ -63,11 +63,17 @@
 " also when a section end marker is created, fold markers are added 
 " to the section start and end lines
 
-" open section header lines may have no fold start markers
+" Headings are not folds by default but can easily be made to folds)
+" Headings may have no fold start markers
 " you can add a manual fold. cursor on the header line: "zf\j.." or vis-sel
 
 " ─   Todos              ■
+" labels could be indented
+"        should be limied in length and not contain dots
 " make header of commented line
+" support haskell comments in highlighing
+" use haskell/vim comments depend on file type
+
 " delete header (and end marker) but leave headline text to edit? then recreate?
 " include optional foldmarkers
 " automatically when an end line is created
@@ -100,7 +106,25 @@ nnoremap <leader>css :call MakeSectionHeader(0, '', 0)<cr>
 nnoremap <leader>cse :call MakeSectionEndMarker()<cr>
 nnoremap <leader>csr :call RefreshSectionMarkers()<cr>
 " Test on these lines
-" Some Headline Text
+
+" normal Headings
+" ─   Utils fold                                        ──
+
+" ─   Utils traverse                                    ──
+
+
+" Heading with manually created fold
+" this may be created until/around the next heading to then fold headings
+" ─   Utils fold                                        ── ■
+
+" more
+ " ▲
+
+" Sections are created as headings, then creating the end line will delete the end dashes in the heading! so they are different from headings with manual folds
+" ─   Helpers                                            ■
+
+" ─^  Helpers                                            ▲
+
 
 
 " let [sl, sc] = searchpos(a:opening, 'bcW') " search left for opening
@@ -134,7 +158,6 @@ func! SectionGoNextEndMarker ()
 endfunc
 " echo SectionGoNextEndMarker()
 
-
 " Create Section header start or end markers
 " Uses the current line text if headerText is empty string
 func! MakeSectionHeader ( isEnd, headerText, addFoldMarker )
@@ -142,7 +165,7 @@ func! MakeSectionHeader ( isEnd, headerText, addFoldMarker )
   let sectionHeaderText = len(a:headerText) ? a:headerText : getline('.')
   normal dd
   let lineFirstPart = a:isEnd ? '" ─^  ' : '" ─   '
-  let foldMarkerText = a:isEnd ? '▲▲' : '■■'
+  let foldMarkerText = a:isEnd ? ' ▲' : ' ■'
   let lineLastPart = a:addFoldMarker ? ('──' . foldMarkerText) : '──'
   let numOfFillChars = lineTargetLength - (len(lineFirstPart) + len(sectionHeaderText) + len('──'))
   let fillChars = repeat( ' ', numOfFillChars)
@@ -164,6 +187,7 @@ func! MakeSectionEndMarker()
   call MakeSectionHeader(1, headerText, 1)
 endfunc
 " call MakeSectionEndMarker()
+
 " ─^  Maps                                              ──
 " ─^  Some more Text                                    ──
 

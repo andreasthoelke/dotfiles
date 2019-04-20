@@ -588,4 +588,88 @@ putLns = traverse_ $ putStrLn . show
 
 
 
+-- Test: Ballpark - Wire/ Tab/Q motion
+main :: IO ()
+main = do
+  args <- Environment.getArgs
+    (flags, inputs) <- case GetOpt.getOpt GetOpt.Permute options args of
+                         (flags, inputs, []) -> return (flags, inputs)
+        (_, _, errs) -> usage $ "flag errors:\n" ++ List.intercalate ", " errs
+
+    when (Help `elem` flags) $ usage ""
+    when (Version `elem` flags) $ do
+      putStrLn $ "fast-tags, version "
+            ++ Version.showVersion Paths_fast_tags.version
+        Exit.exitSuccess
+
+    let verbose       = Verbose `elem` flags
+        emacs         = ETags `elem` flags
+        vim           = not emacs
+        trackPrefixes = emacs
+        output        = last $ defaultOutput : [fn | Output fn <- flags]
+        srcPrefix     = Text.pack $ FilePath.normalise $
+          last $ "" : [fn | SrcPrefix fn <- flags]
+        defaultOutput = if vim then "tags" else "TAGS"
+
+    oldTags <- if vim && NoMerge `notElem` flags
+                  then do
+                    exists <- Directory.doesFileExist output
+            if exists
+               then Text.lines <$> Util.readFileLenient output
+                else return []
+        else return [] -- we do not support tags merging for emacs for now
+
+    inputs <- if Cabal `elem` flags
+                 then getCabalInputs inputs
+        else map ((srcPrefix,) . FilePath.normalise) . Util.unique <$>
+          getInputs flags inputs
+    when (null inputs) $
+      Exit.exitSuccess
+
+    -- Hack: cabal just lists the module name, which I turn into a filename, so
+    -- I don't know if it actually is .hsc.  Or .lhs, but I can't parse those
+    -- anyway.
+    let tryHsc = Cabal `elem` flags
+    stderr <- MVar.newMVar IO.stderr
+    newTags <- flip Async.mapConcurrently (zip [0 :: Int ..] inputs) $
+      \(i, (srcPrefix, fn)) -> Exception.handle (catchError stderr fn) $ do
+        useHsc <- if tryHsc then Directory.doesFileExist (fn ++ "c")
+                            else return False
+            fn <- return $ if useHsc then fn ++ "c" else fn
+            (newTags, warnings) <- Tag.processFile fn trackPrefixes
+            newTags <- return $ if NoModuleTags `elem` flags
+                                   then filter ((/=Tag.Module) . typeOf) newTags else newTags
+            newTags <- return $ (newTags ++) $ if
+                                                  | FullyQualified `elem` flags ->
+                                                    map (Tag.qualify True srcPrefix) newTags
+                                                  | Qualified `elem` flags ->
+                                                    map (Tag.qualify False srcPrefix) newTags
+                                                  | otherwise -> []
+                                                -- Try to do work before taking the lock.
+            Exception.evaluate $ DeepSeq.rnf warnings
+            MVar.withMVar stderr $ \hdl ->
+              mapM_ (IO.hPutStrLn hdl) warnings
+            when verbose $ do
+              let line = take 78 $ show i ++ ": " ++ fn
+                putStr $ '\r' : line ++ replicate (78 - length line) ' '
+                IO.hFlush IO.stdout
+            return newTags
+
+    when verbose $ putChar '\n'
+
+    let allTags = if vim
+                     then Vim.merge maxSeparation (map snd inputs) newTags oldTags
+            else Emacs.format maxSeparation (concat newTags)
+    let write = if vim then Text.IO.hPutStrLn else Text.IO.hPutStr
+    let withOutput action = if output == "-"
+                               then action IO.stdout
+            else IO.withFile output IO.WriteMode action
+    withOutput $ \hdl -> do
+      IO.hSetEncoding hdl IO.utf8
+      mapM_ (write hdl) allTags
+
+  where
+    usage msg = do
+      putStr $ GetOpt.usageInfo (msg ++ "\n" ++ help) options
+        Exit.exitFailure
 

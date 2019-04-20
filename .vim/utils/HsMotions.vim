@@ -63,7 +63,7 @@ let g:anyCharsNotBracketOrEqu = '[^=(]*'
 
 " Top level Haskell type signature. May the colon in a new line. Exclues colons after = and inside ()
 let g:topLevTypeSig = g:topLevPttn . g:anyCharsNotBracketOrEqu . '\_s' . g:anyCharsNotBracketOrEqu . MakeOrPttn( ['∷', '::'] )
-let g:topLevOtherPttn = '^' . MakeOrPttn( ['instance', 'data', 'class', 'type', 'newtype', 'func!'] )
+let g:topLevOtherPttn = '^' . MakeOrPttn( ['instance', 'data', 'class', 'type', 'newtype', 'func!', 'function', 'au ', 'command'] )
 let g:topLevCombined = MakeOrPttn( [ g:topLevTypeSig, g:topLevOtherPttn ] )
 
 " Note the { - } is conceald in this pattern
@@ -81,7 +81,7 @@ let g:syntaxSym = ['<-', '←', '=', '\$', '`\w*`', '->', '→', '|', ',', '=' ]
 let g:syntaxWords = PrependSepWord( ['let', 'in', 'do', 'where', 'if', 'then', 'else', 'case', 'instance'] )
 let g:numOps   = ['+', '-', '\*', '&&']
 " let g:fnWirePttn = MakeOrPttn( AppendSpace( ['^[^ -][^=(]*\zs∷', '^[^ -][^=(]*\zs::', 'where', 'do', ' \zsin', '^[^-].*\zsof', 'then', 'let'] ) )
-let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do', 'in', 'of', 'then', 'let', 'deriving'] )) )
+let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do', 'in', 'of', 'let', 'deriving'] )) )
 let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns )
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
 let g:exprDelimPttn = MakeOrPttn( AppendSpace(g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
@@ -239,8 +239,11 @@ nnoremap q :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.
 
 " TODO add long moves to jumplist as reverting moves would be challenging to perform?
 
-nnoremap <silent> Q :call FnWireframeForw()<cr>
-nnoremap <silent> T :call FnWireframeBackw()<cr>
+" Tab is the 'ballpark' motion - it gets you into constituting areas in a function
+" nnoremap <silent> Q :call FnWireframeForw()<cr>
+nnoremap <silent> <tab> :call FnWireframeForw()<cr>
+" nnoremap <silent> T :call FnWireframeBackw()<cr>
+nnoremap <silent> <s-tab> :call FnWireframeBackw()<cr>
 func! FnWireframeForw()
   " Step back is needed to find keywords that are being skipped to from a prev keyword, e.g. a 'do' after '='
   normal! h
@@ -851,7 +854,7 @@ endfunc
 nnoremap <silent> <localleader>q :call BracketEndForw()<cr>
 vnoremap <silent> <localleader>q <esc>:call ChangeVisSel(function('BracketEndForw'))<cr>h
 " Test: q\qi,<space>JS<esc>
-allLanguages = [Haskell, Agda abc,  Idris, PureScript]
+" allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 func! BracketEndForw()
   " Don't be stuck at previous location
   normal! l

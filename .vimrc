@@ -1084,7 +1084,7 @@ augroup JumplistTimeout
 augroup END
 " TODO try this with updatime
 " Issue: this interval is also used for tagbar loc update
-set updatetime=2000
+set updatetime=1000
 " Note: This also defines the time you have to c-o to get to the insert end location. And after this time the jumplist
 " will also get cleaned up/ suffled a bit. Typically c-i is not useful *after* this time - the jumps then basically become c-o jumps
 
@@ -1207,11 +1207,17 @@ set guicursor=n:block-iCursor
 source .vim/utils/HsMotions.vim
 source .vim/utils/HsSyntaxAdditions.vim
 source .vim/utils/CodeMarkup.vim
+call HsAPIExplore#start()
+" Note: There is an unfinished plugin here:
+" tabe .vim/plugged/HsAPIExplore/autoload/HsAPIExplore.vim
 
 " General tools
 source .vim/utils/utils-terminal.vim
+" Todo: move the helper/commands in this note file
+source .vim/notes/notes-workflow.vim
 source .vim/utils/utils-vimscript-tools.vim
 source .vim/utils/utils-markdown.vim
+source .vim/utils/utils-chromium.vim
 
 " Helper functions
 source .vim/utils/utils-search-replace.vim
@@ -1220,10 +1226,13 @@ source .vim/utils/utils-syntax-color.vim
 
 " Minor
 source .vim/utils/utils-virtualtext.vim
-" source .vim/utils/utils-csv.vim
-" source .vim/utils/utils-applescript.vim
+source .vim/utils/utils-csv.vim
+source .vim/utils/utils-applescript.vim
 
 
+" Accounts
+let g:accountsGithub = ''
+let g:accountsGithub = readfile('.vim/accounts/github')[0:0][0]
 
 function! GotoDefinition()
   if IsPurs()
@@ -1579,7 +1588,8 @@ let g:haskellmode_completion_ghc = 1
 nnoremap <silent> <leader>ik :InteroKill<CR>
 nnoremap <silent> <leader>io :InteroOpen<CR>
 nnoremap <silent> <leader>ih :InteroHide<CR>
-nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
+nnoremap <silent> <leader>im :InteroLoadCurrentModule<CR>
+nnoremap <silent> <leader>il :InteroLoadCurrentFile<CR>
 " nnoremap <silent>         gd :call GotoDefinition()<CR>
 " nnoremap <silent> <leader>gd :sp<CR>:call GotoDefinition()<CR>
 " fee mapping
@@ -1590,7 +1600,7 @@ nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
 
 " Type Inserts: ----------------------------------------------------
 " nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
-nnoremap <localleader>tt :call TypeInsert( )<cr>
+nnoremap <localleader>tt :call TypeInsert()<cr>
 " vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
 " TODO: problem: PSCIDEgetKeyword only work when PSCIDE is started/ throws error with Haskell
 nnoremap <localleader>tg :InteroGenTypeInsert<cr>
@@ -1599,6 +1609,7 @@ nnoremap <localleader>ti :InteroInfoInsert<cr>
 vnoremap <localleader>ti :InteroInfoInsert<cr>
 
 nnoremap <silent> <localleader>tw :call InsertTypeAnnotation()<cr>
+nnoremap <silent> ,tw :call InsertTypeAnnotation()<cr>
 " Type Inserts: ----------------------------------------------------
 
 
@@ -1635,7 +1646,8 @@ nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 
 " New Haskell And Purescript Maps: ------------------------------------------------------
 
-nnoremap dr :call ReplReload()<cr>
+" nnoremap dr :call ReplReload()<cr>
+nnoremap dr :InteroReload<cr>
 
 " nnoremap tr :call TraceTopLevelValue()<cr>
 " Todo: where did this come from?
@@ -1717,8 +1729,8 @@ command! ExtractGenSigs :g/∷.*⇒/t$
 " free mapping <c-Backspace>
 
 " Code Formatting: ------------------------
-" Break line at cursor position
-nnoremap J i<CR><Esc>
+" Break line at cursor position - now used for navigation
+" nnoremap J i<CR><Esc>
 
 " Join line below with current line
 nnoremap <BS> J
@@ -3232,6 +3244,21 @@ command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <a
 command! -nargs=1 Fvim      :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/utils/ /Users/andreas.thoelke/.vimrc
 " Plugin code:
 command! -nargs=1 Fplug     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/plugged/**
+
+" command! -nargs=1 FrepoDel  :tabe | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/plugged/**
+
+command! -nargs=1 Fdeleted call FindInDeletedCode( <q-args> )
+" TODO How can I do this in uncommitted deleted code → undotree or unstaged changes?
+
+
+func! FindInDeletedCode( pattern )
+  let l:cmd = "git log -c -S'" . a:pattern . "'"
+  let l:resultLines = split( system( l:cmd ), '\n' )
+  " Open comment at the end of the last line
+  let l:resultLines[ 1 ] = '{- ' . l:resultLines[ 1 ]
+  exec 'tabe'
+  call append( line('.'), l:resultLines )
+endfunc
 
 
 " This works pretty well. could reuse for other purposes

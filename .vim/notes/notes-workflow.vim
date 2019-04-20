@@ -91,8 +91,7 @@
 " … ^D
 " TODO: make a queue of caller/command ids: put e.g. "type-insert" into the queue when
 " jobsend is issued. then in OnEv1 read (and delete) the last command id and
-" use it to apply a specific parsing of the returned data.
-" TODO: errors in loclist should be wrapped, colored, unicoded
+" use it to apply a specific parsing of the returned data.  TODO: errors in loclist should be wrapped, colored, unicoded
 
 " TODO: What does Purscript project folder require so vim sets the working
 " folder correctly? .DS_Store, .purs-repl, .git/??:

@@ -22,7 +22,8 @@ function! OpenMarkdownPreview() abort
     call jobstop(g:markdown_job_id)
     unlet g:markdown_job_id
   endif
-  let g:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
+  " let g:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
+  let g:markdown_job_id = jobstart('grip ' g:accountsGithub . ' ' . shellescape(expand('%:p')))
   if g:markdown_job_id <= 0 | return | endif
   " call system('open http://localhost:6419')
   call LaunchChromium( 'http://localhost:6419' )

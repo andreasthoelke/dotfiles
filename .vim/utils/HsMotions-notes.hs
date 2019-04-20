@@ -1,5 +1,11 @@
 
 " HsMotions:
+" Only think aligned/alongside/about the structure and syntax of you code
+
+" Go 3 lines down and 4 words in is still ok - but not ideal because
+"  - you ought to not read a haskell function line by line
+"  - vim/text words don't represent you thinking well either
+
 " Think top-down, alongside the hierachies of composed expressions
 " not wordwise
 " the cursor is a point of focus, reference - moving it can expand/highlight a structure - help your thinking
@@ -99,9 +105,13 @@
 "  content
 
 
+nmap <Tab> :echo 'hi there'<cr>
+nmap <S-Tab> :echo 'HI THERE'<cr>
 
+Now c-i/m
+and tab shift-tab is still unmaped?
 
- 
+------------ 
 
 c-n/p
 c-i/m
@@ -117,10 +127,13 @@ w b
 
 Heading, Section
 Label, Indented labels
+Folds (are like Sections, and every section is a Fold. Headings are not folds by default but can easily be made to folds)
 
-Toplevel
-
+c-n/p Toplevel
 c-lh  Paragraph
+
+Hunks
+Warnings/Errors
 
 q t  Wireframe
 W B  Expression
@@ -130,6 +143,5 @@ Q T  Comma, Into Comma
 Indent (don't need this)
 RHS
 
-        pin function and find orther rhs lhs exampes
 
 
