@@ -111,7 +111,7 @@ nmap <S-Tab> :echo 'HI THERE'<cr>
 Now c-i/m
 and tab shift-tab is still unmaped?
 
------------- 
+------------
 
 c-n/p
 c-i/m
@@ -142,6 +142,33 @@ w b  HsWord
 Q T  Comma, Into Comma
 Indent (don't need this)
 RHS
+
+" ─   New maps                                          ──
+
+
+--
+
+
+-- 1. Headings & Labels
+T s-T Heading
+q s-q Label
+
+-- 2. Paragraph
+c-l h Paragraph| ParagVim }{
+z-j k Fold
+
+-- 3. Toplevel-fn & Area
+c-n p Toplevel
+c-m i Area
+
+-- 4. Column, Comma & Line
+  I Y ColumnRight
+t s-t Comma| ,t ,s-t IntoComma
+  J K LineStart
+
+" 5. Small & Big Hs Words
+  W B Expression
+  w b HsWord
 
 
 

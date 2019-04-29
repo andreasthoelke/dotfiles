@@ -1,409 +1,464 @@
 {
     "global": {
-        "check_for_updates_on_startup": true,
+        "check_for_updates_on_startup": false,
         "show_in_menu_bar": false,
         "show_profile_name_in_menu_bar": false
     },
     "profiles": [
         {
-          "complex_modifications": {
-            "parameters": {
-              "basic.simultaneous_threshold_milliseconds": 50,
-              "basic.to_delayed_action_delay_milliseconds": 500,
-              "basic.to_if_alone_timeout_milliseconds": 1000,
-              "basic.to_if_held_down_threshold_milliseconds": 500
-            },
-            "rules": [
-              {
-                "description": "Control + (Shift) + . / , to Option (Shift) + , / . | These four keys are unmappable in Vim otherwise",
-                "manipulators": [
-                  {
-                    "type": "basic",
-                    "from": {
-                      "key_code": "period",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control",
-                          "right_shift"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "t",
-                        "modifiers": [
-                          "left_option"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "basic",
-                    "from": {
-                      "key_code": "comma",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control",
-                          "right_shift"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "comma",
-                        "modifiers": [
-                          "left_option",
-                          "left_shift"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "basic",
-                    "from": {
-                      "key_code": "period",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "period",
-                        "modifiers": [
-                          "left_option"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "basic",
-                    "from": {
-                      "key_code": "comma",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "comma",
-                        "modifiers": [
-                          "left_option"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "description": "Command + Control + [ / ] to Taskmanager next app",
-                "manipulators": [
-                  {
-                    "type": "basic",
-                    "from": {
-                      "key_code": "close_bracket",
-                      "modifiers": {
-                        "mandatory": [ "left_command", "left_control" ] }
-                    },
-                    "to": [
-                      {
-                        "key_code": "tab",
-                        "modifiers": {
-                          "mandatory": "left_command" }
-                      }
-                    ]
-                  },
-                  {
-                    "type": "basic",
-                    "from": {
-                      "key_code": "open_bracket",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_command",
-                          "left_control"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "tab",
-                        "modifiers": [
-                          "left_command",
-                          "left_shift"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "description": "Left Control + ; to Option + ; to open vim command history",
-                "manipulators": [
-                  {
-                    "type": "basic",
-                    "from": {
-                      "key_code": "semicolon",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "semicolon",
-                        "modifiers": [
-                          "left_option"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "description": "Left Control + ' to toggle between next open app",
-                "manipulators": [
-                  {
-                    "type": "basic",
-                    "from": {
-                      "key_code": "quote",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "tab",
-                        "modifiers": [
-                          "left_command"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "description": "Command + Control + [ / ] to Taskmanager next app bu",
-                "manipulators": [
-                  {
-                    "from": {
-                      "key_code": "close_bracket",
-                      "modifiers": {
-                        "mandatory": [ "left_command", "left_control" ] }
-                    },
-                    "to": [
-                      {
-                        "key_code": "tab",
-                        "modifiers": {
-                          "mandatory": "left_command" }
-                      }
-                    ],
-                    "type": "basic"
-                  }, 
-                  {
-                    "from": {
-                      "key_code": "open_bracket",
-                      "modifiers": {
-                        "mandatory": [ "left_command", "left_control" ] }
-                    },
-                    "to": [
-                      {
-                        "key_code": "tab",
-                        "modifiers": {
-                          "mandatory": "left_command" }
-                      }
-                    ],
-                    "type": "basic"
-                  }
-                ]
-              },
-              {
-                "description": "Control + Shift_R + J/K to Arrow Up/Down",
-                "manipulators": [
-                  {
-                    "from": {
-                      "key_code": "j",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control", "right_shift"
-                        ] }
-                    },
-                    "to": [
-                      {
-                        "key_code": "down_arrow"
-                      }
-                    ],
-                    "type": "basic"
-                  }, 
-                  {
-                    "from": {
-                      "key_code": "k",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control", "right_shift"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "up_arrow"
-                      }
-                    ],
-                    "type": "basic"
-                  }
-                ]
-              },
-              {
-                "description": "Caps_Lock + Shift_R to Option",
-                "manipulators": [
-
-                  {
-                    "from": {
-                      "key_code": "f",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control", "right_shift"
-                        ] }
-                    },
-                    "to": [
-                      {
-                        "key_code": "f",
-                        "modifiers": "left_option"
-                      }
-                    ],
-                    "type": "basic"
-                  }, 
-                  {
-                    "from": {
-                      "key_code": "d",
-                      "modifiers": {
-                        "mandatory": [
-                          "left_control", "right_shift"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "d",
-                        "modifiers": "left_option"
-                      }
-                    ],
-                    "type": "basic"
-                  }
-                ]
-              },
-              {
-                "description": "Map ctrl + [ to escape",
-                  "manipulators": [
+            "complex_modifications": {
+                "parameters": {
+                    "basic.simultaneous_threshold_milliseconds": 50,
+                    "basic.to_delayed_action_delay_milliseconds": 500,
+                    "basic.to_if_alone_timeout_milliseconds": 1000,
+                    "basic.to_if_held_down_threshold_milliseconds": 500,
+                    "mouse_motion_to_scroll.speed": 100
+                },
+                "rules": [
                     {
-                      "from": {
-                        "key_code": "open_bracket",
-                        "modifiers": {
-                          "mandatory": [
-                            "control"
-                          ],
-                          "optional": [
-                            "any"
-                          ]
-                        }
-                      },
-                      "to": [
+                        "description": "Control + (Shift) + . / , to Option (Shift) + , / . | These four keys are unmappable in Vim otherwise",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "period",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "t",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "comma",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "comma",
+                                        "modifiers": [
+                                            "left_option",
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "period",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "period",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "comma",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "comma",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Command + Control + [ / ] to Taskmanager next app",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "close_bracket",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_command",
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "tab",
+                                        "modifiers": ["left_command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "open_bracket",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_command",
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "tab",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                      "description": "Tab to <option-q>",
+                      "manipulators": [
                         {
-                          "key_code": "escape"
+                          "from": {
+                            "key_code": "tab",
+                            "modifiers": {
+                            }
+                          },
+                          "to": [
+                            {
+                              "key_code": "q",
+                              "modifiers": [
+                                "left_option"
+                              ]
+                            }
+                          ],
+                          "type": "basic"
+                        },
+                        {
+                          "from": {
+                            "key_code": "tab",
+                            "modifiers": {
+                              "mandatory": [
+                                "right_shift"
+                              ]
+                            }
+                          },
+                          "to": [
+                            {
+                              "key_code": "q",
+                              "modifiers": [
+                                "left_option", "right_shift"
+                              ]
+                            }
+                          ],
+                          "type": "basic"
                         }
-                      ],
-                      "type": "basic"
+                      ]
+                    },
+                    {
+                        "description": "Left Control + ; to Option + ; to open vim command history",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "semicolon",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "semicolon",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Left Control + ' to toggle between next open app",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "quote",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "tab",
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Command + Control + [ / ] to Taskmanager next app bu",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "close_bracket",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_command",
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "tab",
+                                        "modifiers": ["left_command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "open_bracket",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_command",
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "tab",
+                                        "modifiers": ["left_command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Control + Shift_R + J/K to Arrow Up/Down",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "down_arrow"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "up_arrow"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Caps_Lock + Shift_R to Option",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f",
+                                        "modifiers": "left_option"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "d",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control",
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "d",
+                                        "modifiers": "left_option"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Map ctrl + [ to escape",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "open_bracket",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "control"
+                                        ],
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "escape"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Change Fn + h/j/k/l to Arrows",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "fn"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_arrow"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "fn"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "down_arrow"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "fn"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "up_arrow"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "l",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "fn"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_arrow"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
                     }
-                  ]
-              },
-              {
-                "description": "Change Fn + h/j/k/l to Arrows",
-                "manipulators": [
-                  {
-                    "from": {
-                      "key_code": "h",
-                      "modifiers": {
-                        "mandatory": [
-                          "fn"
-                        ],
-                        "optional": [
-                          "caps_lock"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "left_arrow"
-                      }
-                    ],
-                    "type": "basic"
-                  },
-                  {
-                    "from": {
-                      "key_code": "j",
-                      "modifiers": {
-                        "mandatory": [
-                          "fn"
-                        ],
-                        "optional": [
-                          "caps_lock"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "down_arrow"
-                      }
-                    ],
-                    "type": "basic"
-                  },
-                  {
-                    "from": {
-                      "key_code": "k",
-                      "modifiers": {
-                        "mandatory": [
-                          "fn"
-                        ],
-                        "optional": [
-                          "caps_lock"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "up_arrow"
-                      }
-                    ],
-                    "type": "basic"
-                  },
-                  {
-                    "from": {
-                      "key_code": "l",
-                      "modifiers": {
-                        "mandatory": [
-                          "fn"
-                        ],
-                        "optional": [
-                          "caps_lock"
-                        ]
-                      }
-                    },
-                    "to": [
-                      {
-                        "key_code": "right_arrow"
-                      }
-                    ],
-                    "type": "basic"
-                  }
                 ]
-              }
-                ]
-          },
+            },
             "devices": [],
             "fn_function_keys": [
                 {
@@ -533,6 +588,7 @@
             ],
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
+                "country_code": 0,
                 "keyboard_type": "ansi"
             }
         }

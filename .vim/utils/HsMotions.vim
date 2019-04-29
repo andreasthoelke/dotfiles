@@ -91,14 +91,10 @@ let g:columnSepsPttn = MakeOrPttn( AppendSpace( g:columnSeps ) )
 
 
 
+" Buffer local maps
 func! HaskellMaps()
-  nnoremap <silent><buffer> <c-p> :call HsPrevSignature()<cr>:call ScrollOff(10)<cr>
-  " TODO inc visual maps
-  vnoremap <silent><buffer> <c-p> :call HsPrevSignature('v')<cr>:call ScrollOff(10)<cr>
-  nnoremap <silent><buffer> <c-n> :call HsNextSignature()<cr>:call ScrollOff(16)<cr>
-  vnoremap <silent><buffer> <c-n> :call HsNextSignature(1)<cr>
-  nnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>:call ScrollOff(10)<cr>
-  vnoremap <silent><buffer> ,<c-n> :call HsBlockLastLine()<cr>
+  onoremap <silent><buffer> af :call HsBlockVisSel()<cr>
+  xnoremap <silent><buffer> af :<c-u>call HsBlockVisSel()<cr>
 endfunc
 
 
@@ -124,9 +120,11 @@ func! HsBlockLastLine()
   call IfOnSpaceGoWord()
 endfunc
 
-onoremap ih :call HsBlockVisSel()<cr>
-xnoremap ih :<c-u>call HsBlockVisSel()<cr>
+" now run by "af" buffer local maps
+" onoremap ih :call HsBlockVisSel()<cr>
+" xnoremap ih :<c-u>call HsBlockVisSel()<cr>
 func! HsBlockVisSel()
+  normal! l
   call TopLevBackw()
   normal! V
   call HsBlockLastLine()
@@ -198,11 +196,11 @@ nnoremap ,A F,B
 
 " Vimscript Movement: -------------
 
-func! VimScriptMaps()
-  nnoremap <silent><buffer> <c-p> :call VimPrevCommentTitle()<cr>:call ScrollOff(10)<cr>
-  nnoremap <silent><buffer> <c-n> :call VimNextCommentTitle()<cr>:call ScrollOff(16)<cr>
-
-endfunc
+" Not needed any more as this is included in haskell toplevel?
+" func! VimScriptMaps()
+"   nnoremap <silent><buffer> <c-p> :call VimPrevCommentTitle()<cr>:call ScrollOff(10)<cr>
+"   nnoremap <silent><buffer> <c-n> :call VimNextCommentTitle()<cr>:call ScrollOff(16)<cr>
+" endfunc
 
 " Vim Patterns:
 let g:Ptn_VimCommentTitle = '^"\s\u\a*(\s+\u\a*)*:'
@@ -225,10 +223,10 @@ onoremap iv :<c-u>exec "normal! HVL"<cr>
 vmap iv ,Ho,L
 
 " Needed for textobj-markdown because of conflict with textobj-function?
-omap <buffer> af <plug>(textobj-markdown-chunk-a)
-omap <buffer> if <plug>(textobj-markdown-chunk-i)
-omap <buffer> aF <plug>(textobj-markdown-Bchunk-a)
-omap <buffer> iF <plug>(textobj-markdown-Bchunk-i)
+" omap <buffer> af <plug>(textobj-markdown-chunk-a)
+" omap <buffer> if <plug>(textobj-markdown-chunk-i)
+" omap <buffer> aF <plug>(textobj-markdown-Bchunk-a)
+" omap <buffer> iF <plug>(textobj-markdown-Bchunk-i)
 
 " Movement Naviagation:  ---------------------------------------------------------------------
 
@@ -240,11 +238,9 @@ nnoremap q :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.
 " TODO add long moves to jumplist as reverting moves would be challenging to perform?
 
 " Tab is the 'ballpark' motion - it gets you into constituting areas in a function
-" nnoremap <silent> Q :call FnWireframeForw()<cr>
-nnoremap <silent> <tab> :call FnWireframeForw()<cr>
-" nnoremap <silent> T :call FnWireframeBackw()<cr>
-nnoremap <silent> <s-tab> :call FnWireframeBackw()<cr>
-func! FnWireframeForw()
+nnoremap <silent> <c-m> :call FnAreaForw()<cr>
+nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
+func! FnAreaForw()
   " Step back is needed to find keywords that are being skipped to from a prev keyword, e.g. a 'do' after '='
   normal! h
   let [oLine, oCol] = getpos('.')[1:2]
@@ -252,7 +248,7 @@ func! FnWireframeForw()
   call SearchSkipSC( g:fnWirePttn, 'W' )
   if CursorIsInsideComment() || CursorIsInsideString()
     normal! w
-    call FnWireframeForw()
+    call FnAreaForw()
   else
     " Now on the hotspot keyword make specific next/second steps
     call SkipBinding()
@@ -265,7 +261,7 @@ func! FnWireframeForw()
   endif
 endfunc
 
-func! FnWireframeBackw()
+func! FnAreaBackw()
   let [oLine, oCol] = getpos('.')[1:2]
   " Find the prev hotspot keyword
   call SearchSkipSC( g:fnWirePttn, 'bW' )
@@ -287,26 +283,26 @@ func! FnWireframeBackw()
     endif " ▲
   endif
   if CursorIsInsideComment() || CursorIsInsideString()
-    call FnWireframeBackw()
+    call FnAreaBackw()
   endif
   call ScrollOff(10)
 endfunc
 
-" Optional highlighting of fnWireframe keywords:
+" Optional highlighting of fnAreakeywords:
 " doesn't work with multiple files, also slow - obsolete?
-func! HighlightFnWireframe( on )
-  if a:on && !g:hlWireframeID
-    let g:hlWireframeID = matchadd('BlackBG', '\(\s\zswhere\ze\_s\|\s\zsdo\ze\_s\|\s\zsin\ze\_s\|\s\zscase\ze\_s\|\s\zsthen\ze\_s\|\s\zslet\ze\_s\)')
-  elseif !a:on && g:hlWireframeID
-    call matchdelete( g:hlWireframeID )
-    let g:hlWireframeID = 0
+func! HighlightFnArea( on )
+  if a:on && !g:hlAreaID
+    let g:hlAreaID = matchadd('BlackBG', '\(\s\zswhere\ze\_s\|\s\zsdo\ze\_s\|\s\zsin\ze\_s\|\s\zscase\ze\_s\|\s\zsthen\ze\_s\|\s\zslet\ze\_s\)')
+  elseif !a:on && g:hlAreaID
+    call matchdelete( g:hlAreaID )
+    let g:hlAreaID = 0
   else
     echo 'already set!'
   endif
 endfunc
-let g:hlWireframeID = 0
-" call HighlightFnWireframe(1)
-" call HighlightFnWireframe(0)
+let g:hlAreaID = 0
+" call HighlightFnArea(1)
+" call HighlightFnArea(0)
 " let g:fnWire2Pttns = PrependSpace( AppendExtSpace( ['where', 'do', 'in', 'case', 'then', 'let'] ))
 " call append( line('.'), MakeOrPttn( g:fnWire2Pttns ) )
 " call matchdelete( abc )
@@ -704,15 +700,17 @@ func! TestVisSel()
 endfunc " ▲
 " Cursor pos is always == visual start
 
-" Next/prev in comma separated lists
-nnoremap <silent> q :call CommaItemStartForw()<cr>
-onoremap <silent> q :call CommaItemStartForw()<cr>
-vnoremap <silent> q <esc>:call ChangeVisSel(function('CommaItemStartForw'))<cr>
-nnoremap <silent> t :call CommaItemStartBackw()<cr>
-vnoremap <silent> t <esc>:call ChangeVisSel(function('CommaItemStartBackw'))<cr>
+
+" ─   Next/prev in comma separated lists                 ■
+nnoremap <silent> t :call CommaItemStartForw()<cr>
+onoremap <silent> T :call CommaItemStartForw()<cr>
+" Note/Test: The "T" is meant to avoid the "t"/till here - test this
+vnoremap <silent> t <esc>:call ChangeVisSel(function('CommaItemStartForw'))<cr>
+nnoremap <silent> T :call CommaItemStartBackw()<cr>
+vnoremap <silent> T <esc>:call ChangeVisSel(function('CommaItemStartBackw'))<cr>
 " Can't remap omap t, as this is the 't'ill map
 " onoremap <silent> t :call CommaItemStartBackw()<cr>
-" Test: qqqlvtoq           v           |     v
+" Test: tttlvTot           v           |     v
 " allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 func! CommaItemStartForw() " ■
   let [oLine, oCol] = getpos('.')[1:2]
@@ -760,14 +758,15 @@ func! CommaItemStartBackw()
     call search('\S')
   endif
 endfunc
+" ─^  Next/prev in comma separated lists                 ▲
 
 
-" Comma textobjects:
-onoremap <silent> aq :<c-u>call CommaItem_VisSel_Around()<cr>
-vnoremap <silent> aq :<c-u>call CommaItem_VisSel_Around()<cr>o
-onoremap <silent> iq :<c-u>call CommaItem_VisSel_Inside()<cr>
-vnoremap <silent> iq :<c-u>call CommaItem_VisSel_Inside()<cr>o
-" Test: caq, yaq, vaq, viq, yiq<c-o>
+" ─   Comma textobjects                                  ■
+onoremap <silent> at :<c-u>call CommaItem_VisSel_Around()<cr>
+vnoremap <silent> at :<c-u>call CommaItem_VisSel_Around()<cr>o
+onoremap <silent> it :<c-u>call CommaItem_VisSel_Inside()<cr>
+vnoremap <silent> it :<c-u>call CommaItem_VisSel_Inside()<cr>o
+" Test: cat, yat, vat, vit, vit<o>
 " allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 
 func! CommaItem_VisSel_Around()
@@ -778,7 +777,7 @@ func! CommaItem_VisSel_Around()
   let [sLine, sCol] = getpos('.')[1:2]
   " now move to the end of the item, then to the start of the next and back one step
   call CommaItemEnd()
-  normal! wh
+  normal! Wh
   let [eLine, eCol] = getpos('.')[1:2]
   call setpos( "'<", [0, sLine, sCol, 0] )
   call setpos( "'>", [0, eLine, eCol, 0] )
@@ -796,28 +795,18 @@ func! CommaItem_VisSel_Inside()
   call setpos( "'>", [0, eLine, eCol, 0] )
   normal! gv
 endfunc
-" Comma textobjects:
+" ─^  Comma textobjects                                  ▲
 
-" Note the difference to CommaItemStartBackward. This one is not meant to progressively move back
-nnoremap <silent> <localleader>t :call CommaItemStart()<cr>
-func! CommaItemStart()
-  call search( '\([\|(\|{\|,\)', 'bW')
-  normal! w
-endfunc
 
-nnoremap <silent> <localleader>q :call CommaItemEnd()<cr>
-vnoremap <silent> <localleader>q <esc>:call ChangeVisSel(function('CommaItemEnd'))<cr>
-func! CommaItemEnd()
-  call searchpair( '{\|\[\|(', '\(,\|}\|\]\|)\)', '}\|\]\|)', 'W' )
-  normal! h
-endfunc
-
-" Jump to the first item of the next/prev bracket
-nnoremap <silent> ,q :call BracketStartForw()<cr>
-vnoremap <silent> ,q <esc>:call ChangeVisSel(function('BracketStartForw'))<cr>
-nnoremap <silent> ,t :call BracketStartBackw()<cr>
-vnoremap <silent> ,t <esc>:call ChangeVisSel(function('BracketStartBackw'))<cr>
-" See the 'q' tests above. Note the visual maps will hardly be needed
+" ─   Start of next/prev bracket                         ■
+nnoremap <silent> ]t :call BracketStartForw()<cr>
+vnoremap <silent> ]t <esc>:call ChangeVisSel(function('BracketStartForw'))<cr>
+nnoremap <silent> [t :call BracketStartBackw()<cr>
+vnoremap <silent> [t <esc>:call ChangeVisSel(function('BracketStartBackw'))<cr>
+" See the 't' tests above. In tests file see BracketStartForw. Note the visual maps will hardly be needed
+" Issue: t/T and ]t/[t is not very intuitive
+" Tests: just some ]t]t]t and some [t[t[t - note this jumps to start of comment and other 'wrong' spots - but that's ok
+" eitherDecode "[1,2,[3,true]]" ∷ Either String (Int, Int, (Int, Bool))
 func! BracketStartForw()
   if CursorIsOnOpeningBracket() " If on opening bracket, make sure to jump into the bracket
     normal! h
@@ -837,7 +826,7 @@ endfunc
 
 func! BracketStartBackw()
   let [oLine, oCol] = getpos('.')[1:2]
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', '{\|\[\|(', '}\|\]\|)', 'bnW', 'CursorIsInsideStringOrComment()' )
+  let [sLine, sCol] = searchpos( '{\|\[\|(', 'bnW' )
   if sLine && sLine > (oLine - 15)
     call setpos('.', [0, sLine, sCol, 0] )
     normal! w
@@ -849,12 +838,14 @@ func! BracketStartBackw()
     call BracketStartBackw()
   endif
 endfunc
+" ─^  Start of next/prev bracket                         ▲
 
+" End of a list: 
 " Move to the end of a list, ready to insert the next item.
-nnoremap <silent> <localleader>q :call BracketEndForw()<cr>
-vnoremap <silent> <localleader>q <esc>:call ChangeVisSel(function('BracketEndForw'))<cr>h
-" Test: q\qi,<space>JS<esc>
-" allLanguages = [Haskell, Agda abc,  Idris, PureScript]
+nnoremap <silent> ]T :call BracketEndForw()<cr>
+vnoremap <silent> ]T <esc>:call ChangeVisSel(function('BracketEndForw'))<cr>h
+" Test: t]Ti,<space>JS<esc>
+" allLanguages = [ Haskell, Agda abc,  Idris, PureScript ]
 func! BracketEndForw()
   " Don't be stuck at previous location
   normal! l
@@ -866,6 +857,23 @@ func! BracketEndForw()
   endif
 endfunc
 
+" TODO is this still needed? ■
+" Note the difference to CommaItemStartBackward. This one is not meant to progressively move back
+" nnoremap <silent> <localleader>T :call CommaItemStart()<cr>
+" func! CommaItemStart()
+"   call search( '\([\|(\|{\|,\)', 'bW')
+"   normal! w
+" endfunc
+
+" nnoremap <silent> <localleader>t :call CommaItemEnd()<cr>
+" vnoremap <silent> <localleader>t <esc>:call ChangeVisSel(function('CommaItemEnd'))<cr>
+" func! CommaItemEnd()
+"   call searchpair( '{\|\[\|(', '\(,\|}\|\]\|)\)', '}\|\]\|)', 'W' )
+"   normal! h
+" endfunc ▲
+
+
+" ─   HsWord                                            ──
 " - skip brackets and quotes
 " - skip lambda var
 " - skip namesspaced/dots in var - use camelcase motion instead

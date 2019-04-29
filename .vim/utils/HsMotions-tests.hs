@@ -62,6 +62,8 @@ aa "abc" ghi (["abc, ddba"]) jkl
 "    |         v       |  .      v       |
   "   [Ab 'a' <> Ab 'c', Ab 'x' <> Ab 'd', Ab 'y']
 
+BracketStartForw
+
   ( eins, zwei, drei, (drei, halb), more, ( Just 22, Nothing, [ Ab 22, Bc 33, Cd 33], Just 11), vier,
   fuenf, sechs ( sieben, acht, (neun, zehn)), elf
 
@@ -86,7 +88,7 @@ ze0 = object [ "numbers" .= toJSONList [1,2,3 ∷ Int], "names"   .= toJSONList 
              ]
 
 CommaStartBackw
-zweimal zurueck 
+zweimal zurueck
 zweiter case [ oder ,
 
 CommaStartForw

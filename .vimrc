@@ -913,8 +913,9 @@ noremap ; m':
 
 " Open command history with the cursor on the last command. Avoids conflicts with bufferlocal/plugin "q"/quick maps.
 " Also avoid accidential Exmode shell, can still be accessed by "gQ"
-nnoremap Q q:k
-vnoremap Q q:k
+" TODO change this as Q is now used in CodeMarkup.vim
+" nnoremap Q q:k
+" vnoremap Q q:k
 
 " Default command history is 20
 set history =40
@@ -943,6 +944,20 @@ func! PasteLastEchoText()
 endfunc
 
 " COMMAND HISTORY: --------------------------------------------
+
+" Tab key remap:
+" This is documented in .vim/notes/notes-todos.md . Use the following lines to Test <Tab> and <S-Tab>:
+" nnoremap œ :echo col('.')<cr>
+" nnoremap Œ :echo line('.')<cr>
+" TODO currently Tab in command line mode can only be triggered by "c-i"! Now I could set up a command map like this:
+" cnoremap œ <C-\>=Tee1()<CR>
+" cnoremap œ <c-i>
+" nnoremap <leader>abb :call Tee1()<cr>
+" func! Tee1()
+"   call feedkeys("\<Tab>", 'tn')
+" endfunc
+" However this does not trigger the Tab completion!
+
 
 " Unicode: ---------------------------------------------------
 
@@ -1160,15 +1175,17 @@ endfun
 
 " General: -----------------------------------------------------------------------------
 
-nnoremap <leader>cab :e *.cabal<cr>
+nnoremap <leader>cab :vnew *.cabal<cr>
+
+" TODO this does not show a man page outline
+nnoremap <leader>g0 g0
 
 
 " nnoremap <leader>zsh :e ~/.zshrc<cr>
 command! Zshrc   :e ~/.zshrc
 command! ZshOhMy :e ~/.oh-my-zsh/oh-my-zsh.sh
 command! Vimrc   :e ~/.vimrc
-command! Cabal   :e *.cabal
-cabbrev cab Cabal
+command! Cabal   :vnew *.cabal
 
 " Insert the $PATH shell variable
 command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
@@ -1228,6 +1245,10 @@ source .vim/utils/utils-syntax-color.vim
 source .vim/utils/utils-virtualtext.vim
 source .vim/utils/utils-csv.vim
 source .vim/utils/utils-applescript.vim
+
+" Split-out setup sections
+source .vim/utils/setup-tags.vim
+
 
 
 " Accounts
@@ -1590,8 +1611,8 @@ nnoremap <silent> <leader>io :InteroOpen<CR>
 nnoremap <silent> <leader>ih :InteroHide<CR>
 nnoremap <silent> <leader>im :InteroLoadCurrentModule<CR>
 nnoremap <silent> <leader>il :InteroLoadCurrentFile<CR>
-" nnoremap <silent>         gd :call GotoDefinition()<CR>
-" nnoremap <silent> <leader>gd :sp<CR>:call GotoDefinition()<CR>
+nnoremap <silent>         gd :call GotoDefinition()<CR>
+nnoremap <silent> ,gd :sp<CR>:call GotoDefinition()<CR>
 " fee mapping
 " nnoremap <silent>         ]d :call GotoDefinition()<CR>
 " Intero: -----------------------------------------------------------
@@ -1599,17 +1620,24 @@ nnoremap <silent> <leader>il :InteroLoadCurrentFile<CR>
 " New Haskell And Purescript Maps: ------------------------------------------------------
 
 " Type Inserts: ----------------------------------------------------
+" TODO review these
+nnoremap <silent> ,tw :call InsertTypeAnnotation()<cr>
+map <silent> ,tg <Plug>InteroGenericType
+map <silent> ,tt <Plug>InteroType
+
 " nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
-nnoremap <localleader>tt :call TypeInsert()<cr>
+" nnoremap <localleader>tt :call TypeInsert()<cr>
 " vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
 " TODO: problem: PSCIDEgetKeyword only work when PSCIDE is started/ throws error with Haskell
-nnoremap <localleader>tg :InteroGenTypeInsert<cr>
+" nnoremap <localleader>tg :InteroGenTypeInsert<cr>
+" map <silent> <leader>tq <Plug>InteroGenericType
+
+map <silent> <localleader>tg <Plug>InteroGenTypeInsert
 vnoremap <localleader>tg :InteroGenTypeInsert<cr>
 nnoremap <localleader>ti :InteroInfoInsert<cr>
 vnoremap <localleader>ti :InteroInfoInsert<cr>
 
 nnoremap <silent> <localleader>tw :call InsertTypeAnnotation()<cr>
-nnoremap <silent> ,tw :call InsertTypeAnnotation()<cr>
 " Type Inserts: ----------------------------------------------------
 
 
@@ -1849,12 +1877,6 @@ let g:easy_align_ignore_groups = ['Comment', 'String']
 " -- Data.Conduit.Internal.List.Stream
 " replicateMS ∷ Monad m         ⇒ Int → m a   → StreamProducer m a
 
-
-" Insert line comment
-nnoremap <leader>mll i----------------------------------------------------------------------------------<esc>^
-" Fill line with dashes
-nnoremap <leader>mlk $a<space><esc>82a-<esc>d82<bar>^
-" TODO: this somehow stops working!?
 
 
 " ------------------------------------------------------
@@ -2121,11 +2143,13 @@ nnoremap D "_d
 " Folding Folds: ------------------------------------------------
 
 set foldenable
-set foldmethod =marker
+set foldmethod=marker
+set foldmarker=\ ■,\ ▲
+set foldlevelstart=1
 
 " Partially expand syntax and expression based folding (of markdown and gitv plugins)
-au ag Syntax git set foldlevel=1
-au ag FileType markdown set foldlevel=1
+" au ag Syntax git set foldlevel=1
+" au ag FileType markdown set foldlevel=1
 " au ag FileType vim set foldlevel=1
 " au ag FileType haskell set foldlevel=1
 
@@ -2163,7 +2187,8 @@ set foldtext=DefaultFoldtext()
 func! DefaultFoldtext()
   let l:line = getline(v:foldstart)
   let l:subs = substitute(l:line, '{\|"\|--\|▲\|■', '', 'g')
-  return '  ' . l:subs
+  " return ' ●' . l:subs
+  return '▶ ' . l:subs
 endfunc
 
 " Don't show the default '.' in the fold text
@@ -2179,6 +2204,9 @@ exec "setlocal fillchars=fold:\\ "
 " Issue: this seems needed to prevent the cursor from jumping to the beginning of the line on the first vertical motion after commenting
 nnoremap <silent> gcc :TComment<cr>lh
 " → zmaps
+
+" Deactivate the TComment "ic" inside comment textobject - as this is mapped to "inside content" with CodeMarkup
+let g:tcomment_textobject_inlinecomment = ''
 
 " Comments: --------------------------
 
@@ -2710,12 +2738,6 @@ au ag TabLeave * let g:lasttab = tabpagenr()
 
 
 " Buffers: -----------------------------------------
-" next - prev buffer: use unimpaired "[b" - "]b"
-" Old: next - prev buffer
-" nnoremap <silent> ƒ :bn<cr>
-" nnoremap <silent> ð :bp<cr>
-" Next/Prev navigation works via <c-shift-f> <c-shift-d> (Karabiner) <Option/Alt>f / <A-f> / <A-d>
-" Tip Option Alt Key Mappings: get these chars by typing <option+key> in insert mode
 
 " TODO this map isn't really used/appropriate?
 " Prevent closing a window when closing a buffer
@@ -3203,8 +3225,8 @@ vmap <silent> gsd :call HoogleForVisSel()<cr>
 nnoremap <silent> gsi :call GithubSearch("word")<cr>
 vmap <silent> gsi :call GithubSearch("visSel")<cr>
 
-nnoremap <silent> gsf :call GrepSearch("word", "file")<cr>
-vmap <silent> gsf :call GrepSearch("visSel", "file")<cr>
+nnoremap <silent> gsr :call GrepSearch("word", "repo")<cr>
+vmap <silent> gsr :call GrepSearch("visSel", "repo")<cr>
 nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 
@@ -3212,6 +3234,8 @@ vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 " Seach Vim Help and fill the quickfix list with the results
 command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
 cnoreabbrev hg HelpGrep
+
+nnoremap <leader>K K
 
 fun! OpenFinder()
   exec 'silent !open .'
@@ -3250,16 +3274,34 @@ command! -nargs=1 Fplug     :tabe % | Grepper           -side          -query <a
 command! -nargs=1 Fdeleted call FindInDeletedCode( <q-args> )
 " TODO How can I do this in uncommitted deleted code → undotree or unstaged changes?
 
+command! -nargs=1 Help call HelpOpen( <q-args> )
 
 func! FindInDeletedCode( pattern )
   let l:cmd = "git log -c -S'" . a:pattern . "'"
   let l:resultLines = split( system( l:cmd ), '\n' )
-  " Open comment at the end of the last line
-  let l:resultLines[ 1 ] = '{- ' . l:resultLines[ 1 ]
   exec 'tabe'
   call append( line('.'), l:resultLines )
 endfunc
 
+func! HelpOpen( appName )
+  let l:cmd = a:appName . ' --help'
+  let l:resultLines = split( system( l:cmd ), '\n' )
+  exec 'tabe'
+  call append( line('.'), l:resultLines )
+  exec 'Man!'
+endfunc
+
+command! -nargs=1 AppOut call StdoutToBuffer( <q-args> )
+nnoremap <leader>sab :call StdoutToBuffer( getline('.') )<cr>
+" Tests:
+" ls -o -t -a
+" hasktags --help
+func! StdoutToBuffer ( cmd )
+  let l:resultLines = split( system( a:cmd ), '\n' )
+  exec 'vnew'
+  call append( line('.'), l:resultLines )
+  normal! dd
+endfunc
 
 " This works pretty well. could reuse for other purposes
 command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
@@ -3291,11 +3333,9 @@ fun! GrepSearch(selType, mode)
       let keyw = Get_visual_selection()
     endif
     if a:mode == "buffers"
-      " exec 'Grepper -side -buffers -query "' . keyw . '"'
-      exec 'Findb "' . keyw . '"'
+      exec 'Fbuffers "' . keyw . '"'
     else
-      " exec 'Grepper -side -query "' . keyw . '"'
-      exec 'Find "' . keyw . '"'
+      exec 'Frepo "' . keyw . '"'
     endif
 endfun
 " Vim Grepper: ------------------------------
@@ -3681,101 +3721,6 @@ let g:easy_align_delimiters = {
 \   }
 \ }
 
-" highlight TagbarHighlight guifg=Green ctermfg=Green
-highlight default link TagbarHighlight  Cursor
-" how quickly tagbar (and vim in gnyeneral!) refreshes (from file?)
-" set updatetime=500
-let g:tagbar_sort = 0
-
-
-" Tags: ------------
-" set tags=tags;/,codex.tags;/
-set tags=/,codex.tags;/
-" to tell it to use the ./tags
-" set tags+=tags
-" TODO: run ctags manually? how would tags work for purescript
-" ctags -f - --format=2 --excmd=pattern --extra= --fields=nksaSmt myfile
-
-if executable('lushtags')
-    let g:tagbar_type_haskell = {
-        \ 'ctagsbin' : 'lushtags',
-        \ 'ctagsargs' : '--ignore-parse-error --',
-        \ 'kinds' : [
-            \ 'm:module:0',
-            \ 'e:exports:1',
-            \ 'i:imports:1',
-            \ 't:declarations:0',
-            \ 'd:declarations:1',
-            \ 'n:declarations:1',
-            \ 'f:functions:0',
-            \ 'c:constructors:0'
-        \ ],
-        \ 'sro' : '.',
-        \ 'kind2scope' : {
-            \ 'd' : 'data',
-            \ 'n' : 'newtype',
-            \ 'c' : 'constructor',
-            \ 't' : 'type'
-        \ },
-        \ 'scope2kind' : {
-            \ 'data' : 'd',
-            \ 'newtype' : 'n',
-            \ 'constructor' : 'c',
-            \ 'type' : 't'
-        \ }
-    \ }
-    " Add support for purescript files in tagbar.
-    let g:tagbar_type_purescript = {
-        \ 'ctagsbin' : 'lushtags',
-        \ 'ctagsargs' : '--ignore-parse-error --',
-        \ 'kinds' : [
-            \ 'm:module:0',
-            \ 'e:exports:1',
-            \ 'i:imports:1',
-            \ 't:declarations:0',
-            \ 'd:declarations:1',
-            \ 'n:declarations:1',
-            \ 'f:functions:0',
-            \ 'c:constructors:0'
-        \ ],
-        \ 'sro' : '.',
-        \ 'kind2scope' : {
-            \ 'd' : 'data',
-            \ 'n' : 'newtype',
-            \ 'c' : 'constructor',
-            \ 't' : 'type'
-        \ },
-        \ 'scope2kind' : {
-            \ 'data' : 'd',
-            \ 'newtype' : 'n',
-            \ 'constructor' : 'c',
-            \ 'type' : 't'
-        \ }
-    \ }
-    " Add support for markdown files in tagbar.
-    " let g:tagbar_type_markdown = {
-    "   \ 'ctagstype' : 'markdown',
-    "   \ 'kinds' : [
-    "       \ 'h:Heading_L1',
-    "       \ 'i:Heading_L2',
-    "       \ 'k:Heading_L3'
-    "   \ ]
-    " \ }
-    let g:tagbar_type_markdown = {
-        \ 'ctagstype': 'markdown',
-        \ 'ctagsbin' : '~/.vim/plugged/markdown2ctags/markdown2ctags.py',
-        \ 'ctagsargs' : '-f - --sort=yes',
-        \ 'kinds' : [
-            \ 's:sections',
-            \ 'i:images'
-        \ ],
-        \ 'sro' : '|',
-        \ 'kind2scope' : {
-            \ 's' : 'section',
-        \ },
-        \ 'sort': 0,
-    \ }
-endif
 
 " copied from purescript - pscide-mac:
 fun! s:jsonEncode(thing, ...)

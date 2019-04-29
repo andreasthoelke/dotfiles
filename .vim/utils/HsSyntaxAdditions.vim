@@ -2,7 +2,7 @@
 " ─   Filetype Specific Maps Tools Syntax               ──
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellTools()
-" au ag BufNewFile,BufRead        *.hs call HaskellMaps()
+au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
@@ -24,21 +24,10 @@ func! HaskellTools()
   " call vim2hs#haskell#editing#formatting()
 endfunc
 
-func! CommentSyntaxAdditions()
-  " ─   Comment Section Example                            ──
-  " Comment sections use the unicode dash at the start and end of the line
-  " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
-  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\w.*', 11, -1 )
-  " Comment sections can be terminated using the ^ char
-  " ─^  Comment Section Example end                        ──
-  " Comment label: This is a simple label for some highlighted info to come
-  " TODO limit length!
-  call matchadd('CommentLabel', '\v^" \u.*:', -1, -1 )
-endfunc
 
-
+" ─   Haskell                                           ──
 func! HaskellSyntaxAdditions() "{{{
-  call CommentSyntaxAdditions()
+  call CodeMarkupSyntaxHighlights()
   " Conceal comment marker string
   call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
@@ -65,12 +54,13 @@ func! HaskellSyntaxAdditions() "{{{
   " set concealcursor=
   set syntax=purescript
   " This will add one space before the foldmarker comment with doing "zfaf"
-  set commentstring=\ --\ %s
+  set commentstring=\ --\ \%s
   " This refresh of the highlight is needed to have a black icon/indicator for a folded function, e.g the following line
   " call matchadd('Conceal', '--{\{{', -1, -1, {'conceal': ' '})
   " hi! Conceal guibg=#000000
   " Issue: this also set the bg of other conceal chars
 
+  " setlocal foldmarker=\ ■,\ ▲
   " Highlight fn-wireframe keywords
   " Note: This *does* actually have a performance hit when scrolling through a file!
   " call matchadd('BlackBG', '\(\s\zswhere\ze\_s\|\s\zsdo\ze\_s\|\s\zsin\ze\_s\|\s\zscase\ze\_s\|\s\zsthen\ze\_s\|\s\zslet\ze\_s\)')
@@ -81,13 +71,10 @@ func! HaskellSyntaxAdditions() "{{{
 endfunc "}}}
 
 " Syntax Color Haskell: --------------------
-" Syntax Color Haskell: "{{{
-" eins zwei "}}}
-
 
 " only needs to look good in haskell!
 func! VimScriptSyntaxAdditions() " ■
-  call CommentSyntaxAdditions()
+  call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
   call matchadd('Conceal', '\v^\s*\zs"\s', 12, -1, {'conceal': ''})
   " Hilde \" before comment after code
@@ -107,7 +94,7 @@ func! VimScriptSyntaxAdditions() " ■
   " Original vim foldmarker string
   " set foldmarker={{{,}}}
   " set foldmarker=■■,▲▲
-  set foldmarker=\ ■,\ ▲
+  " set foldmarker=\ ■,\ ▲
 endfunc " ▲
 
 " Testing: ■
@@ -131,7 +118,7 @@ endfunc " ▲
 " let g:haskell_classic_highlighting = 1
 " syn match haskellCompose ' \zs\.' conceal cchar=∘
 " syn match haskellLambda '\\' conceal cchar=λ
-" This conceals "->" into unicode "→". and is supposed to trun :: into big ":" - but is that char not available?
+" this conceals "->" into unicode "→". and is supposed to trun :: into big ":" - but is that char not available?
 " Not needed?
 " let g:haskell_conceal_wide = 1
 " goolord/vim2hs us using this to display lambda symbol and fn compose dot

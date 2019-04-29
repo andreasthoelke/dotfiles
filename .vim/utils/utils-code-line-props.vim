@@ -36,6 +36,12 @@ func! IsEmptyLine( linenum )
   return getline( a:linenum ) == ''
 endfunc
 
+func! MatchesInLine( linenum, pttn )
+  " return len( matchstr( getline( a:linenum ), a:char ) ) ? 1 : 0
+  return getline( a:linenum ) =~ a:pttn
+endfunc
+" echo MatchesInLine( line('.') -1, 'a' )
+
 func! IsTypeSignLine( linenum )
   return getline( a:linenum ) =~ '\(∷\|::\)'
 endfunc

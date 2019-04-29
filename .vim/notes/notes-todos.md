@@ -360,9 +360,48 @@ Config path
   Note: When a `Complex Modificatioin` is `remove`d in the Karabiner-Elements Preferences UI, the
   related object is **deleted** from the Karabiner.json file!
 
+#### Route vim-unmappable keys through a karabiner option alt keymap
+Problem: Some keys can not be mapped in vim, e.g. `c-s` control+shift, also `Tab` simply tiggers `c-i` while I'd like to
+map both keys differently.
+Solution:
+  * Make a Karabiner map of to unmappable key to some (arbitry) option key:
+    This Karabiner object maps the `Tab` key to `option-q`:
+  {
+                      "description": "Tab to <option-g>",
+                      "manipulators": [
+                        {
+                          "from": {
+                            "key_code": "tab",
+                            "modifiers": {
+                            }
+                          },
+                          "to": [
+                            {
+                              "key_code": "g",
+                              "modifiers": [
+                                "left_option"
+                              ]
+                            }
+                          ],
+                          "type": "basic"
+                        }
+                      ]
+                    }
+  * Note that only some alt/option keys work with just one keystroke! To find out go into insert mode, hold down the
+  option key and type various characters and see the special symbols inserted after one or two keypresses.
+  * For example typing `option-g` produces `©`. Thus with the karabiner setting above typing `Tab` will send this char: `©`
+  * The special char can now be used in Vim-Maps:
+nnoremap œ :echo col('.')<cr>
+nnoremap Œ :echo line('.')<cr>
+→ type `tab` and see the current cursor column echoed in vim.
+  * Note that you need to consider Shift-Tab usage separately: It needs a separate Karabiner map! you need to find an
+  Option + Shift + Key that prints with one keypress (option+shift+g does not work in one press!) and you need to use
+  that other special char for the vim map
+
   > Karabiner option/alt mapping example. (not in use any more)
   > Note: - <c-;> and <c-+> are "unmappable" keys in vim! Therefore using:
   `nnoremap … q:k`
+nnoremap … :echo 'ab'<cr>
   > This map is using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
 
   Key Codes
@@ -939,18 +978,21 @@ change DocsForCursorWord() to hoogle.hackage.org not hackage/hoogle
 
 ## Temp next
 
+Foldmarker commands `zfaf` do not insert comments before marker
+
+Review Haskell type insert maps `,tw`
+  " Type Inserts
+
 douplicating line with \t. then edit and j/go down jumps to the beginning of the line - should stay in the same row
 
 make HsNextSignature motions vis-selection compliant
 then use this for the haskell function text object
 this could then be used for unicode replace - and rename of vars
 
-next vim title comment
-
 operator pending map/motion for vimscript func
 
 easyclip setting causes redundant undo step at insert leave
-show quickfix process (1 of 4) in statusbar of inactive quickfix list. 
+show quickfix process (1 of 4) in statusbar of inactive quickfix list.
   currently c-g does output the state in the command line
 
 after duplicating a line and then commenting the orig line and moving down with 'j'
@@ -959,7 +1001,10 @@ after duplicating a line and then commenting the orig line and moving down with 
 `dip` dap does not work -> easyclip? d- map
 
 
-## Release notes v1.1.1
+
+## Release notes v1.1.2
+
+## Release notes v1.1.1 (2019-04-20)
 * Command to search in deleted code: `Fdeleted someString`
 * Search in groups of files: `Frepo Fbuffers Fvim Flug Fhask Fnotes Fdeleted`
 * restucture vimrc into separate files

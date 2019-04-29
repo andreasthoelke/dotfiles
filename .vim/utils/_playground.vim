@@ -17,20 +17,22 @@ echo 'a\nb\nc\nb\n' | vim - -es --not-a-term +'g/b/norm gUUixx' +2 +'norm yy2p' 
 
 some things
 
-" Sections can be open or closed
+" Sections can be open or closed ■
 " a closed section has an end marker
-" an open section extends to the next section header (the related text object "is" does)
+" an open section extends to the next section header (the related text object "is" does) ▲
 
-" a section is closed when an end marker is created
-"   the map/command automatically uses the header txt of the previous sectionheader
-" also when a section end marker is created, fold markers are added 
-" to the section start and end lines
+" a section is closed when an end marker is created ■
+"   the map/command automatically uses the header txt of the previous sectionheader ■
+" also when a section end marker is created, fold markers are added ▲
+" to the section start and end lines ▲
 
 " open section header lines may have no fold start markers
 " you can add a manual fold. cursor on the header line: "zf\j.." or vis-sel
 
 " ─   Syntax Color                                     ───
 
+
+" ─   Just header                                  ──
 let g:ta = '" ─   '
 let g:tb = 'Some Examp'
 let g:tc = g:ta . g:tb

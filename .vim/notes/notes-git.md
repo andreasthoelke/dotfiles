@@ -254,7 +254,7 @@ View Stash Content: - "stash list", "stash show" and "git stash show -p stash@{2
 
 ## Git Tags
   * "git tag -a v1.0.0 -m “Git process notes“", "git checkout v<tag>" to checkout a commit based on the related tag!
-  * "git tagls" to view. "git push --tags" to push tags to remote. "git tag -d v<tab>" to delete, then "git push -f --tags"
+  * "git tagls" to view. (issue: this seems to appreviate) "git push --tags" to push tags to remote. "git tag -d v<tab>" to delete, then "git push -f --tags"
   * Process: 
     * in gv copy the commit messages to release-notes1.txt
     * delete the end of the line after the message! 
