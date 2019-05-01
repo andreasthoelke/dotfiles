@@ -370,6 +370,14 @@ Solution:
                       "description": "Tab to <option-g>",
                       "manipulators": [
                         {
+                          "conditions": [
+                            {
+                              "bundle_identifiers": [
+                                "^io\\.alacritty$"
+                              ],
+                              "type": "frontmost_application_if"
+                            }
+                          ],
                           "from": {
                             "key_code": "tab",
                             "modifiers": {
@@ -398,11 +406,26 @@ nnoremap Œ :echo line('.')<cr>
   Option + Shift + Key that prints with one keypress (option+shift+g does not work in one press!) and you need to use
   that other special char for the vim map
 
-  > Karabiner option/alt mapping example. (not in use any more)
-  > Note: - <c-;> and <c-+> are "unmappable" keys in vim! Therefore using:
+#### Limit a map to specific app
+Source this line to get the `bundle id` of a MacOs app:
+!osascript -e 'id of app "Finder"'
+!osascript -e 'id of app "Alacritty"'
+
+The conditions array resides in the root object/ the same level as the "from" and "to" objects
+            "conditions": [
+                            { "bundle_identifiers": [
+                                "^io\\.alacritty$"
+                              ],
+                              "type": "frontmost_application_if"
+                            }
+                          ],
+
+
+#### Karabiner option/alt mapping example. (not in use any more)
+Note: - <c-;> and <c-+> are "unmappable" keys in vim! Therefore using:
   `nnoremap … q:k`
 nnoremap … :echo 'ab'<cr>
-  > This map is using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
+This map is using Karabiner mapping: "description": "Left Control + ; to Option + ; to open vim command history",
 
   Key Codes
   * Use the MacOS `Key Codes` app to view key codes and unicode id.
@@ -961,8 +984,9 @@ when `ga` highlight only appears after first `n`
 syntax highlighting in comments
   literal haskell files?
 where to put haskell notes?
-save in a learning repo?
-search through this?
+  save in a learning repo?
+  search through this?
+  → can now define bookmarked searches through groups of files
 
 test quickfix autoexpand on errors:
   function! QuickfixRefeshStyle()
@@ -977,8 +1001,6 @@ change DocsForCursorWord() to hoogle.hackage.org not hackage/hoogle
 
 
 ## Temp next
-
-Foldmarker commands `zfaf` do not insert comments before marker
 
 Review Haskell type insert maps `,tw`
   " Type Inserts
@@ -1003,6 +1025,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 
 ## Release notes v1.1.2
+* Shortcuts to popular folders <leader>o .. `n` notes, `u` utils, `h` haskell, `c` current
 
 ## Release notes v1.1.1 (2019-04-20)
 * Command to search in deleted code: `Fdeleted someString`

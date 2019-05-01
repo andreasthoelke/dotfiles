@@ -1,4 +1,10 @@
 
+func! GetLangCommentStr()
+  return trim( split(&commentstring, '%s')[0] )
+  " This trims leadging and trailing whitespace
+endfunc
+" put =GetLangCommentStr()
+
 
 command! SyntaxIDShow echo GetSyntaxIDAtCursor()
 func! GetSyntaxIDAtCursor()

@@ -148,6 +148,7 @@ RHS
 
 --
 
+→ copied this to .vim/notes/notes-navigation.md
 
 -- 1. Headings & Labels
 T s-T Heading

@@ -29,7 +29,9 @@ endfunc
 func! HaskellSyntaxAdditions() "{{{
   call CodeMarkupSyntaxHighlights()
   " Conceal comment marker string
-  call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
+  " call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '-- ', 12, -1, {'conceal': ''})
+  " Note: Priority is set to "12" to be > the CodeMarkup matchadd priority (11)
   call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
   " call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})

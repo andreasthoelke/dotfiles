@@ -336,8 +336,15 @@ endfunc
 
 command! StatuslineMoreInfos call StatuslineMoreInfos()
 func! StatuslineMoreInfos()
+  " Show more on inactive windows
   let g:lightline.inactive.right = [ ['scrollbar'], ['line'] ]
   call CursorColumnInStatusline()
+endfunc
+
+func! TagInStatusline()
+  let g:lightline.active.right = [ ['scrollbar'], ['column', 'line', 'tagbar'] ]
+  call lightline#init()
+  call lightline#update()
 endfunc
 
 " To reload config data, then change tab to refresh
@@ -383,9 +390,14 @@ let g:lightline.component.fpathBNum = '%f%n'
 let g:lightline.component_function = {}
 let g:lightline.component_function.gitbranch = 'fugitive#head'
 let g:lightline.component_function.scrollbar = "LightlineScrollbar"
+let g:lightline.component_function.tagbar = 'LightlineTagbar'
 
 func! LightlineScrollbar()
   return noscrollbar#statusline(20,' ','■')
+endfunc
+
+func! LightlineTagbar()
+  return tagbar#currenttag('%s', '')
 endfunc
 
 " Powerline symbols (work)
@@ -2389,6 +2401,7 @@ let g:ag_highlight=1
 " nnoremap <silent> ga m':let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 nnoremap <silent> ga :call HiSearchCursorWord()<cr>
 nnoremap <silent> g- m':set nohlsearch<cr>
+nnoremap <silent> <c-[> m':set nohlsearch<cr>
 
 " Don't add seach next/prev to the jumplist
 nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(14)<cr>
@@ -2755,6 +2768,11 @@ nnoremap <leader>bD :bd!<cr>
 
 nnoremap <localleader>QA :wqa<cr>
 nnoremap <localleader>QQ :q<cr>
+
+" Shortcuts to popular folders:
+nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
+nnoremap <leader>oh :tabe ~/Documents/Haskell/<cr>
+nnoremap <leader>oc :tabe ~/Documents/Haskell/6/<cr>
 
 " nnoremap gw :w<cr>
 " nnoremap <localleader>w :w<cr>

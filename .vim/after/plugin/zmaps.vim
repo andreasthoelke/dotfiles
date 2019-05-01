@@ -17,4 +17,9 @@ nnoremap yot :TagbarToggle<cr>
 " Issue: this seems needed to prevent the cursor from jumping to the beginning of the line on the first vertical motion after commenting
 nnoremap <silent> gcc :TComment<cr>lh
 
+" .. again, unimpaired overwriting this
+nnoremap <silent> ]t :call BracketStartForw()<cr>
+vnoremap <silent> ]t <esc>:call ChangeVisSel(function('BracketStartForw'))<cr>
+nnoremap <silent> [t :call BracketStartBackw()<cr>
+vnoremap <silent> [t <esc>:call ChangeVisSel(function('BracketStartBackw'))<cr>
 

@@ -28,7 +28,7 @@ let g:tagbar_sort = 0
 
 " ─   MakeSectionEndMarker Demo line                    ──
 
-
+" hasktags -c -a -o d2 src/Main.hs
 
 
 " Tags: ------------
@@ -41,32 +41,76 @@ set tags=./tags;
 " TODO: run ctags manually? how would tags work for purescript
 " ctags -f - --format=2 --excmd=pattern --extra= --fields=nksaSmt myfile
 
-let g:tagbar_type_haskell = {
-      \ 'ctagsbin'  : 'fast-tags',
-      \ 'ctagsargs' : '-o-',
-      \ 'kinds'     : [
-      \  'm:modules:0:0',
-      \  'c:classes:0:1',
-      \  't:types:0:1',
-      \  'C:constructors:0:1',
-      \  'p:patterns:0:1',
-      \  'o:operators:0:1',
-      \  'f:functions:0:1'
-      \ ],
-      \ 'sro'        : '.',
-      \ 'kind2scope' : {
-      \ 'm' : 'module',
-      \ 'c' : 'class',
-      \ 'd' : 'data',
-      \ 't' : 'type'
-      \ },
-      \ 'scope2kind' : {
-      \ 'module' : 'm',
-      \ 'class'  : 'c',
-      \ 'data'   : 'd',
-      \ 'type'   : 't'
-      \ }
-      \ }
+
+" let g:tagbar_type_haskell = {
+"       \ 'ctagsbin'  : 'fast-tags',
+"       \ 'ctagsargs' : '-o-',
+"       \ 'kinds'     : [
+"       \  'm:modules:0:0',
+"       \  'c:classes:0:1',
+"       \  't:types:0:1',
+"       \  'C:constructors:0:1',
+"       \  'p:patterns:0:1',
+"       \  'o:operators:0:1',
+"       \  'f:functions:0:1'
+"       \ ],
+"       \ 'sro'        : '.',
+"       \ 'kind2scope' : {
+"       \ 'm' : 'module',
+"       \ 'c' : 'class',
+"       \ 'd' : 'data',
+"       \ 't' : 'type'
+"       \ },
+"       \ 'scope2kind' : {
+"       \ 'module' : 'm',
+"       \ 'class'  : 'c',
+"       \ 'data'   : 'd',
+"       \ 'type'   : 't'
+"       \ }
+"       \ }
+
+
+" let g:tagbar_type_haskell = {
+"     \ 'kinds' : [
+"         \ 'm:module',
+"         \ 'e:exports:1',
+"         \ 'i:imports:1',
+"         \ 't:declarations',
+"         \ 'd:declarations:1',
+"         \ 'n:declarations:1',
+"         \ 'f:functions',
+"         \ 'c:constructors',
+"         \ '?:unknown',
+"     \ ],
+" \ }
+
+" let g:tagbar_type_haskell = {
+"       \ 'ctagsbin' : 'lushtags',
+"       \ 'ctagsargs' : '--ignore-parse-error --',
+"       \ 'kinds' : [
+"       \ 'm:module:0',
+"       \ 'e:exports:1',
+"       \ 'i:imports:1',
+"       \ 't:declarations:0',
+"       \ 'd:declarations:1',
+"       \ 'n:declarations:1',
+"       \ 'f:functions:0',
+"       \ 'c:constructors:0'
+"       \ ],
+"       \ 'sro' : '.',
+"       \ 'kind2scope' : {
+"       \ 'd' : 'data',
+"       \ 'n' : 'newtype',
+"       \ 'c' : 'constructor',
+"       \ 't' : 'type'
+"       \ },
+"       \ 'scope2kind' : {
+"       \ 'data' : 'd',
+"       \ 'newtype' : 'n',
+"       \ 'constructor' : 'c',
+"       \ 'type' : 't'
+"       \ }
+"       \ }
 
 
 let g:tagbar_type_haskell = {
@@ -85,6 +129,7 @@ let g:tagbar_type_haskell = {
       \  't:type names:0:1',
       \  'pt:pattern types:0:1',
       \  'pi:pattern implementations:0:1',
+      \  'f:function:0:1',
       \  'ft:function types:0:1',
       \  'fi:function implementations:0:1',
       \  'o:others:0:1'
@@ -112,39 +157,55 @@ let g:tagbar_type_haskell = {
       \ }
       \ }
 
-let g:tagbar_type_haskell = {
-      \ 'ctagsbin'  : 'hasktags',
-      \ 'ctagsargs' : '-x -c -o-',
-      \ 'kinds'     : [
-      \  'm:modules:0:1',
-      \  'd:data: 0:1',
-      \  'd_gadt: data gadt:0:1',
-      \  't:type names:0:1',
-      \  'nt:new types:0:1',
-      \  'c:classes:0:1',
-      \  'cons:constructors:1:1',
-      \  'c_gadt:constructor gadt:1:1',
-      \  'c_a:constructor accessors:1:1',
-      \  'ft:function types:1:1',
-      \  'fi:function implementations:0:1',
-      \  'o:others:0:1'
+" let g:tagbar_type_haskell = {
+"       \ 'ctagsbin'  : 'hasktags',
+"       \ 'ctagsargs' : '-x -c -o-',
+"       \ 'kinds'     : [
+"       \  'm:modules:0:1',
+"       \  'd:data: 0:1',
+"       \  'd_gadt: data gadt:0:1',
+"       \  't:type names:0:1',
+"       \  'nt:new types:0:1',
+"       \  'c:classes:0:1',
+"       \  'cons:constructors:1:1',
+"       \  'c_gadt:constructor gadt:1:1',
+"       \  'c_a:constructor accessors:1:1',
+"       \  'ft:function types:1:1',
+"       \  'fi:function implementations:0:1',
+"       \  'o:others:0:1'
+"       \ ],
+"       \ 'sro'        : '.',
+"       \ 'kind2scope' : {
+"       \ 'm' : 'module',
+"       \ 'c' : 'class',
+"       \ 'd' : 'data',
+"       \ 't' : 'type'
+"       \ },
+"       \ 'scope2kind' : {
+"       \ 'module' : 'm',
+"       \ 'class'  : 'c',
+"       \ 'data'   : 'd',
+"       \ 'type'   : 't'
+"       \ }
+"       \ }
+
+
+let g:tagbar_type_markdown = {
+      \ 'ctagstype': 'markdown',
+      \ 'ctagsbin' : '~/.vim/plugged/markdown2ctags/markdown2ctags.py',
+      \ 'ctagsargs' : '-f - --sort=yes',
+      \ 'kinds' : [
+      \ 's:sections',
+      \ 'i:images'
       \ ],
-      \ 'sro'        : '.',
+      \ 'sro' : '|',
       \ 'kind2scope' : {
-      \ 'm' : 'module',
-      \ 'c' : 'class',
-      \ 'd' : 'data',
-      \ 't' : 'type'
+      \ 's' : 'section',
       \ },
-      \ 'scope2kind' : {
-      \ 'module' : 'm',
-      \ 'class'  : 'c',
-      \ 'data'   : 'd',
-      \ 'type'   : 't'
-      \ }
+      \ 'sort': 0,
       \ }
 
-" if executable('lushtags')
+" if executable('lushtags') ■
 if 0
   let g:tagbar_type_haskell = {
         \ 'ctagsbin' : 'lushtags',
@@ -224,7 +285,7 @@ if 0
         \ },
         \ 'sort': 0,
         \ }
-endif
+endif " ▲
 
 
 " ─   MakeSectionEndMarker Demo line                    ──

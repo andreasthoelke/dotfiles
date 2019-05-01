@@ -147,6 +147,14 @@
                       "description": "Tab to <option-q>",
                       "manipulators": [
                         {
+                          "conditions": [
+                            {
+                              "bundle_identifiers": [
+                                "^io\\.alacritty$"
+                              ],
+                              "type": "frontmost_application_if"
+                            }
+                          ],
                           "from": {
                             "key_code": "tab",
                             "modifiers": {

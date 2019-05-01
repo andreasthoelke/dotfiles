@@ -541,27 +541,27 @@ call clearmatches()
 call matchadd('MatchParen', '\v^\s*\zs(t|r|a)', -1, -1 )
 call clearmatches()
 
-* Search Motion Examples:
-> Move cursor to +2 chars after the end of the match
+* Search Motion Examples
+Move cursor to +2 chars after the end of the match
 exec "normal! /hi/e+2\r"
-> Move cursor to the end of the match and return the line num
+Move cursor to the end of the match and return the line num
 echo search( 'get', 'e' )
-> Jump to a line/column - this does not work with exec normal
+Jump to a line/column - this does not work with exec normal
 echo search( '\%79l\%18c...' )
 * Pre-selection: This will highlight a block! Do "/" <esc> before to make sure searchhighlight is on
 exec '/\%>500l\%<510l\%>15c'
 * Search in block/selecton: This will find 'a's *only* in this block
 exec '/\%>500l\%<510l\%>15ca'
-> but it works in a map
+but it works in a map
 nnoremap <leader>abb /\%79l\%18c...<cr>
-> match only in a range of columns!
-> echo search( '\%>10c.\%<20cab' )
-> ab ab xx ab xx xx ab ab
-> ab ab xx ab xx xx ab ab
-> Replace within a range of columns
+match only in a range of columns!
+echo search( '\%>10c.\%<20cab' )
+ab ab xx ab xx xx ab ab
+ab ab xx ab xx xx ab ab
+Replace within a range of columns
 .+2s/\%>7caa/XX/g
 .+1s/\%>2c\%<7caa/XX/g
-> xx aa cc aa xx
+xx aa cc aa xx
 
 * Limit matches by line and column
 let abc = matchadd( 'MatchParen', '\(\s\)\@<=\S\%'.line('.').'l\%>'.(col('.')).'c' )
@@ -580,18 +580,18 @@ instead use \{-} after a multiline atom to match asap
   > echo match( 'y', '\v(x|y)')
 </div>
 
-> two empty lines/ three consecutive \n:
+two empty lines/ three consecutive \n:
 /\v\n{3,}
 
-> Consecutive alphanumeric chars
+Consecutive alphanumeric chars
 /\v\w{4}
 exec "normal! " '/\v\w{4}'
 
 * Lines that NOT/Don't contain/start with a pattern
 /\v^(\s*\*)@!
-> find lines that don't start with this pattern: ^( )@!
-> any number of spaces \s* followed by either * or >
-> and then still have a non empty char after that
+find lines that don't start with this pattern: ^( )@!
+any number of spaces \s* followed by either * or >
+and then still have a non empty char after that
 /\v^(\s*(\*|\>))@!.
 /\v^(\s*\*)@!(\s*\>)@!
 
@@ -601,8 +601,8 @@ help pattern.txt
 http://vimdoc.sourceforge.net/htmldoc/pattern.html
 
 ### Demo Seachpair
-> Skip to the next 'e' when on a lowercase 'e'
->   a E b e a (f E a e d) d E a e f E
+Skip to the next 'e' when on a lowercase 'e'
+   a E b e a (f E a e d) d E a e f E
 nnoremap <leader>bb :echo searchpair('(', 'e', ')', 'W', 'IsE()')<cr>
 func! IsE()
   return GetCharAtCursor() ==# 'e'
@@ -695,10 +695,12 @@ see/align with Github wiki repository
 
 ### Create hyperlink to header
 
+TODO - links how work any more?
   Use `h rel.txt` to link
     * mapping is `gk`
     * path is relative to the current file or absolute e.g. 
       * `git%20process.md#/Git%20Reset`
+      * `~/.vim/notes/git%20process.md#/Git%20Reset`
       * `~/.vim/notes/chrome-cli.js` - `gk` still works here
 
 TODO make a nicer Highlight for vim-rel links
@@ -748,8 +750,28 @@ arglists and marks:
 
 ## Code Movement, Motions, Editing
 
-### TODO
+### CodeMarkup & HsMotions
 
+#### Headings & Labels
+T s-T Heading
+q s-q Label
+
+#### Paragraph
+c-l h Paragraph| ParagVim }{
+z-j k Fold
+
+#### Toplevel-fn & Area
+c-n p Toplevel
+c-m i Area
+
+#### Column, Comma & Line
+I Y ColumnRight
+t s-t Comma| ,t ,s-t IntoComma
+J K LineStart
+
+#### Small & Big Hs Words
+W B Expression
+w b HsWord
 
 
 ### Line

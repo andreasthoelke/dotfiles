@@ -4,7 +4,7 @@
 func! CodeMarkupSyntaxHighlights()
   " Comment sections use the unicode dash at the start and end of the line
   " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
-  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\w.*', 11, -1 )
+  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\S.*', 11, -1 )
   " And even: more
   " Comment sections can be terminated using the ^ char
   " ─^  Comment Section Example end                        ──
@@ -23,8 +23,8 @@ endfunc
 " set commentstring=\ --\ \%s
 
 let g:headingPttn = '\v^("|--)\s─\s'
-let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,18}:(\S)@!'
-let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,18}:(\S)@!|("|--)\s─\s)'
+let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
+let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,30}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■
 nnoremap œ :call HeadingForw()<cr>
@@ -83,7 +83,7 @@ func! LabelAndHeading_VisSel_Name()
   " Move back slightly so the current label/heading is found
   normal! m'll
   call search( g:headingOrLabelPttn, 'cbW' )
-  normal! 0
+  normal! ^
   if MatchesInLine( line('.'), '─' )
     normal! ww
     let [sLine, sCol] = getpos('.')[1:2]
@@ -104,7 +104,7 @@ endfunc
 func! LabelAndHeading_VisSel_Content()
   normal! m'll
   call search( g:headingOrLabelPttn, 'cbW' )
-  normal! 0
+  normal! ^
   if MatchesInLine( line('.'), '─' )
     normal! j
     let [sLine, sCol] = getpos('.')[1:2]
@@ -141,16 +141,19 @@ endfunc
 
 " ─^  Textobjs for inside name and inside content        ▲
 
+" ─   Test                                             ──
+
 
 " ─   Create, Update, Delete Headings and Sections    ──
-nnoremap ,mh :call CreateHeading(0, '', 0)<cr>
+nnoremap <localleader>ch :call CreateHeading(0, '', 0)<cr>
 " Create Section header start or end markers
 " Uses the current line text if headerText is empty string
 func! CreateHeading( isEnd, headerText, isSection )
   let lineTargetLength = 64
   let sectionHeaderText = len(a:headerText) ? a:headerText : getline('.')
   normal dd
-  let lineFirstPart = a:isEnd ? '" ─^  ' : '" ─   '
+  let lineFirstPart = a:isEnd ? ' ─^  ' : ' ─   '
+  let lineFirstPart = GetLangCommentStr() . lineFirstPart
   let foldMarkerText = a:isEnd ? ' ▲' : ' ■'
   " Start and end section markers imply fold start and end markers and not dashes at the end of the line!
   let lineLastPart = a:isSection ? foldMarkerText : '──'
@@ -166,7 +169,7 @@ endfunc
 
 
 " "CodeMarkup Section" - sort of closes the previous heading at the current line - turning it into a section
-nnoremap ,ms :call CloseSection()<cr>
+nnoremap <localleader>cs :call CloseSection()<cr>
 " Create section end marker using the header text of the previous header start line
 func! CloseSection()
   " Make sure that folding does not interfere. this now works with foldlevel=0 → section will autocollapse
@@ -194,7 +197,7 @@ endfunc
 " call CloseSection()
 
 
-nnoremap ,md :call StripHeaderOrSection()<cr>
+nnoremap <localleader>cd :call StripHeaderOrSection()<cr>
 func! StripHeaderOrSection()
   normal! j
   call HeadingBackw()
@@ -212,7 +215,7 @@ func! StripMarker()
 endfunc
 
 " Run this after changing the section header text. Will update and marker and realign line spacing
-nnoremap ,mr :call RefreshHeadingOrSection()<cr>
+nnoremap <localleader>cr :call RefreshHeadingOrSection()<cr>
 func! RefreshHeadingOrSection()
   let l:winview = winsaveview()
   let isSectionHeadering = MatchesInLine( line('.'), '■' )

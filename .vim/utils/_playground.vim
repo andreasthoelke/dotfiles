@@ -1,5 +1,10 @@
 let g:cmd1 = 'find $VIMRUNTIME -type f -name \*.vim'
 call append( 15, split( system( g:cmd1 ), '\n' ) )
+
+these don't work:
+call append( line('.'), split( g:tagbar_type_haskell, '\n' ) )
+call append( line('.'), =g:tagbar_type_haskell)
+
 exec "10,$normal! d8f/"
 exec "normal! /run\<cr>"
 exec "normal! d/run\<cr>"
