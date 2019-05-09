@@ -75,20 +75,25 @@ vnoremap <silent> <localleader>r :<c-u>call ReplaceLastPattern(visualmode(), 1)<
 
 func! ReplaceLastPattern( motionType, ...)
   normal! m'
+  " Get the the search patterns form the search history
   let lastPattern = histget( 'search', -1 )
+  " Show user dialog to get the new text
   let replacementText = input('Enter replacement text: ')
+  " a:0 is the number of optional args. Passing (e.g. 1) as the second arg in the visual mode map
   let linesRangeMarkersStr = a:0 ? "'<,'>" : "'[,']"
-  let substCmdAccum = l:linesRangeMarkersStr . 's/'
+  " The substitute command is stated with a range string. it will get appended to using the ".=" in the following lines
+  let substituteCmd = l:linesRangeMarkersStr . 's/'
   " Line and column of start+end of either vis-sel or motion
   let [startLine, startColumn] = getpos(a:0 ? "'<" : "'[")[1:2]
   let [endLine,   endColumn]   = getpos(a:0 ? "'>" : "']")[1:2]
 
   if a:motionType == 'char'
-    let substCmdAccum .= '\%>' . startColumn . 'c\%<' . endColumn . 'c'
+    " Note the special syntax to limit the affected columns of text
+    let substituteCmd .= '\%>' . startColumn . 'c\%<' . endColumn . 'c'
   endif
-  let substCmdAccum .= lastPattern . "/" . replacementText . "/ge"
-  call ExecKeepView( substCmdAccum )
-  " exec substCmdAccum
+  let substituteCmd .= lastPattern . "/" . replacementText . "/ge"
+  call ExecKeepView( substituteCmd )
+  " exec substituteCmd
   " exec 'normal!' "\<C-o>"
   call JumpBackSkipCurrentLoc()
   " Notes: {{{

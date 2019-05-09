@@ -1232,15 +1232,19 @@ set guicursor=n:block-iCursor
 
 " TODO use runtimepath to lazyload
 
-" Haskell maps and syntax additions
+" ─   Haskell maps and syntax additions                 ──
 source .vim/utils/HsMotions.vim
 source .vim/utils/HsSyntaxAdditions.vim
 source .vim/utils/CodeMarkup.vim
-call HsAPIExplore#start()
+source .vim/utils/HsAPIExplore.vim
 " Note: There is an unfinished plugin here:
 " tabe .vim/plugged/HsAPIExplore/autoload/HsAPIExplore.vim
+" call HsAPIExplore#start()
+" Intero maps and helpers:
+source .vim/utils/utils-repl.vim
+source .vim/utils/utils-align.vim
 
-" General tools
+" ─   " General tools                                   ──
 source .vim/utils/utils-terminal.vim
 " Todo: move the helper/commands in this note file
 source .vim/notes/notes-workflow.vim
@@ -1248,17 +1252,17 @@ source .vim/utils/utils-vimscript-tools.vim
 source .vim/utils/utils-markdown.vim
 source .vim/utils/utils-chromium.vim
 
-" Helper functions
+" ─   " Helper functions                                ──
 source .vim/utils/utils-search-replace.vim
 source .vim/utils/utils-code-line-props.vim
 source .vim/utils/utils-syntax-color.vim
 
-" Minor
+" ─   " Minor                                           ──
 source .vim/utils/utils-virtualtext.vim
 source .vim/utils/utils-csv.vim
 source .vim/utils/utils-applescript.vim
 
-" Split-out setup sections
+" ─   " Split-out setup sections                        ──
 source .vim/utils/setup-tags.vim
 
 
@@ -1585,126 +1589,6 @@ nnoremap <expr> <C-J> &diff ? ']c' : '<C-W>j'
 "
 " GitGutter: -------------------------------------------------------
 
-" Intero: -----------------------------------------------------------
-" Intero starts automatically. Set this if you'd like to prevent that.
-let g:intero_start_immediately = 0
-" let g:intero_use_neomake = 0
-" This show ghi warnings as opposed to hlint warnings:
-" TODO: toggle warnings without restart vim!
-let g:intero_ghci_options = '-Wall -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
-" let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
-" let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
-" https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
-
-" TODO: when do I need this?
-let g:haskellmode_completion_ghc = 1
-" autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-" causes tag error?
-
-" autocmd BufWritePost *.hs GhcModCheckAndLintAsync
-
-" autocmd BufWritePost *.hs call s:check_and_lint()
-" function! s:check_and_lint()
-"   let l:qflist = ghcmod#make('check')
-"   call extend(l:qflist, ghcmod#make('lint'))
-"   call setqflist(l:qflist)
-"   cwindow
-"   if empty(l:qflist)
-"     echo "No errors found"
-"   endif
-" endfunction
-
-" Maps for intero.
-" nnoremap <silent> <leader>is :InteroStart<CR>
-" nnoremap <silent> <leader>isc :SignsClear<CR>
-" Todo: unify this with purs?
-nnoremap <silent> <leader>ik :InteroKill<CR>
-nnoremap <silent> <leader>io :InteroOpen<CR>
-nnoremap <silent> <leader>ih :InteroHide<CR>
-nnoremap <silent> <leader>im :InteroLoadCurrentModule<CR>
-nnoremap <silent> <leader>il :InteroLoadCurrentFile<CR>
-nnoremap <silent>         gd :call GotoDefinition()<CR>
-nnoremap <silent> ,gd :sp<CR>:call GotoDefinition()<CR>
-" fee mapping
-" nnoremap <silent>         ]d :call GotoDefinition()<CR>
-" Intero: -----------------------------------------------------------
-
-" New Haskell And Purescript Maps: ------------------------------------------------------
-
-" Type Inserts: ----------------------------------------------------
-" TODO review these
-nnoremap <silent> ,tw :call InsertTypeAnnotation()<cr>
-map <silent> ,tg <Plug>InteroGenericType
-map <silent> ,tt <Plug>InteroType
-
-" nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
-" nnoremap <localleader>tt :call TypeInsert()<cr>
-" vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
-" TODO: problem: PSCIDEgetKeyword only work when PSCIDE is started/ throws error with Haskell
-" nnoremap <localleader>tg :InteroGenTypeInsert<cr>
-" map <silent> <leader>tq <Plug>InteroGenericType
-
-map <silent> <localleader>tg <Plug>InteroGenTypeInsert
-vnoremap <localleader>tg :InteroGenTypeInsert<cr>
-nnoremap <localleader>ti :InteroInfoInsert<cr>
-vnoremap <localleader>ti :InteroInfoInsert<cr>
-
-nnoremap <silent> <localleader>tw :call InsertTypeAnnotation()<cr>
-" Type Inserts: ----------------------------------------------------
-
-
-" Repl Eval Insert: ------------------------------------------------
-" Evaluate a string in the Repl (purs or ghci) and insert the result of the evaluation
-" gee → expr after -- (comment)
-"       expr after =
-"       selection
-" gel → entire line
-" gew → keyword
-" (cursor-column is only significant for gew)
-
-" Extract a (repl-) evaluable expression-string from current line
-nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
-" vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
-
-" Evaluate the entire line
-" nnoremap gel :call ReplEvalExpr_Insert( getline('.') )<cr>
-
-" Eval the current keyword
-" nnoremap gew :call ReplEvalExpr_Insert( PSCIDEgetKeyword() )<cr>
-nnoremap gew :call ReplEvalExpr_Insert( expand("<cword>") )<cr>
-" Repl Eval Insert: ------------------------------------------------
-
-
-nnoremap dip :Pimport<cr>
-nnoremap dap :Papply<cr>:call PurescriptUnicode()<cr>
-" TODO: currently :Papply indents the current line by one char.  same for haskell?
-
-
-" just for testing - not sure when this might be useful
-nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
-" alternative to PSCIDEgetKeyword()
-
-" New Haskell And Purescript Maps: ------------------------------------------------------
-
-" nnoremap dr :call ReplReload()<cr>
-nnoremap dr :InteroReload<cr>
-
-" nnoremap tr :call TraceTopLevelValue()<cr>
-" Todo: where did this come from?
-" nnoremap ta :call TraceTopLevelValue()<cr>
-" nnoremap tf :call TraceComLine()<cr>
-
-
-" GHCI:
-" use :m -<module name> to unload modules
-" use :m to go to only Prelude
-" edit ghci.conf to set
-" DEFAULT IMPORTS:
-" e ~/.ghc/ghci.conf
-" ERROR:
-" currently with the file it never stops loading..?
-" also in .cabal file there is "Exposed modules", which can be multible
-" modules that are loaded into ghci on startup.
 
 " let g:ghcmod_open_quickfix_function = 'GhcModQuickFix'
 function! GhcModQuickFix()
@@ -1716,178 +1600,6 @@ function! GhcModQuickFix()
   ":FufQuickfix
 endfunction
 
-
-" let g:necoghc_enable_detailed_browse = 0
-let g:haskell_tabular = 1
-
-" vmap a= :Tabularize /=<CR>
-" vmap a; :Tabularize /::<CR>
-" vmap a- :Tabularize /-><CR>
-
-" vmap <leader>ta :Tabularize /∷\|→\|⇒/<cr>
-vmap <leader>ta :Tabu /∷\\|→\\|⇒/<cr>
-" note: to insert "\" into command line it needs to be escaped like "\\"
-
-
-" EXTRACT SIGNATURES: ------------------------------------------------------------
-" This makes a nice overview of the function signatures of a hakell file
-" 1.copy/extract function signatures to the end of the file (run either of these)
-nnoremap <leader>exs :g/∷.*→/t$<cr>
-vnoremap <leader>exs :g/∷.*→/t$<cr>
-nnoremap <leader>exg :g/∷.*⇒/t$<cr>
-" 2. visual select the signatures
-" 3. move only the generic sign out of the block
-vnoremap <leader>exg :g/∷.*⇒/m$<cr>
-" 4. visual select blocks and <leader>ta to tabularize the sigs
-command! ExtractSigs :g/∷.*→/t$
-command! ExtractGenSigs :g/∷.*⇒/t$
-" --------------------------------------------------------------------------------
-
-" HASKELL
-" --------------------------------------------------------------------------------
-
-" --------------------------------------------------------------------------------
-" HASKELL
-" let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
-" let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
-" let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
-" let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
-" let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
-" let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
-
-" let g:haskell_indent_if = 3
-" let g:haskell_indent_case = 2
-" let g:haskell_indent_let = 4
-" let g:haskell_indent_where = 6
-" let g:haskell_indent_do = 3
-" let g:haskell_indent_in = 1
-" let g:haskell_indent_guard = 2
-
-" --------------------------------------------------------------------------------
-
-
-" free mapping <c-Backspace>
-
-" Code Formatting: ------------------------
-" Break line at cursor position - now used for navigation
-" nnoremap J i<CR><Esc>
-
-" Join line below with current line
-nnoremap <BS> J
-
-" Push text to the right
-" nnoremap <localleader>> i <Esc>
-" Make it repeatable so the cursor follows the text to the right
-" Followup: it just does this. not sure what the problem was before
-" nmap <Plug>PushTextRight i <esc>l:call repeat#set("\<Plug>PushTextRight")<cr>
-" nmap <localleader>> <Plug>PushTextRight
-nmap <localleader>> i <esc>
-
-
-" Insert line. Related to `]<space>`
-" nnoremap O o<Esc> 
-
-
-" EasyAlign: -----------------------------
-" 1. visually selecte the lines
-" 2. type ':EasyAlign'
-" 3. type '2 ' to align to the second space!!
-
-" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vnoremap <Enter> <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-" TODO: find alt mapping
-nnoremap <leader>ga <Plug>(EasyAlign)
-
-let g:easy_align_ignore_groups = ['Comment', 'String']
-
-" Align Example:
-" you can go from this: ..
-" data Drawing
-"   = Fill Shape FillStyle
-"   | Outline Shape OutlineStyle
-"   | Text Font Number Number FillStyle String
-"   | Rotate Number Drawing
-"   | Clipped Shape Drawing
-"   | WithShadow Shadow Drawing
-
-" .. to this:
-" data Drawing
-"   = Fill       Shape  FillStyle
-"   | Outline    Shape  OutlineStyle
-"   | Text       Font   Number Number FillStyle String
-"   | Rotate     Number Drawing
-"   | Clipped    Shape  Drawing
-"   | WithShadow Shadow Drawing
-" 1. uncomment this block first, then with the cursor on the second line:
-" 2. "<leader>ga}2 " aligns the rest of the block to the 2nd <space>, and then
-" 3. "<leader>ga}3 " to align to the 3rd <space> as well
-
-" Align Example:
-" (using Tabularize or EasyAlign with regex)
-" you can go from this: ..
-" everywhere f = go
-"   where
-"   go (Many ds) = f (Many (map go ds))
-"   go (Scale s d) = f (Scale s (go d))
-"   go (Translate t d) = f (Translate t (go d))
-"   go (Rotate r d) = f (Rotate r (go d))
-"   go (Clipped s d) = f (Clipped s (go d))
-"   go (WithShadow s d) = f (WithShadow s (go d))
-"   go other = f other
-
-" .. to this:
-" everywhere f = go
-"   where
-"   go (Many ds)        = f (Many (map      go ds))
-"   go (Scale s d)      = f (Scale s (      go d))
-"   go (Translate t d)  = f (Translate t (  go d))
-"   go (Rotate r d)     = f (Rotate r (     go d))
-"   go (Clipped s d)    = f (Clipped s (    go d))
-"   go (WithShadow s d) = f (WithShadow s ( go d))
-"   go other            = f other
-" 1. select all lines starting with "go"
-" 2. ":Tabularize /=/" to align to `=`
-" 3. ":Tabularize /go/" to align to `go`
-" Also EasyAlign can align to words or other chars using regex like this:
-" "<,'>EasyAlign */go/"
-" "<,'>EasyAlign */(g/"
-" "<,'>EasyAlign */(go/"
-" "<,'>EasyAlign */(/"
-
-" GTabularize applies only to lines that match!
-" Regex ".*\zs," matches the last comma in the line
-" Running the following will align the type signatures as shown below
-" GTabularize /∷/
-" GTabularize /⇒/
-" GTabularize /.*\zs→/
-
-" -- Control.Monad
-" replicateM ∷ (Applicative m) ⇒ Int → abc a → m [a]
-" -- Data.Sequence
-" replicateM ∷ Monad m ⇒ Int → m a → m (Seq a)
-" -- Data.Sequence.Internal
-" replicateM ∷ Monad m ⇒ Int → m a → m (Seq a)
-" -- Data.Conduit.List
-" replicateM ∷ Monad m ⇒ Int → m a → Producer m a
-" -- Control.Monad
-" replicateM_ ∷ (Applicative m) ⇒ Int → m a → m ()
-" -- Data.Conduit.Internal.List.Stream
-" replicateMS ∷ Monad m ⇒ Int → m a → StreamProducer m a
-"
-" -- Control.Monad
-" replicateM  ∷ (Applicative m) ⇒ Int → abc a → m [a]
-" -- Data.Sequence
-" replicateM  ∷ Monad m         ⇒ Int → m a   → m (Seq a)
-" -- Data.Sequence.Internal
-" replicateM  ∷ Monad m         ⇒ Int → m a   → m (Seq a)
-" -- Data.Conduit.List
-" replicateM  ∷ Monad m         ⇒ Int → m a   → Producer m a
-" -- Control.Monad
-" replicateM_ ∷ (Applicative m) ⇒ Int → m a   → m ()
-" -- Data.Conduit.Internal.List.Stream
-" replicateMS ∷ Monad m         ⇒ Int → m a   → StreamProducer m a
 
 
 
@@ -2771,6 +2483,7 @@ nnoremap <localleader>QQ :q<cr>
 
 " Shortcuts to popular folders:
 nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
+nnoremap <leader>ov :tabe ~/.vimrc<cr>
 nnoremap <leader>oh :tabe ~/Documents/Haskell/<cr>
 nnoremap <leader>oc :tabe ~/Documents/Haskell/6/<cr>
 
@@ -3280,7 +2993,8 @@ command! -nargs=1 Fbuffers  :tabe % | Grepper           -side -buffers -query <a
 command! -nargs=1 Fnotes    :tabe % | Grepper -tool git -side          -query <args> /Users/andreas.thoelke/.vim/notes
 command! -nargs=1 FnotesAll :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/notes
 " Haskell code:
-command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/Documents/Haskell/4/hello44/** /Users/andreas.thoelke/Documents/Haskell/4/abc4/test1/**
+" command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/Documents/Haskell/4/hello44/** /Users/andreas.thoelke/Documents/Haskell/4/abc4/test1/**
+command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/Documents/Haskell/6/HsTraining1/** /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingBook2/**
 
 " Vim code:
 command! -nargs=1 Fvim      :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/utils/ /Users/andreas.thoelke/.vimrc

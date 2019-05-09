@@ -19,7 +19,11 @@ function! Demo1()
   return join(lines, "\n")
 endfunction
 
-
+" Returns the indent level of lineNum
+func! IndentLevel( lineNum )
+  return matchstrpos( getline( a:lineNum ), '\S')[1] + 1
+endfunc
+" echo matchstrpos("    sta", "\S")
 
 " Return the character under the cursor
 func! GetCharAtCursor()

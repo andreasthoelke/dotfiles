@@ -169,7 +169,7 @@ endfunc
 " The motion jumps to the *beginning* of the last line
 nnoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}-"<CR>
 " The OpPending map spans to the *end* of the last line
-onoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}-g_"<CR>
+onoremap <silent> ,<c-l> :<C-u>exec "keepjumps norm! " . v:count1 . "}$"<CR>
 " The VisSel map spans to the *end* of the last line
 vnoremap <silent> ,<c-l> }-g_
 " Jump to the beginning of the last line of the previous paragraph
@@ -178,6 +178,54 @@ nnoremap <silent> ,<c-h> :<C-u>exec "keepjumps norm! " . v:count1 . "{{}-"<CR>
 " Keep jumps with native paragraph motions
 nnoremap } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
 nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
+
+
+" ─   Indention                                          ■
+
+" TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
+
+nnoremap ,j  :call IndentBlockEnd()<cr>
+onoremap ,j V:call IndentBlockEnd()<cr>
+nnoremap ,k  :call IndentBlockStart()<cr>
+onoremap ,k V:call IndentBlockStart()<cr>
+vnoremap <silent> ,j <esc>:call ChangeVisSel(function('IndentBlockEnd'))<cr>
+vnoremap <silent> ,k <esc>:call ChangeVisSel(function('IndentBlockStart'))<cr>
+
+func! IndentBlockEnd()
+  normal! m'^
+  call setpos('.', IndentBlockEndPos( line('.'), col('.'), 1 ) )
+endfunc
+
+func! IndentBlockStart()
+  normal! m'^
+  call setpos('.', IndentBlockEndPos( line('.'), col('.'), -1 ) )
+endfunc
+
+func! IndentBlockEndPos( lineNum, indentLevel, dir )
+  let lineOffset = 0
+  while IndentLevel( a:lineNum + lineOffset ) == a:indentLevel
+    let lineOffset = lineOffset + a:dir
+  endwhile
+  return [0, a:lineNum + (lineOffset - a:dir), a:indentLevel, 0]
+endfunc
+
+" Textobject for Indent Block
+onoremap ii :<c-u>call IndentBlock_VisSel_Inside()<cr>
+vnoremap ii :<c-u>call IndentBlock_VisSel_Inside()<cr>
+func! IndentBlock_VisSel_Inside()
+  normal! m'
+  call IndentBlockStart()
+  normal! V
+  call IndentBlockEnd()
+  normal! o
+endfunc
+
+" From Stackoverflow: move to line of same indent!
+nnoremap ,J ^:call IndentBlockEnd()<cr>:call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<CR>
+nnoremap ,K ^:call IndentBlockStart()<cr>:call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<CR>
+" TODO where is this useful in typical hasekell layout?
+
+" ─^  Indention                                          ▲
 
 
 " Argument Movement: Note the is Vim-targets related
@@ -232,8 +280,6 @@ vmap iv ,Ho,L
 
 " --------------
 
-nnoremap t :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<CR>
-nnoremap q :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<CR>
 
 " TODO add long moves to jumplist as reverting moves would be challenging to perform?
 

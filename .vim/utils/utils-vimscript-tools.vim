@@ -1,5 +1,13 @@
 
 
+"  see PasteListAsLines - not needed any more
+nnoremap <leader>bb :call HsStringListToLines()<cr>
+func! HsStringListToLines()
+  let a = eval( getline('.') )
+  call append('.', a)
+endfunc
+" ["eins","eins","eins"]
+
 
 " EDIT VIM SCRIPT: ---------------------------------------------------------------------
 
@@ -47,7 +55,7 @@ endfunc
 nnoremap <silent> ,s m':set opfunc=OpSourceVimL<cr>g@
 vnoremap <silent> ,ss :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
 
-" Uses "h textobj-function"
+" Uses "h textobj-function" .. ? it does not!?
 " * SourceVimL Operator function allows e.g.
 " * <leader>saf "source around function"
 " * <leader>si" "source inside quotes"
@@ -72,9 +80,6 @@ endfunc
 " echo 'hi 2'
 " call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'char', 500)
 " call highlightedyank#highlight#add( 'HighlightedyankRegion', getpos("'<"), getpos("'>"), 'line', 500)}}}
-
-
-
 
 " Source a range
 command! -range Source <line1>,<line2>call SourceRange()

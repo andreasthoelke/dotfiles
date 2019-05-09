@@ -321,6 +321,12 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
 
 ## Align
 
+* Align maps:
+`leader al` + [motion, textobject: e.g. `ii` "inside indent block"] 
+              + speperatorId (<space>, 2<space>, "," )
+* Tabularize 1st and 2nd column of a motion or selected range of lines based on <space>
+`leader at` + [range]
+
 Example: Align the 3 lines below to the ':tabe' word:
  - visually select the lines
  1. `:Tabularize /:tabe/`
@@ -335,6 +341,15 @@ command! -nargs=1 Fbuffers :tabe % | Grepper           -side -buffers -query <ar
      * uses smart paragraph
 
 
+## Repl
+
+Repl format: `gew` does just append all repl returned lines
+`gel` "eval list" on a Haskell identifier will insert a resulting list as lines. see PasteListAsLines()
+`get` "eval table": After "eval list", it then aligns the first two columns (column separator is <space>)
+`geT` "tabularizes" the output
+
+* `\tw` or `\tt` to get the type of the identifier
+`
 
 ## Code Navigation
   * how to navigate header like this:?

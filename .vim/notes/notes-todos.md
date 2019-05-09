@@ -981,6 +981,12 @@ when `ga` highlight only appears after first `n`
 `0` or `^` should go the begin of the text, not start of comment string
 
 ## Haskell Todos
+
+consider useful alignments →
+  vmap <leader>ta :Tabu /∷\\|→\\|⇒/<cr>
+
+also review: " EXTRACT SIGNATURES:
+
 syntax highlighting in comments
   literal haskell files?
 where to put haskell notes?
@@ -999,6 +1005,8 @@ run the current line through typeOf cmd-line prog.
 
 change DocsForCursorWord() to hoogle.hackage.org not hackage/hoogle
 
+autodetect HsList or Record and render as lists in a flowting window
+use flowting window for PasteListAsLines
 
 ## Temp next
 
@@ -1023,9 +1031,31 @@ after duplicating a line and then commenting the orig line and moving down with 
 `dip` dap does not work -> easyclip? d- map
 
 
+"done" rename these (most important past) haskell repos:
+       /Users/andreas.thoelke/Documents/Haskell/4/hello44/** 
+       /Users/andreas.thoelke/Documents/Haskell/4/abc4/test1/**
+     /Users/andreas.thoelke/Documents/Haskell/6/HsTraining1/**
+     /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingBook2/**
+
 
 ## Release notes v1.1.2
 * Shortcuts to popular folders <leader>o .. `n` notes, `u` utils, `h` haskell, `c` current
+
+* Indent motions: `,j` `,k` to move to end/start of indent block. IndentBlockEnd() HsMotions
+*                 `,J` `,K` to move to the next/prev same level indent
+*                `vii` to visually select inside indent block
+* Align maps:
+    `leader al` + [motion, textobject: e.g. `ii` "inside indent block"] 
+              + speperatorId (<space>, 2<space>, "," )
+* Tabularize 1st and 2nd column of a motion or selected range of lines based on <space>
+    `leader at` + [range]
+
+* Repl format: `gew` does just append all repl returned lines
+* `gel` "eval list" on a Haskell identifier will insert a resulting list as lines. see PasteListAsLines()
+* `get` "eval table": After "eval list", it then aligns the first two columns (column separator is <space>)
+* `geT` "tabularizes" the output
+* `\tw` or `\tt` to get the type of the identifier
+
 
 ## Release notes v1.1.1 (2019-04-20)
 * Command to search in deleted code: `Fdeleted someString`

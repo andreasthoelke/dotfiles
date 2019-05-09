@@ -30,6 +30,7 @@ let g:tagbar_sort = 0
 
 " hasktags -c -a -o d2 src/Main.hs
 
+nnoremap <leader>ta :Dispatch! hasktags -c %<cr>
 
 " Tags: ------------
 " Look upwards from the current files directory until a "tags" file is found
