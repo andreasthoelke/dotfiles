@@ -23,7 +23,8 @@ endfunc
 " set commentstring=\ --\ \%s
 
 let g:headingPttn = '\v^("|--)\s─\s'
-let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
+" let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
+let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,50}:(\S)@!'
 let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,30}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■
@@ -72,11 +73,13 @@ endfunc
 " ─^  Labels                                             ▲
 
 
+
+
 " ─   Textobjs for inside name and inside content        ■
-onoremap <silent> in :<c-u>call LabelAndHeading_VisSel_Name()<cr>
-vnoremap <silent> in :<c-u>call LabelAndHeading_VisSel_Name()<cr>o
-onoremap <silent> ic :<c-u>call LabelAndHeading_VisSel_Content()<cr>
-vnoremap <silent> ic :<c-u>call LabelAndHeading_VisSel_Content()<cr>o
+onoremap <silent> iln :<c-u>call LabelAndHeading_VisSel_Name()<cr>
+vnoremap <silent> iln :<c-u>call LabelAndHeading_VisSel_Name()<cr>o
+onoremap <silent> ilc :<c-u>call LabelAndHeading_VisSel_Content()<cr>
+vnoremap <silent> ilc :<c-u>call LabelAndHeading_VisSel_Content()<cr>o
 " Tests: sel this ..
 
 func! LabelAndHeading_VisSel_Name()

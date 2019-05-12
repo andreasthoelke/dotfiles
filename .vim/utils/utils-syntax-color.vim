@@ -17,7 +17,7 @@ nnoremap <leader>bn :echo GetSyntaxIDAtCursor()<cr>
 " Show the syntax group(s) of the word under the cursor
 " The first pasted line is the outermost syntax group eg. vimLineComment, the last line is actual syntax group/id for the work
 " under the cursor, e.g. vimCommentTitle
-nnoremap <leader>hsg :call SyntaxStack()<CR>
+nnoremap <leader>hhsg :call SyntaxStack()<CR>
 function! SyntaxStack()
   let l:synList = map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')
   call append(line('.'),  l:synList )
@@ -59,7 +59,7 @@ function! SyntaxColor()
 endfun
 
 " Highligh color values in the current line
-nnoremap <leader>hcc :,ColorHighlight<CR>
+nnoremap <leader>hhcc :,ColorHighlight<CR>
 " TODO range mapping
 
 " Example:

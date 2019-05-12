@@ -3,6 +3,11 @@
 
 " This works! Opens a terminal with the running grip server process and moves the cursor to the browser
 command! Demo1Markdown Dispatch grip -b %
+" But below is better - hides the terminal
+
+" 
+command! Markdown :call OpenMarkdownPreview()
+nnoremap glm :call OpenMarkdownPreview()<cr>
 
 " function! OpenMarkdownPreview() abort
 "   " stops any previous/running job!
@@ -23,7 +28,7 @@ function! OpenMarkdownPreview() abort
     unlet g:markdown_job_id
   endif
   " let g:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
-  let g:markdown_job_id = jobstart('grip ' g:accountsGithub . ' ' . shellescape(expand('%:p')))
+  let g:markdown_job_id = jobstart('grip ' . g:accountsGithub . ' ' . shellescape(expand('%:p')))
   if g:markdown_job_id <= 0 | return | endif
   " call system('open http://localhost:6419')
   call LaunchChromium( 'http://localhost:6419' )

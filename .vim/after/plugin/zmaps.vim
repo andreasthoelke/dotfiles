@@ -18,9 +18,12 @@ nnoremap yot :TagbarToggle<cr>
 nnoremap <silent> gcc :TComment<cr>lh
 
 " .. again, unimpaired overwriting this
-nnoremap <silent> ]t :call BracketStartForw()<cr>
-vnoremap <silent> ]t <esc>:call ChangeVisSel(function('BracketStartForw'))<cr>
-nnoremap <silent> [t :call BracketStartBackw()<cr>
-vnoremap <silent> [t <esc>:call ChangeVisSel(function('BracketStartBackw'))<cr>
-nnoremap <silent> ]T :call BracketEndForw()<cr>
-vnoremap <silent> ]T <esc>:call ChangeVisSel(function('BracketEndForw'))<cr>h
+" now using: 
+" let g:nremap = {'[b': '', ']b': '', '[t': '', ']t': '', '[T': '', ']T': ''}
+" obsolete?
+" nnoremap <silent> ]t :call BracketStartForw()<cr>
+" vnoremap <silent> ]t <esc>:call ChangeVisSel(function('BracketStartForw'))<cr>
+" nnoremap <silent> [t :call BracketStartBackw()<cr>
+" vnoremap <silent> [t <esc>:call ChangeVisSel(function('BracketStartBackw'))<cr>
+" nnoremap <silent> ]T :call BracketEndForw()<cr>
+" vnoremap <silent> ]T <esc>:call ChangeVisSel(function('BracketEndForw'))<cr>h

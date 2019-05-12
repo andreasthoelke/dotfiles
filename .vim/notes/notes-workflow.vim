@@ -13,7 +13,7 @@
 " Eff ( timeout ∷ TIMEOUT | eff0 )
 " while checking that expression (apply ContT) (\k → (setTimeoutImpl mills) (k unit) ) has type ContT Unit (Eff ( timeout ∷ TIMEOUT | eff0 ) ) Unit in value declaration setTimeoutCont where eff0 is a rigid type variable t1 is an unknown type
 
-" PURESCRIPT WORKFLOW:
+" ─   PURESCRIPT WORKFLOW                               ──
 " "mkdir test1" && "cd test1" && "pulp init" && "nvim Main.purs"
 " ":PursRepl" will start a pulp repl terminal session
 " "gw" saving refeshes syntastic
@@ -104,7 +104,34 @@
 
 " source "/Users/andreas.thoelke/.vim/utils/termin1.vim"
 
-" HASKELL WORKFLOW:
+" ─   HASKELL WORKFLOW                                  ──
+
+
+" ─   Stack workflow                                     ■
+
+" New project:
+"   "stack new Test1"
+" or for a simpler folder structure "stack new Test1 simple"
+" setup/copy ghc version into the folder. may slowly download a 240md ghc version. But it should usually just copy this
+" from what ghcup has downloaded/set for the OS.
+""  "stack setup"
+" now could do "stack ghci" / "stack repl" or build an executable: "stack bild", or install the app on the system: "stack install"
+"
+" If Intero shows a version conflict this can be added to the "stack.yaml":
+"  "allow-newer: true"
+
+" Ghc versions and ghcup:
+" "ghc --version" shows the active global ghc version. Current "8.6.5"
+" "ghcup list" lists the versions that can be switched to. Current:
+  " ✗ ghc   8.6.2
+  " ✔ ghc   8.6.3   recommended
+  " ✗ ghc   8.6.4
+  " ✔ ghc   8.6.5   latest
+  "
+" ─^  Stack workflow                                     ▲
+
+" ─   Intero test workflow                               ■
+
 "   <leader>io to open intero
 "   <leader>ih to hide the intero window
 "   <leader>il to load the module
@@ -118,6 +145,10 @@
 "   `,ti` to insert type hole to get the type of a do bind. `,tu` to undo
 "   <leader>kk run it in the vim-terminal mode:
 "                            use i to type and c-\ c-n to leave insert mode
+
+" ─^  Intero test workflow                               ▲
+
+
 " use this to format imports/code
 " noremap <leader>ci :call StylishHaskell()<cr>
 " important: you have to save bofore otherwise new code will be deleted and
@@ -163,7 +194,6 @@
 
 " Just run an app based on a mobule file: xstack runghc helloworld.hs"
 
-" ─    Comment Section Example                            ──
 " Ale: -------------------------------------------------------------------------------
 " shows the underlined warning (Data.Char)
 " and the listing in the loclist
@@ -495,9 +525,9 @@ nnoremap <leader>ccl :CopyAndQuit<cr>
 
 " idea for insert mode mappings:
 " go to just before the first non-blank text of the line
-inoremap II <Esc>I
+" inoremap II <Esc>I
 
-" .. or have shortcuts like this:
+" Set Syntax:
 nnoremap <localleader>sh :set syntax=html<cr>
 nnoremap <localleader>sj :set syntax=javascript<cr>
 nnoremap <localleader>sv :set syntax=vim<cr>

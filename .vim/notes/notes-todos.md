@@ -251,6 +251,10 @@ Will show expand tags in the runnable source file to see the notes.
 
 * haskell/ps comments support syntax highlight for code blocks?
 
+### Literate Markdown
+tried out but not yet loading into Intero
+/Users/andreas.thoelke/Documents/Haskell/6/HsTrainingTypeClasses1/src/LiterateHsMarkdown.md
+https://gitlab.haskell.org/ghc/ghc/wikis/literate-markdown
 
 ## Tags
 [Config](../../.vimrc#Tags:)
@@ -999,6 +1003,12 @@ test quickfix autoexpand on errors:
 
 test effects of vim2hs
 
+
+* Literate Markdown
+    tried out but not yet loading into Intero
+    /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingTypeClasses1/src/LiterateHsMarkdown.md
+    https://gitlab.haskell.org/ghc/ghc/wikis/literate-markdown
+
 run the current line through typeOf cmd-line prog.
   -- execute ".!typeOf %"
   problem: cabal install does not produce a global executable
@@ -1008,7 +1018,37 @@ change DocsForCursorWord() to hoogle.hackage.org not hackage/hoogle
 autodetect HsList or Record and render as lists in a flowting window
 use flowting window for PasteListAsLines
 
+* Kinds: how do I get the Kind of a type in Intero? `:kind Maybe` .. not with InteroInfo ..?
+* Syntax highlight in InteroRepl?
+
+* Ghci config: configure typical language extensions and disable some warnings via g:intero_ghci_options
+
+
+* Make repl :typeAt work with a vis-selection
+    use this approach?
+    vnoremap get :call InsertEvalExpr( ':type ' . Get_visual_selection(), "PasteTypeSig" )<cr>
+    to run this?
+    :type-at Functortown 87 1 87 4 bo0
+
+* After "Intero open" and then closing the intro split below, the lines are currupted, specifically after inserting
+(e.g. via 'get'/\tw). currently opening intero in a separate window
+
 ## Temp next
+
+Consistent focus maps
+`o` in seach just opens/focuses that line in the other window to the right - it does not close the grep seach window.
+however:
+ * tagbar has a different map: `p`
+ * quickfix error also have a different map
+ * markbar?
+
+A string at the beginning of a line in a .hs file is highlighted/concealed as a vim comment
+
+* Hasktags
+    open these two files:
+      /Users/andreas.thoelke/Documents/Haskell/6/hasktags/src/Hasktags.hs
+      /Users/andreas.thoelke/Documents/Haskell/6/hasktags/tags
+    run this with get: runFindWithCache
 
 Review Haskell type insert maps `,tw`
   " Type Inserts
@@ -1037,6 +1077,8 @@ after duplicating a line and then commenting the orig line and moving down with 
      /Users/andreas.thoelke/Documents/Haskell/6/HsTraining1/**
      /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingBook2/**
 
+* training whitespace is highlighted in insert mode just left of the cursor. not after restart, but something triggers this
+
 
 ## Release notes v1.1.2
 * Shortcuts to popular folders <leader>o .. `n` notes, `u` utils, `h` haskell, `c` current
@@ -1054,8 +1096,15 @@ after duplicating a line and then commenting the orig line and moving down with 
 * `gel` "eval list" on a Haskell identifier will insert a resulting list as lines. see PasteListAsLines()
 * `get` "eval table": After "eval list", it then aligns the first two columns (column separator is <space>)
 * `geT` "tabularizes" the output
+* `gek` to inset the `Kind` (visual-sel and word at cursor)
 * `\tw` or `\tt` to get the type of the identifier
-
+* `leader hs` creates a haskell top level function stub with a random and indexed name (used for quick tests)
+* Use feedkeys to activate modes: e.g. call feedkeys("\<c-v>", 'x') see VisualBlockMode()
+* `]b`, `[b` for next/prev binding
+* `cib` to change the binding name in consequtive lines
+* `<leader>rb` to rename a binding and its occurences
+* `iB` "inside buffer" textobject
+* `iv` "inside viewable" area in window textobj
 
 ## Release notes v1.1.1 (2019-04-20)
 * Command to search in deleted code: `Fdeleted someString`

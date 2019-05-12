@@ -349,7 +349,6 @@ Repl format: `gew` does just append all repl returned lines
 `geT` "tabularizes" the output
 
 * `\tw` or `\tt` to get the type of the identifier
-`
 
 ## Code Navigation
   * how to navigate header like this:?
@@ -368,7 +367,7 @@ Repl format: `gew` does just append all repl returned lines
   NOTE this is not complete - research full solution?
   * does not move to "[" as parent → vim navigate json file
 
-  * jump to start/end of inserted/pasted text `\`[ \`]`
+  * jump to start/end of inserted/pasted text `\`[ \`]
   * jump to start/end of previous selection \`< \`>
 
   * Using seach to navigate
@@ -460,13 +459,15 @@ location could be a
 
 ## Search
 
- 1. `:Find <searchword>`
-    * It's now:
-      * Frepo, Fbuffers, Fnotes, Fhask, Fvim, Fplug
+ 1. Grepper search
+    * Frepo, Fbuffers, Fnotes, Fhask, Fvim, Fplug
     * only in git files in case of repo, notes
     * on sidebar, with context
     * in new tab
     * based on project root
+    * use single quotes when searching :Frepo 'multiple words'
+    * visual select two words and then `gsr` does the same
+    * use regex: `:Frepo 'leader.*oc\s' `
 
     see ~/.vimrc#/Search%20Config:
 
@@ -590,9 +591,9 @@ note that \_.* would match all text till the end of the buffer!
 instead use \{-} after a multiline atom to match asap
 
 <div>
-> Test if char is space OR '-'
-  > if getline('.')[0] =~ '\v(\s|-)'
-  > echo match( 'y', '\v(x|y)')
+Test if char is space OR '-'
+  if getline('.')[0] =~ '\v(\s|-)'
+  echo match( 'y', '\v(x|y)')
 </div>
 
 two empty lines/ three consecutive \n:
@@ -710,7 +711,7 @@ see/align with Github wiki repository
 
 ### Create hyperlink to header
 
-TODO - links how work any more?
+TODO - links don't work any more?
   Use `h rel.txt` to link
     * mapping is `gk`
     * path is relative to the current file or absolute e.g. 

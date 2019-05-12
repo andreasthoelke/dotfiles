@@ -61,7 +61,7 @@ endfunc
 let g:topLevPttn = '^[^ -]'
 let g:anyCharsNotBracketOrEqu = '[^=(]*'
 
-" Top level Haskell type signature. May the colon in a new line. Exclues colons after = and inside ()
+" Top level Haskell type signature. May the colon in a new line. Exclues colons after = and inside (). '\_s' => whitespace or blank lines
 let g:topLevTypeSig = g:topLevPttn . g:anyCharsNotBracketOrEqu . '\_s' . g:anyCharsNotBracketOrEqu . MakeOrPttn( ['∷', '::'] )
 let g:topLevOtherPttn = '^' . MakeOrPttn( ['instance', 'data', 'class', 'type', 'newtype', 'func!', 'function', 'au ', 'command'] )
 let g:topLevCombined = MakeOrPttn( [ g:topLevTypeSig, g:topLevOtherPttn ] )
@@ -69,9 +69,9 @@ let g:topLevCombined = MakeOrPttn( [ g:topLevTypeSig, g:topLevOtherPttn ] )
 " Note the { - } is conceald in this pattern
 let g:multilineTilAfterEqual = '\_.\{-}\s=\_s\+\zs\S'
 
-" all haskell type devs - even inner once
-" all top level →
-"   how to combine or patterns in regex or functions?
+" all haskell type sig on bindings (where and let)
+let g:typeSigBind = '^[^=(]*\zs' . MakeOrPttn( ['∷', '::'] )
+
 
 let g:nextWordPttn = '\_s\+\zs\S'
 let g:infixOps = ['<$>', '<\*>', '\*>', '>>', '>>=', '++', '<>', ':']
@@ -97,6 +97,7 @@ func! HaskellMaps()
   xnoremap <silent><buffer> af :<c-u>call HsBlockVisSel()<cr>
 endfunc
 
+" ─   TopLevel                                           ■
 
 nnoremap <silent> <c-n> :call TopLevForw()<cr>:call ScrollOff(16)<cr>
 func! TopLevForw()
@@ -131,10 +132,72 @@ func! HsBlockVisSel()
   normal! o
 endfunc
 
-" --------------
+" ─^  TopLevel                                           ▲
 
 
-" Paragraph Movement: ----------------
+" ─   Bindings, including where/let                     ──
+" * `]b`, `[b` for next/prev binding
+" * `cib` to change the binding name in consequtive lines
+" * `<leader>rb` to rename a binding and its occurences
+
+" Next/Prev Binding:
+nnoremap <silent> ]b :call BindingForw()<cr>:call ScrollOff(16)<cr>
+func! BindingForw()
+  normal! W
+  call search( g:typeSigBind, 'W' )
+  normal! B
+endfunc
+
+nnoremap <silent> [b :call BindingBackw()<cr>:call ScrollOff(10)<cr>
+func! BindingBackw()
+  call search( g:typeSigBind, 'bW' )
+  normal! B
+endfunc
+
+" Textobj for type-sig binding name:
+" Method 1: Only useful to yank the top level name? Note that change/substitute of two lines will need one of the other approaches.
+onoremap <silent> ib :<c-u>call Binding_VisSel_Name()<cr>
+vnoremap <silent> ib :<c-u>call Binding_VisSel_Name()<cr>o
+" Tests:
+" pv0 ∷ IO Text
+" pv0 = pack <$> getLine
+func! Binding_VisSel_Name()
+  normal! m'll
+  call BindingBackw()
+  normal! ve
+endfunc
+
+" Method 2: Change the name in multiple consecutive lines in place
+nnoremap <leader>hcn :call BindgingChangeName()<cr>
+" This overwrites "cib" textobj above! because this approach allows to change multiple line
+nnoremap cib :call BindingChangeName()<cr>
+func! BindingChangeName()
+  normal! m'll
+  call BindingBackw()
+  call VisualBlockMode()
+  if MatchesInLine( line('.'), 'let' ) " let is the only word that can preced the local binding?
+    normal! je
+  else " can span multiple lines based on indent
+    normal ,je
+  endif
+  call feedkeys("c")
+endfunc
+
+" Method 3: Rename binding. Replace all occurrences of the next binding name in the Hs-Block
+nnoremap <leader>rb :call BindingRename()<cr>
+func! BindingRename()
+  normal! m'll
+  call BindingBackw()
+  let cw = expand('<cword>')
+  normal Vaf
+  let linesRangeStr = "'<,'>"
+  normal! V
+  call ReplacePattern( linesRangeStr, cw )
+endfunc
+
+
+
+" ─   Paragraph Movement                                ──
 
 " Next Paragraph:
 nnoremap <silent> <c-l> :call ParagNext()<cr>
@@ -265,7 +328,7 @@ endfunc
 
 " Textobjects: -----------------------------------
 " ie = inner entire buffer
-onoremap ib :<c-u>exec "normal! ggVG"<cr>
+onoremap iB :<c-u>exec "normal! ggVG"<cr>
 " iv = current viewable text in the buffer
 onoremap iv :<c-u>exec "normal! HVL"<cr>
 vmap iv ,Ho,L
@@ -735,11 +798,11 @@ func! GetVisSelOtherEnd()
 endfunc
 " Test: Select a range - use 'o' to change cursor - unselect - running the line will still consider 'gv' selection
 " echo GetVisSelOtherEnd()
-vmap <silent><leader>cn :<c-u>call TestVisSel()<cr> " ■
+vmap <silent><leader>cn :<c-u>call TestVisSel()<cr>"
 " The vis-sel needs to be canceled in order to be able to access the cursorpos
-vmap <silent><leader>cc <esc>:call TestVisSel()<cr> " ■
-nmap <silent><leader>cn :call TestVisSel()<cr> " ■
-vmap <silent><leader>cn :call TestVisSel()<cr> " ■
+vmap <silent><leader>cc <esc>:call TestVisSel()<cr>
+nmap <silent><leader>cn :call TestVisSel()<cr>
+vmap <silent><leader>cn :call TestVisSel()<cr>
 func! TestVisSel()
   echo GetVisSelOtherEnd()
   normal! gv

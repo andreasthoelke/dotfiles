@@ -1,5 +1,5 @@
 
-" Used in utils-csv.vim - obsolete?
+" This uses a list of lines, not a range in the code like below
 fun! SubstituteInLines ( lines, origDelim, newDelim )
   let l:idx = 0
   while l:idx < len(a:lines)
@@ -9,6 +9,17 @@ fun! SubstituteInLines ( lines, origDelim, newDelim )
   endwhile
   return a:lines
 endfun
+
+
+" Enhance SubstituteInLines to multiple replacements
+func! ReplaceStringsInLines( lines, listListMap )
+  for [target, replacement] in a:listListMap
+    call SubstituteInLines( a:lines, target, replacement )
+  endfor
+  return a:lines
+endfunc
+" echo ReplaceStringsInLines( [getline( line('.') +1)], g:HsReplacemMap_CharsToUnicodePtts )
+" unfold :: Monad m => (b -> Maybe (a, b)) -> b -> Producer m a
 
 " Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
 
@@ -115,6 +126,17 @@ endfunc
 " xx ww aa at cc ee ax ww ll aa xx
 " xx ww aa at cc ee ax ww ll aa xx}}}
 
+
+func! ReplacePattern( linesRangeStr, pattern )
+  normal! m'
+  " Show user dialog to get the new text
+  let replacementText = input('Enter replacement text: ')
+  " The substitute command is stated with a range string. it will get appended to using the ".=" in the following lines
+  let substituteCmd = a:linesRangeStr . 's/'
+  let substituteCmd .= a:pattern . "/" . replacementText . "/ge"
+  call ExecKeepView( substituteCmd )
+  call JumpBackSkipCurrentLoc()
+endfunc
 
 
 

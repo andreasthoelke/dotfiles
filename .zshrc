@@ -4,6 +4,8 @@
 path+=('/Users/andreas.thoelke/.local/bin')
 path+=('/Users/andreas.thoelke/Library/Python/3.6/bin')
 path+=('/Users/andreas.thoelke/.cargo/bin')
+path+=('/Users/andreas.thoelke/.cabal/bin')
+path+=('/Users/andreas.thoelke/.ghcup/bin')
 
 # View man pages in vim:
 export MANPAGER="nvim -c 'set ft=man' -"

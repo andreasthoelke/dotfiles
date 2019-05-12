@@ -1233,37 +1233,39 @@ set guicursor=n:block-iCursor
 " TODO use runtimepath to lazyload
 
 " ─   Haskell maps and syntax additions                 ──
-source .vim/utils/HsMotions.vim
-source .vim/utils/HsSyntaxAdditions.vim
-source .vim/utils/CodeMarkup.vim
-source .vim/utils/HsAPIExplore.vim
+source ~/.vim/utils/HsMotions.vim
+source ~/.vim/utils/HsSyntaxAdditions.vim
+source ~/.vim/utils/CodeMarkup.vim
+source ~/.vim/utils/HsAPIExplore.vim
 " Note: There is an unfinished plugin here:
 " tabe .vim/plugged/HsAPIExplore/autoload/HsAPIExplore.vim
 " call HsAPIExplore#start()
 " Intero maps and helpers:
-source .vim/utils/utils-repl.vim
-source .vim/utils/utils-align.vim
+source ~/.vim/utils/HsIntero.vim
+source ~/.vim/utils/HsFormat.vim
+source ~/.vim/utils/utils-align.vim
 
 " ─   " General tools                                   ──
-source .vim/utils/utils-terminal.vim
+source ~/.vim/utils/utils-terminal.vim
 " Todo: move the helper/commands in this note file
-source .vim/notes/notes-workflow.vim
-source .vim/utils/utils-vimscript-tools.vim
-source .vim/utils/utils-markdown.vim
-source .vim/utils/utils-chromium.vim
+source ~/.vim/notes/notes-workflow.vim
+source ~/.vim/utils/utils-vimscript-tools.vim
+source ~/.vim/utils/utils-markdown.vim
+source ~/.vim/utils/utils-chromium.vim
 
 " ─   " Helper functions                                ──
-source .vim/utils/utils-search-replace.vim
-source .vim/utils/utils-code-line-props.vim
-source .vim/utils/utils-syntax-color.vim
+source ~/.vim/utils/utils-search.vim
+source ~/.vim/utils/utils-search-replace.vim
+source ~/.vim/utils/utils-code-line-props.vim
+source ~/.vim/utils/utils-syntax-color.vim
 
 " ─   " Minor                                           ──
-source .vim/utils/utils-virtualtext.vim
-source .vim/utils/utils-csv.vim
-source .vim/utils/utils-applescript.vim
+source ~/.vim/utils/utils-virtualtext.vim
+source ~/.vim/utils/utils-csv.vim
+source ~/.vim/utils/utils-applescript.vim
 
 " ─   " Split-out setup sections                        ──
-source .vim/utils/setup-tags.vim
+source ~/.vim/utils/setup-tags.vim
 
 
 
@@ -1271,147 +1273,6 @@ source .vim/utils/setup-tags.vim
 let g:accountsGithub = ''
 let g:accountsGithub = readfile('.vim/accounts/github')[0:0][0]
 
-function! GotoDefinition()
-  if IsPurs()
-    normal m'
-    " add position to jumplist
-    exec 'Pgoto'
-  else
-    exec 'InteroGoToDef'
-  endif
-endfun
-
-" function! TypeInsert( keyword)
-function! TypeInsert()
-  if IsPurs()
-    let l:kw = PSCIDEgetKeyword()
-    " call PursType( a:keyword )
-    call PursType( l:kw )
-  else
-    " exec 'InteroInstTypeInsert'
-    " :InteroInstTypeInsert
-    :InteroGenTypeInsert
-  endif
-endfun
-
-function! ReplEvalExpr_Insert( exprStr )
-  if IsPurs()
-    call PursEval( a:exprStr )
-  else
-    call InsertEvalExpressionRes( a:exprStr )
-  endif
-endfun
-
-" Get a (repl-) evaluable expression-string from a (line-) string
-function! ExtractEvalExpFromLineStr( lineStr )
-  let l:lineList = split( a:lineStr )
-
-  if l:lineList[0] == '--'
-    " it's a commented line
-    " → use the second word onwards
-    return join( l:lineList[1:], ' ')
-
-  elseif l:lineList[1] == '='
-    " it's a declaration
-    " → use the third word onwards
-    return join( l:lineList[2:], ' ')
-  else
-    echoe 'Could not extract an expression!'
-  endif
-endfun
-
-
-" TODO: Intero has these custom functions:
-" InsertInstType
-" InsertGenType
-" InsertEvalRes
-" InsertEvalExpressionRes
-" TODO: make proper API
-
-
-" Todo: use join( list, ' ' )
-function! ListToHsFnCall(stlist)
-  let l:fncall = ""
-
-  for nextItem in a:stlist
-    let l:fncall = l:fncall . " " . nextItem
-  endfor
-  return l:fncall
-  " echo fncall
-endfun
-
-function! GetModuleName()
-  for lineNum in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-    " skip empty lines as those seem to confuse the if == 'module'
-    if split( getline( lineNum ) ) == []
-      continue
-    endif
-    let firstWord  = get( split( getline( lineNum ) ), 0 )
-    let moduleName = get( split( getline( lineNum ) ), 1 )
-    if firstWord == "module"
-      break
-    endif
-  endfor
-  return moduleName
-endfun
-
-
-function! ReplReload()
-  let modulename = GetModuleName()
-  " exec ':up'
-  if IsPurs()
-    " TODO: is this needed? what does it do?
-    call purescript#ide#utils#update()
-    exec ':Prebuild'
-    call PursEval(':r')
-    call PursEval('import ' . modulename)
-    " call PursEval('import Helpers')
-    " exec 'SlimeSend1 :r'
-    " exec 'SlimeSend1 import ' . modulename
-    " exec 'SlimeSend1 import Helpers'
-  else
-    if has('nvim')
-      exec ':InteroReload'
-    else
-      exec 'SlimeSend1 :r'
-      exec 'SlimeSend1 :l ' . modulename
-    endif
-  endif
-endfun
-
-function! InsertTypeAnnotation()
-  " exec ':up'
-  if IsPurs()
-    " exec ':PSCIDEaddTypeAnnotation'
-    call PSCIDEaddTypeAnnotation(matchstr(getline(line(".")), '^\s*\zs\k\+\ze'))
-  else
-    if has('nvim')
-      exec ':InteroTypeInsert'
-    else
-      exec ':GhcModTypeInsert'
-    endif
-  endif
-  " This has no effect/comes too early as the text will be inserted by Intero asynced/later
-  " call PurescriptUnicode()
-endfun
-
-function! ImportIdentifier()
-  if IsPurs()
-    exec ':PSCIDEimportIdentifier'
-  else
-    " TODO
-  endif
-endfun
-
-function! PsciReload()
-  let modulename = GetModuleName()
-  exec ':w'
-  exec 'SlimeSend1 :r'
-  exec 'SlimeSend1 import ' . modulename
-  " import is for purescript / psci
-  " exec 'SlimeSend1 :l ' . modulename
-  " :l is for haskell / ghci
-endfun
 
 
 " ALE: --------------------------------------------------------
@@ -1472,6 +1333,10 @@ command! HlintConf :exec (':e ' . projectroot#guess() . '/.hlint.yaml')
 " let g:nnoremap = {"]a": "", "[a": ""}
 " let g:nnoremap = {"]a": ':<C-U>call signature#mark#Goto("next", "spot", "global")', "[a": ""}
 " "]a" is used for mark navigation
+
+" Disable certain unimpaired maps!:
+let g:nremap = {'[b': '', ']b': '', '[t': '', ']t': '', '[T': '', ']T': ''}
+
 
 " UNIMPAIRED: -------------------------------------------------
 
@@ -1732,108 +1597,6 @@ endfun
 "
 " copy a folder: cp -a /source/. /dest/
 "
-" HASKELL PURESCRIPT TEST FUNCTIONS: ----------------------------------------------------------------
-" "unique functions"
-nnoremap <leader>uf :call RandFnName()<cr>2w
-" produces a (test) haskell function with a random name, e.g.:
-" cp0 = undefined
-" "unique symbol"
-nnoremap <leader>us :call RandSymbol()<cr>
-
-" "expand function": expand a symbol name to a function stub
-nnoremap <leader>ef A :: String<esc>^ywo<esc>PA= undefined<esc>b
-" nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
-
-" "expand signature": expand a signature to a function stub
-nnoremap <leader>es ^ywo<esc>PA= undefined<esc>b
-
-" "expand undefined": expand a signature to a function stub
-nnoremap <leader>eu yiwo<esc>PA = undefined<esc>b
-" nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
-
-
-nnoremap <leader>uef <leader>us<leader>ef
-
-" "index symbol" append postfix index to function name
-nnoremap <leader>if ea0^jea0^k
-
-nnoremap <leader><c-a> jk^
-nnoremap <leader><c-x> <c-x>j<c-x>k^
-
-
-function! RandFnName()
-python << EOF
-import string
-import random
-import vim
-
-vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0 = undefined'
-EOF
-endfunction
-
-function! RandSymbol()
-python << EOF
-import string
-import random
-import vim
-
-vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0'
-EOF
-endfunction
-
-
-" Reduce a paragraph (purs repl type output) to one line, deleting 2+ space seperations between words
-nnoremap <leader>ccu "td}:call TransfTRegAndAppend( function('StripNewlinesAndMultispaces') )<cr>k
-
-" Get the type of do-binds by producing a type error:
-" nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>"tp^
-nnoremap <leader>cco "tyiwolet (xb0 :: Int) = <esc>$"tp^
-" "$" is needed because EasyClip jumps back
-" Note: It's easier to see the type with this, but then it requires 3 keypesses to undo
-nmap <leader>cci wi∷ _ <esc>^dr
-nmap <leader>ccu wdwdw^dr
-" These work fine - conflict with bracket/comma navigation
-" nmap ,ti wi∷ _ <esc>^dr
-" nmap ,tu wdwdw^dr
-
-
-" Apply 'fn' to the 't'/temp and append the result after the current line
-function! TransfTRegAndAppend ( fn )
-  call append( line('.') - 1, a:fn( @t ))
-endfun
-" Testfn: Use of TransfTRegAndAppend with higher order function
-nnoremap <leader>cci "tdd:call TransfTRegAndAppend( function('toupper') )<cr>
-
-function! StripNewlinesAndMultispaces( str ) " 1. delete all newlines:
-  let l:str1 = substitute(  a:str,  '\n',  '', 'ge' )
- " 2. replace sections/words that have more than one space (regex: ' \+') with one space
- let l:str2 = substitute( l:str1, ' \+', ' ', 'ge' )
- return l:str2
- " the same in one 's' command:
-  " exec 's/\n//ge | s/ \+/ /ge'
-endfun
-
-function! StripString( original, stripThisString )
- return substitute(  a:original, a:stripThisString, '', 'ge' )
-endfun
-
-
-
-" " TODO: format haskell/purescript functions signature!!
-" fun! FormatSign()
-"   exec "normal! /∷\<cr>"
-"   let indentPos = col('.')
-"   let lineNum = line('.')
-"   exec "normal! /→\<cr>"
-"   normal cuq
-"
-"   " exec "insert <cr>"
-"   " echo indentPos
-"   let ab = append(lineNum, "hii")
-" endfun
-"
-" HASKELL PURESCRIPT TEST FUNCTIONS: ----------------------------------------------------------------
-" ----------------------------------------------------------------------------------------------------
 
 
 
@@ -2483,6 +2246,7 @@ nnoremap <localleader>QQ :q<cr>
 
 " Shortcuts to popular folders:
 nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
+nnoremap <leader>on :tabe ~/.vim/notes/<cr>
 nnoremap <leader>ov :tabe ~/.vimrc<cr>
 nnoremap <leader>oh :tabe ~/Documents/Haskell/<cr>
 nnoremap <leader>oc :tabe ~/Documents/Haskell/6/<cr>
@@ -2702,8 +2466,6 @@ command! Editor :call OpenCurrentFileInSystemEditor()
 nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
 " Tip: alternatively just ":!open $"!
 
-command! Markdown :call OpenMarkdownPreview()
-nnoremap glm :call OpenMarkdownPreview()<cr>
 
 " This seems to work now (silently)
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
@@ -2945,459 +2707,10 @@ nnoremap <leader>ll :lopen<cr>
 " nnoremap <leader>qq :copen<cr>:set syntax=purescript<cr>
 nnoremap <leader>qq :copen<cr>
 
-nnoremap <silent> gsg :call GoogleSearch("word")<cr>
-vmap <silent> gsg :call GoogleSearch("visSel")<cr>
 
-nnoremap <silent> gsh :call DocsForCursorWord()<cr>
-vmap <silent> gsh :call DocsForVisSel()<cr>
-nnoremap <silent> gsd :call HoogleForCursorWord()<cr>
-vmap <silent> gsd :call HoogleForVisSel()<cr>
 
-nnoremap <silent> gsi :call GithubSearch("word")<cr>
-vmap <silent> gsi :call GithubSearch("visSel")<cr>
 
-nnoremap <silent> gsr :call GrepSearch("word", "repo")<cr>
-vmap <silent> gsr :call GrepSearch("visSel", "repo")<cr>
-nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
-vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
-
-
-" Seach Vim Help and fill the quickfix list with the results
-command! -nargs=1 HelpGrep  exec ':helpgrep' <q-args> | exec ':cwindow'
-cnoreabbrev hg HelpGrep
-
-nnoremap <leader>K K
-
-fun! OpenFinder()
-  exec 'silent !open .'
-endfun
-
-fun! OpenCurrentFileInSystemEditor()
-  exec 'silent !open %'
-endfun
-
-
-" Search Config: -----------------------------------
-
-" Can just use 'vim' instead of 'vimgrep'
-
-
-" Vim Grepper: ------------------------------
-
-" Repo files:
-command! -nargs=1 Frepo     :tabe % | Grepper -tool git -side          -query <args>
-" Open buffers:
-command! -nargs=1 Fbuffers  :tabe % | Grepper           -side -buffers -query <args>
-
-" Notes:
-command! -nargs=1 Fnotes    :tabe % | Grepper -tool git -side          -query <args> /Users/andreas.thoelke/.vim/notes
-command! -nargs=1 FnotesAll :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/notes
-" Haskell code:
-" command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/Documents/Haskell/4/hello44/** /Users/andreas.thoelke/Documents/Haskell/4/abc4/test1/**
-command! -nargs=1 Fhask     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/Documents/Haskell/6/HsTraining1/** /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingBook2/**
-
-" Vim code:
-command! -nargs=1 Fvim      :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/utils/ /Users/andreas.thoelke/.vimrc
-" Plugin code:
-command! -nargs=1 Fplug     :tabe % | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/plugged/**
-
-" command! -nargs=1 FrepoDel  :tabe | Grepper           -side          -query <args> /Users/andreas.thoelke/.vim/plugged/**
-
-command! -nargs=1 Fdeleted call FindInDeletedCode( <q-args> )
-" TODO How can I do this in uncommitted deleted code → undotree or unstaged changes?
-
-command! -nargs=1 Help call HelpOpen( <q-args> )
-
-func! FindInDeletedCode( pattern )
-  let l:cmd = "git log -c -S'" . a:pattern . "'"
-  let l:resultLines = split( system( l:cmd ), '\n' )
-  exec 'tabe'
-  call append( line('.'), l:resultLines )
-endfunc
-
-func! HelpOpen( appName )
-  let l:cmd = a:appName . ' --help'
-  let l:resultLines = split( system( l:cmd ), '\n' )
-  exec 'tabe'
-  call append( line('.'), l:resultLines )
-  exec 'Man!'
-endfunc
-
-command! -nargs=1 AppOut call StdoutToBuffer( <q-args> )
-nnoremap <leader>sab :call StdoutToBuffer( getline('.') )<cr>
-" Tests:
-" ls -o -t -a
-" hasktags --help
-func! StdoutToBuffer ( cmd )
-  let l:resultLines = split( system( a:cmd ), '\n' )
-  exec 'vnew'
-  call append( line('.'), l:resultLines )
-  normal! dd
-endfunc
-
-" This works pretty well. could reuse for other purposes
-command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
-
-runtime plugin/grepper.vim    " initialize g:grepper with default values
-let g:grepper.stop = 20
-
-au ag FileType GrepperSide
-  \  silent execute 'keeppatterns v#'.b:grepper_side.'#'
-  " \| set syntax=purescript
-" TODO make this use the syntax of the (first?) buffer filetype
-  \| set syntax=vim
-  \| silent normal! ggn
-
-" Note: This runs a search/selection that allows to apply the purescript syntax only to the selcted lines!
-" search pattern from ".b:grepper_side": \v^%(\>\>\>|\]\]\]) ([[:alnum:][:blank:]\/\-_.~]+):(\d+)
-
-" This does not seem needed? also not working?
-" nmap gs  <plug>(GrepperOperator)
-" xmap gs  <plug>(GrepperOperator)
-
-highlight GrepperSideFile gui=italic guifg=#C34371 guibg=#000000
-" highlight Conceal         guifg=#FFFFFF guibg=#000000
-
-fun! GrepSearch(selType, mode)
-    if a:selType == "word"
-      let keyw = expand("<cword>")
-    else
-      let keyw = Get_visual_selection()
-    endif
-    if a:mode == "buffers"
-      exec 'Fbuffers "' . keyw . '"'
-    else
-      exec 'Frepo "' . keyw . '"'
-    endif
-endfun
-" Vim Grepper: ------------------------------
-
-
-fun! GoogleSearchStr()
-    let keyw = expand("<cword>")
-    let url = 'http://www.google.de\#q\=' . keyw
-    return url
-endfun
-
-fun! Google()
-    let keyw = expand("<cword>")
-    let url = 'http://www.google.de\#q\=' . keyw
-    let comm = 'silent !open ' . url
-    exec comm
-endfun
-
-fun! GoogleVisSel()
-    let keyw = Get_visual_selection()
-    let enckw = UrlEncode(keyw)
-    let url = 'http://www.google.de\#q\=' . enckw
-    let comm = 'silent !open ' . url
-    exec comm
-endfun
-
-fun! GoogleSearch(selType)
-    if a:selType == "word"
-      let keyw = expand("<cword>")
-    else
-      let keyw = Get_visual_selection()
-    endif
-    let enckw = UrlEncode(keyw)
-    let extension = GetExtension()
-    if extension == "purs"
-      let lang = 'PureScript'
-    elseif extension == "hs"
-      let lang = 'Haskell'
-    else
-      let lang = ''
-    endif
-    let url = 'http://www.google.de\#q\=' . lang . '+' . enckw
-    let comm = 'silent !open ' . url
-    exec comm
-endfun
-
-fun! OpenVisSel()
-    let keyw = Get_visual_selection()
-    let enckw = UrlEncode(keyw)
-    let comm = 'silent !open ' . enckw
-    exec comm
-endfun
-
-fun! DocsForCursorWord()
-    let keyw = expand("<cword>")
-    if IsPurs()
-      let url = 'https://pursuit.purescript.org\/search\?q\=' . keyw
-    else
-      " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . keyw
-      let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . keyw
-      " let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . keyw
-    endif
-    let comm = 'silent !open ' . url
-    exec comm
-endfun
-
-fun! DocsForVisSel()
-    let keyw = Get_visual_selection()
-    let enckw = UrlEncode(keyw)
-    if IsPurs()
-      let url = 'https://pursuit.purescript.org\/search\?q\=' . enckw
-    else
-      " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . enckw
-      let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . enckw
-      " let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw
-    endif
-    let comm = 'silent !open ' . url
-    exec comm
-endfun
-
-fun! HoogleForCursorWord()
-  let g:originFile = expand('%')
-  " why did I use this? turns out this or 'w!' crashes vim!
-  " originFile is needed for hsimport to work!
-  if IsPurs()
-    call PSCIDEpursuit(PSCIDEgetKeyword())
-  else
-    let l:keyw = expand("<cword>")
-    call HoogleLookup( l:keyw, '' )
-    " let comm = 'Hoogle ' . keyw
-    " exec comm
-    " exec 'w!'
-    wincmd j
-  endif
-endfun
-
-fun! HoogleForVisSel()
-  let g:originFile = expand('%')
-  exec 'silent! s/\%V→/->'
-  exec 'silent! s/\%V∷/::'
-  exec 'silent! s/\%V⇒/=>'
-  let keyw = Get_visual_selection()
-  " exec 'silent! s/\%V->/→'
-  " exec 'silent! s/\%V::/∷'
-  " exec 'silent! s/\%V=>/⇒'
-  " use undo instead to prevent adding this to the undo list!
-  " exec 'u'
-  " let comm = 'silent Hoogle ' . keyw
-  let comm = 'Hoogle ' . keyw
-  exec comm
-  " exec 'w!'
-  wincmd j
-endfun
-
-
-command! -nargs=1 Docs  :call Docs(<args>)
-command! -nargs=1 Docsp :call Docsp(<args>)
-command! -nargs=1 Docsh :call Docsh(<args>)
-
-
-fun! Docs(searchSt)
-    let enckw = UrlEncode(a:searchSt)
-    if IsPurs()
-      let url = 'https://pursuit.purescript.org\/search\?q\=' . enckw
-    else
-      " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . enckw
-      let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw
-    endif
-    let comm = 'silent !open ' . url
-    exec comm
-endfun
-
-fun! Docsp(searchSt)
-    let enckw = UrlEncode(a:searchSt)
-    let url = 'https://pursuit.purescript.org\/search\?q\=' . enckw
-    let comm = 'silent !open ' . url
-    exec comm
-endfun
-
-" "stack build && stack exec pragmaticServant-exe"
-  " normal! gg"_dG
-
-" nnoremap <leader>cab :e *.cabal<cr>
-    " let extension = expand("%:e")
-
-
-" Extracts the project name, e.g. "pragmaticServant" from the Stack "package.yaml" file
-fun! HaskellProjectName()
-    let firstLine = readfile('package.yaml')[0:0][0]
-    return split(firstLine)[1]
-endfun
-" These are the first two lines from "package.yaml" at the root of the project folder/working directory:
-" name:                pragmaticServant
-" version:             0.1.0.0
-
-" Alternative approach: use name of working directory
-" expand('%:p:h:t')
-fun! HaskellProjectName1()
-    return fnamemodify('package.yaml', ':p:h:t')
-endfun
-
-
-
-
-" Opens a visible terminal and builds and runs the stack project (using stack build && stack exec ..)
-" TODO: two alternative ways to launch long running processes:
-" ➜  pragmaticServant git:(master) ✗ stack runghc src/Lib.hs
-" 2. Launch a terminal with "glt" + "ghcid -T :main"
-fun! HaskellStackRun()
-  " let Cbs2 = {
-  " \ 'on_stdout': function('OnEv1'),
-  " \ 'on_stderr': function('OnEv1'),
-  " \ 'on_exit': function('OnEv1')
-  " \ }
-
-  " let commandBaseString = "!stack build && stack exec "
-  let projectName = HaskellProjectName1()
-  " let commString = commandBaseString . projectName . "-exe"
-  " let commString = "stack build"
-  let commString = "20Term stack build && stack exec " . projectName . "-exe"
-  " let StackRunIO = jobstart(commString, Cbs2)
-  " exec "20Term stack build"
-
-  exec commString
-endfun
-" example command:
-" "stack build && stack exec pragmaticServant-exe"
-" glt :20Term<cr>
-
-  " command! PursRepl :let PursReplID = jobstart("pulp repl", Cbs1)
-		  " :call jobstart(split(&shell) + split(&shellcmdflag) + ['{cmd}'])
-      "
-" ➜  pragmaticServant git:(master) ✗ stack runghc src/Lib.hs
-" 2. Launch a terminal with "glt" + "ghcid -T :main"
-
-
-fun! GithubSearch(selType)
-  if a:selType == "word"
-    let keyw = expand("<cword>")
-  else
-    let keyw = Get_visual_selection()
-  endif
-
-  let extension = GetExtension()
-
-  if extension == "purs"
-    let lang = 'PureScript'
-  elseif extension == "hs"
-    let lang = 'Haskell'
-  else
-    let lang = ''
-  endif
-  exec RunGithubSearch(keyw, lang)
-endfun
-
-fun! RunGithubSearch(keyw, lang)
-  let enckw = UrlEncode(a:keyw)
-  let base = 'https://github.com/search\?l\='
-  let baseLang = base . a:lang . '\&q\='
-  let search = baseLang . enckw . '\&type\=Code'
-  let comm = 'silent !open ' . search
-  return comm
-endfun
-
-
-fun! IsPurs()
-  let extension = expand("%:e")
-  " echom expand("%:e")
-  if extension == "purs"
-    return 1
-  else
-    return 0
-  endif
-endfun
-
-fun! GetExtension()
-  let extension = expand("%:e")
-  return extension
-endfun
-" vim
-
-fun! EncodeChar(char)
-  if a:char == '%'
-    return '%%'
-  elseif a:char == ' '
-    return '+'
-  else
-    " Taken from eval.txt
-    let n = char2nr(a:char)
-    let r = ''
-    while n
-      let r = '0123456789ABCDEF'[n % 16] . r
-      let n = n / 16
-    endwhile
-    return '%'. r
-  endif
-endf
-
-fun! EncodeURL(url)
-   return substitute(a:url, '\([^a-zA-Z0-9_.-]\)', '\=EncodeChar(submatch(1))', 'g')
-endf
-
-" URL encode a string. ie. Percent-encode (actually backslash!) characters as necessary.
-function! UrlEncode(string)
-  let result = ""
-  let characters = split(a:string, '.\zs')
-  for character in characters
-    if character == " "
-      let result = result . "+"
-    elseif CharacterRequiresUrlEncoding(character)
-      let result = result . '\' . character
-      " let i = 0
-      " while i < strlen(character)
-      "     let byte = strpart(character, i, 1)
-      "     let decimal = char2nr(byte)
-      "     let result = result . "%" . printf("%02x", decimal)
-      "     let i += 1
-      " endwhile
-    else
-      let result = result . character
-    endif
-  endfor
-  return result
-endfunction
-
-" Returns 1 if the given character should be percent-encoded in a URL encoded
-" string.
-function! CharacterRequiresUrlEncoding(character)
-    let ascii_code = char2nr(a:character)
-    if ascii_code >= 48 && ascii_code <= 57
-        return 0
-    elseif ascii_code >= 65 && ascii_code <= 90
-        return 0
-    elseif ascii_code >= 97 && ascii_code <= 122
-        return 0
-    elseif a:character == "-" || a:character == "_" || a:character == "." || a:character == "~"
-        return 0
-    endif
-    return 1
-endfunction
-
-function! GetStringTillEndOfLine()
-  return strpart( getline('.'), col('.') - 1 )
-endfunction
-
-nnoremap <leader>sb i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
-" nnoremap <leader>sn :echo col([line('.'),'$'])<CR>
-nnoremap <leader>sn i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
-" Vim will insert a newline (<CR>) followed by a number of spaces (<C-R>=repeat(' ',...)) equal to the difference between the column number of the end of the previous line (col([line('.')-1,'$'])) and the current column number (col('.'))
-
-
-" TIP: indenting, inserting characters
-function! ExampleIndentByNChars()
-  let l:str1 = repeat('X', col('.'))
-
-  " this line reads as follows:
-  " from the current line (".")
-  " to "+2" lines (after the ",")
-  " substitute ("s/")
-  " from any character ("^")
-  " inserting the string using ". l:str1 ."
-  " "g" mean global (see: "http://vim.wikia.com/wiki/Search_and_replace")
-  exec '.,+2s/^/' . l:str1 . '/g'
-  " Example: with cursor (') on column 18 / the "x"
-" XXXXXXXXXXXXXXXXXX  " testline 1111x11
-" XXXXXXXXXXXXXXXXXX  " testline 2222222
-" XXXXXXXXXXXXXXXXXX  " testline 3333333
-endfun
-
-
+" TODO rename and move this
 function! Get_visual_selection()
   " Why is this not a built-in Vim script function?!
   let [lnum1, col1] = getpos("'<")[1:2]
@@ -3407,6 +2720,12 @@ function! Get_visual_selection()
   let lines[0]  = lines[0][col1 - 1:]
   return join(lines, "\n")
 endfunction
+
+func! VisualBlockMode()
+  " Activate visual block mode. 'x' option is needed to exec right away.
+  call feedkeys("\<c-v>", 'x')
+endfunc
+
 
 function! ExampleFor()
   "" warn: did not work reliably when applied..
@@ -3539,34 +2858,6 @@ function! PrevHunkAllBuffers()
 endfunction
 " ------- Git gutter ----------------------------------
 
-
-" ------- Formatting Haskell Imports ----------------------------------
-let g:stylish_haskell_command = 'stylish-haskell'
-" taken from stylish-haskell plugin
-function! s:OverwriteBuffer(output)
-  let winview = winsaveview()
-  silent! undojoin
-  normal! gg"_dG
-  call append(0, split(a:output, '\v\n'))
-  normal! G"_dd
-  call winrestview(winview)
-endfunction
-
-function! StylishHaskell()
-  write
-  " write any changes as otherwise those would be lost - no undo possible!
-  let output = system(g:stylish_haskell_command . " " . bufname("%"))
-  let errors = matchstr(output, '\(Language\.Haskell\.Stylish\.Parse\.parseModule:[^\x0]*\)')
-  if v:shell_error != 0
-    echom output
-  elseif empty(errors)
-    call s:OverwriteBuffer(output)
-    write
-  else
-    echom errors
-  endif
-endfunction
-" ------- Formatting Haskell Imports ----------------------------------
 
 
 
