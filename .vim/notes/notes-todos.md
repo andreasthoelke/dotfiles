@@ -256,6 +256,12 @@ tried out but not yet loading into Intero
 /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingTypeClasses1/src/LiterateHsMarkdown.md
 https://gitlab.haskell.org/ghc/ghc/wikis/literate-markdown
 
+### Markdown rendered in browser
+* works with `:Markdown` cmd via Chromium
+Highlighting/pointing
+* Viumum `vc` ⇒ carret mode, `jk, gg` 
+* then `V` to highlight line, then `c` for carret, etc
+
 ## Tags
 [Config](../../.vimrc#Tags:)
 
@@ -267,8 +273,6 @@ https://gitlab.haskell.org/ghc/ghc/wikis/literate-markdown
 * https://www.reddit.com/r/haskell/comments/a4lr0h/haskell_programming_set_up_in_vim/
 
 intero-neovim?
-
-
 
 ## Git
   * show number of unstaged files/hunks in (tmux?) status?
@@ -986,6 +990,28 @@ when `ga` highlight only appears after first `n`
 
 ## Haskell Todos
 
+Cabal config
+/Users/andreas.thoelke/.cabal/config
+
+there is `stack haddock --open lens` to open the local docs of the lib
+  https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in-2018/
+stack test --fast --haddock-deps --file-watch
+stack hoogle -- generate --local
+stack hoogle -- server --local --port=8080
+This actually works and shows my local docs alongside the docs of dependencies:
+  http://localhost:8080/?hoogle=maptomaybe
+  shows function from TypeClasses/Functortown.hs
+
+HIE config:
+  ~/.vim/HIE/settings.json
+
+ haskell-ide-engine
+  stack --stack-yaml=stack.yaml exec hoogle generate
+
+
+auto select rendering/alignment based on type (e.g. [Sting]) 
+* is there a haskell tracing lib that tabularizes all [data-type] collections?
+
 consider useful alignments →
   vmap <leader>ta :Tabu /∷\\|→\\|⇒/<cr>
 
@@ -1033,6 +1059,19 @@ use flowting window for PasteListAsLines
 * After "Intero open" and then closing the intro split below, the lines are currupted, specifically after inserting
 (e.g. via 'get'/\tw). currently opening intero in a separate window
 
+* Test this: command! Run    :call HaskellStackRun()
+* related: ghcid
+
+HOOGLE INCLUDE NEW LIBS:
+  "hoogle generate base lense" will download and install only the base and
+  lense libs.
+  open ":e hoogle-defaults" from the root of the project folder, add/delete
+  libs, then <backspace> in first line to have everything in one row, and
+  copy-paste into terminal
+  https://github.com/ndmitchell/hoogle/blob/master/docs/Install.md
+  Todo: get hoogle libs from cabal file
+
+
 ## Temp next
 
 Consistent focus maps
@@ -1072,7 +1111,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 
 "done" rename these (most important past) haskell repos:
-       /Users/andreas.thoelke/Documents/Haskell/4/hello44/** 
+       /Users/andreas.thoelke/Documents/Haskell/4/hello44/**
        /Users/andreas.thoelke/Documents/Haskell/4/abc4/test1/**
      /Users/andreas.thoelke/Documents/Haskell/6/HsTraining1/**
      /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingBook2/**
@@ -1081,13 +1120,14 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 
 ## Release notes v1.1.2
+* Intero ShowList_asLines() in floating window with column alignment (`gec`, `geC`, `gel`)
 * Shortcuts to popular folders <leader>o .. `n` notes, `u` utils, `h` haskell, `c` current
 
 * Indent motions: `,j` `,k` to move to end/start of indent block. IndentBlockEnd() HsMotions
 *                 `,J` `,K` to move to the next/prev same level indent
 *                `vii` to visually select inside indent block
 * Align maps:
-    `leader al` + [motion, textobject: e.g. `ii` "inside indent block"] 
+    `leader al` + [motion, textobject: e.g. `ii` "inside indent block"]
               + speperatorId (<space>, 2<space>, "," )
 * Tabularize 1st and 2nd column of a motion or selected range of lines based on <space>
     `leader at` + [range]
@@ -1105,6 +1145,8 @@ after duplicating a line and then commenting the orig line and moving down with 
 * `<leader>rb` to rename a binding and its occurences
 * `iB` "inside buffer" textobject
 * `iv` "inside viewable" area in window textobj
+* `leader hsi` "Haskell stype imports"
+* `<c-x>f` in a file path, in insert mode browses files (vim native!)
 
 ## Release notes v1.1.1 (2019-04-20)
 * Command to search in deleted code: `Fdeleted someString`

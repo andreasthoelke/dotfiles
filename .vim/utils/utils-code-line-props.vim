@@ -9,8 +9,7 @@ func! GetTextWithinLineColumns_asLines( startLine, startColumn, endLine, endColu
 endfunc
 " echo GetTextWithinLineColumns_asLines( 1575, 1, 1577, 10 )
 
-function! Demo1()
-  " Why is this not a built-in Vim script function?!
+function! Get_visual_selection()
   let [lnum1, col1] = getpos("'<")[1:2]
   let [lnum2, col2] = getpos("'>")[1:2]
   let lines = getline(lnum1, lnum2)
@@ -18,6 +17,35 @@ function! Demo1()
   let lines[0]  = lines[0][col1 - 1:]
   return join(lines, "\n")
 endfunction
+
+func! VisualBlockMode()
+  " Activate visual block mode. 'x' option is needed to exec right away.
+  call feedkeys("\<c-v>", 'x')
+endfunc
+
+
+
+" Like <cword> but includes Haskell symbol characters
+func! HsCursorKeyword()
+  let isk = &l:isk
+  " Tempoarily extend the isKeyword character range
+  setl isk+=.,<,>,$,#,+,-,*,/,%,',&,=,!,:,124,~,?,^
+  let keyword = expand("<cword>")
+  let &l:isk = isk
+  return keyword
+endfunc
+
+" Get the type signature from line
+func! HsExtractTypeFromLine( lineNr )
+  let line  = getline( a:lineNr )
+  let pattern = '\v^.*(∷|:)\ze'
+  return substitute( line, pattern, '', '')
+endfunc
+" Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
+" echo HsExtractTypeFromLine( line('.')-1 )
+" Control.Monad replicateM ∷ (Applicative m) => Int -> m a -> m [a]
+" echo HsExtractTypeFromLine( line('.')-1 )
+
 
 " Returns the indent level of lineNum
 func! IndentLevel( lineNum )

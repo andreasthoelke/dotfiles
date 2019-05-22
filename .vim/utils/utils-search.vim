@@ -4,8 +4,10 @@ vmap <silent> gsg :call GoogleSearch("visSel")<cr>
 
 nnoremap <silent> gsh :call DocsForCursorWord()<cr>
 vmap <silent> gsh :call DocsForVisSel()<cr>
-nnoremap <silent> gsd :call HoogleForCursorWord()<cr>
-vmap <silent> gsd :call HoogleForVisSel()<cr>
+
+" Now in HsAPIExplore:
+" nnoremap <silent> gsd :call HoogleForCursorWord()<cr>
+" vmap <silent> gsd :call HoogleForVisSel()<cr>
 
 nnoremap <silent> gsi :call GithubSearch("word")<cr>
 vmap <silent> gsi :call GithubSearch("visSel")<cr>

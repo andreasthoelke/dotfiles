@@ -62,6 +62,8 @@ func! HaskellSyntaxAdditions() "{{{
   " hi! Conceal guibg=#000000
   " Issue: this also set the bg of other conceal chars
 
+  setlocal formatprg=stylish-haskell
+
   " setlocal foldmarker=\ ■,\ ▲
   " Highlight fn-wireframe keywords
   " Note: This *does* actually have a performance hit when scrolling through a file!

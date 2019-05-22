@@ -70,21 +70,20 @@
 
 ## Arglist
 
-  * `args \`cat files.txt\`` get arglist from a file using backtick expression
+  * `args \cat files.txt\` get arglist from a file using backtick expression
 
 ### Argdo
   substitute in a selection of files:
   `vim /<c-r>// **/*.txt` previous search pattern in txt files in subfolders
   `QfToArgs | argdo %s//abc/g | update` run a command on all file in the quickfix list
 
-
 ## Registers
-  * `qaq` to clear
+* `qaq` to clear
 
 
 ## Cmdline
   `:find a<tab>` (e.g. in Haskell project folder) allows to:
-  * Reach into subfolders (usind `set path+=**`, but this includes other folders)`
+  * Reach into subfolders (usind `set path+=**`, but this includes other folders)
   * autocompl menu
   * fuzzy complete (e.g. `:find *hs<c-i>` will show all haskell files)
   (https://www.kwyse.com/posts/twid-vim-minimalism/)
@@ -165,6 +164,9 @@ how about folders?
 
 
 ## Completion
+
+now via HIE and decomplete
+
   https://github.com/mhinz/vim-galore#completion
 
 > Tab navigate the file system while in insert mode

@@ -1,17 +1,28 @@
 
+
+
+
+" Try: - "gqaf"
+" Issue: this behaved strangely when tryed in 5.2019
+" set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
+" If the 'formatexpr' option is not empty it will be used instead formatprg
+" In HsSyntaxAdditions
+" setlocal formatprg=stylish-haskell
+
+
 " "unique functions"
-nnoremap <leader>hs :call RandFnName()<cr>2w
-" produces a (test) haskell function with a random name, e.g.:
+nnoremap <localleader>hs :call RandFnName()<cr>3w
+nnoremap <localleader>hS :call RandSymbol()<cr>wA ∷ String<esc>^ywo<esc>PA= undefined<esc>w
+" produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"
-" nnoremap <leader>us :call RandSymbol()<cr>
-nnoremap <leader>us :call RandSymbol()<cr>
+nnoremap <leader>hus :call RandSymbol()<cr>
 
-" "expand function": expand a symbol name to a function stub
+" "expand function" expand a symbol name to a function stub
 nnoremap <leader>ef A ∷ String<esc>^ywo<esc>PA= undefined<esc>b
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
 
-" "expand signature": expand a signature to a function stub
+" "expand signature" expand a signature to a function stub
 nnoremap <leader>es ^ywo<esc>PA= undefined<esc>b
 nnoremap <leader>hes ^ywo<esc>PA= undefined<esc>w
 
@@ -29,6 +40,7 @@ nmap <leader>hfs :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<e
 nnoremap <leader>if ea0^jea0^k
 nnoremap <leader>his ea0^jea0^k
 
+" Increase/ decrease the index of TypeSig and term level binding together
 nnoremap <leader><c-a> jk^
 nnoremap <leader><c-x> <c-x>j<c-x>k^
 
@@ -92,26 +104,6 @@ endfunc
 " ─   Hs format utils from HsAPIExplore                 ──
 
 
-" Like <cword> but includes Haskell symbol characters{{{
-func! HsCursorKeyword()
-  let isk = &l:isk
-  " Tempoarily extend the isKeyword character range
-  setl isk+=.,<,>,$,#,+,-,*,/,%,',&,=,!,:,124,~,?,^
-  let keyword = expand("<cword>")
-  let &l:isk = isk
-  return keyword
-endfunc "}}}
-
-" Get the type signature from line{{{
-func! HsExtractTypeFromLine( lineNr )
-  let line  = getline( a:lineNr )
-  let pattern = '\v^.*(∷|:)\ze'
-  return substitute( line, pattern, '', '')
-endfunc
-" Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
-" echo HsExtractTypeFromLine( line('.')-1 )
-" Control.Monad replicateM ∷ (Applicative m) => Int -> m a -> m [a]
-" echo HsExtractTypeFromLine( line('.')-1 )}}}
 
 func! PreserveKleisliInUnicodeReplace( listListMap ) "{{{
   call insert( a:listListMap, ['>=>', '>#>'] )
@@ -146,19 +138,10 @@ command! -range=% HsReplaceUnicodeToChars :<line1>,<line2>call ReplaceStringsInR
 " kleisli :: forall e. Example e >=> Line
 " kleisli = do aa <- example
 
-" ─ Utils
-
-" obsolete ?
-" func! HsReplaceCharsWithUnicode( str )
-"   let str1 = substitute( a:str, '::', '∷', '')
-"   return str1
-" endfunc
-
 
 " ─   Formatting Haskell Imports                         ■
 let g:stylish_haskell_command = 'stylish-haskell'
-setlocal formatprg=stylish-haskell
-noremap <leader>hci :call StylishHaskell()<cr>
+noremap <leader>hsi :call StylishHaskell()<cr>
 command! Style  :call StylishHaskell()
 command! Indent :call StylishHaskell()
 
@@ -188,12 +171,36 @@ function! s:OverwriteBuffer(output)
 endfunction
 " ─^  Formatting Haskell Imports                         ▲
 
-nnoremap <leader>his :call( 'Control.Monad', 'replicateM' )
 
-" call Hsimp("Control.Monad", "replicateM")
-fun! Hsimp(module, symbol)
-  call hsimport#imp_symbol(a:module, a:symbol)
-endfun
+let g:hsTypeSigColumns = [ "∷", "⇒", ".*\zs→" ]
+" Tabularizes patterns found in TypeSignatures over a range of lines
+func! HsTabularizeTypeSigns( startLine, endLine )
+  call TabularizeListOfPttns( g:hsTypeSigColumns, a:startLine, a:endLine )
+endfunc
+" call HsTabularizeTypeSigns( 2, 4 )
+" call HsTabularizeTypeSigns( 1, line('$') )
+
+" Obsolete ■
+" func! HoogleAlignSinatures()
+"   GTabularize /∷/
+"   GTabularize /⇒/
+"   GTabularize /.*\zs→/
+" endfunc
+
+" ALIGNING COLUMS OF HASKELL SIGS:{{{
+" run: :browse Data.List.Split in GHCi and copy into a vim buffer
+"
+" align right to ∷ with padding 1:
+" '<,'>Tabularize /::/r1c1l1
+" move lines that contain "Splitter" to the bottom of the file!
+" g/Splitter/m$
+" move lines with two occurences of "Splitter" to the bottom
+" g/Splitter.*Splitter/m$
+" move lines with "Eq" to line 22!
+" '<,'>g/Eq/m22
+ " ▲
+
+
 
 
 

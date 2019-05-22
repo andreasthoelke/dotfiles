@@ -33,6 +33,16 @@ endfunc
 " Opfunction might be abstracted better using this approach? https://vi.stackexchange.com/questions/12555/how-to-allow-count-before-my-custom-operator 
 
 
+" Tabularize in multiple runs based on a list of different patterns
+" Skips lines where the pattern does not match
+func! TabularizeListOfPttns( listOfColumnPatterns, startLine, endLine )
+  for pttn in a:listOfColumnPatterns
+    call ExecRange( "GTabularize " . '/' . pttn . '/', a:startLine, a:endLine )
+  endfor
+endfunc
+" Test with: call HsTabularizeTypeSigns( 2, 4 )
+
+
 " Example of EasyAlign API usage:
 " EasyAlign <line1>,<line2>call easy_align#align(<bang>0, 0, 'command', <q-args>)
 

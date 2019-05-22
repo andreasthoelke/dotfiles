@@ -52,9 +52,10 @@ Plug 'wellle/visual-split.vim'
 Plug 'inkarkat/vim-ingo-library'
 Plug 'andreasthoelke/vim-EnhancedJumps'
 
-" Completion: -------------------------------------
-" Plug 'ajh17/VimCompletesMe'
-
+" Just a default split command
+" Plug 'vimlab/split-term.vim'
+Plug 'tpope/vim-dispatch'
+Plug 'radenling/vim-dispatch-neovim'
 
 " Git: --------------------------------------------------
 Plug 'tpope/vim-fugitive'
@@ -204,13 +205,31 @@ Plug 'andreasthoelke/purescript-vim'
 " Plug 'FrigoEU/psc-ide-vim'
 " Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
 
-" Haskell: -------------------------------------------------------------
+
+" ─   Haskell IDE features                               ■
+
+" Plug 'parsonsmatt/intero-neovim'
+Plug 'andreasthoelke/intero-neovim'
+
+" Plug 'Twinside/vim-hoogle'
+Plug 'andreasthoelke/vim-hoogle'
+
+" Haskell IDE Engine HIE:
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': './install.sh'
+      \ }
+
+
+
 " lookup ":h vim2hs", e.g. Tabularize haskell_types is useful
 " Plug 'goolord/vim2hs'
 Plug 'andreasthoelke/vim2hs'
 Plug 'andreasthoelke/haskell-env'
 " Interact with Hoogle Haskell API
 Plug 'andreasthoelke/HsAPIExplore'
+" Add an identifier to the import section of a hasell file
+Plug 'dan-t/vim-hsimport'
 " This does show some nice unicode symbols (see "conceal" screenshots).
 " TODO customize some symbols e.g return looks not destinct enough. also apply to purescript
 " TODO this has some nice unicode conceal suggestions  ~/.vim/plugged/vim-haskellConcealPlus/after/syntax/haskell.vim
@@ -221,14 +240,12 @@ Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
 
 Plug 'Shougo/vimproc.vim', {'do': 'make'}
 
-" Plug 'eagletmt/neco-ghc'
 " Plug 'bitc/vim-hdevtools'
 " still can't get it to work 9-2018
 " create a new project then run: "hdevtools check 'src/Lib.hs'" - runs
 " indefinetly
 " crashes vim on :HdevtoolsType command
 
-Plug 'dan-t/vim-hsimport'
 
 " Problem: this did not indent Record syntax properly
 " Plug 'neovimhaskell/haskell-vim'
@@ -241,41 +258,36 @@ Plug 'itchyny/vim-haskell-indent'
 
 " compliant with brittany
 Plug 'sbdchd/neoformat'
-" Haskell: -------------------------------------------------------------
 
-
-" Syntax Checkers: -----------------------------------------------------
+" Syntax Checkers:
 " Plug 'jaspervdj/stylish-haskell'
-" Plug 'w0rp/ale'
+Plug 'w0rp/ale'
 " Just 10 lines of code. uses "to" default map
 " Plug 'mpickering/hlint-refactor-vim'
 Plug 'neomake/neomake'
 Plug 'vim-syntastic/syntastic'
 
 
-" IDE Features: ------------------------------------------
-" Plug 'parsonsmatt/intero-neovim'
-Plug 'andreasthoelke/intero-neovim'
-
-" Plug 'Twinside/vim-hoogle'
-Plug 'andreasthoelke/vim-hoogle'
-
-" Haskell IDE Engine HIE:
-" Plug 'autozimu/LanguageClient-neovim', {
-"       \ 'branch': 'next',
-"       \ 'do': 'bash install.sh',
-"       \ }
-
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" IDE Features: ------------------------------------------
-
+" Completion:
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  " Plug 'ncm2/ncm2'
+  " Plug 'ncm2/float-preview.nvim'
+  " Plug 'roxma/nvim-yarp'
+  " Plug 'ncm2/ncm2-bufword'
+  " Plug 'ncm2/ncm2-path'
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+" Now substituted by HIE
+" Plug 'eagletmt/neco-ghc'
 " Plug 'ervandew/supertab'
 " did not work with omnicomplete so far
-"
-" Just a default split command
-" Plug 'vimlab/split-term.vim'
-Plug 'tpope/vim-dispatch'
-Plug 'radenling/vim-dispatch-neovim'
+
+" ─^  Haskell IDE features                               ▲
+
 
 
 call plug#end()
@@ -286,19 +298,18 @@ augroup ag
   au!
 augroup end
 
-" General Settings: ---------------------------------------
 
 " This needs to be set early in the vimrc, as the mappings below will refer to it!
 let mapleader="\<Space>"
 let maplocalleader="\\"
 
+" Enables 'setlocal' for filestypes
+filetype plugin on
 
-" finish
 
 " Increase this for debugging
 set verbose=0
 
-" set omnifunc=syntaxcomplete#Complete
 
 
 " let $PATH .= (":" . $HOME . "/.cabal/bin")
@@ -505,6 +516,8 @@ let g:promptline_preset = {
 " avoid |hit enter| prompts
 " set shortmess+="mW"
 set shortmess=aoOtT
+" Cut completion messages?
+set shortmess+=c
 
 " Persistence Saving: -----------------------------------------------------------------
 
@@ -863,7 +876,6 @@ set wildmenu
 set wildmode=longest:list,full
 " Well behaved flat menu
 " set wildmode=longest:full
-set completeopt=menuone,preview
 
 " Tab navigate the file system while in insert mode
 " inoremap <Tab> <c-x><c-f>
@@ -1176,13 +1188,6 @@ endfun
 
 
 
-" Language Client HIE: -----------------------------------------------------------------
-
-" status: can't get HIE (hie --lsp) installed
-" waiting for homebrew formular
-
-
-" Language Client HIE: -----------------------------------------------------------------
 
 
 " General: -----------------------------------------------------------------------------
@@ -1232,6 +1237,13 @@ set guicursor=n:block-iCursor
 
 " TODO use runtimepath to lazyload
 
+" ─   " Helper functions                                ──
+source ~/.vim/utils/utils-search.vim
+source ~/.vim/utils/utils-search-replace.vim
+source ~/.vim/utils/utils-code-line-props.vim
+source ~/.vim/utils/utils-syntax-color.vim
+source ~/.vim/utils/utils-general-helpers.vim
+
 " ─   Haskell maps and syntax additions                 ──
 source ~/.vim/utils/HsMotions.vim
 source ~/.vim/utils/HsSyntaxAdditions.vim
@@ -1252,12 +1264,8 @@ source ~/.vim/notes/notes-workflow.vim
 source ~/.vim/utils/utils-vimscript-tools.vim
 source ~/.vim/utils/utils-markdown.vim
 source ~/.vim/utils/utils-chromium.vim
+source ~/.vim/utils/utils-floatwin.vim
 
-" ─   " Helper functions                                ──
-source ~/.vim/utils/utils-search.vim
-source ~/.vim/utils/utils-search-replace.vim
-source ~/.vim/utils/utils-code-line-props.vim
-source ~/.vim/utils/utils-syntax-color.vim
 
 " ─   " Minor                                           ──
 source ~/.vim/utils/utils-virtualtext.vim
@@ -1271,7 +1279,7 @@ source ~/.vim/utils/setup-tags.vim
 
 " Accounts
 let g:accountsGithub = ''
-let g:accountsGithub = readfile('.vim/accounts/github')[0:0][0]
+let g:accountsGithub = readfile( expand( '~/.vim/accounts/github' ) )[0:0][0]
 
 
 
@@ -1294,6 +1302,8 @@ nnoremap <leader>aa :ALEToggle<cr>
 let g:ale_sign_warning = '⚠'
 let g:ale_sign_error = '•'
 
+let g:sign_warning = '⚠'
+let g:sign_error = '•'
 
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
@@ -1382,8 +1392,14 @@ nnoremap <leader>sr :SyntasticReset<cr>
 " Intero uses Neomake to show error and ghc warnings
 hi NeomakeErrorSign   ctermfg=white
 hi NeomakeWarningSign ctermfg=white
-hi NeomakeIntoSign    ctermfg=white
+hi NeomakeInfoSign    ctermfg=white
 hi NeomakeMessageSign ctermfg=white
+
+hi ErrorSign   ctermfg=white
+hi WarningSign ctermfg=white
+hi IntoSign    ctermfg=white
+hi MessageSign ctermfg=white
+
 
 " Autoexpand quickfix list not always wanted? controlling this elsewhere
 " let g:neomake_open_list=2
@@ -1751,7 +1767,7 @@ nmap <Plug>(go_away_sneak) <Plug>Sneak_s
 " Sneak Code Navigation: ------------------------------------------------
 
 
-" Easymotion Code Navigation: ------------------------------------------------
+" ─   Easymotion Code Navigation                         ■
 " Endhanced word and line motions
 map <localleader>w <Plug>(easymotion-w)
 map <localleader>b <Plug>(easymotion-b)
@@ -1790,14 +1806,112 @@ hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
 "   \ '(_\zs.)' . '|' .
 "   \ '(#\zs.)'
 
-
-" Easymotion Code Navigation: ------------------------------------------------
-
-
-" ------------------------------------------------------
+" ─^  Easymotion Code Navigation                         ▲
 
 
-" ------------------------------------------------------
+" ─   Language Client HIE                                ■
+
+let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper'] }
+let g:LanguageClient_rootMarkers = ['*.cabal', 'stack.yaml']
+
+let g:LanguageClient_autoStart = 1
+" let g:lsp_async_completion = 1
+" delay updates? not sure if this works
+" let g:LanguageClient_changeThrottle = 0.5
+
+let g:LanguageClient_diagnosticsEnable = 1
+let g:LanguageClient_diagnosticsList = 'Location'
+" default is Quickfix - but Intero uses quickfix (nicely formatted) via neomake
+
+let g:LanguageClient_windowLogMessageLevel = 'Info'
+" let g:LanguageClient_settingsPath = '~/.vim/HIE/settings.json'
+" default: $projectdir/.vim/settings.json
+
+let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log')
+let g:LanguageClient_useFloatingHover = 1
+" In HsFormat
+" set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
+" Try: - "gqaf"
+
+
+nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
+map <Leader>lg :call LanguageClient#textDocument_definition()<CR>
+map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
+map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
+map <Leader>lb :call LanguageClient#textDocument_references()<CR>
+map <Leader>la :call LanguageClient#textDocument_codeAction()<CR>
+map <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
+
+
+
+" Diagnostics highlighing:
+let g:LanguageClient_diagnosticsDisplay = {
+      \ 1: {
+      \ 'name': 'Error',
+      \ 'texthl': 'WarningSign',
+      \ 'signTexthl': 'WarningSign',
+      \ 'virtualTexthl': 'purescriptLineComment',
+      \ 'signText': g:sign_error,
+      \ },
+      \ 2: {
+      \ 'name': 'Warning',
+      \ 'texthl': 'WarningSign',
+      \ 'signTexthl': 'WarningSign',
+      \ 'virtualTexthl': 'purescriptLineComment',
+      \ 'signText': g:sign_warning,
+      \ },
+      \ 3: {
+      \ 'name': 'Information',
+      \ 'texthl': 'WarningSign',
+      \ 'signTexthl': 'WarningSign',
+      \ 'virtualTexthl': 'purescriptLineComment',
+      \ 'signText': g:sign_warning,
+      \ },
+      \ 4: {
+      \ 'name': 'Hint',
+      \ 'texthl': 'WarningSign',
+      \ 'signTexthl': 'WarningSign',
+      \ 'virtualTexthl': 'purescriptLineComment',
+      \ 'signText': g:sign_warning,
+      \ },
+      \ }
+
+" ─^  Language Client HIE                                ▲
+
+
+
+
+" ─   Completion                                         ■
+
+" call deoplete#enable()
+let g:deoplete#enable_at_startup = 1
+" let g:deoplete#num_processes = 1
+
+" autocmd BufEnter * call ncm2#enable_for_buffer()
+" let g:float_preview#docked = 0
+" function! DisableExtras()
+"   call nvim_win_set_option(g:float_preview#win, 'number', v:false)
+"   call nvim_win_set_option(g:float_preview#win, 'relativenumber', v:false)
+"   call nvim_win_set_option(g:float_preview#win, 'cursorline', v:false)
+" endfunction
+" autocmd User FloatPreviewWinOpen call DisableExtras()
+
+
+" set completeopt=menuone,preview
+set completeopt=noinsert,menuone,noselect
+" set completeopt+=noselect
+" set completeopt+=noinsert
+
+" TODO Not sure what effect this has
+set completefunc=LanguageClient#complete
+set omnifunc=LanguageClient#complete
+" set omnifunc=syntaxcomplete#Complete
+" set omnifunc=lsp#complete
+
+" let g:haskellmode_completion_ghc = 0
+" autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+
 " omni complete
 " inoremap <C-B> <C-X><C-O>
 " Open omni menu and don't select the first entry
@@ -1810,9 +1924,7 @@ hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
 " open suggestions
 " imap <Tab> <C-P>
 
-" TODO Does this enable netrw?
-filetype plugin on
-" set omnifunc=syntaxcomplete#Complete
+
 " TODO: above line testen
 " insert mode <S-space> schliesst omni preview und fuegt space ein
 " If you prefer the Omni-Completion tip window to close when a selection is
@@ -1828,7 +1940,8 @@ filetype plugin on
 " augroup END
 
 
-" ------------------------------------------------------
+" ─^  Completion                                         ▲
+
 
 
 " Search: ---------------------------------
@@ -1876,8 +1989,8 @@ let g:ag_highlight=1
 " nnoremap <silent> ga m':let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 nnoremap <silent> ga :call HiSearchCursorWord()<cr>
 nnoremap <silent> g- m':set nohlsearch<cr>
-nnoremap <silent> <c-[> m':set nohlsearch<cr>
-
+" nnoremap <silent> <c-[> m':set nohlsearch<cr>
+nnoremap <silent> <c-[> m':set nohlsearch<cr>:call FloatWin_close()<cr>
 " Don't add seach next/prev to the jumplist
 nnoremap <silent> n :keepjumps normal! n<cr>:call ScrollOff(14)<cr>
 nnoremap <silent> N :keepjumps normal! N<cr>
@@ -1985,7 +2098,7 @@ endfunction
 " autocmd! QuickFixCmdPost * :call QuickfixRefeshStyle()
 " autocmd! QuickFixCmdPost * botright copen 8
 " autocmd! QuickFixCmdPost * echom "hii"
-" TODO test this
+" TODO test this. This is what Intero uses?
 au ag User NeomakeJobFinished call QuickfixRefeshStyle()
 
 function! QuickfixRefeshStyle()
@@ -2003,7 +2116,7 @@ endfunction
 
 " Demo Examples: this also worked:
 " autocmd BufReadPost quickfix :call QuickfixRefeshStyle()
-" autocmd QuickFixCmdPost * :call WinDo( "set syntax=purescript" )
+" autocmd QuickFixCmdPost * :call WinDo( winnr(), "set syntax=purescript" )
 " num of 'valid' entries in quickfixlist:
 " echo len(filter(getqflist(), 'v:val.valid'))
 
@@ -2190,7 +2303,7 @@ nnoremap <c-w>t :tabe %<cr><c-o>
 nnoremap <c-w><c-t> :tabe %<cr><c-o>
 
 " close tab and go to the previous window
-nnoremap <localleader>tc :call CloseTabGoToPrevious()<cr>
+" nnoremap <localleader>tc :call CloseTabGoToPrevious()<cr>
 nnoremap <localleader>x :call CloseTabGoToPrevious()<cr>
 function! CloseTabGoToPrevious()
   if tabpagenr("$") > 1 && tabpagenr() > 1 && tabpagenr() < tabpagenr("$")
@@ -2248,6 +2361,7 @@ nnoremap <localleader>QQ :q<cr>
 nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
 nnoremap <leader>on :tabe ~/.vim/notes/<cr>
 nnoremap <leader>ov :tabe ~/.vimrc<cr>
+nnoremap <leader>od :tabe ~/Documents/<cr>
 nnoremap <leader>oh :tabe ~/Documents/Haskell/<cr>
 nnoremap <leader>oc :tabe ~/Documents/Haskell/6/<cr>
 
@@ -2359,11 +2473,6 @@ nnoremap <leader>dr :LinediffReset<cr>
 
 set diffopt+=vertical
 
-fun! OpenITerm()
-    let path = projectroot#guess()
-    exec 'silent !open -a iTerm ' . path
-endfun
-" this works: :silent !open -a iTerm Documents/purescript
 
 " Show a Git diff of the current file
 command! Diff execute 'w !git diff --no-index % -'
@@ -2466,9 +2575,15 @@ command! Editor :call OpenCurrentFileInSystemEditor()
 nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
 " Tip: alternatively just ":!open $"!
 
-
-" This seems to work now (silently)
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
+command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
+
+fun! OpenITerm()
+  let path = projectroot#guess()
+  exec 'silent !open -a iTerm ' . path
+endfun
+" this works: :silent !open -a iTerm Documents/purescript
+
 " ----------------------------------------------------------------------------------
 
 
@@ -2710,38 +2825,6 @@ nnoremap <leader>qq :copen<cr>
 
 
 
-" TODO rename and move this
-function! Get_visual_selection()
-  " Why is this not a built-in Vim script function?!
-  let [lnum1, col1] = getpos("'<")[1:2]
-  let [lnum2, col2] = getpos("'>")[1:2]
-  let lines = getline(lnum1, lnum2)
-  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
-  let lines[0]  = lines[0][col1 - 1:]
-  return join(lines, "\n")
-endfunction
-
-func! VisualBlockMode()
-  " Activate visual block mode. 'x' option is needed to exec right away.
-  call feedkeys("\<c-v>", 'x')
-endfunc
-
-
-function! ExampleFor()
-  "" warn: did not work reliably when applied..
-  for _ in range(1,22)
-    " Search for n in current line. Returns line num or 0
-    if search('n', 'p', line(".")) > 0
-      echo "inn"
-    else
-      echo "out"
-      break
-    endif
-  endfor
-  echo "off"
-endfunction
-
-
 
 hi Directory guifg=#11C8D7 ctermfg=DarkMagenta
 
@@ -2899,9 +2982,9 @@ endfunction
 " Works on these lines no matter where the cursor is: test "http://yahoo.com" vs: test http://yahoo.com
 
 " Just like windo, but restore the current window when done.
-function! WinDo(command)
-  let currwin=winnr()
-  execute 'windo ' . a:command
+function! WinDo( winId, command )
+  let currwin = winnr()
+  execute a:winId . 'windo ' . a:command
   execute currwin . 'wincmd w'
 endfunction
 com! -nargs=+ -complete=command Windo call WinDo(<q-args>)

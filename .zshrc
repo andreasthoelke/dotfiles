@@ -37,6 +37,8 @@ export KITTY_CONFIG_DIRECTORY="/Users/andreas.thoelke/.config/kitty"
 
 # export ONI_NEOVIM_PATH="/usr/local/Cellar/neovim/0.3.3/bin/"
 
+alias nvim4="/Users/andreas.thoelke/Documents/temp/nvim-osx64/bin/nvim"
+
 # Neovim Remote: ---------------------------------------------------------
 alias vi="nvr -l "
 # when in terminal mode, use neo-vim-remote to open file in the host

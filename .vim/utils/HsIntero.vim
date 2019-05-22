@@ -1,6 +1,6 @@
 
 
-" Intero: -----------------------------------------------------------
+" ─   Settings                                          ──
 " Intero starts automatically. Set this if you'd like to prevent that.
 let g:intero_start_immediately = 0
 " let g:intero_use_neomake = 0
@@ -29,7 +29,8 @@ let g:haskellmode_completion_ghc = 1
 "   endif
 " endfunction
 
-" Maps for intero.
+
+" ─   Maps                                              ──
 " nnoremap <silent> <leader>is :InteroStart<CR>
 " nnoremap <silent> <leader>isc :SignsClear<CR>
 " Todo: unify this with purs?
@@ -42,12 +43,7 @@ nnoremap <silent>         gd :call GotoDefinition()<CR>
 nnoremap <silent> ,gd :sp<CR>:call GotoDefinition()<CR>
 " fee mapping
 " nnoremap <silent>         ]d :call GotoDefinition()<CR>
-" Intero: -----------------------------------------------------------
 
-" New Haskell And Purescript Maps: ------------------------------------------------------
-
-" Type Inserts: ----------------------------------------------------
-" TODO review these
 " nnoremap <silent> ,tw :call InsertTypeAnnotation()<cr>
 nnoremap <silent> gw :call InsertTypeAnnotation()<cr>
 map <silent> <localleader>tg <Plug>InteroGenericType
@@ -69,7 +65,7 @@ nnoremap <silent> <localleader>tw :call InsertTypeAnnotation()<cr>
 " Type Inserts: ----------------------------------------------------
 
 
-" Repl Eval Insert: ------------------------------------------------
+" ─   Repl Eval Insert                                   ■
 " Evaluate a string in the Repl (purs or ghci) and insert the result of the evaluation
 " gee → expr after -- (comment)
 "       expr after =
@@ -91,27 +87,35 @@ nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') 
 " This uses a custom function inside Intero?!
 " nnoremap gew :call ReplEvalExpr_Insert( expand("<cword>") )<cr>
 
-nnoremap gew :call InsertEvalExpr( expand("<cword>"), "PasteLines" )<cr>
 
+
+" Run cword in repl - paste returned lines verbally:
+nnoremap gew :call InsertEvalExpr( expand("<cword>"), "FloatWin_ShowLines", '' )<cr>
+nnoremap geW :call InsertEvalExpr( expand("<cword>"), "PasteLines", '' )<cr>
+" -                   - Haskell list as lines:
+nnoremap gel :call InsertEvalExpr( expand("<cword>"), "ShowList_AsLines", '' )<cr>
+" -                   - Haskell list as table:
+nnoremap gec :call InsertEvalExpr( expand("<cword>"), "ShowList_AsLines", 'Align2Columns' )<cr>
+nnoremap geC :call InsertEvalExpr( expand("<cword>"), "ShowList_AsLines", 'AlignTable' )<cr>
+
+" Get repl :type/:kind info for cword / vis-sel:
 nnoremap get :call InsertEvalExpr( ':type ' . expand('<cword>'), "PasteTypeSig" )<cr>
 vnoremap get :call InsertEvalExpr( ':type ' . Get_visual_selection(), "PasteTypeSig" )<cr>
 nnoremap gek :call InsertEvalExpr( ':kind ' . expand('<cword>'), "PasteLines" )<cr>
 vnoremap gek :call InsertEvalExpr( ':kind ' . Get_visual_selection(), "PasteLines" )<cr>
 
-" nnoremap gel :call InsertEvalExpr( expand("<cword>"), "PasteLines" )<cr>
-nnoremap gel :call InsertEvalExpr( expand("<cword>"), "PasteListAsLines" )<cr>
-nnoremap geat :call InsertEvalExpr( expand("<cword>"), "PasteListAsTable" )<cr>
-nnoremap geaT :call InsertEvalExpr( expand("<cword>"), "PasteListAsTable2" )<cr>
 
 " Evaluate "expr" in ghci. "renderFnName" will receive what ghci returns as a vim list of lines.
-func! InsertEvalExpr( expr, renderFnName ) abort
+func! InsertEvalExpr( expr, renderFnName, alignFnName ) abort
+  " Set the align function as a script var as it can not be passed to callback(?)
+  let s:alignFnName = a:alignFnName
   call intero#process#add_handler( function( a:renderFnName ) )
   call intero#repl#eval( a:expr )
 endfunc
 
-" This simply pasts the lines below as they are
-func! PasteLines( lines ) abort
-  call append(line('.'), a:lines)
+" Simply paste the lines below as they are
+func! PasteLines( lines )
+  call append( line('.'), a:lines )
 endfunc
 
 func! PasteTypeSig( lines ) abort
@@ -119,17 +123,30 @@ func! PasteTypeSig( lines ) abort
   call append(line('.') -1, unicodeLines)
 endfunc
 
-" Interpretes the first repl-returned line as a Haskell-List of Strings - and appends these items as lines. 
-func! PasteListAsLines( hsList )
-  call append( line('.'), eval( a:hsList[0] ) )
+" Interpretes the first repl-returned line as a Haskell-List of Strings - and appends these items as lines.
+" It then aligns the first 2 columns (column separator is <space>)
+func! ShowList_AsLines( hsList )
+  normal! m'
+  call FloatWin_ShowLines( eval( a:hsList[0] ) )
+  if len( s:alignFnName )
+    call FloatWin_do( 'call ' . s:alignFnName . '()' )
+  endif
 endfunc
 
-" Interpretes the first repl-returned line as a Haskell-List of Strings - and appends these items as lines. 
+" exec l:startWindowNr . 'wincmd w' ■
+" call nvim_set_current_win(2)
+" Interpretes the first repl-returned line as a Haskell-List of Strings - and appends these items as lines.
 " It then aligns the first 2 columns (column separator is <space>)
-func! PasteListAsTable( hsList )
-  normal! m'
-  call PasteListAsLines( a:hsList )
-  normal jV,jo^
+" func! ShowList_AsColumns( hsList, alignment_FuncName )
+"   normal! m'
+"   call ShowList_AsLines( a:hsList )
+"   call FloatWin_do( 'call ' . a:alignment_FuncName . '()' )
+"   " call append( line('.'), eval( a:hsList[0] ) )
+"   " call Align2Columns()
+" endfunc ▲
+
+func! Align2Columns()
+  normal V,jo^
   normal V
   " motionType could e.g. be 'char' here - but aligning will only use linewise here
   let motionType = 'lines'
@@ -144,18 +161,16 @@ func! PasteListAsTable( hsList )
   for comExpr in comExpressions
     execute range . "call easy_align#align(0, 0, motionType, comExpr)"
   endfor
-  call JumpBackSkipCurrentLoc()
+  " call JumpBackSkipCurrentLoc()
 endfunc
 
-func! PasteListAsTable2( hsList )
-  call PasteListAsLines( a:hsList )
-  normal jV,jo^
+func! AlignTable()
+  normal V,jo^
   exec "'<,'>Tabu / /"
   normal V
 endfunc
 
-
-" Repl Eval Insert: ------------------------------------------------
+" ─^  Repl Eval Insert                                   ▲
 
 
 nnoremap dip :Pimport<cr>
@@ -332,8 +347,6 @@ function! PsciReload()
   " :l is for haskell / ghci
 endfun
 
-
-
 " Extracts the project name, e.g. "pragmaticServant" from the Stack "package.yaml" file
 fun! HaskellProjectName()
   let firstLine = readfile('package.yaml')[0:0][0]
@@ -348,7 +361,6 @@ endfun
 fun! HaskellProjectName1()
   return fnamemodify('package.yaml', ':p:h:t')
 endfun
-
 
 
 command! Run    :call HaskellStackRun()
@@ -381,8 +393,6 @@ endfun
 " command! PursRepl :let PursReplID = jobstart("pulp repl", Cbs1)
 " :call jobstart(split(&shell) + split(&shellcmdflag) + ['{cmd}'])
 "
-" ➜  pragmaticServant git:(master) ✗ stack runghc src/Lib.hs
-" 2. Launch a terminal with "glt" + "ghcid -T :main"
 
 
 
