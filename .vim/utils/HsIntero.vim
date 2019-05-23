@@ -128,9 +128,11 @@ endfunc
 func! ShowList_AsLines( hsList )
   normal! m'
   call FloatWin_ShowLines( eval( a:hsList[0] ) )
+  " call append( line('.'),  eval( a:hsList[0] ) )
   if len( s:alignFnName )
     call FloatWin_do( 'call ' . s:alignFnName . '()' )
   endif
+  call FloatWin_FitWidthHeight()
 endfunc
 
 " exec l:startWindowNr . 'wincmd w' ■

@@ -309,7 +309,8 @@ filetype plugin on
 
 " Increase this for debugging
 set verbose=0
-
+" Will write a log file with debug level 9
+" vim -V9myVim.log
 
 
 " let $PATH .= (":" . $HOME . "/.cabal/bin")

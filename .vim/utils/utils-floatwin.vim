@@ -120,6 +120,26 @@ endfunc
 " Test this:
 " autocmd User FloatPreviewWinOpen call DoSomething()
 
+
+func! FloatWin_FitWidth()
+  " get the current buffer lines
+  let lines = nvim_buf_get_lines( g:floatWin_scratchBuf_Id, 0, line('$'), 0 )
+  let newWidth = FloatWin_display_width( lines, g:floatWin_max_width )
+  call FloatWin_SetProp( 'width', newWidth )
+endfunc
+
+func! FloatWin_SetProp( propName, val )
+  call nvim_win_set_config( g:floatWin_win, { a:propName : a:val } )
+endfunc
+" call FloatWin_SetProp( 'height', 10 )
+
+func! FloatWin_FitWidthHeight()
+  let lines = nvim_buf_get_lines( g:floatWin_scratchBuf_Id, 0, line('$'), 0 )
+  let newWidth = FloatWin_display_width( lines, g:floatWin_max_width )
+  call nvim_win_set_config( g:floatWin_win, { 'width' : newWidth, 'height': len( lines ) } )
+endfunc
+
+
 func! FloatWin_do( cmd )
   let originalWinHandle = nvim_get_current_win()
   call nvim_set_current_win( g:floatWin_win )
