@@ -3,7 +3,7 @@
 
 
 " Try: - "gqaf"
-" Issue: this behaved strangely when tryed in 5.2019
+" Issue: this behaved strangely when tried in 5.2019
 " set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
 " If the 'formatexpr' option is not empty it will be used instead formatprg
 " In HsSyntaxAdditions
@@ -11,8 +11,8 @@
 
 
 " "unique functions"
-nnoremap <localleader>hs :call RandFnName()<cr>3w
-nnoremap <localleader>hS :call RandSymbol()<cr>wA ∷ String<esc>^ywo<esc>PA= undefined<esc>w
+nnoremap <localleader>hs :call RandFnName()<cr>2w
+nnoremap <localleader>hS :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<esc>w
 " produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"

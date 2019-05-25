@@ -358,15 +358,15 @@ let g:aab .= 'B'
 " Explore And Come Back: - ":argu[ment]" goes back to the latest 'argument' file after you may have used "c-]" or quickfix search to explore related code
 " Load Arglist From File: - "args `cat .toc`" using backtick expression
 " Make a local copy
-nnoremap <Leader>al :arglocal<CR>
+" nnoremap <Leader>al :arglocal<CR>
 " Add the current buffer
-nnoremap <Leader>aa :argadd % <Bar> next<CR>
+" nnoremap <Leader>aa :argadd % <Bar> next<CR>
 " Start a new arglist from the current file
-nnoremap <Leader>as :arglocal! %<CR>
+" nnoremap <Leader>as :arglocal! %<CR>
 " Delete the current index
-nnoremap <Leader>ad :<C-R>=argidx()+1<CR>argdelete<CR>
+" nnoremap <Leader>ad :<C-R>=argidx()+1<CR>argdelete<CR>
 " Go to current arg file
-nnoremap <Leader>ac :argument<CR>
+" nnoremap <Leader>ac :argument<CR>
 " TODO add this to the status line
 function! StatuslineArglistIndicator()
     " return '%{argc()>0?("A[".repeat("-",argidx()).(expand("%")==argv(argidx())?"+":"~").repeat("-",argc()-argidx()-1)."]"):""}'

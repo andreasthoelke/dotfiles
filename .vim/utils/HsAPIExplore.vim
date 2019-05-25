@@ -76,8 +76,6 @@ func! GetAPICmdStr( query, limit, infoFlag )
 endfunc
 
 
-
-
 "
 
 " Import Haskell Identifiers Using Hoogle And Hsimport:{{{

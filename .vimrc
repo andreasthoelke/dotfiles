@@ -1828,7 +1828,7 @@ let g:LanguageClient_windowLogMessageLevel = 'Info'
 " let g:LanguageClient_settingsPath = '~/.vim/HIE/settings.json'
 " default: $projectdir/.vim/settings.json
 
-let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log')
+" let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log')
 let g:LanguageClient_useFloatingHover = 1
 " In HsFormat
 " set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
@@ -1836,6 +1836,7 @@ let g:LanguageClient_useFloatingHover = 1
 
 
 nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+" Documentation
 map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
 map <Leader>lg :call LanguageClient#textDocument_definition()<CR>
 map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
@@ -1888,6 +1889,18 @@ let g:LanguageClient_diagnosticsDisplay = {
 " call deoplete#enable()
 let g:deoplete#enable_at_startup = 1
 " let g:deoplete#num_processes = 1
+
+inoremap <expr> <c-i> deoplete#manual_complete()
+
+call deoplete#custom#option({
+      \ 'auto_complete_delay': 1000,
+      \ 'smart_case': v:true,
+      \ 'auto_complete': v:false,
+      \ })
+
+
+
+
 
 " autocmd BufEnter * call ncm2#enable_for_buffer()
 " let g:float_preview#docked = 0
@@ -2355,7 +2368,7 @@ nnoremap <leader>bD :bd!<cr>
 
 " General Leader Cmd Shortcut Maps: ---------------------------------
 
-nnoremap <localleader>QA :wqa<cr>
+nnoremap <silent> <localleader>QA :wqa<cr>
 nnoremap <localleader>QQ :q<cr>
 
 " Shortcuts to popular folders:
@@ -2983,9 +2996,9 @@ endfunction
 " Works on these lines no matter where the cursor is: test "http://yahoo.com" vs: test http://yahoo.com
 
 " Just like windo, but restore the current window when done.
-function! WinDo( winId, command )
-  let currwin = winnr()
-  execute a:winId . 'windo ' . a:command
+function! WinDo(command)
+  let currwin=winnr()
+  execute 'windo ' . a:command
   execute currwin . 'wincmd w'
 endfunction
 com! -nargs=+ -complete=command Windo call WinDo(<q-args>)

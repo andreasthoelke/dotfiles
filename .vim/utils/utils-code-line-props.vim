@@ -52,6 +52,7 @@ func! IndentLevel( lineNum )
   return matchstrpos( getline( a:lineNum ), '\S')[1] + 1
 endfunc
 " echo matchstrpos("    sta", "\S")
+   " echo IndentLevel( line('.') )
 
 " Return the character under the cursor
 func! GetCharAtCursor()
@@ -101,10 +102,10 @@ endfunc
 " echo IsColOfLastChar( col('.') )
 
 
-
 func! CursorIsAtStartOfWord()
-  return GetCharAtColRelToCursor( -1 ) =~ '\s'
+  return GetCharAtColRelToCursor( -1 ) =~ '\s' && GetCharAtColRelToCursor( 0 ) =~ '\S'
 endfunc
+" echo  CursorIsAtStartOfWord()
 
 " Returns Ascii code of multi-byte charaters like '→'
 func! GetCharAtCursorAscii()

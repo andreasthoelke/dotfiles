@@ -75,7 +75,7 @@ nnoremap <silent> <localleader>tw :call InsertTypeAnnotation()<cr>
 " (cursor-column is only significant for gew)
 
 " Extract a (repl-) evaluable expression-string from current line
-nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
+" nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
 " vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
 
 " Evaluate the entire line
@@ -87,26 +87,35 @@ nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') 
 " This uses a custom function inside Intero?!
 " nnoremap gew :call ReplEvalExpr_Insert( expand("<cword>") )<cr>
 
-
+" Todos:
+" visual selection map
+" include <cword> in GetReplExpr
+" use GetReplExpr in column maps
+"
+nnoremap gei :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
 
 " Run cword in repl - paste returned lines verbally:
-nnoremap gew :call InsertEvalExpr( expand("<cword>"), "FloatWin_ShowLines", '' )<cr>
-nnoremap geW :call InsertEvalExpr( expand("<cword>"), "PasteLines", '' )<cr>
+nnoremap <silent> gew :call InteroEval( GetReplExpr(), "ShowList_AsLines", '' )<cr>
+nnoremap geW :call InteroEval( GetReplExpr(), "PasteLines", '' )<cr>
 " -                   - Haskell list as lines:
-nnoremap gel :call InsertEvalExpr( expand("<cword>"), "ShowList_AsLines", '' )<cr>
+nnoremap gel :call InteroEval( GetReplExpr(), "ShowList_AsLines", '' )<cr>
 " -                   - Haskell list as table:
-nnoremap gec :call InsertEvalExpr( expand("<cword>"), "ShowList_AsLines", 'Align2Columns' )<cr>
-nnoremap geC :call InsertEvalExpr( expand("<cword>"), "ShowList_AsLines", 'AlignTable' )<cr>
+nnoremap gec :call InteroEval( GetReplExpr(), "ShowList_AsLines", 'Align2Columns' )<cr>
+nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines", 'AlignTable' )<cr>
 
 " Get repl :type/:kind info for cword / vis-sel:
-nnoremap get :call InsertEvalExpr( ':type ' . expand('<cword>'), "PasteTypeSig" )<cr>
-vnoremap get :call InsertEvalExpr( ':type ' . Get_visual_selection(), "PasteTypeSig" )<cr>
-nnoremap gek :call InsertEvalExpr( ':kind ' . expand('<cword>'), "PasteLines" )<cr>
-vnoremap gek :call InsertEvalExpr( ':kind ' . Get_visual_selection(), "PasteLines" )<cr>
+nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
+vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "PasteTypeSig", '' )<cr>
+nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "PasteLines", '' )<cr>
+vnoremap gek :call InteroEval( ':kind ' . Get_visual_selection(), "PasteLines", '' )<cr>
 
+
+" Align function needs to be a script var .. (?)
+" let s:alignFnName = ''
 
 " Evaluate "expr" in ghci. "renderFnName" will receive what ghci returns as a vim list of lines.
-func! InsertEvalExpr( expr, renderFnName, alignFnName ) abort
+" Renamed from "InsertEvalExpr"
+func! InteroEval( expr, renderFnName, alignFnName ) abort
   " Set the align function as a script var as it can not be passed to callback(?)
   let s:alignFnName = a:alignFnName
   call intero#process#add_handler( function( a:renderFnName ) )
@@ -127,6 +136,12 @@ endfunc
 " It then aligns the first 2 columns (column separator is <space>)
 func! ShowList_AsLines( hsList )
   normal! m'
+  if a:hsList[0][0] != '['
+    echoe 'No Haskell list found!'
+    call FloatWin_ShowLines( a:hsList )
+    call FloatWin_FitWidthHeight()
+    return
+  endif
   call FloatWin_ShowLines( eval( a:hsList[0] ) )
   " call append( line('.'),  eval( a:hsList[0] ) )
   if len( s:alignFnName )
@@ -173,6 +188,31 @@ func! AlignTable()
 endfunc
 
 " ─^  Repl Eval Insert                                   ▲
+
+
+"From  https://github.com/sriharshachilakapati/dotfiles/blob/abdef669aad394ff290c7360995e8c05386bcb80/.vimrc
+" Callback function used for imports. Calls FZF if there are ambigous imports and resolves with selected one
+function! s:PaddImportCallback(ident, result)
+  " If the result is empty, then early exit
+  if (type(a:result["result"]) == type(v:null))
+    return
+  endif
+
+  " There are ambigous imports, call FZF with default FZF options
+  call fzf#run(fzf#wrap({ 'source': a:result["result"],
+        \ 'sink': { module -> PaddImport(a:ident, module) }
+        \ }))
+endfunction
+
+
+func! ServerCmd( command, ... )
+  let l:args = get(a:, 1, [])
+  call LanguageClient_workspace_executeCommand( a:command, l:args, function('PasteLines'))
+endfunc
+
+func! LanguageClient_workspace_executeCmd(...)
+  return call('LanguageClient#workspace_executeCommand', a:000)
+endfunc
 
 
 nnoremap dip :Pimport<cr>
@@ -230,31 +270,35 @@ function! TypeInsert()
   endif
 endfun
 
-function! ReplEvalExpr_Insert( exprStr )
+func! ReplEvalExpr_Insert( exprStr )
   if IsPurs()
     call PursEval( a:exprStr )
   else
     call InsertEvalExpressionRes( a:exprStr )
   endif
-endfun
+endfunc
 
 " Get a (repl-) evaluable expression-string from a (line-) string
-function! ExtractEvalExpFromLineStr( lineStr )
-  let l:lineList = split( a:lineStr )
+func! GetReplExpr()
+  let lineList                = split( getline('.') )
+  let secondWordOnwards       = join( l:lineList[1:], ' ')
+  let topLevelSymbol          = lineList[0]
+  let isDeclatationWithNoArgs = lineList[1] == '='
+  let isToplevelLine          = IndentLevel( line('.') ) == 1
 
-  if l:lineList[0] == '--'
-    " it's a commented line
-    " → use the second word onwards
-    return join( l:lineList[1:], ' ')
-
-  elseif l:lineList[1] == '='
-    " it's a declaration
-    " → use the third word onwards
-    return join( l:lineList[2:], ' ')
+  if CursorIsInsideStringOrComment()
+    return secondWordOnwards
+  elseif IsTypeSignLine( line('.') )
+    return topLevelSymbol
+  elseif isToplevelLine && isDeclatationWithNoArgs
+    echoe 'hi there'
+    return topLevelSymbol
+  elseif CursorIsAtStartOfWord()
+    return expand('<cword>')
   else
     echoe 'Could not extract an expression!'
   endif
-endfun
+endfunc
 
 
 " TODO: Intero has these custom functions:
