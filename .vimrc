@@ -2591,6 +2591,10 @@ nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
 
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
+" Todo: start Alacritty with options
+" command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --option \"window.decoration\" \"none\"'"
+" command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --config-file /Users/andreas.thoelke/.config/alacritty/alacritty.yml"
+" command! Alacritty exec "silent !open -n '/Applications/Alacritty.app/"
 
 fun! OpenITerm()
   let path = projectroot#guess()

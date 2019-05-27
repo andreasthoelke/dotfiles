@@ -35,6 +35,9 @@ export VIMDATA=~/vimtmp
 # Kitty is a terminal (similar to Alacritty)
 export KITTY_CONFIG_DIRECTORY="/Users/andreas.thoelke/.config/kitty"
 
+
+alias alacritty="open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
+
 # export ONI_NEOVIM_PATH="/usr/local/Cellar/neovim/0.3.3/bin/"
 
 alias nvim4="/Users/andreas.thoelke/Documents/temp/nvim-osx64/bin/nvim"
