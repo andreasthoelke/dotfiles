@@ -46,7 +46,8 @@ hi Float           guifg=#AE81FF
 hi FoldColumn      guifg=#465457 guibg=#000000
 hi Folded          guifg=#465457 guibg=#111111
 
-hi Keyword        guifg=#2C9E71
+" Now set as part of munsell colors below
+" hi Keyword        guifg=#2C9E71
 hi Identifier      guifg=#FD971F
 hi Ignore          guifg=#808080 guibg=bg
 hi IncSearch       guifg=#C4BE89 guibg=#000000
@@ -86,7 +87,7 @@ hi StatusLineNC guibg=#000000 gui=bold
 hi StorageClass    guifg=#FD971F               gui=italic
 hi Structure       guifg=#66D9EF
 hi Tag             guifg=#F92672               gui=italic
-hi Title           guifg=#ef5939
+" hi Title           guifg=#ef5939
 " hi Todo            guifg=#FFFFFF guibg=bg      gui=bold
 
 hi Typedef         guifg=#66D9EF
@@ -312,7 +313,7 @@ hi! def link mkdLink Underlined2
 
 " Dirvish{{{
 hi! def link DirvishPathTail Function
-hi! def link DirvishArg DataConstructor"}}}
+hi! def link DirvishArg DataConstructor"
 
 " Markbar
 exec 'hi! DarkHeader guifg=' . g:color_ming_green_dark
@@ -320,7 +321,7 @@ hi! link markbarHeader DarkHeader
 hi! link markbarID Highlight1
 
 " Editor & Quickfix
-hi LineNr guifg=#404040
+" hi LineNr guifg=#404040
 hi FoldColumn guibg=gray10 guifg=gray20
 hi Folded     guifg=#3D5862 guibg=#121212
 
@@ -343,7 +344,7 @@ hi iCursor         guibg=#727272
 hi CursorLine                    guibg=#1C2020
 
 hi CursorLineNr    guifg=#FD971F               gui=none
-" hi LineNr          guifg=#303030
+hi LineNr          guifg=#303030
 hi NonText         guifg=#465457
 hi SpecialKey      guifg=#465457
 
@@ -353,21 +354,11 @@ hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
 " Visual selection
 hi Visual guibg=#2E2E2E gui=none
 
-
 " Comment syntax additions
 hi BlackBG guibg=#000000
 hi GreyBG guibg=#262626
-" hi CommentSection guifg=#3D5862 guibg=#0B0B0B
-hi CommentSection guifg=#42606B guibg=#0B0B0B
 hi CommentSection guifg=#42606B guibg=#0E0E0E
-" hi CommentLabel guifg=#2E6B69 guibg=#030303
-" hi CommentLabel guifg=#306C6F guibg=#030303
-" hi CommentLabel guifg=#3C7C80 guibg=#030303
-" hi CommentLabel guifg=#4C8588 guibg=#030303
 hi CommentLabel guifg=#42606B guibg=#030303
-" hi CommentLabel guifg=#466571 guibg=#030303
-" hi CommentLabel guifg=#419398 guibg=#030303
-" hi CommentLabel guifg=#69DFE6 guibg=#030303
 
 "    From Vimrc: ---------------------------------
 " run: RedirMessagesBuf hi Folded

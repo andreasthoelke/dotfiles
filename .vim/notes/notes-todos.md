@@ -455,7 +455,7 @@ Status:
   this throws channelID errors and sometimes vimium does not launch
     nnoremap <leader>gx :call LaunchChromium('<c-r><c-p>')<cr>
 
-let g:js = '(function() { var nodes = document.querySelectorAll("h2"); var titles = []; for (var i = 0; i < 5; i++) { titles.push(nodes[i].innerHTML) } return titles.join(" "); })();'
+let g:js = '(function() { var nodes = document.querySelectorAll("h2"); var titles = []; for (var i = 0; i < 5; i++) { titles.push(nodes[i].innerHTML) } return titles.join(" "); })();
 
 let g:js = '(function() { var nodes = document.querySelectorAll("h2"); var titles = []; for (var i = 0; i < 5; i++) { titles.push(nodes[i].textContent) } return titles.join(","); })();'
 
@@ -1074,6 +1074,10 @@ HOOGLE INCLUDE NEW LIBS:
 
 ## Temp next
 
+
+Gui=italic now works! use this in syntax highlight?
+hi! Underlined2 guifg=#077D67 guibg=#0C0C0C gui=italic
+
 Consistent focus maps
 `o` in seach just opens/focuses that line in the other window to the right - it does not close the grep seach window.
 however:
@@ -1116,7 +1120,10 @@ after duplicating a line and then commenting the orig line and moving down with 
      /Users/andreas.thoelke/Documents/Haskell/6/HsTraining1/**
      /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingBook2/**
 
-* training whitespace is highlighted in insert mode just left of the cursor. not after restart, but something triggers this
+* trailing whitespace is highlighted in insert mode just left of the cursor. not after restart, but something triggers this
+
+" Todo: start Alacritty with options
+" command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --option \"window.decoration\" \"none\"'"
 
 
 ## Release notes v1.1.2
@@ -1147,6 +1154,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 * `iv` "inside viewable" area in window textobj
 * `leader hsi` "Haskell stype imports"
 * `<c-x>f` in a file path, in insert mode browses files (vim native!)
+* createHeading `\ch`, closeSection `\cs`, delete/strip Heading `\cd`, refreshHeading `\cr`
 
 ## Release notes v1.1.1 (2019-04-20)
 * Command to search in deleted code: `Fdeleted someString`

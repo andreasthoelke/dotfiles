@@ -46,7 +46,7 @@ function __promptline_ps1 {
 }
 function __promptline_vcs_branch {
   local branch
-  local branch_symbol=" "
+  local branch_symbol=""
 
   # git
   if hash git 2>/dev/null; then
@@ -60,11 +60,11 @@ function __promptline_vcs_branch {
 }
 function __promptline_cwd {
   local dir_limit="3"
-  local truncation="⋯"
+  local truncation="..."
   local first_char
   local part_count=0
   local formatted_cwd=""
-  local dir_sep="  "
+  local dir_sep="/ "
   local tilde="~"
 
   local cwd="${PWD/#$HOME/$tilde}"
@@ -162,27 +162,27 @@ function __promptline {
   fi
   local wrap="$noprint$esc" end_wrap="$end_esc$end_noprint"
   local space=" "
-  local sep=""
-  local rsep=""
-  local alt_sep=""
-  local alt_rsep=""
+  local sep=""
+  local rsep=""
+  local alt_sep=">"
+  local alt_rsep="<"
   local reset="${wrap}0${end_wrap}"
   local reset_bg="${wrap}49${end_wrap}"
-  local b_fg="${wrap}38;5;202${end_wrap}"
-  local b_bg="${wrap}48;5;234${end_wrap}"
-  local b_sep_fg="${wrap}38;5;234${end_wrap}"
-  local c_fg="${wrap}38;5;243${end_wrap}"
-  local c_bg="${wrap}48;5;232${end_wrap}"
-  local c_sep_fg="${wrap}38;5;232${end_wrap}"
-  local warn_fg="${wrap}38;5;232${end_wrap}"
-  local warn_bg="${wrap}48;5;166${end_wrap}"
-  local warn_sep_fg="${wrap}38;5;166${end_wrap}"
-  local y_fg="${wrap}38;5;202${end_wrap}"
-  local y_bg="${wrap}48;5;234${end_wrap}"
-  local y_sep_fg="${wrap}38;5;234${end_wrap}"
-  local z_fg="${wrap}38;5;232${end_wrap}"
-  local z_bg="${wrap}48;5;45${end_wrap}"
-  local z_sep_fg="${wrap}38;5;45${end_wrap}"
+  local b_fg="${wrap}38;2;234;234;234${end_wrap}"
+  local b_bg="${wrap}48;2;40;73;84${end_wrap}"
+  local b_sep_fg="${wrap}38;2;40;73;84${end_wrap}"
+  local c_fg="${wrap}38;2;66;96;107${end_wrap}"
+  local c_bg="${wrap}48;2;14;14;14${end_wrap}"
+  local c_sep_fg="${wrap}38;2;14;14;14${end_wrap}"
+  local warn_fg="${wrap}38;2;162;46;68${end_wrap}"
+  local warn_bg="${wrap}48;2;3;3;3${end_wrap}"
+  local warn_sep_fg="${wrap}38;2;3;3;3${end_wrap}"
+  local y_fg="${wrap}38;2;239;239;239${end_wrap}"
+  local y_bg="${wrap}48;2;47;47;47${end_wrap}"
+  local y_sep_fg="${wrap}38;2;47;47;47${end_wrap}"
+  local z_fg="${wrap}38;2;40;73;84${end_wrap}"
+  local z_bg="${wrap}48;2;3;3;3${end_wrap}"
+  local z_sep_fg="${wrap}38;2;3;3;3${end_wrap}"
   if [[ -n ${ZSH_VERSION-} ]]; then
     PROMPT="$(__promptline_left_prompt)"
     RPROMPT="$(__promptline_right_prompt)"

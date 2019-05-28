@@ -134,20 +134,23 @@ endfunc
 
 " Interpretes the first repl-returned line as a Haskell-List of Strings - and appends these items as lines.
 " It then aligns the first 2 columns (column separator is <space>)
-func! ShowList_AsLines( hsList )
+func! ShowList_AsLines( replReturnedLines )
+  let firstLine = 
   normal! m'
-  if a:hsList[0][0] != '['
-    echoe 'No Haskell list found!'
-    call FloatWin_ShowLines( a:hsList )
+  if a:maybeHsList[0][0] == '['
+    " 
+    call FloatWin_ShowLines( a:maybeHsList )
     call FloatWin_FitWidthHeight()
     return
+  elseif a:maybeHsList[0][1] == '"'
+    " Received a Haskell list of stings - can simply convert-eval it to vimscript of strings!
+    call FloatWin_ShowLines( eval( a:maybeHsList[0] ) )
+    if len( s:alignFnName )
+      call FloatWin_do( 'call ' . s:alignFnName . '()' )
+    endif
   endif
-  call FloatWin_ShowLines( eval( a:hsList[0] ) )
-  " call append( line('.'),  eval( a:hsList[0] ) )
-  if len( s:alignFnName )
-    call FloatWin_do( 'call ' . s:alignFnName . '()' )
-  endif
-  call FloatWin_FitWidthHeight()
+
+  " call FloatWin_FitWidthHeight()
 endfunc
 
 " exec l:startWindowNr . 'wincmd w' ■

@@ -70,5 +70,23 @@ nnoremap <leader>hhcc :,ColorHighlight<CR>
 " Remove the highlighting (and related vim slowdown) of color values
 nnoremap <leader>hcd :ColorClear<CR>
 
+func! GetHighlightColorVals( group )
+  let output = execute('hi ' . a:group)
+  let list = split(output, '\s\+')
+  let dict = {}
+  for item in list
+    if match(item, '=') > 0
+      let splited = split(item, '=')
+      let dict[splited[0]] = splited[1]
+    endif
+  endfor
+  return dict
+endfunc
+" From: https://vi.stackexchange.com/questions/12293/read-values-from-a-highlight-group
+
+func! GetHiGuiColorList ( hlgroup )
+  let cols = GetHighlightColorVals( a:hlgroup )
+  return [ get( cols, 'guifg', '' ), get( cols, 'guibg', '' ) ]
+endfunc
 
 

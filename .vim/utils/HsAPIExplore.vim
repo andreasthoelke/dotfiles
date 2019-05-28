@@ -102,7 +102,7 @@ func! HoogleImportIdentifier() "{{{
   call HoogleCloseSearch()
   let l:module     = l:split_line_prev[ 1 ]
   let l:identifier = l:split_line[ 0 ]
-  call Hsimp( l:module, l:identifier )
+  call HsImport( l:module, l:identifier )
   " normal! <c-w>k{{{
   " if &mod
   "   echo "Please save before importing!"

@@ -98,7 +98,9 @@ Plug 'gcavallanti/vim-noscrollbar'
 " Requires a patched font ("Nerd Font" e.g. "family: MesloLGLDZ Nerd Font") which is set in "alacritty.yaml" or "kitty.conf" or ITerm2 settings.
 " Plug 'ryanoasis/vim-devicons'
 " Creates a (zsh) command prompt based on vim-airline style: ":PromptlineSnapshot ~/.promptline.sh airline" then in zsh: "source .promptline.sh"
-Plug 'edkolev/promptline.vim'
+" Plug 'edkolev/promptline.vim'
+" True color support:
+Plug 'plexigras/promptline.vim'
 " Tabline Statusline: -----------------------------------------------------------
 
 
@@ -299,6 +301,55 @@ augroup ag
 augroup end
 
 
+
+" TODO use runtimepath to lazyload
+
+" ─   " Helper functions                                ──
+source ~/.vim/utils/utils-search.vim
+source ~/.vim/utils/utils-search-replace.vim
+source ~/.vim/utils/utils-code-line-props.vim
+source ~/.vim/utils/utils-syntax-color.vim
+source ~/.vim/utils/utils-general-helpers.vim
+
+" ─   Haskell maps and syntax additions                 ──
+source ~/.vim/utils/HsMotions.vim
+source ~/.vim/utils/HsSyntaxAdditions.vim
+source ~/.vim/utils/CodeMarkup.vim
+source ~/.vim/utils/HsAPIExplore.vim
+" Note: There is an unfinished plugin here:
+" tabe .vim/plugged/HsAPIExplore/autoload/HsAPIExplore.vim
+" call HsAPIExplore#start()
+" Intero maps and helpers:
+source ~/.vim/utils/HsIntero.vim
+source ~/.vim/utils/HsFormat.vim
+source ~/.vim/utils/utils-align.vim
+
+" ─   " General tools                                   ──
+source ~/.vim/utils/utils-terminal.vim
+" Todo: move the helper/commands in this note file
+source ~/.vim/notes/notes-workflow.vim
+source ~/.vim/utils/utils-vimscript-tools.vim
+source ~/.vim/utils/utils-markdown.vim
+source ~/.vim/utils/utils-chromium.vim
+source ~/.vim/utils/utils-floatwin.vim
+
+
+" ─   " Minor                                           ──
+source ~/.vim/utils/utils-virtualtext.vim
+source ~/.vim/utils/utils-csv.vim
+source ~/.vim/utils/utils-applescript.vim
+
+" ─   " Split-out setup sections                        ──
+source ~/.vim/utils/setup-tags.vim
+
+
+
+" Accounts
+let g:accountsGithub = ''
+let g:accountsGithub = readfile( expand( '~/.vim/accounts/github' ) )[0:0][0]
+
+
+
 " This needs to be set early in the vimrc, as the mappings below will refer to it!
 let mapleader="\<Space>"
 let maplocalleader="\\"
@@ -450,7 +501,7 @@ endfunc
 
 " Airline Settings: --------------------------------------------------------------
 " TODO delete airline setting when lightline settings are done
-let g:airline_theme='simple'
+let g:airline_theme='papercolor'
 " Powerline fonts work but the > seperator doesn't seem expressive for tabs to status
 let g:airline_powerline_fonts = 0
 
@@ -499,10 +550,16 @@ let g:airline_mode_map = {
 " Airline Settings: --------------------------------------------------------------
 
 
-" Promptline Settings: ------------------------------------------------------------
+" ─   Promptline                                         ■
+
+" Workflow: To produce a .promptline.sh (referenced in .zshrc) based on theme and symbols defiled below:
+" Source this file once more - ":so %"! - otherwise symbols are not recognized
+" Then do "PromptlineSnapshot! ~/.promptline.sh" to overwrite, then Alacritty
+" (this does not need airline any more!)
+
 " Creates a (zsh) command prompt based on vim-airline style: "PromptlineSnapshot ~/.promptline.sh airline" then in zsh: "source .promptline.sh"
 " sections (a, b, c, x, y, z, warn) are optional
-" Note: Needs to briefly plugins-install airline to work
+" This is a main value of promptline: it allows to easily configure how the terminal/shell prompt is set up:
 let g:promptline_preset = {
         \'b' : [ '$vim_mode' ],
         \'c' : [ promptline#slices#cwd({ 'dir_limit': 3 }) ],
@@ -510,7 +567,37 @@ let g:promptline_preset = {
         \'z' : [ promptline#slices#jobs() ],
         \'warn' : [ promptline#slices#last_exit_code() ]}
 
-" Promptline Settings: ------------------------------------------------------------
+hi PromptlineB_vimMode    guifg=#EAEAEA guibg=#284954
+hi PromptlineC_folderPath guifg=#42606B guibg=#0E0E0E
+hi PromptlineY_gitBranch  guifg=#EFEFEF guibg=#2F2F2F
+hi PromptlineZ_bgJobs     guifg=#284954 guibg=#030303
+hi PromptlineWarn         guifg=#A22E44 guibg=#030303
+
+let g:promptline_theme =  {
+      \'b'    : GetHiGuiColorList( 'PromptlineB_vimMode' ),
+      \'c'    : GetHiGuiColorList( 'PromptlineC_folderPath' ),
+      \'y'    : GetHiGuiColorList( 'PromptlineY_gitBranch' ),
+      \'z'    : GetHiGuiColorList( 'PromptlineZ_bgJobs' ),
+      \'warn' : GetHiGuiColorList( 'PromptlineWarn' )}
+
+" Some colors used:
+" let g:color_ming_green_dark = '#3C6B7C '
+" let g:color_ming_green = '#3A768C '
+" let g:color_sacramento_green_brighter = '#077D67'
+
+let g:promptline_powerline_symbols = 0
+let g:promptline_symbols = {
+      \ 'left'           : '',
+      \ 'right'          : '',
+      \ 'left_alt'       : '>',
+      \ 'right_alt'      : '<',
+      \ 'dir_sep'        : '/ ',
+      \ 'truncation'     : '...',
+      \ 'vcs_branch'     : '',
+      \ 'battery'        : '',
+      \ 'space'          : ' '}
+
+" ─^  Promptline                                         ▲
 
 
 " Messages: ----------------------------------------------------------------------
@@ -1235,52 +1322,6 @@ set guicursor=n:block-iCursor
 
 " General: ---------------------------------------------------------------------------
 
-
-" TODO use runtimepath to lazyload
-
-" ─   " Helper functions                                ──
-source ~/.vim/utils/utils-search.vim
-source ~/.vim/utils/utils-search-replace.vim
-source ~/.vim/utils/utils-code-line-props.vim
-source ~/.vim/utils/utils-syntax-color.vim
-source ~/.vim/utils/utils-general-helpers.vim
-
-" ─   Haskell maps and syntax additions                 ──
-source ~/.vim/utils/HsMotions.vim
-source ~/.vim/utils/HsSyntaxAdditions.vim
-source ~/.vim/utils/CodeMarkup.vim
-source ~/.vim/utils/HsAPIExplore.vim
-" Note: There is an unfinished plugin here:
-" tabe .vim/plugged/HsAPIExplore/autoload/HsAPIExplore.vim
-" call HsAPIExplore#start()
-" Intero maps and helpers:
-source ~/.vim/utils/HsIntero.vim
-source ~/.vim/utils/HsFormat.vim
-source ~/.vim/utils/utils-align.vim
-
-" ─   " General tools                                   ──
-source ~/.vim/utils/utils-terminal.vim
-" Todo: move the helper/commands in this note file
-source ~/.vim/notes/notes-workflow.vim
-source ~/.vim/utils/utils-vimscript-tools.vim
-source ~/.vim/utils/utils-markdown.vim
-source ~/.vim/utils/utils-chromium.vim
-source ~/.vim/utils/utils-floatwin.vim
-
-
-" ─   " Minor                                           ──
-source ~/.vim/utils/utils-virtualtext.vim
-source ~/.vim/utils/utils-csv.vim
-source ~/.vim/utils/utils-applescript.vim
-
-" ─   " Split-out setup sections                        ──
-source ~/.vim/utils/setup-tags.vim
-
-
-
-" Accounts
-let g:accountsGithub = ''
-let g:accountsGithub = readfile( expand( '~/.vim/accounts/github' ) )[0:0][0]
 
 
 
