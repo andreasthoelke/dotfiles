@@ -267,7 +267,7 @@
 " Use Last Search Pattern: - do "/abc<cr>" (a normal search), then "vim /<c-r>/g %" → "c-r" will expand to the last search
 " Proposed Workflow: - 1. Test search expression with regular search, then 2. use the same expression with vimgrep
 
-" Copy Paste File Path: - copy to "p" register "<leader>fpc": , insert: "<leader>fpi", echo: "<leader>fpe"
+" Copy Paste File Path: "%p to put the name of the current file after the cursor. echo @%. let @+=@%
 " Jump To File Path: in split below "<c-w>f", in tab "<c-w>gf"
 " View A Folder Env Variable: e.g. VIMRUNTIMEPATH Folder: - "i<c-r>=$VIM<tab><cr>" in buffer, then "<c-w>f" to open Nerdtree.  Or ":NERDTree $VIM<tabs>"
 
@@ -599,6 +599,10 @@ nnoremap <silent> <Leader>gf :pedit <C-r><C-f><cr>
 " Expression mapping example: build a string and run it as an expression
 " nnoremap <expr> GG ":echom " . screencol() . "\n"
 " nnoremap <silent> GG :echom screencol()<CR>
+
+" Insert mode mappings: can work with <c-o>, which pauses insert-mode for one char/command
+" imap <c-y> <c-o>:echo "hi"<cr><c-o>:echo "again"<cr>
+" List of what control-char do: https://www.reddit.com/r/vim/comments/4w0lib/do_you_use_insert_mode_keybindings/
 
 " Get time in command mode: "echo now" → "echo strftime('%X')"
 cabbrev now strftime('%X')

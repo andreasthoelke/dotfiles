@@ -76,8 +76,6 @@ func! GetAPICmdStr( query, limit, infoFlag )
 endfunc
 
 
-"
-
 " Import Haskell Identifiers Using Hoogle And Hsimport:{{{
 " 1. Use "gsd" ("go search docs") on a missing identifier
 " 2. In the hoogle list of available identifiers, go to the line/version you
