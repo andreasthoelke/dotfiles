@@ -60,11 +60,11 @@ function __promptline_vcs_branch {
 }
 function __promptline_cwd {
   local dir_limit="3"
-  local truncation="..."
+  local truncation="⋯"
   local first_char
   local part_count=0
   local formatted_cwd=""
-  local dir_sep="/ "
+  local dir_sep=" / "
   local tilde="~"
 
   local cwd="${PWD/#$HOME/$tilde}"
@@ -180,7 +180,7 @@ function __promptline {
   local y_fg="${wrap}38;2;239;239;239${end_wrap}"
   local y_bg="${wrap}48;2;47;47;47${end_wrap}"
   local y_sep_fg="${wrap}38;2;47;47;47${end_wrap}"
-  local z_fg="${wrap}38;2;40;73;84${end_wrap}"
+  local z_fg="${wrap}38;2;60;107;124${end_wrap}"
   local z_bg="${wrap}48;2;3;3;3${end_wrap}"
   local z_sep_fg="${wrap}38;2;3;3;3${end_wrap}"
   if [[ -n ${ZSH_VERSION-} ]]; then

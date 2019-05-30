@@ -204,8 +204,8 @@ let g:promptline_symbols = {
       \ 'right'          : '',
       \ 'left_alt'       : '>',
       \ 'right_alt'      : '<',
-      \ 'dir_sep'        : '/ ',
-      \ 'truncation'     : '...',
+      \ 'dir_sep'        : ' / ',
+      \ 'truncation'     : '⋯',
       \ 'vcs_branch'     : '',
       \ 'battery'        : '',
       \ 'space'          : ' '}
@@ -213,7 +213,10 @@ let g:promptline_symbols = {
 " ─^  Promptline                                         ▲
 
 
+" https://unicode-table.com
 
+" two charater unicode symbols can ge displayed in vim, but not in promptline/alacritty?
+"   ⁞⋮  ⬜ ｜  ︱
 
 " function! StatuslineArglistIndicator()
 

@@ -108,13 +108,31 @@ plugins=(
    copyfile # "copyfile <filename>" to copy text of file into clipboard
    web-search # "google ..", "wiki" "!w"
    vi-mode
+   nearcolor
    # zsh_reload # use "src" to reload .zshrc in all running shells
    )
 
 source $ZSH/oh-my-zsh.sh
 
+# Docs: https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 
+ZSH_HIGHLIGHT_STYLES[path]='fg=#42606B,bg=#0E0E0E'
+# ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=white'
+ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=#A22E44,bg=#030303'
+ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=#3C6B7C,bg=#030303'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=#76E0D9'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=#008EB8'
+ZSH_HIGHLIGHT_STYLES[function]='fg=#008EB8'
+ZSH_HIGHLIGHT_STYLES[command]='fg=#008EB8'
+ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=#008EB8'
+ZSH_HIGHLIGHT_STYLES[default]='fg=#BECACD'
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=#983B4D'
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=#983B4D'
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#077D67'
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#077D67'
 
+# [[ $COLORTERM = *(24bit|truecolor)* ]] || zmodload zsh/nearcolor
 
 # User configuration --------------------------------------------------
 
