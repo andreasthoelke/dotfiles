@@ -70,9 +70,10 @@ alias yvim='npm run app --prefix Documents/NyaoVim'
 # ZSH_THEME="robbyrussell"
 # ZSH_THEME=“amuse”
 # ZSH_THEME="cobalt2"
-
+# zstyle ':completion:*:builtins' list-colors '=*=1;203;5;142'
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
+
 
 # Uncomment the following line to use hyphen-insensitive completion. Case
 # sensitive completion must be off. _ and - will be interchangeable.
@@ -108,13 +109,14 @@ plugins=(
    copyfile # "copyfile <filename>" to copy text of file into clipboard
    web-search # "google ..", "wiki" "!w"
    vi-mode
-   nearcolor
    # zsh_reload # use "src" to reload .zshrc in all running shells
    )
 
 source $ZSH/oh-my-zsh.sh
 
-# Docs: https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
+
+# Zsh highlight colors config:
+# Docs: https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 
 ZSH_HIGHLIGHT_STYLES[path]='fg=#42606B,bg=#0E0E0E'
@@ -132,9 +134,9 @@ ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=#983B4D'
 ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#077D67'
 ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#077D67'
 
-# [[ $COLORTERM = *(24bit|truecolor)* ]] || zmodload zsh/nearcolor
-
 # User configuration --------------------------------------------------
+
+
 
 # Activate vim bindings
 bindkey -v
@@ -268,6 +270,10 @@ alias gitx='gitx --all'
 # Git aliases: ---------------------------------------------------------
 
 
+alias ls='exa --sort=type --level=2 --all'
+# Note you can type "ls -T" to see a depth-limited tree
+# https://the.exa.website/docs/command-line-options
+
 function chpwd() {
     emulate -L zsh
     ls -a
@@ -289,7 +295,19 @@ function mkcd ()
 
 alias rmcurdir='rmdir `pwd` && cd ..'
 
+# Setup ANSI colors (see https://jonasjacek.github.io/colors/)
+# as "ls" and completion tools don't seem to support full RGB?
+fileTypeColors='di=38;5;73:'
+fileTypeColors+='*md=38;5;159:'
+fileTypeColors+='.*=38;5;244:'
 
+# export LS_COLORS="di=38;5;11:*.md=38;5;13"
+export LS_COLORS=$fileTypeColors
+
+
+# between quotation marks is the tool output for LS_COLORS
+# export LS_COLORS="di=31;41:ln=31;41:so=31;41:pi=31;41:ex=31;41:bd=31;41:cd=31;41:su=31;41:sg=31;41:tw=31;41:ow=31;41:"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 
 

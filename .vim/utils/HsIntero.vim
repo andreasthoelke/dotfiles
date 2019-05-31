@@ -132,26 +132,27 @@ func! PasteTypeSig( lines ) abort
   call append(line('.') -1, unicodeLines)
 endfunc
 
+" TODO test and finish the various cases
 " Interpretes the first repl-returned line as a Haskell-List of Strings - and appends these items as lines.
 " It then aligns the first 2 columns (column separator is <space>)
-func! ShowList_AsLines( replReturnedLines )
-  let firstLine = 
+func! ShowList_AsLines( replReturnedLines ) " ■
+  let firstLine = a:replReturnedLines[0]
   normal! m'
-  if a:maybeHsList[0][0] == '['
+  if firstLine[0] == '['
     " 
     call FloatWin_ShowLines( a:maybeHsList )
     call FloatWin_FitWidthHeight()
     return
-  elseif a:maybeHsList[0][1] == '"'
+  elseif firstLine[1] == '"'
     " Received a Haskell list of stings - can simply convert-eval it to vimscript of strings!
-    call FloatWin_ShowLines( eval( a:maybeHsList[0] ) )
+    call FloatWin_ShowLines( eval( firstLine ) )
     if len( s:alignFnName )
       call FloatWin_do( 'call ' . s:alignFnName . '()' )
     endif
   endif
 
   " call FloatWin_FitWidthHeight()
-endfunc
+endfunc " ▲
 
 " exec l:startWindowNr . 'wincmd w' ■
 " call nvim_set_current_win(2)

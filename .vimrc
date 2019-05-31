@@ -1473,8 +1473,10 @@ func! DefaultFoldtext()
   return '▶ ' . l:subs
 endfunc
 
+" set fillchars=fold:\
+
 " Don't show the default '.' in the fold text
-exec "setlocal fillchars=fold:\\ "
+exec "set fillchars=fold:\\ "
 " exec .. is to allow a <Space> at the end of an expression
 " Note that the \ to escape the ' ' also needs to be escaped, hence the \\
 

@@ -1125,8 +1125,11 @@ after duplicating a line and then commenting the orig line and moving down with 
 " Todo: start Alacritty with options
 " command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --option \"window.decoration\" \"none\"'"
 
+" TODO test and finish the various cases: InteroRepl
 
 ## Release notes v1.1.2
+* zsh syntax highlight colors
+* zsh consistent `ls` and completion ANSI colors
 * Intero ShowList_asLines() in floating window with column alignment (`gec`, `geC`, `gel`)
 * Shortcuts to popular folders <leader>o .. `n` notes, `u` utils, `h` haskell, `c` current
 
