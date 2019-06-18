@@ -1,5 +1,8 @@
 
+" Learn: \hu, \hU, \ht, leader if
 
+" tj00 ∷ a
+" tj00 = undefined
 
 
 " Try: - "gqaf"
@@ -11,15 +14,16 @@
 
 
 " "unique functions"
-nnoremap <localleader>hs :call RandFnName()<cr>2w
-nnoremap <localleader>hS :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<esc>w
+nnoremap <localleader>hu :call RandFnName()<cr>2w
+nnoremap <localleader>hU :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<esc>w
 " produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"
 nnoremap <leader>hus :call RandSymbol()<cr>
 
 " "expand function" expand a symbol name to a function stub
-nnoremap <leader>ef A ∷ String<esc>^ywo<esc>PA= undefined<esc>b
+" nnoremap <leader>ef A ∷ String<esc>^ywo<esc>PA= undefined<esc>b
+nnoremap <localleader>ht ^yiwko<esc>PA ∷ a<esc>w
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
 
 " "expand signature" expand a signature to a function stub
@@ -38,7 +42,7 @@ nmap <leader>hfs :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<e
 
 " "index symbol" append postfix index to function name
 nnoremap <leader>if ea0^jea0^k
-nnoremap <leader>his ea0^jea0^k
+" nnoremap <leader>his ea0^jea0^k
 
 " Increase/ decrease the index of TypeSig and term level binding together
 nnoremap <leader><c-a> jk^
@@ -141,7 +145,7 @@ command! -range=% HsReplaceUnicodeToChars :<line1>,<line2>call ReplaceStringsInR
 
 " ─   Formatting Haskell Imports                         ■
 let g:stylish_haskell_command = 'stylish-haskell'
-noremap <leader>hsi :call StylishHaskell()<cr>
+noremap <leader>hi :call StylishHaskell()<cr>
 command! Style  :call StylishHaskell()
 command! Indent :call StylishHaskell()
 

@@ -718,7 +718,12 @@ what are buffertags?
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 
 ## Completion
-  see nav-containers.md#/Completion
+  see notes-navigation.md#/Completion
+
+  now via HIE and decomplete
+  https://github.com/mhinz/vim-galore#completion
+  but may want to ckeck out coc.nvim and
+  https://github.com/voldikss/coc-browser
 
 ## Unicode symbols
 * List of haskell unicode library symbols (use those!)
@@ -767,7 +772,7 @@ Vim Additional Documentation: https://github.com/mhinz/vim-galore
 
 ## Todos
 
-general: quickly share urls with Android, mac, other iphone
+* general: quickly share urls with Android, mac, other iphone
 
 how are check-lists rendered in markdown?
 can I check those or is this implemented in the vim orgmode?
@@ -856,6 +861,8 @@ make `rm -r` commands move to trash?
   vim-subversive allows to rename a variable within a function or what is currently visible of the buffer
 
 ## Current Todos
+
+`git show --help` in terminal somehow open vim-manpages
 
 after restart I need several undos until the latest change is undone
 
@@ -1072,8 +1079,37 @@ HOOGLE INCLUDE NEW LIBS:
   Todo: get hoogle libs from cabal file
 
 
+## Pretty printing in floating win
+TODO: resume here. how to auto select table print vs. pPrint
+func! InteroEval_SmartShow_step2( replReturnedLines )
+T.printTable tickers
+pPrint tickers
+.vim/utils/HsIntero.vim
+src/Prettyprint.hs--
+https://github.com/gdevanla/pptable#readme
+http://hackage.haskell.org/package/pptable-0.3.0.0/docs/Text-PrettyPrint-Tabulate.html
+https://hackage.haskell.org/package/pptable-0.2.0.0/candidate/docs/Text-PrettyPrint-Tabulate-Example.html
+https://github.com/cdepillabout/pretty-simple
+http://hackage.haskell.org/package/pretty-simple-2.2.0.1/docs/Text-Pretty-Simple.html
+
+### A text rendering engine
+https://github.com/quchen/prettyprinter
+https://guide.aelve.com/haskell/pretty-printing-uhierj0c
+https://github.com/quchen/prettyprinter/blob/master/prettyprinter/src/Data/Text/Prettyprint/Doc/Render/Tutorials/TreeRenderingTutorial.hs
+
+### General haskell setup
+https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in-2018/
+
+
+
+
 ## Temp next
 
+
+sometimes error signs in the sign column get stuck. I then have to use `:sign unplace *`
+
+when I leave a vitual window open, then switch to another tab/win, open another virtual win, then go back to the org
+win, create a new win, then the orig win will not close - i'll have to go to it and close it manually
 
 Gui=italic now works! use this in syntax highlight?
 hi! Underlined2 guifg=#077D67 guibg=#0C0C0C gui=italic
@@ -1128,9 +1164,11 @@ after duplicating a line and then commenting the orig line and moving down with 
 " TODO test and finish the various cases: InteroRepl
 
 ## Release notes v1.1.2
+* `leader >>` + motion (or vis-sel with "v") indents the lines to the current cursor-horz position. `leader >>l` to indent the current line
 * zsh syntax highlight colors
 * zsh consistent `ls` and completion ANSI colors
 * Intero ShowList_asLines() in floating window with column alignment (`gec`, `geC`, `gel`)
+* `leader lm` to open LanguageClient menu, `leader la` to show the available code actions
 * Shortcuts to popular folders <leader>o .. `n` notes, `u` utils, `h` haskell, `c` current
 
 * Indent motions: `,j` `,k` to move to end/start of indent block. IndentBlockEnd() HsMotions
@@ -1148,7 +1186,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 * `geT` "tabularizes" the output
 * `gek` to inset the `Kind` (visual-sel and word at cursor)
 * `\tw` or `\tt` to get the type of the identifier
-* `leader hs` creates a haskell top level function stub with a random and indexed name (used for quick tests)
+* `localleader hs` creates a haskell top level function stub with a random and indexed name (used for quick tests). `\hS` also add a type-sig stub
 * Use feedkeys to activate modes: e.g. call feedkeys("\<c-v>", 'x') see VisualBlockMode()
 * `]b`, `[b` for next/prev binding
 * `cib` to change the binding name in consequtive lines

@@ -79,7 +79,7 @@ onoremap ih :<c-u>execute "normal! ?^.*:\rv$"<cr>
 " exec "normal! gg" . '/\vfor .\+ in .\+:' . "\<cr>"
 " }}}
 
-" Operator Map: The operator key map "\r" should be followed by a motion (e.g. W, $ or 'a) or textobject "af/ip/iv ..".
+" Operator Map: The operator key map "\r" should be followed by a motion (e.g. W, $ or 'a) or textobject "af/ip/iv/iB ..".
 " It's a function that operates on a range of text from a motion, textobj or vis-selection. It then transforms that text or does some other side effect.
 nnoremap <silent> <localleader>r :set opfunc=ReplaceLastPattern<cr>g@
 vnoremap <silent> <localleader>r :<c-u>call ReplaceLastPattern(visualmode(), 1)<cr>

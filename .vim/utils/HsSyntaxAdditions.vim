@@ -62,7 +62,8 @@ func! HaskellSyntaxAdditions() "{{{
   " hi! Conceal guibg=#000000
   " Issue: this also set the bg of other conceal chars
 
-  setlocal formatprg=stylish-haskell
+  " use this: ?
+  " setlocal formatprg=stylish-haskell
 
   " setlocal foldmarker=\ ■,\ ▲
   " Highlight fn-wireframe keywords

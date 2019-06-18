@@ -288,6 +288,8 @@ endif
 " Plug 'ervandew/supertab'
 " did not work with omnicomplete so far
 
+Plug 'thalesmello/webcomplete.vim'
+
 " ─^  Haskell IDE features                               ▲
 
 
@@ -992,33 +994,6 @@ endfunc
 " Jumplist: --------------------------------------
 
 
-
-" Indenting: -------------------------------------
-
-" Use only spaces for indentation
-set expandtab
-set shiftwidth=2
-set softtabstop=2
-" http://vim.wikia.com/wiki/Indenting_source_code
-
-nnoremap <leader>>> :call IndentToCursorH()<CR>
-nnoremap <leader><< :call IndentToCursorH()<CR>
-" TODO: maybe make a mapping "dwkwj<leader>>>" to indent haskell binds:
-  " jsonValue ∷ Value
-  "           ← decode (T.encodeUtf8 jsonTxt) ?? "Not a valid json!"
-"
-function! IndentToCursorH()
-  exec ("left " . (virtcol('.') - 1))
-  " exec ("left " . col('.'))
-endfun
-
-" Indenting: -------------------------------------
-
-
-
-
-
-
 " General: -----------------------------------------------------------------------------
 
 nnoremap <leader>cab :vnew *.cabal<cr>
@@ -1189,6 +1164,7 @@ let g:neomake_highlight_line = 1
 " Uses NVIMs nvim_buf_add_highlight feature
 
 command! SignsClear :sign unplace *
+command! ClearSigns :sign unplace *
 " Neomake defaults
 let g:neomake_error_sign = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
 let g:neomake_warning_sign = {
@@ -1590,151 +1566,6 @@ hi EasyMotionIncSearch guifg=black guibg=white ctermfg=black ctermbg=white
 " ─^  Easymotion Code Navigation                         ▲
 
 
-" ─   Language Client HIE                                ■
-
-let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper'] }
-let g:LanguageClient_rootMarkers = ['*.cabal', 'stack.yaml']
-
-let g:LanguageClient_autoStart = 1
-" let g:lsp_async_completion = 1
-" delay updates? not sure if this works
-" let g:LanguageClient_changeThrottle = 0.5
-
-let g:LanguageClient_diagnosticsEnable = 1
-let g:LanguageClient_diagnosticsList = 'Location'
-" default is Quickfix - but Intero uses quickfix (nicely formatted) via neomake
-
-let g:LanguageClient_windowLogMessageLevel = 'Info'
-" let g:LanguageClient_settingsPath = '~/.vim/HIE/settings.json'
-" default: $projectdir/.vim/settings.json
-
-" let g:LanguageClient_loggingFile = expand('~/.vim/LanguageClient.log')
-let g:LanguageClient_useFloatingHover = 1
-" In HsFormat
-" set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
-" Try: - "gqaf"
-
-
-nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-" Documentation
-map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
-map <Leader>lg :call LanguageClient#textDocument_definition()<CR>
-map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
-map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
-map <Leader>lb :call LanguageClient#textDocument_references()<CR>
-map <Leader>la :call LanguageClient#textDocument_codeAction()<CR>
-map <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
-
-
-
-" Diagnostics highlighing:
-let g:LanguageClient_diagnosticsDisplay = {
-      \ 1: {
-      \ 'name': 'Error',
-      \ 'texthl': 'WarningSign',
-      \ 'signTexthl': 'WarningSign',
-      \ 'virtualTexthl': 'purescriptLineComment',
-      \ 'signText': g:sign_error,
-      \ },
-      \ 2: {
-      \ 'name': 'Warning',
-      \ 'texthl': 'WarningSign',
-      \ 'signTexthl': 'WarningSign',
-      \ 'virtualTexthl': 'purescriptLineComment',
-      \ 'signText': g:sign_warning,
-      \ },
-      \ 3: {
-      \ 'name': 'Information',
-      \ 'texthl': 'WarningSign',
-      \ 'signTexthl': 'WarningSign',
-      \ 'virtualTexthl': 'purescriptLineComment',
-      \ 'signText': g:sign_warning,
-      \ },
-      \ 4: {
-      \ 'name': 'Hint',
-      \ 'texthl': 'WarningSign',
-      \ 'signTexthl': 'WarningSign',
-      \ 'virtualTexthl': 'purescriptLineComment',
-      \ 'signText': g:sign_warning,
-      \ },
-      \ }
-
-" ─^  Language Client HIE                                ▲
-
-
-
-
-" ─   Completion                                         ■
-
-" call deoplete#enable()
-let g:deoplete#enable_at_startup = 1
-" let g:deoplete#num_processes = 1
-
-inoremap <expr> <c-i> deoplete#manual_complete()
-
-call deoplete#custom#option({
-      \ 'auto_complete_delay': 1000,
-      \ 'smart_case': v:true,
-      \ 'auto_complete': v:false,
-      \ })
-
-
-
-
-
-" autocmd BufEnter * call ncm2#enable_for_buffer()
-" let g:float_preview#docked = 0
-" function! DisableExtras()
-"   call nvim_win_set_option(g:float_preview#win, 'number', v:false)
-"   call nvim_win_set_option(g:float_preview#win, 'relativenumber', v:false)
-"   call nvim_win_set_option(g:float_preview#win, 'cursorline', v:false)
-" endfunction
-" autocmd User FloatPreviewWinOpen call DisableExtras()
-
-
-" set completeopt=menuone,preview
-set completeopt=noinsert,menuone,noselect
-" set completeopt+=noselect
-" set completeopt+=noinsert
-
-" TODO Not sure what effect this has
-set completefunc=LanguageClient#complete
-set omnifunc=LanguageClient#complete
-" set omnifunc=syntaxcomplete#Complete
-" set omnifunc=lsp#complete
-
-" let g:haskellmode_completion_ghc = 0
-" autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-
-" omni complete
-" inoremap <C-B> <C-X><C-O>
-" Open omni menu and don't select the first entry
-" inoremap <C-space><C-space> <C-x><C-o><C-p>
-" navigate the list by using j and k
-" Free mapping in insert mode
-" inoremap <C-j> <C-n>
-" inoremap <C-k> <C-p>
-
-" open suggestions
-" imap <Tab> <C-P>
-
-
-" TODO: above line testen
-" insert mode <S-space> schliesst omni preview und fuegt space ein
-" If you prefer the Omni-Completion tip window to close when a selection is
-" made, these lines close it on movement in insert mode or when leaving
-" insert mode
-
-
-" Todo: needed for omnicomplete? - this throws error when hitting return in command history!
-" augroup cursleave
-"   autocmd!
-"   autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-"   autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-" augroup END
-
-
-" ─^  Completion                                         ▲
 
 
 
@@ -2293,6 +2124,7 @@ set noshowmode
 
 " Unicode: -----------------
 " https://unicode-table.com
+" https://unicode-table.com/en/blocks/supplemental-mathematical-operators/
 
 " Arglist: -----------------
 nnoremap <leader>oa :CtrlPArgs<cr>
@@ -2874,6 +2706,7 @@ source ~/.vim/utils/utils-markdown.vim
 source ~/.vim/utils/utils-chromium.vim
 source ~/.vim/utils/utils-floatwin.vim
 source ~/.vim/utils/tools-tab-status-lines.vim
+source ~/.vim/utils/tools-langClientHIE-completion.vim
 
 
 " ─   " Minor                                           ──

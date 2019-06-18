@@ -58,7 +58,22 @@ let g:floatWin_docked = 0
 " only used for g:floatWin_docked == 0
 let g:floatWin_max_width = 120
 
-func! FloatWin_ShowLines( linesToShow )
+" Show lines in float-win at cursor loc by default. Or pass column, row for win relative position.
+func! FloatWin_ShowLines( linesToShow, ... )
+  let opt = { 'focusable': v:true,
+        \ 'width': 50,
+        \ 'height': 10,
+        \ 'anchor': 'NW'
+        \}
+  if a:0
+    let opt.relative = 'win'
+    let opt.col = a:1 -1
+    let opt.row = a:2 -1
+  else
+    let opt.relative = 'cursor'
+    let opt.col = 0
+    let opt.row = 1
+  endif
 
   " Create a scratch buffer on first invocaion:
   if !g:floatWin_scratchBuf_Id
@@ -70,35 +85,36 @@ func! FloatWin_ShowLines( linesToShow )
   " Just push the text into the buffer:
   call nvim_buf_set_lines( g:floatWin_scratchBuf_Id, 0, -1, 0, a:linesToShow )
 
-  if g:floatWin_docked
-    let prevw_width = winwidth(0)
-  else
-    let prevw_width = FloatWin_display_width( a:linesToShow, g:floatWin_max_width)
-  endif
-  let prevw_height = FloatWin_display_height( a:linesToShow, prevw_width )
+  " TODO this could be replaced with the FloatWin_FitWidthHeight()? ■
+  " if g:floatWin_docked
+  "   let prevw_width = winwidth(0)
+  " else
+  "   let prevw_width = FloatWin_display_width( a:linesToShow, g:floatWin_max_width)
+  " endif
+  " let prevw_height = FloatWin_display_height( a:linesToShow, prevw_width )
 
-  let opt = { 'focusable': v:true,
-        \ 'width': prevw_width,
-        \ 'height': prevw_height
-        \}
-
-  if g:floatWin_docked
-    let opt.relative = 'win'
-
-    let winline = winline()
-    let winheight = winheight(0)
-
-    " use down
-    let opt.row = winheight - prevw_height
-    let opt.col  = 0
-  else
-    let opt.relative = 'cursor'
-    let opt.col = 0
-    let opt.row = 1
-    let opt.anchor = 'NW'
-
-    " let g:floatWin_opts = {'relative': 'cursor', 'width': 10, 'height': 2, 'col': 0, 'row': 1, 'anchor': 'NW'}
-  endif
+  " let opt = { 'focusable': v:true,
+  "       \ 'width': prevw_width,
+  "       \ 'height': prevw_height
+  "       \}
+  " if g:floatWin_docked
+  "   let opt.relative = 'win'
+  "   let winline = winline()
+  "   let winheight = winheight(0)
+  "   " use down
+  "   let opt.row = winheight - prevw_height
+  "   let opt.col  = 0
+  " else
+  "   " let opt.relative = 'cursor'
+  "   " let opt.col = 0
+  "   " let opt.row = 1
+  "   let opt.anchor = 'NW'
+  "   " TODO there are many redundant options here. could focus this on just absolute positioning
+  "   let opt.relative = 'win'
+  "   let opt.col = a:locX
+  "   let opt.row = a:locY + 1
+  "   " let g:floatWin_opts = {'relative': 'cursor', 'width': 10, 'height': 2, 'col': 0, 'row': 1, 'anchor': 'NW'}
+  " endif ▲
 
   let winargs = [ g:floatWin_scratchBuf_Id, 0, opt ]
 
@@ -114,11 +130,29 @@ func! FloatWin_ShowLines( linesToShow )
   call nvim_win_set_option(g:floatWin_win, 'cursorline', v:false)
 
   silent doautocmd <nomodeline> User FloatPreviewWinOpen
+
+  call FloatWin_FitWidthHeight()
   return g:floatWin_win
 endfunc
+" call FloatWin_ShowLines( testText1 )
+" call FloatWin_ShowLines( testText1, col('.'), BufferLineToWinLine( line('.') ) )
 
 " Test this:
 " autocmd User FloatPreviewWinOpen call DoSomething()
+
+func! BufferLineToWinLine( bufferLineNum )
+  let l:winview = winsaveview()
+  call cursor( a:bufferLineNum, 0 )
+  let winLine = winline()
+  call winrestview(l:winview)
+  return winLine
+endfunc
+" echo BufferLineToWinLine( line('.') ) == winline()
+
+" func! BufferLineToWinLine_nofolds( bufferLineNum )
+"   return a:bufferLineNum - winsaveview()['topline']
+" endfunc
+" echo BufferLineToWinLine( line('.') )
 
 
 func! FloatWin_FitWidth()

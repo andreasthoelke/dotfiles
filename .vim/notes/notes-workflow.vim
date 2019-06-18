@@ -253,6 +253,7 @@
 " Regex In Visual Search: - \v^[.+\] - finds text in angle brackets if at start of line. also see https://regexr.com/45174
 " [will find] that text if this line is uncommented
 " Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks
+" Match "ib" string or "n" sting in "ein": echo "ein" =~ '\v(ib|n)'
 " Match Last Comma In Line: /.*\zs,/ - .*\zs\.   .*\zs,  \zs,
 " Testing: Visually select a regex e.g. `[^`]*` an hit // to search for it. Then do q/ to edit search history. Even better: 
 " Realtime Testing: Hit / then c-p to get back the prev search and edit in command line → seeing the highlightes matches update as you type

@@ -63,7 +63,7 @@ let g:anyCharsNotBracketOrEqu = '[^=(]*'
 
 " Top level Haskell type signature. May the colon in a new line. Exclues colons after = and inside (). '\_s' => whitespace or blank lines
 let g:topLevTypeSig = g:topLevPttn . g:anyCharsNotBracketOrEqu . '\_s' . g:anyCharsNotBracketOrEqu . MakeOrPttn( ['∷', '::'] )
-let g:topLevOtherPttn = '^' . MakeOrPttn( ['instance', 'data', 'class', 'type', 'newtype', 'func!', 'function', 'au ', 'command'] )
+let g:topLevOtherPttn = '^' . MakeOrPttn( ['instance', 'data ', 'class', 'type ', 'newtype', 'func!', 'function', 'au ', 'command'] )
 let g:topLevCombined = MakeOrPttn( [ g:topLevTypeSig, g:topLevOtherPttn ] )
 
 " Note the { - } is conceald in this pattern
@@ -109,10 +109,20 @@ func! TopLevBackw()
   call search( g:topLevCombined, 'bW' )
 endfunc
 
+func! TopLevBackwLine()
+  return searchpos( g:topLevCombined, 'cnb')[0]
+endfunc
+" echo TopLevBackwLine()
+
 func! PrevBlockLastLine()
   " Seach back to a line that does not start with a comment
   call search('\v^(\s*--.*)@!\s*.', 'bW')
 endfunc
+
+func! TypeSigBackwLineNum()
+  call searchpos( g:topLevTypeSig, 'cnb' )[0]
+endfunc
+
 
 nnoremap <silent> ,<c-n> :call HsBlockLastLine()<cr>:call ScrollOff(10)<cr>
 func! HsBlockLastLine()
@@ -329,6 +339,7 @@ endfunc
 " Textobjects: -----------------------------------
 " ie = inner entire buffer
 onoremap iB :<c-u>exec "normal! ggVG"<cr>
+vmap iB :<c-u>exec "normal! ggVGo"<cr>
 " iv = current viewable text in the buffer
 onoremap iv :<c-u>exec "normal! HVL"<cr>
 vmap iv ,Ho,L
@@ -826,7 +837,9 @@ func! CommaItemStartForw() " ■
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
   " Find delimiter on the same bracket level, skip matches in Strings
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW', 'CursorIsInsideStringOrComment()' )
+  " let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW', 'CursorIsInsideStringOrComment()' )
+  " Test this: I may want to use this in comments and strings?!
+  let [sLine, sCol] = searchpairpos( '{\|\[\|(', ',', '}\|\]\|)', 'nW' )
   " echo sLine . '-' . sCol
   if sLine && sLine < (oLine + 5)
     call setpos('.', [0, sLine, sCol, 0] )

@@ -42,13 +42,18 @@ endfunc
 
 nnoremap ,œ :call GoSectionEndAbort('')<cr>
 " Go to specific (via name) or current section end
-func! GoSectionEndAbort( headerText )
+" func! GoSectionEndAbort( headerText )
+func! GoSectionEndAbort( ... )
   let l:winview = winsaveview()
   normal! ll
   call HeadingBackw()
-  let headerText = (a:headerText != '') ? a:headerText : GetHeadingTextFromHeadingLine( line('.') )
   " Go to either next start or end marker
-  call search('\v^("|--)\s─(\^|\s)\s{2}' . headerText, 'W')
+  if a:0
+    let headerText = (a:1 != '') ? a:1 : GetHeadingTextFromHeadingLine( line('.') )
+    call search('\v^("|--)\s─(\^|\s)\s{2}' . headerText, 'W')
+  else
+    call search('\v^("|--)\s─(\^|\s)', 'W')
+  endif
   let isEndMarker = MatchesInLine(line('.'), '\^')
   if isEndMarker " Confirm we have moved to matching end marker
     return 1
@@ -76,10 +81,10 @@ endfunc
 
 
 " ─   Textobjs for inside name and inside content        ■
-onoremap <silent> iln :<c-u>call LabelAndHeading_VisSel_Name()<cr>
-vnoremap <silent> iln :<c-u>call LabelAndHeading_VisSel_Name()<cr>o
-onoremap <silent> ilc :<c-u>call LabelAndHeading_VisSel_Content()<cr>
-vnoremap <silent> ilc :<c-u>call LabelAndHeading_VisSel_Content()<cr>o
+onoremap <silent> ihn :<c-u>call LabelAndHeading_VisSel_Name()<cr>
+vnoremap <silent> ihn :<c-u>call LabelAndHeading_VisSel_Name()<cr>o
+onoremap <silent> ihc :<c-u>call LabelAndHeading_VisSel_Content()<cr>
+vnoremap <silent> ihc :<c-u>call LabelAndHeading_VisSel_Content()<cr>o
 " Tests: sel this ..
 
 func! LabelAndHeading_VisSel_Name()
@@ -217,7 +222,7 @@ func! StripMarker()
   normal dd
 endfunc
 
-" Run this after changing the section header text. Will update and marker and realign line spacing
+" Run this after changing the section header text. Will update and marker and re-align line spacing
 nnoremap <localleader>cr :call RefreshHeadingOrSection()<cr>
 func! RefreshHeadingOrSection()
   let l:winview = winsaveview()
@@ -225,7 +230,7 @@ func! RefreshHeadingOrSection()
   " Note that this will turn normal headings with a foldmarker into a section heading
   let headerText = GetHeadingTextFromHeadingLine( line('.') )
   call CreateHeading( 0, headerText, isSectionHeadering )
-  if GoSectionEndAbort( headerText )
+  if GoSectionEndAbort()
     call CreateHeading(1, headerText, 1)
   endif
   call winrestview(l:winview)

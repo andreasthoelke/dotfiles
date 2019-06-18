@@ -92,16 +92,22 @@ nnoremap <silent> <localleader>tw :call InsertTypeAnnotation()<cr>
 " include <cword> in GetReplExpr
 " use GetReplExpr in column maps
 "
-nnoremap gei :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
+" Default:
+nnoremap gei :call InteroEval_SmartShow()<cr>
 
+" Plain Repl Lines:
+nnoremap ges :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
+
+" ─   legacy to be reviewed                              ■
 " Run cword in repl - paste returned lines verbally:
-nnoremap <silent> gew :call InteroEval( GetReplExpr(), "ShowList_AsLines", '' )<cr>
+nnoremap <silent> gew :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", '' )<cr>
 nnoremap geW :call InteroEval( GetReplExpr(), "PasteLines", '' )<cr>
 " -                   - Haskell list as lines:
-nnoremap gel :call InteroEval( GetReplExpr(), "ShowList_AsLines", '' )<cr>
+nnoremap gel :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", '' )<cr>
 " -                   - Haskell list as table:
-nnoremap gec :call InteroEval( GetReplExpr(), "ShowList_AsLines", 'Align2Columns' )<cr>
-nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines", 'AlignTable' )<cr>
+nnoremap gec :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'AlignColumns('')' )<cr>
+nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'AlignTable' )<cr>
+" ─^  legacy to be reviewed                              ▲
 
 " Get repl :type/:kind info for cword / vis-sel:
 nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
@@ -109,20 +115,132 @@ vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "PasteTypeSig"
 nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "PasteLines", '' )<cr>
 vnoremap gek :call InteroEval( ':kind ' . Get_visual_selection(), "PasteLines", '' )<cr>
 
+nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<cr>
+
 
 " Align function needs to be a script var .. (?)
-" let s:alignFnName = ''
+let s:async_alignFnExpr = ''
+let s:async_curType = ''
 
 " Evaluate "expr" in ghci. "renderFnName" will receive what ghci returns as a vim list of lines.
 " Renamed from "InsertEvalExpr"
 func! InteroEval( expr, renderFnName, alignFnName ) abort
   " Set the align function as a script var as it can not be passed to callback(?)
-  let s:alignFnName = a:alignFnName
+  let s:async_alignFnExpr = a:alignFnName
   call intero#process#add_handler( function( a:renderFnName ) )
   call intero#repl#eval( a:expr )
 endfunc
 
-" Simply paste the lines below as they are
+
+func! InteroEval_SmartShow()
+  " 1. Eval the type of the expression in the repl
+endfunc
+
+func! InteroEval_SmartShow_step2( replReturnedLines ) " ■
+  " 2. Store the type of the expression
+  let firstLine = split( a:replReturnedLines[0], ' ' )
+  " let typeSepIndex = index( firstLine, '"::' )
+  " let s:curType = join( firstLine[typeSepIndex:], ' ' )
+  let s:curType = join( firstLine[2:], ' ' )
+  " 3. Now eval the expression in the repl
+  " echoe s:curType
+  if s:curType[0:1] == '[(' || s:curType[0:1] == '[['
+    " 1) List of Tuples/Lists: `show` the Tuple/List and align to all commas
+    let replExpr = 'show <$> ' . GetReplExpr()
+    " let s:async_alignFnExpr = "AlignColumns( ['\,', '2\,'] )"
+    call InteroRun( replExpr, 'ShowList_AsLines_Aligned', "AlignTable( ',' )" )
+  elseif s:curType =~ '\v(Map |Vector |\[\u)'
+    " 2) Map, Vector or Haskelltype (uppercase in list): use ppTable
+    " -- echo "Map.Map Stock" =~ '\v(Map |Vector |\[\u)' ■
+    " -- echo "Vector Stock" =~ '\v(Map "|Vector |\[\u)'
+    " -- echo "[Ein" =~ '\v(Map "|Vector |\[\u)' ▲
+    let replExpr = 'T.printTable ' . GetReplExpr()
+    call InteroRun( replExpr, 'HsShowLinesInFloatWin', '' )
+  elseif s:curType =~ '\v(Int |Integer |String |Text |\[Char)'
+    " 3) Simple type are shown as they are:
+    call InteroRun( GetReplExpr(), 'HsShowLinesInFloatWin', '' )
+  else
+    " 4) Non list type: use Pretty.Simple
+    let replExpr = 'pPrint ' . GetReplExpr()
+    call InteroRun( replExpr, 'HsShowLinesInFloatWin', '' )
+  endif
+endfunc
+" Tests: see ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Prettyprint.hs
+" call InteroRun( ':type ' . GetReplExpr(), 'InteroEval_SmartShow_step2', '' ) ▲
+
+" Select a haskell print/show function and optionally a vim-script align function
+" based on the Hs expression/return type
+func! HsPrintAlignFn_fromType( typeStr )
+  if typeStr[0:1] == '[(' || typeStr[0:1] == '[['
+    " 1) List of Tuples/Lists: `show` the Tuple/List and align to all commas
+    return ['show <$> ', "AlignTable(',')"]
+  elseif s:curType =~ '\v(Map |Vector |\[\u)'
+    " 2) Map, Vector or Haskelltype (uppercase in list): use ppTable
+    return ['T.printTable ', '']
+  elseif s:curType =~ '\v(Int |Integer |String |Text |\[Char)'
+    " 3) Simple types are shown as they are:
+    return ['', '']
+  else
+    " 4) Non list type: use Pretty.Simple
+    return ['pPrint ', '']
+  endif
+endfunc
+
+
+" Separates 3 output types:
+" - Forwards multi-line repl-outputs
+" - Splits a list of strings into lines
+" - Forwards other values
+func! InteroReplReturnCB( lines )
+  if len( lines ) == 1
+    " Repl returned the typlical one value
+    let hsReturnVal = lines[0]
+    if hsReturnVal[0:1] == '["'
+      " Detected list of strings: To split the list into lines, convert to vim list of line-strings!
+      call HsShowLinesInFloatWin( eval ( hsReturnVal ) )
+    else
+      call HsShowLinesInFloatWin( [hsReturnVal] )
+    endif
+  elseif
+    call HsShowLinesInFloatWin( lines )
+  endif
+endfunc
+
+func! HsShowLinesInFloatWin( hsLines )
+  normal! m'
+  call FloatWin_ShowLines( a:hsLines )
+  call FloatWin_do( 'call HaskellSyntaxAdditions()' )
+  call FloatWin_FitWidthHeight()
+  if len( s:async_alignFnExpr )
+    call FloatWin_do( 'call ' . s:async_alignFnExpr )
+  endif
+endfunc
+" call HsShowLinesInFloatWin( ["eins", "zwei"] )
+
+func! InteroRun( replExpr, alignFnExpr )
+  let s:async_alignFnExpr = a:alignFnExpr
+  call intero#process#add_handler( function( 'InteroReplReturnCB' ) )
+  call intero#repl#eval( a:replExpr )
+endfunc
+
+func! InteroRunType( testExpr, continueFnName )
+  let g:async_runTypeContinue = a:continueFnName
+  call intero#process#add_handler( function( 'InteroReplTypeReturnCB' ) )
+  call intero#repl#eval( ':type ' . a:testExpr )
+  " call intero#repl#eval( ':type +d ' . a:testExpr )-- TODO how to integrate the polymorphic flag?
+endfunc
+" call InteroRunType('maybe', 'HsShowLinesInFloatWin' )
+" call InteroRunType('database', 'HsShowLinesInFloatWin' )
+
+func! InteroReplTypeReturnCB( lines )
+  if len( a:lines ) == 1
+    call call( g:async_runTypeContinue, [[HsGetTypeFromSignatureStr( a:lines[0] )]] )
+  else
+    call HsShowLinesInFloatWin( lines )
+  endif
+endfunc
+
+" Simply paste the lines below as they are ■
 func! PasteLines( lines )
   call append( line('.'), a:lines )
 endfunc
@@ -130,28 +248,28 @@ endfunc
 func! PasteTypeSig( lines ) abort
   let unicodeLines = ReplaceStringsInLines( a:lines, g:HsReplacemMap_CharsToUnicodePtts )
   call append(line('.') -1, unicodeLines)
-endfunc
+endfunc " ▲
 
 " TODO test and finish the various cases
 " Interpretes the first repl-returned line as a Haskell-List of Strings - and appends these items as lines.
 " It then aligns the first 2 columns (column separator is <space>)
-func! ShowList_AsLines( replReturnedLines ) " ■
+func! ShowList_AsLines_Aligned( replReturnedLines ) " ■
   let firstLine = a:replReturnedLines[0]
   normal! m'
-  if firstLine[0] == '['
-    " 
-    call FloatWin_ShowLines( a:maybeHsList )
-    call FloatWin_FitWidthHeight()
-    return
-  elseif firstLine[1] == '"'
+
+  if firstLine[0:1] == '["'
     " Received a Haskell list of stings - can simply convert-eval it to vimscript of strings!
     call FloatWin_ShowLines( eval( firstLine ) )
-    if len( s:alignFnName )
-      call FloatWin_do( 'call ' . s:alignFnName . '()' )
+    if len( s:async_alignFnExpr )
+      call FloatWin_do( 'call ' . s:async_alignFnExpr )
     endif
+  elseif
+    " Maybe an error?
+    call FloatWin_ShowLines( replReturnedLines )
   endif
 
-  " call FloatWin_FitWidthHeight()
+  call FloatWin_do( 'call HaskellSyntaxAdditions()' )
+  call FloatWin_FitWidthHeight()
 endfunc " ▲
 
 " exec l:startWindowNr . 'wincmd w' ■
@@ -160,35 +278,36 @@ endfunc " ▲
 " It then aligns the first 2 columns (column separator is <space>)
 " func! ShowList_AsColumns( hsList, alignment_FuncName )
 "   normal! m'
-"   call ShowList_AsLines( a:hsList )
+"   call ShowList_AsLines_Aligned( a:hsList )
 "   call FloatWin_do( 'call ' . a:alignment_FuncName . '()' )
 "   " call append( line('.'), eval( a:hsList[0] ) )
-"   " call Align2Columns()
+"   " call AlignColumns()
 " endfunc ▲
 
-func! Align2Columns()
+func! AlignColumns( columnPtts )
   normal V,jo^
   normal V
   " motionType could e.g. be 'char' here - but aligning will only use linewise here
   let motionType = 'lines'
   " The align expression (EasyAlign DSL)
-  let comExpressions = ['\ ', '2\ ']
+  " If no colums patterns are passed (empty list) then the default (two colums by space) is used
+  let columnPtts = len( a:columnPtts ) ? a:columnPtts : ['\ ', '2\ ']
   " Get the range of lines from either visual mode ( "'<") or an (operator pending) motion or text object
   let [l1, l2] = ["'<", "'>"]
   " Format the range string
   let range = l1.','.l2
   " Call the easyAlign main API function
   " function! easy_align#align(bang, live/preview-mode, visualmode, expr) range
-  for comExpr in comExpressions
+  for comExpr in columnPtts
     execute range . "call easy_align#align(0, 0, motionType, comExpr)"
   endfor
   " call JumpBackSkipCurrentLoc()
 endfunc
 
-func! AlignTable()
-  normal V,jo^
-  exec "'<,'>Tabu / /"
-  normal V
+func! AlignTable( columnPttn )
+  normal ggV,jo^
+  exec "'<,'>Tabu /" . a:columnPttn
+  normal Vl
 endfunc
 
 " ─^  Repl Eval Insert                                   ▲
@@ -287,15 +406,18 @@ func! GetReplExpr()
   let lineList                = split( getline('.') )
   let secondWordOnwards       = join( l:lineList[1:], ' ')
   let topLevelSymbol          = lineList[0]
-  let isDeclatationWithNoArgs = lineList[1] == '='
+  let isDeclarationWithNoArgs = lineList[1] == '='
   let isToplevelLine          = IndentLevel( line('.') ) == 1
+  let cursorIsAtStartOfLine   = col('.') == 1 " not sure where?
 
   if CursorIsInsideStringOrComment()
     return secondWordOnwards
   elseif IsTypeSignLine( line('.') )
     return topLevelSymbol
-  elseif isToplevelLine && isDeclatationWithNoArgs
-    echoe 'hi there'
+  elseif IsTypeSignLineWithArgs( line('.') )
+    return topLevelSymbol
+  elseif isToplevelLine && isDeclarationWithNoArgs
+    " echoe 'declaration with no args'
     return topLevelSymbol
   elseif CursorIsAtStartOfWord()
     return expand('<cword>')
@@ -303,6 +425,44 @@ func! GetReplExpr()
     echoe 'Could not extract an expression!'
   endif
 endfunc
+
+
+" ─   Apply args                                         ■
+nnoremap <silent> ]g :call TestArgForw()<cr>:call ScrollOff(16)<cr>
+func! TestArgForw()
+  call search( '\v^--\s\>', 'W' )
+endfunc
+
+func! TestArgForwLineNum()
+  return searchpos( '\v^--\s\>', 'cnb' )[0]
+endfunc
+
+nnoremap <silent> [g :call TestArgBackw()<cr>:call ScrollOff(10)<cr>
+func! TestArgBackw()
+  call search( '\v^--\s\>', 'bW' )
+endfunc
+
+func! InteroEval_TestArgs( lineNum_TestArgs, lineNum_TypeSig )
+  let testArgs = HsGetTestArgsFromLineNum( a:lineNum_TestArgs )
+  let typeSig = getline( a:lineNum_TypeSig )
+  let symbolName = split( typeSig )[0]
+  let returnType = HsExtractReturnTypeFromTypeSig( typeSig )
+endfunc
+
+func! HsGetTestArgsFromLineNum( lineNum )
+  return split( getline( a:lineNum ), '>\s' )[1]
+endfunc
+" -- > "eins" 123
+" echo HsGetTestArgsFromLineNum( line('.')-1 )
+
+" ─^  Apply args                                         ▲
+
+func! HsExtractReturnTypeFromTypeSig( typeSig )
+  let list = split( a:typeSig, '\v(∷\s|⇒\s|→\s)' )
+  return list[ len( list ) -1 ]
+endfunc
+
+
 
 
 " TODO: Intero has these custom functions:

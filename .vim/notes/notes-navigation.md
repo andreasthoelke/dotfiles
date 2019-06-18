@@ -169,6 +169,9 @@ now via HIE and decomplete
 
   https://github.com/mhinz/vim-galore#completion
 
+but may want to ckeck out coc.nvim and
+  https://github.com/voldikss/coc-browser
+
 > Tab navigate the file system while in insert mode
 inoremap <Tab> <c-x><c-f>
 " In command mode use <c-d> and Tab
