@@ -333,6 +333,10 @@ hi Normal          guifg=#F8F8F2 guibg=#151719
 
 hi Comment         guifg=#3D5862
 
+" Conceal: Leaving the default link to Operator currently
+" hi conceal         guifg=#BCBCBC guibg=none
+" exec 'hi conceal guifg=' . g:color_ming_green
+
 " Note: Cursor is show with inverted bg-fg colors by alacritty.
 " Could alternatively activate custom colors in alacretty settings
 " Not sure when this is unsed

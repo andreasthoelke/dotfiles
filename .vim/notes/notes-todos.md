@@ -753,11 +753,6 @@ goyo for notes taking?
 
 review:  EXTRACT SIGNATURES:
 
-learn about conceal feature
-usecaes:
-  * haskell lambda, Integer/String symbols (example plugin)
-  * hide quotes?
-
  related?
  Specific Neovim features: nvim_buf_add_highlight nvim_buf_set_virtual_text
 
@@ -1164,7 +1159,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 " TODO test and finish the various cases: InteroRepl
 
 ## Release notes v1.1.2
-* `leader >>` + motion (or vis-sel with "v") indents the lines to the current cursor-horz position. `leader >>l` to indent the current line
+* `\,` + motion (or vis-sel with "v") indents the lines to the current cursor-horz position. `\,l`/`j`/`}` to indent the current line/two lines/block
 * zsh syntax highlight colors
 * zsh consistent `ls` and completion ANSI colors
 * Intero ShowList_asLines() in floating window with column alignment (`gec`, `geC`, `gel`)
@@ -1196,6 +1191,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 * `leader hsi` "Haskell stype imports"
 * `<c-x>f` in a file path, in insert mode browses files (vim native!)
 * createHeading `\ch`, closeSection `\cs`, delete/strip Heading `\cd`, refreshHeading `\cr`
+* conceal unicode symbols: `⫩ ⫦ ◇ ⟐` for `<$> >>= <> <*>`
 
 ## Release notes v1.1.1 (2019-04-20)
 * Command to search in deleted code: `Fdeleted someString`

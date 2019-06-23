@@ -25,6 +25,9 @@ func! HaskellTools()
 endfunc
 
 
+nnoremap <leader>cm :call clearmatches()<cr>
+
+
 " ─   Haskell                                           ──
 func! HaskellSyntaxAdditions() "{{{
   call CodeMarkupSyntaxHighlights()
@@ -32,9 +35,9 @@ func! HaskellSyntaxAdditions() "{{{
   " call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '-- ', 12, -1, {'conceal': ''})
   " Note: Priority is set to "12" to be > the CodeMarkup matchadd priority (11)
-  call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
+  " TODO reactivate" call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
   " call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
-  call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
+  " TODO" call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
 
   " Conceal foldmarker strings and display icon to indicate fold expanding
   " Note: escaping {'s instead of literal '' {'s avoids accidental folding

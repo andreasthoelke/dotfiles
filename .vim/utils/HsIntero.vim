@@ -16,8 +16,7 @@ let g:haskellmode_completion_ghc = 1
 " autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 " causes tag error?
 
-" autocmd BufWritePost *.hs GhcModCheckAndLintAsync
-
+" autocmd BufWritePost *.hs GhcModCheckAndLintAsync ■
 " autocmd BufWritePost *.hs call s:check_and_lint()
 " function! s:check_and_lint()
 "   let l:qflist = ghcmod#make('check')
@@ -27,10 +26,10 @@ let g:haskellmode_completion_ghc = 1
 "   if empty(l:qflist)
 "     echo "No errors found"
 "   endif
-" endfunction
+" endfunction ▲
 
 
-" ─   Maps                                              ──
+" ─   Maps                                               ■
 " nnoremap <silent> <leader>is :InteroStart<CR>
 " nnoremap <silent> <leader>isc :SignsClear<CR>
 " Todo: unify this with purs?
@@ -43,54 +42,29 @@ nnoremap <silent>         gd :call GotoDefinition()<CR>
 nnoremap <silent> ,gd :sp<CR>:call GotoDefinition()<CR>
 " fee mapping
 " nnoremap <silent>         ]d :call GotoDefinition()<CR>
+" ─^  Maps                                               ▲
 
-" nnoremap <silent> ,tw :call InsertTypeAnnotation()<cr>
-nnoremap <silent> gw :call InsertTypeAnnotation()<cr>
-map <silent> <localleader>tg <Plug>InteroGenericType
-map <silent> <localleader>tt <Plug>InteroType
-
-" nnoremap tt :call TypeInsert( PSCIDEgetKeyword() )<cr>
-" nnoremap <localleader>tt :call TypeInsert()<cr>
-" vnoremap tt :call TypeInsert( Get_visual_selection() )<cr>
-" TODO: problem: PSCIDEgetKeyword only work when PSCIDE is started/ throws error with Haskell
-" nnoremap <localleader>tg :InteroGenTypeInsert<cr>
-" map <silent> <leader>tq <Plug>InteroGenericType
+" ─   Legacy Intero Types: TODO                          ■
+" only for identifier, no unicode conversion
+nnoremap <silent> gw :InteroTypeInsert<cr>
+nnoremap <silent> <localleader>tw :InteroTypeInsert<cr>
+" does not echo any more (changed this in Intero) outputs gentype only in Repl
+map <localleader>tt <Plug>InteroType
 
 map <silent> <localleader>tg <Plug>InteroGenTypeInsert
 vnoremap <localleader>tg :InteroGenTypeInsert<cr>
+" map <localleader>tg <Plug>InteroGenericType
 nnoremap <localleader>ti :InteroInfoInsert<cr>
 vnoremap <localleader>ti :InteroInfoInsert<cr>
+" ─^  Legacy Intero Types: TODO                          ▲
 
-nnoremap <silent> <localleader>tw :call InsertTypeAnnotation()<cr>
-" Type Inserts: ----------------------------------------------------
+" ─   Repl legacy                                        ■
+
+
+" ─^  Repl legacy                                        ▲
 
 
 " ─   Repl Eval Insert                                   ■
-" Evaluate a string in the Repl (purs or ghci) and insert the result of the evaluation
-" gee → expr after -- (comment)
-"       expr after =
-"       selection
-" gel → entire line
-" gew → keyword
-" (cursor-column is only significant for gew)
-
-" Extract a (repl-) evaluable expression-string from current line
-" nnoremap gei :call ReplEvalExpr_Insert( ExtractEvalExpFromLineStr( getline('.') ) )<cr>
-" vnoremap gei :call ReplEvalExpr_Insert( Get_visual_selection() )<cr>
-
-" Evaluate the entire line
-" nnoremap gel :call ReplEvalExpr_Insert( getline('.') )<cr>
-
-" Eval the current keyword
-" nnoremap gew :call ReplEvalExpr_Insert( PSCIDEgetKeyword() )<cr>
-
-" This uses a custom function inside Intero?!
-" nnoremap gew :call ReplEvalExpr_Insert( expand("<cword>") )<cr>
-
-" Todos:
-" visual selection map
-" include <cword> in GetReplExpr
-" use GetReplExpr in column maps
 "
 " Default:
 nnoremap gei :call InteroEval_SmartShow()<cr>
@@ -122,14 +96,6 @@ nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<c
 let s:async_alignFnExpr = ''
 let s:async_curType = ''
 
-" Evaluate "expr" in ghci. "renderFnName" will receive what ghci returns as a vim list of lines.
-" Renamed from "InsertEvalExpr"
-func! InteroEval( expr, renderFnName, alignFnName ) abort
-  " Set the align function as a script var as it can not be passed to callback(?)
-  let s:async_alignFnExpr = a:alignFnName
-  call intero#process#add_handler( function( a:renderFnName ) )
-  call intero#repl#eval( a:expr )
-endfunc
 
 
 func! InteroEval_SmartShow()
@@ -349,7 +315,6 @@ nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 
 " New Haskell And Purescript Maps: ------------------------------------------------------
 
-" nnoremap dr :call ReplReload()<cr>
 nnoremap dr :InteroReload<cr>
 
 " nnoremap tr :call TraceTopLevelValue()<cr>
@@ -369,37 +334,6 @@ nnoremap dr :InteroReload<cr>
 " also in .cabal file there is "Exposed modules", which can be multible
 " modules that are loaded into ghci on startup.
 
-
-function! GotoDefinition()
-  if IsPurs()
-    normal m'
-    " add position to jumplist
-    exec 'Pgoto'
-  else
-    exec 'InteroGoToDef'
-  endif
-endfun
-
-" function! TypeInsert( keyword)
-function! TypeInsert()
-  if IsPurs()
-    let l:kw = PSCIDEgetKeyword()
-    " call PursType( a:keyword )
-    call PursType( l:kw )
-  else
-    " exec 'InteroInstTypeInsert'
-    " :InteroInstTypeInsert
-    :InteroGenTypeInsert
-  endif
-endfun
-
-func! ReplEvalExpr_Insert( exprStr )
-  if IsPurs()
-    call PursEval( a:exprStr )
-  else
-    call InsertEvalExpressionRes( a:exprStr )
-  endif
-endfunc
 
 " Get a (repl-) evaluable expression-string from a (line-) string
 func! GetReplExpr()
@@ -500,62 +434,6 @@ function! GetModuleName()
 endfun
 
 
-function! ReplReload()
-  let modulename = GetModuleName()
-  " exec ':up'
-  if IsPurs()
-    " TODO: is this needed? what does it do?
-    call purescript#ide#utils#update()
-    exec ':Prebuild'
-    call PursEval(':r')
-    call PursEval('import ' . modulename)
-    " call PursEval('import Helpers')
-    " exec 'SlimeSend1 :r'
-    " exec 'SlimeSend1 import ' . modulename
-    " exec 'SlimeSend1 import Helpers'
-  else
-    if has('nvim')
-      exec ':InteroReload'
-    else
-      exec 'SlimeSend1 :r'
-      exec 'SlimeSend1 :l ' . modulename
-    endif
-  endif
-endfun
-
-function! InsertTypeAnnotation()
-  " exec ':up'
-  if IsPurs()
-    " exec ':PSCIDEaddTypeAnnotation'
-    call PSCIDEaddTypeAnnotation(matchstr(getline(line(".")), '^\s*\zs\k\+\ze'))
-  else
-    if has('nvim')
-      exec ':InteroTypeInsert'
-    else
-      exec ':GhcModTypeInsert'
-    endif
-  endif
-  " This has no effect/comes too early as the text will be inserted by Intero asynced/later
-  " call PurescriptUnicode()
-endfun
-
-function! ImportIdentifier()
-  if IsPurs()
-    exec ':PSCIDEimportIdentifier'
-  else
-    " TODO
-  endif
-endfun
-
-function! PsciReload()
-  let modulename = GetModuleName()
-  exec ':w'
-  exec 'SlimeSend1 :r'
-  exec 'SlimeSend1 import ' . modulename
-  " import is for purescript / psci
-  " exec 'SlimeSend1 :l ' . modulename
-  " :l is for haskell / ghci
-endfun
 
 " Extracts the project name, e.g. "pragmaticServant" from the Stack "package.yaml" file
 fun! HaskellProjectName()
