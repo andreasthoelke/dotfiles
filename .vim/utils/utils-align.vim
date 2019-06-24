@@ -93,9 +93,36 @@ func! TabularizeListOfPttns( listOfColumnPatterns, startLine, endLine )
 endfunc
 " Test with: call HsTabularizeTypeSigns( 2, 4 )
 
-
 " Example of EasyAlign API usage:
 " EasyAlign <line1>,<line2>call easy_align#align(<bang>0, 0, 'command', <q-args>)
+
+
+func! AlignBufferAsTable( columnPttn )
+  normal ggV,jo^
+  exec "'<,'>Tabu /" . a:columnPttn
+  normal Vl
+endfunc
+
+func! AlignBufferAsColumns( columnPtts )
+  normal V,jo^
+  normal V
+  " motionType could e.g. be 'char' here - but aligning will only use linewise here
+  let motionType = 'lines'
+  " The align expression (EasyAlign DSL)
+  " If no colums patterns are passed (empty list) then the default (two colums by space) is used
+  let columnPtts = len( a:columnPtts ) ? a:columnPtts : ['\ ', '2\ ']
+  " Get the range of lines from either visual mode ( "'<") or an (operator pending) motion or text object
+  let [l1, l2] = ["'<", "'>"]
+  " Format the range string
+  let range = l1.','.l2
+  " Call the easyAlign main API function
+  " function! easy_align#align(bang, live/preview-mode, visualmode, expr) range
+  for comExpr in columnPtts
+    execute range . "call easy_align#align(0, 0, motionType, comExpr)"
+  endfor
+  " call JumpBackSkipCurrentLoc()
+endfunc
+" call AlignColumns( ['\,', '2\,'] )
 
 
 let g:haskell_tabular = 1

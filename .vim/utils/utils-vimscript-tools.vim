@@ -90,6 +90,7 @@ nnoremap <leader>sy y$o<c-r>=<c-r>"<cr><esc>
 " Run a VimScript snippet (til end of the line) and echo the result in the command line
 nnoremap <leader>sx y$:echom <c-r>"<cr>
 
-" EDIT VIM SCRIPT: ---------------------------------------------------------------------
 
-" EDIT VIM SCRIPT: ---------------------------------------------------------------------
+command! RuntimepathShow exec "new | call append( line('.'), split( &runtimepath , ',' ) )"
+
+

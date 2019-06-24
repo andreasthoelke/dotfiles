@@ -2681,6 +2681,7 @@ endfunction
 source ~/.vim/utils/utils-search.vim
 source ~/.vim/utils/utils-search-replace.vim
 source ~/.vim/utils/utils-code-line-props.vim
+source ~/.vim/utils/utils-code-haskell.vim
 source ~/.vim/utils/utils-syntax-color.vim
 source ~/.vim/utils/utils-general-helpers.vim
 

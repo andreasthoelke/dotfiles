@@ -24,55 +24,6 @@ func! VisualBlockMode()
 endfunc
 
 
-func! GetTopLevSymbolName( lineNum )
-  return matchstr( getline(a:lineNum), '^\S*\ze\s')
-endfunc
-" echo GetTopLevSymbolName( line('.') +1 )
-" aber ∷ eins
-
-" Return the previous function name
-func! GetTopLevSymbolNameBackw()
-  let lineNum = TopLevBackwLine()
-  return GetTopLevSymbolName( lineNum )
-endfunc
-" echo GetTopLevSymbolNameBackw()
-
-
-" Like <cword> but includes Haskell symbol characters
-func! HsCursorKeyword()
-  let isk = &l:isk
-  " Tempoarily extend the isKeyword character range
-  setl isk+=.,<,>,$,#,+,-,*,/,%,',&,=,!,:,124,~,?,^
-  let keyword = expand("<cword>")
-  let &l:isk = isk
-  return keyword
-endfunc
-
-" Get the type signature from line
-func! HsExtractTypeFromLine( lineNum )
-  let line  = getline( a:lineNum )
-  let pattern = '\v^.*(∷|:)\ze'
-  return substitute( line, pattern, '', '')
-endfunc
-" Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
-" echo HsExtractTypeFromLine( line('.')-1 )
-" Control.Monad replicateM ∷ (Applicative m) => Int -> m a -> m [a]
-" echo HsExtractTypeFromLine( line('.')-1 )
-
-func! HsExtractReturnTypeFromLine( lineNum )
-  let line  = getline( a:lineNum )
-  let list = split( line, '\v(∷\s|⇒\s|→\s)' )
-  return list[ len( list ) -1 ]
-endfunc
-" Control.Monad replicateM ∷ (Applicative m) ⇒ Int → m a → m [a]
-" echo HsExtractReturnTypeFromLine( line('.')-1 )
-
-func! HsGetTypeFromSignatureStr( signStr )
-  return matchstr( a:signStr, '\v(∷|::)\s\zs.*')
-endfunc
-" Control.Monad replicateM ∷ (Applicative m) ⇒ Int → m a → m [a]
-" echo HsGetTypeFromSignatureStr( getline( line('.')-1 ) )
-
 " Returns the indent level of lineNum
 func! IndentLevel( lineNum )
   return matchstrpos( getline( a:lineNum ), '\S')[1] + 1

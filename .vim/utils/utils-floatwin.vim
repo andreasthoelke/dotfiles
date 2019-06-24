@@ -135,7 +135,7 @@ func! FloatWin_ShowLines( linesToShow, ... )
   return g:floatWin_win
 endfunc
 " call FloatWin_ShowLines( testText1 )
-" call FloatWin_ShowLines( testText1, col('.'), BufferLineToWinLine( line('.') ) )
+" call FloatWin_ShowLines( testText1, col('.') -10, BufferLineToWinLine( line('.') +3) )
 
 " Test this:
 " autocmd User FloatPreviewWinOpen call DoSomething()
