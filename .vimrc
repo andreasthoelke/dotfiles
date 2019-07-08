@@ -162,6 +162,7 @@ Plug 'mityu/vim-applescript'
 
 " Markdown: -------------
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+
 Plug 'jszakmeister/markdown2ctags'
 Plug 'aklt/rel.vim'
 
@@ -173,6 +174,14 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 " Plug 'tpope/vim-scriptease'
 " This works, but not sure I need it often
 Plug 'chrisbra/csv.vim'
+
+" Nyaovim for realtime markdown writing
+" Plug 'andreasthoelke/nyaovim-markdown-preview'
+
+" Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
+Plug 'euclio/vim-markdown-composer'
+
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 
 " Code Navagation Editing: ---------------------------------------------
 " Plug 'easymotion/vim-easymotion'
@@ -2353,25 +2362,6 @@ let g:markbar_delete_mark_mapping   = '<c-x>'
 " Markbar: --------------------------------------------------------------------------
 
 
-" Markdown: ---------------------------------------
-" "ge"
-let g:vim_markdown_follow_anchor = 1
-" Just a fix, because insert-mode return creates an indented list?
-let g:vim_markdown_new_list_item_indent = 0
-let g:vim_markdown_no_extensions_in_markdown = 0
-" let g:vim_markdown_edit_url_in = 'vsplit'
-let g:vim_markdown_anchorexpr = "'# '.v:anchor"
-let g:vim_markdown_anchorexpr = "v:anchor"
-
-augroup markdown_config
-  autocmd!
-  " Example: buffer local maps. Note: <Plug> maps don't work with "noremap"!
-  " Follow a markdown hyperlink, add position to jumplist to allow "c-o" to jump back
-  autocmd FileType markdown nmap <silent><buffer> <c-]> m'<Plug>Markdown_EditUrlUnderCursor
-augroup END
-
-" Markdown: ---------------------------------------
-
 " Rel Links: -------------
 nmap gk <Plug>(Rel)
 " see "h rel-links" or help:rel.txt#/should%20refer
@@ -2462,46 +2452,47 @@ let g:easy_align_delimiters = {
 \ }
 
 
+" Obsolete, use :h json_encode()
 " copied from purescript - pscide-mac:
-fun! s:jsonEncode(thing, ...)
-  let nl = a:0 > 0 ? (a:1 ? "\n" : "") : ""
-  if type(a:thing) == type("")
-    return '"'.escape(a:thing,'"\').'"'
-  elseif type(a:thing) == type({}) && !has_key(a:thing, 'json_special_value')
-    let pairs = []
-    for [Key, Value] in items(a:thing)
-      call add(pairs, s:jsonEncode(Key).':'.s:jsonEncode(Value))
-      unlet Key | unlet Value
-    endfor
-    return "{".nl.join(pairs, ",".nl)."}"
-  elseif type(a:thing) == type(0)
-    return a:thing
-  elseif type(a:thing) == type([])
-    return '['.join(map(copy(a:thing), "s:jsonEncode(v:val)"),",").']'
-    return
-  elseif string(a:thing) == string(s:jsonNULL())
-    return "null"
-  elseif string(a:thing) == string(s:jsonTrue())
-    return "true"
-  elseif string(a:thing) == string(s:jsonFalse())
-    return "false"
-  else
-    throw "unexpected new thing: ".string(a:thing)
-  endif
-endf
-
-fun! s:jsonNULL()
-  return {'json_special_value': 'null'}
-endf
-fun! s:jsonTrue()
-  return {'json_special_value': 'true'}
-endf
-fun! s:jsonFalse()
-  return {'json_special_value': 'false'}
-endf
-fun! s:jsonToJSONBool(i)
-  return  a:i ? s:jsonTrue() : s:jsonFalse()
-endf
+" fun! s:jsonEncode(thing, ...)
+"   let nl = a:0 > 0 ? (a:1 ? "\n" : "") : ""
+"   if type(a:thing) == type("")
+"     return '"'.escape(a:thing,'"\').'"'
+"   elseif type(a:thing) == type({}) && !has_key(a:thing, 'json_special_value')
+"     let pairs = []
+"     for [Key, Value] in items(a:thing)
+"       call add(pairs, s:jsonEncode(Key).':'.s:jsonEncode(Value))
+"       unlet Key | unlet Value
+"     endfor
+"     return "{".nl.join(pairs, ",".nl)."}"
+"   elseif type(a:thing) == type(0)
+"     return a:thing
+"   elseif type(a:thing) == type([])
+"     return '['.join(map(copy(a:thing), "s:jsonEncode(v:val)"),",").']'
+"     return
+"   elseif string(a:thing) == string(s:jsonNULL())
+"     return "null"
+"   elseif string(a:thing) == string(s:jsonTrue())
+"     return "true"
+"   elseif string(a:thing) == string(s:jsonFalse())
+"     return "false"
+"   else
+"     throw "unexpected new thing: ".string(a:thing)
+"   endif
+" endf
+"
+" fun! s:jsonNULL()
+"   return {'json_special_value': 'null'}
+" endf
+" fun! s:jsonTrue()
+"   return {'json_special_value': 'true'}
+" endf
+" fun! s:jsonFalse()
+"   return {'json_special_value': 'false'}
+" endf
+" fun! s:jsonToJSONBool(i)
+"   return  a:i ? s:jsonTrue() : s:jsonFalse()
+" endf
 
 " ------- Git gutter ----------------------------------
 function! NextHunkAllBuffers()
@@ -2694,16 +2685,17 @@ source ~/.vim/utils/HsAPIExplore.vim
 " tabe .vim/plugged/HsAPIExplore/autoload/HsAPIExplore.vim
 " call HsAPIExplore#start()
 " Intero maps and helpers:
-source ~/.vim/utils/HsIntero.vim
-source ~/.vim/utils/HsFormat.vim
+source ~/.vim/utils/tools-intero.vim
 source ~/.vim/utils/utils-align.vim
+source ~/.vim/utils/utils-format.vim
+source ~/.vim/utils/utils-stubs.vim
 
 " ─   " General tools                                   ──
 source ~/.vim/utils/utils-terminal.vim
 " Todo: move the helper/commands in this note file
 source ~/.vim/notes/notes-workflow.vim
 source ~/.vim/utils/utils-vimscript-tools.vim
-source ~/.vim/utils/utils-markdown.vim
+source ~/.vim/utils/tools-markdown.vim
 source ~/.vim/utils/utils-chromium.vim
 source ~/.vim/utils/utils-floatwin.vim
 source ~/.vim/utils/tools-tab-status-lines.vim
@@ -2714,6 +2706,7 @@ source ~/.vim/utils/tools-langClientHIE-completion.vim
 source ~/.vim/utils/utils-virtualtext.vim
 source ~/.vim/utils/utils-csv.vim
 source ~/.vim/utils/utils-applescript.vim
+" source ~/.vim/utils/GuiVim.vim
 
 " ─   " Split-out setup sections                        ──
 source ~/.vim/utils/setup-tags.vim

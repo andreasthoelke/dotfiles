@@ -139,5 +139,17 @@ func! ReplacePattern( linesRangeStr, pattern )
 endfunc
 
 
+" ─   Utils                                             ──
+
+func! PatternToMatchOutsideOfParentheses( searchStr, openStr, closeStr )
+  return '\(([^' . a:closeStr . ']*' . a:openStr . '\)\@<!' . a:searchStr . '\([^' . a:openStr . ']*' . a:closeStr . '\)\@!'
+endfunc
+" prevent matches (in brackets) - but not outsider (other) -- [this e actually works!!] (elems)
+" call matchadd('MatchParen', PatternToMatchOutsideOfParentheses( 'e', '(', ')' ), -1, -1 )
+" call matchadd('MatchParen', PatternToMatchOutsideOfParentheses( 'e', '\[', '\]' ), -1, -1 )
+
+" Note: Search Regex Within Quotes: - "\v`[^`]*`" search and highlight strings within backtick quotes/ wrapped in backticks
+" Search within bracket - (works with (limitations)) ...
+" call matchadd('MatchParen', '([^)]*', -1, -1 )
 
 

@@ -33,7 +33,12 @@ map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
 map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
 map <Leader>lb :call LanguageClient#textDocument_references()<CR>
 map <Leader>la :call LanguageClient#textDocument_codeAction()<CR>
+
 map <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
+" This still shows an error - 'no handler for ..'
+map <Leader>lS :call LanguageClient_workspace_symbol()<CR>
+
+map <Leader>ga :call LanguageClient_textDocument_documentHighlight()<CR>
 
 
 
@@ -72,6 +77,36 @@ let g:LanguageClient_diagnosticsDisplay = {
 " ─^  Language Client HIE                                ▲
 
 
+" func! s:showLC_Diagnostics( stateJSON )
+"   if has_key(a:stateJSON, 'result')
+"     let res = json_decode( a:stateJSON.result )
+"     call FloatWin_ShowLines( [ string( res.diagnostics ) ] )
+"   endif
+" endfunc
+
+nnoremap ged :call ShowLC_Diagnostics()<cr>
+
+func! s:showLC_Diagnostics( stateJSON )
+  if !has_key(a:stateJSON, 'result')
+    return
+  endif
+  let message = ''
+  let state = json_decode( a:stateJSON.result )
+  let diagnostics = get( state.diagnostics, expand('%:p'), [] )
+  " echoe string( diagnostics )
+  for diag in diagnostics
+    if diag.range.start.line +1 == line('.')
+      let message = diag.message
+    endif
+  endfor
+  let messageLines = split( message, '\%x00' )
+  call FloatWin_ShowLines( messageLines )
+endfunc
+
+
+func! ShowLC_Diagnostics()
+  call LanguageClient#getState(function( 's:showLC_Diagnostics' ))
+endfunc
 
 
 " ─   Completion                                         ■

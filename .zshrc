@@ -271,6 +271,7 @@ alias gitx='gitx --all'
 
 
 alias ls='exa --sort=type --level=2 --all'
+alias lst='exa --sort=type --level=2 --all -T'
 # Note you can type "ls -T" to see a depth-limited tree
 # https://the.exa.website/docs/command-line-options
 

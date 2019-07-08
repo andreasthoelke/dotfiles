@@ -60,6 +60,9 @@ let g:floatWin_max_width = 120
 
 " Show lines in float-win at cursor loc by default. Or pass column, row for win relative position.
 func! FloatWin_ShowLines( linesToShow, ... )
+  if !len( a:linesToShow )
+    return
+  endif
   let opt = { 'focusable': v:true,
         \ 'width': 50,
         \ 'height': 10,
@@ -134,6 +137,7 @@ func! FloatWin_ShowLines( linesToShow, ... )
   call FloatWin_FitWidthHeight()
   return g:floatWin_win
 endfunc
+" call FloatWin_ShowLines( ['eins', 'zwei'] )
 " call FloatWin_ShowLines( testText1 )
 " call FloatWin_ShowLines( testText1, col('.') -10, BufferLineToWinLine( line('.') +3) )
 
@@ -170,7 +174,9 @@ endfunc
 func! FloatWin_FitWidthHeight()
   let lines = nvim_buf_get_lines( g:floatWin_scratchBuf_Id, 0, line('$'), 0 )
   let newWidth = FloatWin_display_width( lines, g:floatWin_max_width )
-  call nvim_win_set_config( g:floatWin_win, { 'width' : newWidth, 'height': len( lines ) } )
+  if newWidth
+    call nvim_win_set_config( g:floatWin_win, { 'width' : newWidth, 'height': len( lines ) } )
+  endif
 endfunc
 
 

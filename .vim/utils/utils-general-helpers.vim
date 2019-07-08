@@ -15,6 +15,21 @@ func! FlipListList ( listList )
 endfunc
 " echo FlipListList( [[11, 22], [33, 44]] )
 
+func! TrimListOfStr( listOfStr )
+  return map( a:listOfStr, {key, val -> trim(val)} )
+endfunc
+" echo map( [" eins ", " zwei"], {key, val -> trim(val)} )
+
+func! Reduce( funcRef, list)
+  let acc = ''
+  for val in a:list[0:]
+    let acc = a:funcRef(acc, val)
+  endfor
+  return acc
+endfun
+" echo Reduce( {acc, nextStr -> acc . '(i∷ ' . nextStr . ') '}, ['a → b', 'Maybe a'] )[:-2] . '!'
+
+
 func! MakeBufferDisposable() "{{{
   setl buftype=nofile
   setl bufhidden=hide

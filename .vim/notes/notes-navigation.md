@@ -539,23 +539,85 @@ This will match 'e's when followed by a space, but dont match the space
 /\ve(\s)
 /e
 
+call matchadd('MatchParen', '\vAPPLE([A-Z\s]*\))\@!', -1, -1 )
+call matchadd('MatchParen', '\vAPPLE', -1, -1 )
+call clearmatches()
+
+
+APPLE (BANANA) APPLE (ORANGE)
+(BANANA APPLE APPLE ORANGE)
+APPLE APPLE APPLE
+(APPLE ORANGE BANANA)
+APPLE (APPLE)
+PINEAPPLE
+(BANANA APPLE)
+() APPLE ()
+(ORANGE KIWI
+APPLE
+KIWI)
+(ORANGE APPLE) APPLE
+
 * ignore text in brackets
-/\ve([\[\]]*\])@!
+/\ve([\[\]].*\])@!
 
 call search('on\@!')
 
-/\ve[{]*\@
+call search('on\@!')
 
-e { ase } fde
+aon bo cdf
+
+/\ve[{]*\@=
+
+ae  ase  fde
+ae { ase } fde
 
  some elem <in elim br> and end elem
 
- some elem <in elem br> and end elem
+ some elem (in elem br) and end elem
+
+ some elem [in elem br] and end elem
+
+ some elem [in elem br] aTd end elem
 
 
-* Testing with `matchadd`
+* Testing with `matchadd` test
   this only highlights the 'e's not the following (obligatory!) space!
 call matchadd('MatchParen', '\ve(\s)@=', -1, -1 )
+* prevent matches (in brackets) - but not outsider (other) -- [this e actually works!!]
+call matchadd('MatchParen', '\ve(.*\])@!', -1, -1 )
+call matchadd('MatchParen', "\(T.*\)\@_!e", -1, -1 )
+
+### Negative Lookaheads / lookbacks
+* does not match before a ")" .. see?!
+call matchadd('MatchParen', '\ve(.*\))@!', -1, -1 )
+call matchadd('MatchParen', 'e\(.*)\)\@!', -1, -1 )
+
+* does not match after a "(" .. see?!
+call matchadd('MatchParen', '\((.*\)\@<!e', -1, -1 )
+
+* does not match after a "(" and before ")" ... see!? (my biggest regex achievement .. ) - as of june 2019
+call matchadd('MatchParen', '\(([^)]*\)\@<!e\([^(]*)\)\@!', -1, -1 )
+
+                                     | ← this does not seem needed but logically belongs here
+call matchadd('MatchParen', '\(([^)]*(\)\@<!e\([^(]*)\)\@!', -1, -1 )
+
+* does → not match → after a "(" and → before ")" ... → see!? (my biggest regex → achievement .. ) - as of → june 2019
+call matchadd('MatchParen', '\(([^)]*\)\@<!→\([^(]*)\)\@!', -1, -1 )
+
+func! PatternToMatchOutsideOfParentheses( searchStr )
+  return '\(([^)]*\)\@<!' . a:searchStr . '\([^(]*)\)\@!'
+endfunc
+
+func! PatternToMatchOutsideOfParentheses( searchStr, openStr, closeStr )
+  return '\(([^' . a:closeStr . ']*' . a:openStr . '\)\@<!' . a:searchStr . '\([^' . a:openStr . ']*' . a:closeStr . '\)\@!'
+endfunc
+" prevent matches (in brackets) - but not outsider (other) -- [this e actually works!!] (elems)
+call matchadd('MatchParen', PatternToMatchOutsideOfParentheses( 'e', '(', ')' ), -1, -1 )
+call matchadd('MatchParen', PatternToMatchOutsideOfParentheses( 'e', '\[', '\]' ), -1, -1 )
+
+
+call matchadd('MatchParen', '[^(]', -1, -1 )
+
 call clearmatches()
 
 * Set start of match with `\sz` [use `\se` to set end of match]

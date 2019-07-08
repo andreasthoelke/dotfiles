@@ -583,7 +583,7 @@ return
 call nyaovim#open_devtools('undocked')
 
 > Use NyaoVim Methods via RpcNotify
-call rpcnotify( 0, 'markdown-preview:scrollToLine', 223 )
+call rpcnotify( 0, 'markdown-preview:scrollToLine', 123 )
 
 call rpcnotify( 0, 'markdown-preview:scroll', 'down' )
 call rpcnotify( 0, 'markdown-preview:scroll', 'up' )
@@ -645,6 +645,7 @@ click: () => {
     !npm run app --prefix Documents/NyaoVim -- /Users/andreas.thoelke/.vim/notes/color-scheme-doc.md
     > rather use
     command! OpenInNyanVim exec ':Dispatch' 'npm run app --prefix Documents/NyaoVim --' expand('%:p')
+    command! OpenInNyanVim exec ':Dispatch' 'npm run app --prefix Documents/temp/NyaoVim --' expand('%:p')
     > this allows to go back and work in nvim and then kill nyaovim by killing the terminal buffer
 
 ### Oni
@@ -1100,6 +1101,9 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 ## Temp next
 
+markdown previewers research and config
+
+→ then get back to Session InteroStubs to finish haskell inline tests
 
 sometimes error signs in the sign column get stuck. I then have to use `:sign unplace *`
 
@@ -1159,6 +1163,8 @@ after duplicating a line and then commenting the orig line and moving down with 
 " TODO test and finish the various cases: InteroRepl
 
 ## Release notes v1.1.2
+* `glm`/`gsm` to start/stop iamcco/markdown-preview.nvim
+* `ged` for LanguageClient diagnostics (hlint, ghcmod). see ShowLC_Diagnostics()
 * `\,` + motion (or vis-sel with "v") indents the lines to the current cursor-horz position. `\,l`/`j`/`}` to indent the current line/two lines/block
 * zsh syntax highlight colors
 * zsh consistent `ls` and completion ANSI colors

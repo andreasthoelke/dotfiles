@@ -3,6 +3,7 @@ func! GetTopLevSymbolName( lineNum )
   return matchstr( getline(a:lineNum), '^\S*\ze\s')
 endfunc
 " echo GetTopLevSymbolName( line('.') +1 )
+" aber arg = eins
 " aber ∷ eins
 
 " Return the previous function name
@@ -34,13 +35,24 @@ endfunc
 " Control.Monad replicateM ∷ (Applicative m) => Int -> m a -> m [a]
 " echo HsExtractTypeFromLine( line('.')-1 )
 
-func! HsExtractReturnTypeFromLine( lineNum )
-  let line  = getline( a:lineNum )
-  let list = split( line, '\v(∷\s|⇒\s|→\s)' )
+func! HsExtractReturnTypeFromTypeSigStr( typeSigStr )
+  let list = split( a:typeSigStr, '\v(∷\s|⇒\s|→\s)' )
   return list[ len( list ) -1 ]
 endfunc
 " Control.Monad replicateM ∷ (Applicative m) ⇒ Int → m a → m [a]
-" echo HsExtractReturnTypeFromLine( line('.')-1 )
+" echo HsExtractReturnTypeFromTypeSigStr( getline( line('.')-1 ) )
+
+func! HsExtractArgTypesFromTypeSigStr( typeSigStr )
+  let mainPartsList = split( a:typeSigStr, '\v(∷\s|⇒\s)' )
+  " let signatureTypes = split( mainPartsList[-1], '\v→' )
+  let signatureTypes = split( mainPartsList[-1], PatternToMatchOutsideOfParentheses( '→', '(', ')' ) )
+  let argumentsTypes = signatureTypes[:-2]
+  return TrimListOfStr( argumentsTypes )
+endfunc
+" Control.Monad replicateM ∷ (Applicative m) ⇒ Int → m a → m [a]
+" echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
+" Control.Monad replicateM ∷ (Applicative m) ⇒ Int → (a → b) → m a → m [a]
+" echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
 
 func! HsGetTypeFromSignatureStr( signStr )
   return matchstr( a:signStr, '\v(∷|::)\s\zs.*')
@@ -48,11 +60,10 @@ endfunc
 " Control.Monad replicateM ∷ (Applicative m) ⇒ Int → m a → m [a]
 " echo HsGetTypeFromSignatureStr( getline( line('.')-1 ) )
 
-func! HsExtractReturnTypeFromTypeSig( typeSig )
-  let list = split( a:typeSig, '\v(∷\s|⇒\s|→\s)' )
-  return list[ len( list ) -1 ]
+func! ArgsPlacehoderStr ( argumentTypesList )
+  return Reduce( {acc, nextStr -> acc . '(i∷ ' . nextStr . ') '}, a:argumentTypesList )[0:-2]
 endfunc
-
+" echo ArgsPlacehoderStr( ['a → b', 'Maybe a'] )
 
 function! GetModuleName()
   for lineNum in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]

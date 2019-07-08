@@ -20,12 +20,29 @@ command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
 
-function! LaunchChromium( url ) abort
-  if exists('g:launchChromium_job_id') && (g:launchChromium_job_id) > 0
+func! LaunchChromium( url ) abort
+  if exists('g:launchChromium_job_id')
     call jobstop( g:launchChromium_job_id )
+    " echo g:launchChromium_job_id
+    unlet g:launchChromium_job_id
+  else
+    let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
+  endif
+endfunc
+call LaunchChromium( 'http://purescript.org' )
+
+func! StopChromium()
+  " if exists('g:launchChromium_job_id') && (g:launchChromium_job_id > 0)
+  if exists('g:launchChromium_job_id')
+    call jobstop( g:launchChromium_job_id )
+    " echo g:launchChromium_job_id
     unlet g:launchChromium_job_id
   endif
-  let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
-endfunction
+endfunc
+call StopChromium()
 
 " Launching Chromium: ---------------------------------------------------------------
+
+
+
+

@@ -13,62 +13,6 @@
 " setlocal formatprg=stylish-haskell
 
 
-" "unique functions"
-nnoremap <localleader>hu :call RandFnName()<cr>2w
-nnoremap <localleader>hU :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<esc>w
-" produces a (test) haskell function with a random name, ejk.:
-" cp0 = undefined
-" "unique symbol"
-nnoremap <leader>hus :call RandSymbol()<cr>
-
-" "expand function" expand a symbol name to a function stub
-" nnoremap <leader>ef A ∷ String<esc>^ywo<esc>PA= undefined<esc>b
-nnoremap <localleader>ht ^yiwko<esc>PA ∷ a<esc>w
-" nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
-
-" "expand signature" expand a signature to a function stub
-nnoremap <leader>es ^ywo<esc>PA= undefined<esc>b
-nnoremap <leader>hes ^ywo<esc>PA= undefined<esc>w
-
-" "expand undefined": expand a signature to a function stub
-nnoremap <leader>eu yiwo<esc>PA = undefined<esc>b
-" nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
-
-
-nnoremap <leader>uef <leader>us<leader>ef
-" Test stub:
-" nmap <leader>ts <leader>us<leader>ef
-nmap <leader>hfs :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<esc>w
-
-" "index symbol" append postfix index to function name
-nnoremap <leader>if ea0^jea0^k
-" nnoremap <leader>his ea0^jea0^k
-
-" Increase/ decrease the index of TypeSig and term level binding together
-nnoremap <leader><c-a> jk^
-nnoremap <leader><c-x> <c-x>j<c-x>k^
-
-
-function! RandFnName()
-python << EOF
-import string
-import random
-import vim
-vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0 = undefined'
-EOF
-endfunction
-" Note the Python code must not be indented in a Vim function
-
-function! RandSymbol()
-python << EOF
-import string
-import random
-import vim
-vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0'
-EOF
-endfunction
-
-
 " Reduce a paragraph (purs repl type output) to one line, deleting 2+ space seperations between words
 nnoremap <leader>ccu "td}:call TransfTRegAndAppend( function('StripNewlinesAndMultispaces') )<cr>k
 
@@ -106,7 +50,6 @@ endfunc
 
 
 " ─   Hs format utils from HsAPIExplore                 ──
-
 
 
 func! PreserveKleisliInUnicodeReplace( listListMap ) "{{{

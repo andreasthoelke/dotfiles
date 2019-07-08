@@ -45,8 +45,8 @@ nnoremap <silent> <leader>io :InteroOpen<CR>
 nnoremap <silent> <leader>ih :InteroHide<CR>
 nnoremap <silent> <leader>im :InteroLoadCurrentModule<CR>
 nnoremap <silent> <leader>il :InteroLoadCurrentFile<CR>
-nnoremap <silent>         gd :call GotoDefinition()<CR>
-nnoremap <silent> ,gd :sp<CR>:call GotoDefinition()<CR>
+nnoremap <silent>         gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> ,gd :sp<CR>:call LanguageClient_textDocument_definition()<CR>
 " fee mapping
 " nnoremap <silent>         ]d :call GotoDefinition()<CR>
 nnoremap dr :InteroReload<cr>
@@ -105,17 +105,6 @@ func! InteroEval_SmartShow()
 
 endfunc
 
-
-nnoremap <localleader>ct :call CreateInlineTestDec()<cr>
-
-" -- e1_database4 = database4 (Just "eins") 123
-func! CreateInlineTestDec()
-  let typeSigLineNum = TopLevBackwLine()
-  let funcName       = GetTopLevSymbolName( typeSigLineNum )
-  let lineText = 'e1_' . funcName . ' = ' . funcName . ' i'
-  call append( line('.') -1, lineText )
-  normal k
-endfunc
 
 
 " Separates 3 output types:
@@ -246,6 +235,7 @@ endfunc
 " echo HsTypeStr_To_PrintAlignFn('Map Int Char')
 
 
+" ─   Tools                                              ■
 
 " Simply paste the lines below as they are ■
 func! PasteLines( lines )
@@ -286,7 +276,8 @@ endfun
 
 " command! PursRepl :let PursReplID = jobstart("pulp repl", Cbs1)
 " :call jobstart(split(&shell) + split(&shellcmdflag) + ['{cmd}'])
-"
+
+" ─^  Tools                                              ▲
 
 " ─   Other tools Langserver                             ■
 "From  https://github.com/sriharshachilakapati/dotfiles/blob/abdef669aad394ff290c7360995e8c05386bcb80/.vimrc
@@ -317,8 +308,6 @@ endfunc
 nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 " alternative to PSCIDEgetKeyword()
 " ─^  Other tools Langserver                             ▲
-
-
 
 " ─   Repl legacy                                        ■
 
