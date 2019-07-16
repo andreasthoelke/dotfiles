@@ -153,9 +153,9 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 
 " Language Support: -----------------------------------------------------
-" Plug 'jelera/vim-javascript-syntax'
-" Plug 'elzr/vim-json'
-" Plug 'leafgarland/typescript-vim'
+Plug 'jelera/vim-javascript-syntax'
+Plug 'elzr/vim-json'
+Plug 'leafgarland/typescript-vim'
 Plug 'mityu/vim-applescript'
 " Plug 'bendavis78/vim-polymer'
 " Plug 'vmchale/dhall-vim'
@@ -230,8 +230,6 @@ Plug 'autozimu/LanguageClient-neovim', {
       \ 'branch': 'next',
       \ 'do': './install.sh'
       \ }
-
-
 
 " lookup ":h vim2hs", e.g. Tabularize haskell_types is useful
 " Plug 'goolord/vim2hs'

@@ -77,12 +77,6 @@ let g:LanguageClient_diagnosticsDisplay = {
 " ─^  Language Client HIE                                ▲
 
 
-" func! s:showLC_Diagnostics( stateJSON )
-"   if has_key(a:stateJSON, 'result')
-"     let res = json_decode( a:stateJSON.result )
-"     call FloatWin_ShowLines( [ string( res.diagnostics ) ] )
-"   endif
-" endfunc
 
 nnoremap ged :call ShowLC_Diagnostics()<cr>
 
@@ -103,10 +97,18 @@ func! s:showLC_Diagnostics( stateJSON )
   call FloatWin_ShowLines( messageLines )
 endfunc
 
+" func! s:showLC_Diagnostics( stateJSON ) ■
+"   if has_key(a:stateJSON, 'result')
+"     let res = json_decode( a:stateJSON.result )
+"     call FloatWin_ShowLines( [ string( res.diagnostics ) ] )
+"   endif
+" endfunc ▲
+
 
 func! ShowLC_Diagnostics()
   call LanguageClient#getState(function( 's:showLC_Diagnostics' ))
 endfunc
+
 
 
 " ─   Completion                                         ■

@@ -5,6 +5,8 @@ vmap <silent> gsg :call GoogleSearch("visSel")<cr>
 nnoremap <silent> gsh :call DocsForCursorWord()<cr>
 vmap <silent> gsh :call DocsForVisSel()<cr>
 
+nnoremap <silent> gse :call DefinitionForCursorWord()<cr>
+
 " Now in HsAPIExplore:
 " nnoremap <silent> gsd :call HoogleForCursorWord()<cr>
 " vmap <silent> gsd :call HoogleForVisSel()<cr>
@@ -12,7 +14,7 @@ vmap <silent> gsh :call DocsForVisSel()<cr>
 nnoremap <silent> gsi :call GithubSearch("word")<cr>
 vmap <silent> gsi :call GithubSearch("visSel")<cr>
 
-nnoremap <silent> gsr :call GrepSearch("word", "repo")<cr>
+nnoremap 1silent> gsr :call GrepSearch("word", "repo")<cr>
 vmap <silent> gsr :call GrepSearch("visSel", "repo")<cr>
 nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
@@ -203,6 +205,15 @@ fun! DocsForVisSel()
   let comm = 'silent !open ' . url
   exec comm
 endfun
+
+fun! DefinitionForCursorWord()
+  let keyw = expand("<cword>")
+  let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . keyw
+  let url = 'https://haskell-code-explorer.mfix.io/search/' . keyw
+  let comm = 'silent !open ' . url
+  exec comm
+endfun
+
 
 fun! HoogleForCursorWord()
   let g:originFile = expand('%')

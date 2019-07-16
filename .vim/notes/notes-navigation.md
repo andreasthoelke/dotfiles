@@ -334,6 +334,9 @@ autohide/expand `foldcolum`? .. or just have a shortcut to toggle
 
 Example: Align the 3 lines below to the ':tabe' word:
  - visually select the lines
+ then align to ' -' e.g. when having "ab  - cd" and "ef  - gh"
+ 0. <,>EasyAlign / -/
+ or
  1. `:Tabularize /:tabe/`
  or
  2. `:Easyalign`<cr> then `6 ` <cr> to align to the 6th space
@@ -345,6 +348,7 @@ command! -nargs=1 Fbuffers :tabe % | Grepper           -side -buffers -query <ar
  * `:Tabularize / /` to align to `" "`
      * uses smart paragraph
 
+see examples here: ~/.vim/utils/utils-align.vim#/Align%20Example.
 
 ## Repl
 
@@ -777,6 +781,8 @@ see/align with Github wiki repository
     * the `q` to close tagbar and have the cursor on the heading in the left window
 
 ### Create hyperlink to header
+now there is:
+* `LinkRefToClipBoard` command unsing rel.vim: ~/.vim/utils/utils-general-helpers.vim#/LinkRefToClipBoard%20call
 
 TODO - links don't work any more?
   Use `h rel.txt` to link
@@ -785,8 +791,6 @@ TODO - links don't work any more?
       * `git%20process.md#/Git%20Reset`
       * `~/.vim/notes/git%20process.md#/Git%20Reset`
       * `~/.vim/notes/chrome-cli.js` - `gk` still works here
-
-TODO make a nicer Highlight for vim-rel links
 
 from any filetype to any search-word: ~/.vimrc#/set whitespace escape: help:rel.txt#/should%20refer
 text commit-nts1.txt#/#%20Vimium%20workflow

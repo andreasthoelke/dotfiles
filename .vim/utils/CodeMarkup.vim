@@ -24,7 +24,7 @@ endfunc
 
 let g:headingPttn = '\v^("|--)\s─\s'
 " let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
-let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,50}:(\S)@!'
+let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}:(\S)@!'
 let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,30}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■

@@ -85,10 +85,10 @@ nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'Align
 " ─^  legacy to be reviewed                              ▲
 
 " Get repl :type/:kind info for cword / vis-sel:
-nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
-vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "PasteTypeSig", '' )<cr>
-nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "PasteLines", '' )<cr>
-vnoremap gek :call InteroEval( ':kind ' . Get_visual_selection(), "PasteLines", '' )<cr>
+nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
+nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+vnoremap gek :call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
 
 nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<cr>
 

@@ -30,13 +30,13 @@ endfun
 " echo Reduce( {acc, nextStr -> acc . '(i∷ ' . nextStr . ') '}, ['a → b', 'Maybe a'] )[:-2] . '!'
 
 
-func! MakeBufferDisposable() "{{{
+func! MakeBufferDisposable()
   setl buftype=nofile
   setl bufhidden=hide
   setl noswapfile
   " Buffer is shown with ':ls' but not ctrlP
   setl buflisted
-endfunc "}}}
+endfunc
 
 " Create or just activate/focus a disposable window
 func! ActivateScratchWindow( bufferNameId )
@@ -63,6 +63,48 @@ func! ActivateScratchWindow( bufferNameId )
   call MakeBufferDisposable()
 endfunc
 " call ActivateScratchWindow('Test2')
+
+
+" ─   Links Rel                                          ■
+
+nnoremap <leader>cl :call LinkRefToClipBoard()<cr>
+command! LinkRefToClipBoard call LinkRefToClipBoard()
+
+func! LinkRefToClipBoard()
+  let lineText = getline('.')
+  let lineText = substitute( lineText, '"\s', '', 'g' )
+  let lineText = substitute( lineText, '─', '', 'g' )
+  let lineText = substitute( lineText, '■', '', 'g' )
+  let lineText = substitute( lineText, ':', '.', 'g' )
+  " These substitutes allow linking to a vimscript function (also see not allowed char in rel.vim)
+  let lineText = substitute( lineText, '!', '.', 'g' )
+  let lineText = substitute( lineText, '(\|)', '.', 'g' )
+  " echo substitute( getline('.'), '─\|"', '', 'g' )
+  let [w1;mayW3] = split( lineText )
+  let searchStr = '#/'.w1
+  if len( mayW3 )
+    let searchStr .= '%20'.mayW3[0]
+  endif
+  if len( mayW3 ) > 1
+    let searchStr .= '%20'.mayW3[1]
+  endif
+  let lineRef = expand('%:p') . searchStr
+  let lineRef = substitute( lineRef, '/Users/andreas.thoelke/', '~/', 'g' )
+  echo 'Copied this text-link-reference to clipboard:'
+  echo lineRef
+  let @*= lineRef
+endfunc
+" Example: ~/.vim/utils/utils-general-helpers.vim#/Create%20or%20just
+" ~/.vim/utils/utils-general-helpers.vim#/LinkRefToClipBoard()
+" Now works also on code markup lines
+" ~/.vim/utils/utils-general-helpers.vim#/Links%20Rel%20■
+
+" Basically I want:
+" Here is a concealedlink: ..*notes-todos.md//Release notes v1.1.2*
+" where the abs path is hidden and the text is readable without the %20
+" ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
+
+" ─^  Links Rel                                          ▲
 
 
 

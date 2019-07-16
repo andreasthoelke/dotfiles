@@ -9,6 +9,7 @@ nnoremap gsm :call StopChromium()<cr>
 
 let g:mkdp_auto_start = 0
 let g:mkdp_auto_close = 0
+let g:mkdp_command_for_global = 1
 
 " let g:mkdp_browser = '/Applications/Chromium.app/Contents/MacOS/Chromium'
 " this function will receive url as param

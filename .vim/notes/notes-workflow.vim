@@ -130,6 +130,26 @@
   "
 " ─^  Stack workflow                                     ▲
 
+" ─   Update HIE                                         ■
+" Most recent update: 14-07-2019
+" 1. Check the current version: hie --version
+"    Current output is: Version 0.11.0.0, Git revision 58461a056abc6c23b01a4500bcef3095d2afe229 (dirty) (2932 commits) x86_6 4 ghc-8.6.5
+" 2. Check if there is a new release (0.11.0.0 the current as of 07-2019) https://github.com/haskell/haskell-ide-engine/releases
+" 3. Run git pull in /Users/andreas.thoelke/Documents/Haskell/haskell-ide-engine/
+" 4. Run stack ./install.hs hie-8.6.5
+"    - this will take a long time (like 20 mins)
+"    - will install for my current ghc (8.6.5)
+"    - stack ./install.hs help
+"    - Will finish with the following output:
+"        Copied executables to /Users/andreas.thoelke/.local/bin:
+"        - hie
+"        - hie-wrapper
+"        # stack (for stack-hie-8.6.5)
+"        Build completed in 11m28s
+
+" ─^  Update HIE                                         ▲
+
+
 " ─   Intero test workflow                               ■
 
 "   <leader>io to open intero
@@ -268,7 +288,7 @@
 " Use Last Search Pattern: - do "/abc<cr>" (a normal search), then "vim /<c-r>/g %" → "c-r" will expand to the last search
 " Proposed Workflow: - 1. Test search expression with regular search, then 2. use the same expression with vimgrep
 
-" Copy Paste File Path: "%p to put the name of the current file after the cursor. echo @%. let @+=@%
+" Copy Paste File Path: "%p to put the name of the current file after the cursor. echo @%. let @+=@% Also:  put =@%
 " Jump To File Path: in split below "<c-w>f", in tab "<c-w>gf"
 " View A Folder Env Variable: e.g. VIMRUNTIMEPATH Folder: - "i<c-r>=$VIM<tab><cr>" in buffer, then "<c-w>f" to open Nerdtree.  Or ":NERDTree $VIM<tabs>"
 

@@ -1,11 +1,57 @@
 
+
+# $Path is now defined at /etc/paths:
+# /Users/andreas.thoelke/.npm/bin
+# /Users/andreas.thoelke/.local/bin
+# /Users/andreas.thoelke/.cabal/bin
+# /Users/andreas.thoelke/.ghcup/bin
+# /usr/local/bin
+# /usr/bin
+# /bin
+# /usr/sbin
+# /sbin
+
+# To set the system-wide $PATH, run "sudo nvim /etc/paths" and add paths to the beginning of the file to have them
+# scanned with priority. This becomes effective after restarting the terminal → ":Alacritty" in vim or "alacritty" in
+# the shell - not after "source .zshrc"
+# Use this to view the current path
+# echo $PATH | tr ':' '
+# or alternatively ":Path" in vim
+
+# 07-2019:
+# /Users/andreas.thoelke/.cargo/bin
+# /Library/Frameworks/Python.framework/Versions/3.6/bin
+# /Users/andreas.thoelke/.npm/bin
+# /Users/andreas.thoelke/.local/bin
+# /Users/andreas.thoelke/.cabal/bin
+# /Users/andreas.thoelke/.ghcup/bin
+# /usr/local/bin
+# /usr/bin
+# /bin
+# /usr/sbin
+# /sbin
+# /opt/X11/bin
+# /Users/andreas.thoelke/.cargo/bin
+# /Library/Frameworks/Python.framework/Versions/3.6/bin
+
+# TODO who enters and then doublicates these lines?
+# /Users/andreas.thoelke/.cargo/bin
+# /Library/Frameworks/Python.framework/Versions/3.6/bin
+
+# Previous approach and info:
 # export PATH=/Users/andreas.thoelke/.local/bin:/Users/andreas.thoelke/Library/Python/3.6/bin:$PATH
 
-path+=('/Users/andreas.thoelke/.local/bin')
-path+=('/Users/andreas.thoelke/Library/Python/3.6/bin')
-path+=('/Users/andreas.thoelke/.cargo/bin')
-path+=('/Users/andreas.thoelke/.cabal/bin')
-path+=('/Users/andreas.thoelke/.ghcup/bin')
+# This is where stack/haskell tools (like HIE) are installed to
+# path+=('/Users/andreas.thoelke/.local/bin')
+# Other Haskell tools?:
+# path+=('/Users/andreas.thoelke/.cabal/bin')
+# Python apps:
+# path+=('/Users/andreas.thoelke/Library/Python/3.6/bin')
+# Rust apps:
+# path+=('/Users/andreas.thoelke/.cargo/bin')
+# Manage versions of ghc:
+# path+=('/Users/andreas.thoelke/.ghcup/bin')
+
 
 # View man pages in vim:
 export MANPAGER="nvim -c 'set ft=man' -"
@@ -37,6 +83,9 @@ export KITTY_CONFIG_DIRECTORY="/Users/andreas.thoelke/.config/kitty"
 
 
 alias alacritty="open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
+
+alias npmpath='/Users/andreas.thoelke/.npm/bin'
+alias npmp='/Users/andreas.thoelke/.npm/bin'
 
 # export ONI_NEOVIM_PATH="/usr/local/Cellar/neovim/0.3.3/bin/"
 

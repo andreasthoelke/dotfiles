@@ -731,6 +731,8 @@ let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
   - https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions/basic-syntax-extensions
 * this has some nice unicode conceal suggestions  ~/.vim/plugged/vim-haskellConcealPlus/after/syntax/haskell.vim
 
+## Table of Contents
+[toc]
 
 ## Low priority
 
@@ -855,6 +857,7 @@ make `rm -r` commands move to trash?
   i could use a vimscript function text object, it would allow to 'source around function' with blank lines
 
   vim-subversive allows to rename a variable within a function or what is currently visible of the buffer
+
 
 ## Current Todos
 
@@ -1162,25 +1165,44 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 " TODO test and finish the various cases: InteroRepl
 
+## Current commands
+leader lk - Symbol documentation
+leader la - LC Code action → import symbol!
+insert c-i - show completions with type sig!
+leader hi - format imports
+
+get       - type at symbol or vis sel
+gek       - kind at symbol or vis sel
+ges       - run symbol
+ged       - show diagnostic message in float-win
+
+\ hu      - unique symbol
+\ ct      - create inline test stub
+gsh       - search hoogle
+gse       - explore definition
+
+
 ## Release notes v1.1.2
+* `LinkRefToClipBoard` command using rel.vim: ~/.vim/utils/utils-general-helpers.vim#/command.*%20LinkRefToClipBoard%20call
+* Syntax highlighting for rel links: ~/.vim/utils/HsSyntaxAdditions.vim#/func.*%20VimScriptSyntaxAdditions
+* document updating HIE: ~/.vim/notes/notes-workflow.vim#/Update%20HIE%20■
 * `glm`/`gsm` to start/stop iamcco/markdown-preview.nvim
-* `ged` for LanguageClient diagnostics (hlint, ghcmod). see ShowLC_Diagnostics()
+* `ged` for LanguageClient diagnostics (hlint, ghcmod). see ShowLC_Diagnostics() ~/.vim/utils/tools-langClientHIE-completion.vim#/func.%20s.showLC_Diagnostics.%20stateJSON
 * `\,` + motion (or vis-sel with "v") indents the lines to the current cursor-horz position. `\,l`/`j`/`}` to indent the current line/two lines/block
 * zsh syntax highlight colors
 * zsh consistent `ls` and completion ANSI colors
 * Intero ShowList_asLines() in floating window with column alignment (`gec`, `geC`, `gel`)
 * `leader lm` to open LanguageClient menu, `leader la` to show the available code actions
 * Shortcuts to popular folders <leader>o .. `n` notes, `u` utils, `h` haskell, `c` current
-
 * Indent motions: `,j` `,k` to move to end/start of indent block. IndentBlockEnd() HsMotions
 *                 `,J` `,K` to move to the next/prev same level indent
 *                `vii` to visually select inside indent block
 * Align maps:
     `leader al` + [motion, textobject: e.g. `ii` "inside indent block"]
               + speperatorId (<space>, 2<space>, "," )
+  see: ~/.vim/notes/notes-navigation.md#/##%20Align
 * Tabularize 1st and 2nd column of a motion or selected range of lines based on <space>
     `leader at` + [range]
-
 * Repl format: `gew` does just append all repl returned lines
 * `gel` "eval list" on a Haskell identifier will insert a resulting list as lines. see PasteListAsLines()
 * `get` "eval table": After "eval list", it then aligns the first two columns (column separator is <space>)
@@ -1194,7 +1216,7 @@ after duplicating a line and then commenting the orig line and moving down with 
 * `<leader>rb` to rename a binding and its occurences
 * `iB` "inside buffer" textobject
 * `iv` "inside viewable" area in window textobj
-* `leader hsi` "Haskell stype imports"
+* `leader hsi` "Haskell style imports" (fromatting import lines using stylish-haskell)
 * `<c-x>f` in a file path, in insert mode browses files (vim native!)
 * createHeading `\ch`, closeSection `\cs`, delete/strip Heading `\cd`, refreshHeading `\cr`
 * conceal unicode symbols: `⫩ ⫦ ◇ ⟐` for `<$> >>= <> <*>`
@@ -1231,16 +1253,15 @@ after duplicating a line and then commenting the orig line and moving down with 
 * intero neovim custom functions e.g. `InsertEvalExpressionRes` are now in forked repo
 
 ## Release notes v1.0.5
-  * close win above, below, left, right with `<c-w>d`: `k/j/h/l`
-  * Pinning paragraphs and visual selections with `<leader>wp` (visual-split plugin)
-  * Indenting settings
-  * CamelCaseMotion plugin. Use e.g. `v2iw`, `vie`, `vbbb`
-  * Add every yank position to the jumplist. In EasyClip with tag "AT tweak:"
-  * Add start of visual mode (`v`) to jumplist
-  * Add line motions to jumplist
-  * Only the start of 'select word' `ga` next and search adds to the jumplist
-  * line text object `al` `il`
-
+* close win above, below, left, right with `<c-w>d`: `k/j/h/l`
+* Pinning paragraphs and visual selections with `<leader>wp` (visual-split plugin)
+* Indenting settings
+* CamelCaseMotion plugin. Use e.g. `v2iw`, `vie`, `vbbb`
+* Add every yank position to the jumplist. In EasyClip with tag "AT tweak:"
+* Add start of visual mode (`v`) to jumplist
+* Add line motions to jumplist
+* Only the start of 'select word' `ga` next and search adds to the jumplist
+* line text object `al` `il`
 *  (HEAD -> master) Note taking, jumplist, indention                                                                                                          5 hours ago   Andreas Thoelke  [d24bfe4]
 
 ## Release notes v1.0.4

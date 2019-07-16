@@ -23,23 +23,20 @@ let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
 func! LaunchChromium( url ) abort
   if exists('g:launchChromium_job_id')
     call jobstop( g:launchChromium_job_id )
-    " echo g:launchChromium_job_id
     unlet g:launchChromium_job_id
   else
     let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
   endif
 endfunc
-call LaunchChromium( 'http://purescript.org' )
+" call LaunchChromium( 'http://purescript.org' )
 
 func! StopChromium()
-  " if exists('g:launchChromium_job_id') && (g:launchChromium_job_id > 0)
   if exists('g:launchChromium_job_id')
     call jobstop( g:launchChromium_job_id )
-    " echo g:launchChromium_job_id
     unlet g:launchChromium_job_id
   endif
 endfunc
-call StopChromium()
+" call StopChromium()
 
 " Launching Chromium: ---------------------------------------------------------------
 

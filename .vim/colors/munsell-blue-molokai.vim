@@ -101,7 +101,6 @@ hi WildMenu        guifg=#66D9EF guibg=#000000
 hi TabLineFill     guifg=#1B1D1E guibg=#1B1D1E
 hi TabLine         guibg=#1B1D1E guifg=#808080 gui=none
 
-
 " Copied from https://github.com/dim13/smyck.vim ----------------------------------------------------------------------
 " ----------------------------------------------------------------------------
 " Syntax Highlighting
@@ -362,7 +361,9 @@ hi Visual guibg=#2E2E2E gui=none
 hi BlackBG guibg=#000000
 hi GreyBG guibg=#262626
 hi CommentSection guifg=#42606B guibg=#0E0E0E
-hi CommentLabel guifg=#42606B guibg=#030303
+hi CommentLabel   guifg=#42606B guibg=#030303
+
+hi htmlLink guifg=#42606B guibg=#030303
 
 "    From Vimrc: ---------------------------------
 " run: RedirMessagesBuf hi Folded

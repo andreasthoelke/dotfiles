@@ -5,6 +5,8 @@ au ag BufNewFile,BufRead        *.hs call HaskellTools()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.md          call VimScriptSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.zshrc       call CodeMarkupSyntaxHighlights()
 " au ag BufNewFile,BufRead        *.vim,*.vimrc call VimScriptMaps()
 " ─^  Filetype Specific Maps Tools Syntax               ──
 
@@ -80,19 +82,16 @@ endfunc "}}}
 
 " Syntax Color Haskell: --------------------
 
-" only needs to look good in haskell!
 func! VimScriptSyntaxAdditions() " ■
   call CodeMarkupSyntaxHighlights()
   " Hide comment character at beginning of line
   call matchadd('Conceal', '\v^\s*\zs"\s', 12, -1, {'conceal': ''})
   " Hilde \" before comment after code
   call matchadd('Conceal', '\s\zs\"\ze\s', 12, -1, {'conceal': ''})
-  " Conceal foldmarker strings and display icon to indicate fold expanding
-  " Note: escaping {'s instead of literal '' {'s avoids accidental folding
-  " call matchadd('Conceal', "\"\{\{\{", -1, -1, {'conceal': 'x'})
-  " call matchadd('Conceal', '\"\(■\|▲\)', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '■\ze■', 12, -1, {'conceal': ' '})
-  " call matchadd('Conceal', '▲\ze▲', 12, -1, {'conceal': ' '})
+  " Conceal "%20" which is used for "h rel.txt" with space
+  call matchadd('Conceal', '%20', 12, -1, {'conceal': ' '})
+  call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
+  " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
 
   set conceallevel=2 " ■
   set concealcursor=ni " ▲
