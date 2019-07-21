@@ -31,7 +31,7 @@ nnoremap <leader>cm :call clearmatches()<cr>
 
 
 " ─   Haskell                                           ──
-func! HaskellSyntaxAdditions() "{{{
+func! HaskellSyntaxAdditions()
   call CodeMarkupSyntaxHighlights()
   " Conceal comment marker string
   " call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
@@ -40,6 +40,26 @@ func! HaskellSyntaxAdditions() "{{{
   " TODO reactivate" call matchadd('Conceal', '{- ', -1, -1, {'conceal': ''})
   " call matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
   " TODO" call matchadd('Conceal', '-}', -1, -1, {'conceal': ''})
+
+" ─   Conceal with unicode                               ■
+  " This replaces the following insert maps
+  " inoremap :: <c-k>::
+  " inoremap -> <c-k>->
+  " inoremap <- <c-k><-
+  " inoremap => <c-k>=>
+  " inoremap <= <c-k><=
+  " inoremap forall <c-k>FA
+
+  " syntax match Normal ' \zs<\$>' conceal cchar=⫩
+  " call matchadd('Conceal', '::', 12, -1, {'conceal': '∷'})
+  " call matchadd('Conceal', ' \zs->', 12, -1, {'conceal': '→'})
+  " call matchadd('Conceal', ' \zs<-', 12, -1, {'conceal': '←'})
+  " call matchadd('Conceal', ' \zs=\ze>', 12, -1, {'conceal': '⇒'})
+  " call matchadd('Conceal', ' \zs<=', 12, -1, {'conceal': '⇐'})
+  " call matchadd('Conceal', ' \zsforall', 12, -1, {'conceal': '∀'})
+
+  " Other Haskell unicode conceals: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Conceal%20with%20unicode
+" ─^  Conceal with unicode                               ▲
 
   " Conceal foldmarker strings and display icon to indicate fold expanding
   " Note: escaping {'s instead of literal '' {'s avoids accidental folding
@@ -78,7 +98,7 @@ func! HaskellSyntaxAdditions() "{{{
   " let g:fnWire2Pttns = PrependSpace( AppendExtSpace( ['where', 'do', 'in', 'case', 'then', 'let'] ))
   " let g:fnWire2Pttns = NotInCommentLine( PrependSpace( AppendExtSpace( ['where', 'do', 'in', 'case', 'then', 'let'] )) )
   " call append( line('.'), MakeOrPttn( g:fnWire2Pttns ) )
-endfunc "}}}
+endfunc
 
 " Syntax Color Haskell: --------------------
 

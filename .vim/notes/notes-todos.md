@@ -1166,20 +1166,21 @@ after duplicating a line and then commenting the orig line and moving down with 
 " TODO test and finish the various cases: InteroRepl
 
 ## Current commands
-leader lk - Symbol documentation
-leader la - LC Code action → import symbol!
-insert c-i - show completions with type sig!
-leader hi - format imports
+leader lk   - LC Symbol documentation
+leader la   - LC Code action → import symbol!
+insert c-i  - LC show completions with type sig!
+leader hi   - format imports
 
-get       - type at symbol or vis sel
-gek       - kind at symbol or vis sel
-ges       - run symbol
-ged       - show diagnostic message in float-win
+get         - IN show type of symbol or vis sel
+gwt         - IN paste type (with unicode)
+gek         - IN kind at symbol or vis sel
+ges         - IN run symbol
+ged         - LC show diagnostic message in float-win
 
-\ hu      - unique symbol
-\ ct      - create inline test stub
-gsh       - search hoogle
-gse       - explore definition
+\ hu        - unique symbol
+\ ct        - create inline test stub
+gsh         - search hoogle
+gse         - explore definition
 
 
 ## Release notes v1.1.2

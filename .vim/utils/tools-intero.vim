@@ -86,6 +86,7 @@ nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'Align
 
 " Get repl :type/:kind info for cword / vis-sel:
 nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+nnoremap gwt :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
 vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
 nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
 vnoremap gek :call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
@@ -105,6 +106,8 @@ func! InteroEval_SmartShow()
 
 endfunc
 
+" TODO consideration: could use the ":set +t" ghci feature to always get the type alongside the returned value and
+" treat/format it accordingly
 
 
 " Separates 3 output types:

@@ -35,24 +35,34 @@ endfunc
 " Control.Monad replicateM ∷ (Applicative m) => Int -> m a -> m [a]
 " echo HsExtractTypeFromLine( line('.')-1 )
 
-func! HsExtractReturnTypeFromTypeSigStr( typeSigStr )
-  let list = split( a:typeSigStr, '\v(∷\s|⇒\s|→\s)' )
-  return list[ len( list ) -1 ]
+func! SplitTypeSignStr( typeSigStr )
+  let list = split( a:typeSigStr, '\v(-\>|→|::|∷|\=\>|⇒)' )
+  return TrimListOfStr( list )
 endfunc
 " Control.Monad replicateM ∷ (Applicative m) ⇒ Int → m a → m [a]
-" echo HsExtractReturnTypeFromTypeSigStr( getline( line('.')-1 ) )
+" Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
+" echo SplitTypeSignStr( getline( line('.')-1 ) )
+
+func! HsExtractReturnTypeFromTypeSigStr( typeSigStr )
+  let list = SplitTypeSignStr( a:typeSigStr )
+  return list[ len( list ) -1 ]
+endfunc
 
 func! HsExtractArgTypesFromTypeSigStr( typeSigStr )
-  let mainPartsList = split( a:typeSigStr, '\v(∷\s|⇒\s)' )
+  let mainPartsList = split( a:typeSigStr, '\v(∷\s|::\s|⇒\s|\=\>\s)' )
   " let signatureTypes = split( mainPartsList[-1], '\v→' )
-  let signatureTypes = split( mainPartsList[-1], PatternToMatchOutsideOfParentheses( '→', '(', ')' ) )
+  let signatureTypes = split( mainPartsList[-1], PatternToMatchOutsideOfParentheses( '\(→\s\|->\s\)', '(', ')' ) )
   let argumentsTypes = signatureTypes[:-2]
   return TrimListOfStr( argumentsTypes )
 endfunc
+
 " Control.Monad replicateM ∷ (Applicative m) ⇒ Int → m a → m [a]
+" echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
+" Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
 " echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
 " Control.Monad replicateM ∷ (Applicative m) ⇒ Int → (a → b) → m a → m [a]
 " echo HsExtractArgTypesFromTypeSigStr( getline( line('.')-1 ) )
+
 
 func! HsGetTypeFromSignatureStr( signStr )
   return matchstr( a:signStr, '\v(∷|::)\s\zs.*')

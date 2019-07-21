@@ -4,13 +4,18 @@
 func! CodeMarkupSyntaxHighlights()
   " Comment sections use the unicode dash at the start and end of the line
   " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\u.*\S\s*──', -1, -1 )
-  call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\S.*', 11, -1 )
+
+  " call matchadd('CommentSection', '\v^("|--)\s─(\^|\s)\s{2}\S.*', 11, -1 )
+  call matchadd('CommentSection', '\v("|--)\s─(\^|\s)\s{2}\S.*', 11, -1 )
+
   " And even: more
   " Comment sections can be terminated using the ^ char
   " ─^  Comment Section Example end                        ──
   " Comment label: This is a simple label for some highlighted info to come
   " Note that:this does not match - the scoping of vim vars e.g. g:myvar would otherwise match
+
   call matchadd('CommentLabel', g:labelPttn, -1, -1 )
+
   " call matchadd('CommentLabel', '\v^\s*("|--)\s\zs\S[^.]{,18}:(\S)@!', -1, -1 )
   " Note: ":\ze(\s\S)=" allows "..: eins" and "..:", but not "..:eins"
 endfunc
@@ -18,13 +23,21 @@ endfunc
 " An ano othe:
 " one
 
+" class Functor f => Align (f :: * -> *) where
 
 " TODO
 " set commentstring=\ --\ \%s
 
 let g:headingPttn = '\v^("|--)\s─\s'
 " let g:labelPttn = '\v^\s*("|--)\s\zs\S[^.]{,30}:(\S)@!'
-let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}:(\S)@!'
+" let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}:(\S)@!'
+
+" Note: This is a negative look behind - makes sure that the ':' does not appear before the other ':'
+" (:@<!)
+" It prevents haskell type colons e.g. :: to match:
+" class Functor f => Align (f :: * -> *) where
+
+let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}(:@<!):(\S)@!'
 let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,30}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■

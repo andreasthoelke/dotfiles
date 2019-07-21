@@ -821,43 +821,6 @@ endfunc
 " However this does not trigger the Tab completion!
 
 
-" Unicode: ---------------------------------------------------
-
-inoremap :: <c-k>::
-inoremap -> <c-k>->
-inoremap <- <c-k><-
-inoremap => <c-k>=>
-" inoremap <= <c-k><=
-inoremap forall <c-k>FA
-
-" To type a unicode char, in insert-mode type "<c-k>a:"
-" nnoremap cuc :%s/::/<c-k>::/g<cr>:%s/forall/<c-k>FA/g<cr>
-nnoremap cuf :%s/forall/<c-k>FA/ge<cr>
-nnoremap cuc :%s/::/<c-k>::/ge<cr>
-nnoremap cua :%s/->/<c-k>->/ge<cr>
-nnoremap cub :%s/<-/<c-k><-/ge<cr>
-nnoremap cue :%s/>=>/>#>/ge<cr>
-" safe Kleisi!
-nnoremap cud :%s/=>/<c-k>=>/ge<cr>
-nnoremap cug :%s/>#>/>=>/ge<cr>
-" restore Kleisi!
-" vnoremap <leader>bu :s/\%V→/->/ge<cr>:s/\%V∷/::/ge<cr>:s/\%V⇒/=>/ge<cr>
-" vnoremap <leader>bi :s/\%V->/→/ge<cr>:s/\%V::/∷/ge<cr>:s/\%V=> /⇒ /ge<cr>
-
-" Alternative for bind? ⤜ or »= or >>= or ≥
-
-
-" nnoremap cue :%s/<=/<c-k><=/e<cr>
-" TODO: could do the reverse replacement to revert back to non-unicode
-" also: what to do with 'greater-than-or-qual'?
-
-" Replace all purescript unicode characters
-noremap <leader>cu :call PurescriptUnicode()<cr>
-fun! PurescriptUnicode()
-  " normal cufcuccuacubcudcue
-  " TODO: there was a reason to NOT convert forall, what was it??
-  normal cufcuccuacubcuecudcuf
-endfun
 
 
 " ─   Movement                                          ──

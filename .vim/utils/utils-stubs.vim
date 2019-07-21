@@ -29,9 +29,10 @@ endfunc
 
 
 nnoremap <localleader>ca :call CreateAssertion()<cr>
+" Tests: (uncomment)
 " database4 ∷ String → [(String, String, Int)]
 " e1_database4 = database4 (Just "eins") 123
-" a14_database4 = id e1_database4 == (i∷ [(String, Int)])
+" a11_database4 = id e1_database4 == (i∷ [(String, String, Int)])
 func! CreateAssertion()
   let lineNumPrevInlineTestDec = InlineTestDeclBackwLine()
   if lineNumPrevInlineTestDec < TopLevBackwLine()

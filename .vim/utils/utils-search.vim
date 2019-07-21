@@ -14,7 +14,7 @@ nnoremap <silent> gse :call DefinitionForCursorWord()<cr>
 nnoremap <silent> gsi :call GithubSearch("word")<cr>
 vmap <silent> gsi :call GithubSearch("visSel")<cr>
 
-nnoremap 1silent> gsr :call GrepSearch("word", "repo")<cr>
+nnoremap <silent> gsr :call GrepSearch("word", "repo")<cr>
 vmap <silent> gsr :call GrepSearch("visSel", "repo")<cr>
 nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
