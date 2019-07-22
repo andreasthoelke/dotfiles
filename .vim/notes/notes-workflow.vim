@@ -128,6 +128,15 @@
   " ✗ ghc   8.6.4
   " ✔ ghc   8.6.5   latest
   "
+
+" Install dependancy from Github (not hackage):
+" 1. list in .cabal under build-depends: (as usual)
+" 2. then in stack.yaml:
+" extra-deps:
+" - cabal-helper-0.7.3.0
+" - github: mightybyte/map-syntax
+"   commit: acebcf0a83ee639e1a0c49850b9c85821d53f621
+
 " ─^  Stack workflow                                     ▲
 
 " ─   Update HIE                                         ■

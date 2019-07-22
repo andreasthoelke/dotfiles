@@ -1165,6 +1165,16 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 " TODO test and finish the various cases: InteroRepl
 
+* Repl auto reload
+" TODO perhaps reload on InsertLeave? otherwise all cmds would take longer..?
+func! InteroEval( expr, renderFnName, alignFnName ) abort
+" exec "InteroReload"
+
+* running `get` should recognise the typeApplication in the next word?
+np0 = length @[]
+* put this into the .ghci file?
+:set -XTypeApplications
+
 ## Current commands
 leader lk   - LC Symbol documentation
 leader la   - LC Code action → import symbol!

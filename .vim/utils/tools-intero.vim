@@ -246,8 +246,8 @@ func! PasteLines( lines )
 endfunc
 
 func! PasteTypeSig( lines ) abort
-  let unicodeLines = ReplaceStringsInLines( a:lines, g:HsReplacemMap_CharsToUnicodePtts )
-  call append(line('.') -1, unicodeLines)
+  " let unicodeLines = ReplaceStringsInLines( a:lines, g:HsReplacemMap_CharsToUnicodePtts )
+  call append(line('.') -1, a:lines)
 endfunc " ▲
 
 command! HsStackRun    :call HaskellStackRun()
@@ -317,6 +317,7 @@ nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 " Evaluate "expr" in ghci. "renderFnName" will receive what ghci returns as a vim list of lines.
 " Renamed from "InsertEvalExpr"
 func! InteroEval( expr, renderFnName, alignFnName ) abort
+  " exec "InteroReload" " TODO perhaps reload on InsertLeave? otherwise all cmds would take longer..?
   " Set the align function as a script var as it can not be passed to callback(?)
   let s:async_alignFnExpr = a:alignFnName
   call intero#process#add_handler( function( a:renderFnName ) )
