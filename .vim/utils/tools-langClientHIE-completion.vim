@@ -28,7 +28,13 @@ let g:LanguageClient_useFloatingHover = 1
 nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
 " Documentation
 map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
+
+" Go to definition:
+map <Leader>lG <c-w>v:call LanguageClient#textDocument_definition()<CR>
 map <Leader>lg :call LanguageClient#textDocument_definition()<CR>
+" Bug in LC currently prevents this
+" map <Leader>lg :call LanguageClient#textDocument_definition({'gotoCmd':'split'})<cr>
+
 map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
 map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
 map <Leader>lb :call LanguageClient#textDocument_references()<CR>
@@ -87,7 +93,7 @@ func! s:showLC_Diagnostics( stateJSON )
   let message = ''
   let state = json_decode( a:stateJSON.result )
   let diagnostics = get( state.diagnostics, expand('%:p'), [] )
-  " echoe string( diagnostics )
+  echoe string( diagnostics )
   for diag in diagnostics
     if diag.range.start.line +1 == line('.')
       let message = diag.message

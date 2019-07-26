@@ -100,8 +100,8 @@ endfunc
 
 
 " ─   "unique functions"                                 ■
-nnoremap <localleader>hu :call RandFnName()<cr>2w
-nnoremap <localleader>hU :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<esc>w
+nnoremap <localleader>hu icb<esc>:call RandFnName()<cr>2w
+nnoremap <localleader>hU icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
 " produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"
@@ -109,8 +109,21 @@ nnoremap <leader>hus :call RandSymbol()<cr>
 
 " "expand function" expand a symbol name to a function stub
 " nnoremap <leader>ef A ∷ String<esc>^ywo<esc>PA= undefined<esc>b
-nnoremap <localleader>ht ^yiwko<esc>PA ∷ a<esc>w
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
+" Issue: This clutters the register
+" nnoremap <localleader>ht ^yiwko<esc>PA :: a<esc>w
+
+" TODO adapt other stub maps to not use yank register
+nnoremap <localleader>ht :call Stubs_ExpandATypeSign()<cr>
+func! Stubs_ExpandATypeSign()
+  let symbName = GetTopLevSymbolName( line('.') )
+  let lineText = symbName . ' :: a'
+  call append( line('.') -1, lineText )
+  normal! ^kww
+endfunc
+" Test:
+" cbom0 :: a
+" cbom0 = compare
 
 " "expand signature" expand a signature to a function stub
 nnoremap <leader>es ^ywo<esc>PA= undefined<esc>b
@@ -124,7 +137,7 @@ nnoremap <leader>eu yiwo<esc>PA = undefined<esc>b
 nnoremap <leader>uef <leader>us<leader>ef
 " Test stub:
 " nmap <leader>ts <leader>us<leader>ef
-nmap <leader>hfs :call RandSymbol()<cr>A ∷ String<esc>^ywo<esc>PA= undefined<esc>w
+nmap <leader>hfs :call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
 
 " "index symbol" append postfix index to function name
 nnoremap <leader>if ea0^jea0^k

@@ -1104,6 +1104,11 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 ## Temp next
 
+* there is a LC diagnostic warking about this pragma: {-# HLINT ignore cbkt0 #-}
+  I'd like to therefore pass the -Wno-unrecognised-pragmas ghc option to ghc-mod
+
+* adapt other stub maps to not use yank register ~/.vim/utils/utils-stubs.vim#/TODO%20adapt%20other
+
 markdown previewers research and config
 
 → then get back to Session InteroStubs to finish haskell inline tests
@@ -1165,6 +1170,21 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 " TODO test and finish the various cases: InteroRepl
 
+### finish Markdown cursor indicator
+* SessionOpen markdownPreviewCursorFeature
+
+Overloaded lists/strings: {-# LANGUAGE OverloadedLists, OverloadedStrings,
+  would allow me to write
+  oj3 = length @Set.Set [4, 1, 5, 2] instead of
+  oj4 = length @Set.Set $ Set.fromList [4, 1, 5, 2]
+  but this will alert 'ambigous types'/not compile:
+  e3_align0 = align0 [1, 2, 3] ['a', 'b']
+
+Floating win:
+* jump to floating win
+* yank first line/value in floating win
+* conceal/format the it:: type
+
 * Repl auto reload
 " TODO perhaps reload on InsertLeave? otherwise all cmds would take longer..?
 func! InteroEval( expr, renderFnName, alignFnName ) abort
@@ -1187,13 +1207,48 @@ gek         - IN kind at symbol or vis sel
 ges         - IN run symbol
 ged         - LC show diagnostic message in float-win
 
+### Stubs
 \ hu        - unique symbol
+\ ht        - add type stub
+leader es   - add function to type-sig/ expand signature
+leader if   - add an index/num to the signature-symbol name
 \ ct        - create inline test stub
+\ ca        - create assertion
+
+### Search & Docs
 gsh         - search hoogle
 gse         - explore definition
 
+### Git
+leader gg   - GitGutterToggle
+]c [c       - GitGutter Next/Prev Hunk
+GitGutter.. UndoHunk, ..PreviewHunk
+
+lead lg/lG  - go to definition/ in split
+
+### Intero Errors or Warnings
+leader qq   - open QFL
+[Q [q ]q    - go to first/prev/next error (while in main win)
+c-n/p       - next/prev (while in QFL)
+go (in QFL) - jump to line (but stay in QFL)
+p           - to open file:loc in preview window, `c-w z` or `P` to close preview
+
+### LC Warnings AND Errors
+leader ll   - open Loclist
+[L [l ]l    - go to first/prev/next error/warning (while in main win)
+Go (in LLi) - jump to line (but stay in LocList)
+c-m/i       - next/prev in QFL
+p           - does not work! .. could set up a split?
+
+### Align, Indent
+\,l/j/}     - intent range of lines to current cursor H
+`>ii`         - shift lines of indent block to the right
+leader al   - easy align
+
 
 ## Release notes v1.1.2
+* Conealed anonymous toplevel (test-) binds: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Concealed%20TL-Binds
+* Hlint ignore warning comment conceal: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/syntax%20match%20concealHlintComment
 * `LinkRefToClipBoard` command using rel.vim: ~/.vim/utils/utils-general-helpers.vim#/command.*%20LinkRefToClipBoard%20call
 * Syntax highlighting for rel links: ~/.vim/utils/HsSyntaxAdditions.vim#/func.*%20VimScriptSyntaxAdditions
 * document updating HIE: ~/.vim/notes/notes-workflow.vim#/Update%20HIE%20■

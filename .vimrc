@@ -28,7 +28,7 @@ Plug 'andreasthoelke/vim-dirvish'
 " Tools: ------------------------------------------
 " Show Tags. Note: There is a Haskell integration, but it does not work :Tag.. not..  Update 11-12-2018: It currently does seem to work for Haskell .. see the spock project TODO just purescript does not work
 Plug 'majutsushi/tagbar'
-" Make the preview window more convienient to use
+" Make the preview window more convienient to use. use in quickfix via 'p'
 Plug 'skywind3000/vim-preview'
 " Display registers on '"' or "c-r" or @
 Plug 'junegunn/vim-peekaboo'
@@ -1103,9 +1103,9 @@ let g:syntastic_style_warning_symbol = "⚠"
 
 " Todo Temp:
 " nmap <leader>ss :SyntasticToggle<cr>
-nnoremap <leader>sc :SyntasticCheck<cr>
-nnoremap <leader>st :SyntasticToggleMode<cr>
-nnoremap <leader>sr :SyntasticReset<cr>
+" nnoremap <leader>sc :SyntasticCheck<cr>
+" nnoremap <leader>st :SyntasticToggleMode<cr>
+" nnoremap <leader>sr :SyntasticReset<cr>
 
 " SYNTASIC: ---------------------------------------------------
 
@@ -1132,6 +1132,8 @@ hi MessageSign ctermfg=white
 let g:neomake_highlight_columns = 1
 let g:neomake_highlight_line = 1
 " Uses NVIMs nvim_buf_add_highlight feature
+
+nnoremap <leader>sc :sign unplace *<cr>
 
 command! SignsClear :sign unplace *
 command! ClearSigns :sign unplace *
@@ -2330,47 +2332,21 @@ nmap gk <Plug>(Rel)
 " Rel Links: -------------
 
 
-" GOYO LIMELIGHT: -----------------------------------------------------------------------
-function! s:goyo_enter()
-  set scrolloff=13
-  Limelight
-  hi Search guibg=#3E3E3E guifg=#DDDDDD
-  hi Visual guibg=#3E3E3E gui=none
-endfunction
-
-function! s:goyo_leave()
-  set scrolloff=13
-  Limelight!
-  hi Search guibg=#3E3E3E guifg=#DDDDDD
-  hi Visual guibg=#3E3E3E gui=none
-endfunction
-
-" Number of preceding/following paragraphs to include (default: 0)
-let g:limelight_paragraph_span = 2
-let g:limelight_default_coefficient = 0.8
-
-augroup goyo
-  autocmd!
-  autocmd! User GoyoEnter nested call <SID>goyo_enter()
-  autocmd! User GoyoLeave nested call <SID>goyo_leave()
-augroup END
-
-" ---- GOYO - LIMELIGHT -----------------------------------------------------------------------
-
-
 " Quickfix loclist ----
 " Quickfix Navigation: - "leader qq", "]q" with cursor in code, "c-n/p" and "go" with cursor in quickfix list
 au ag BufWinEnter quickfix call QuickfixMaps()
 func! QuickfixMaps()
   nnoremap <buffer> go :.cc<cr>:wincmd p<cr>
+  nnoremap <buffer> Go :.ll<cr>:wincmd p<cr>
   nnoremap <buffer> <c-n> :cnext<cr>:wincmd p<cr>
   nnoremap <buffer> <c-p> :cprev<cr>:wincmd p<cr>
+  nnoremap <buffer> <c-m> :lnext<cr>:wincmd p<cr>
+  nnoremap <buffer> <c-i> :lprev<cr>:wincmd p<cr>
   nnoremap <silent><buffer> p :PreviewQuickfix<cr>
   nnoremap <silent><buffer> P :PreviewClose<cr>
   " autocmd FileType qf nnoremap <silent><buffer> p :PreviewQuickfix<cr>
   " autocmd FileType qf nnoremap <silent><buffer> P :PreviewClose<cr>
 endfunc
-
 
 " nmap <leader>ll :lopen<cr>:Wrap<cr>
 nnoremap <leader>ll :lopen<cr>

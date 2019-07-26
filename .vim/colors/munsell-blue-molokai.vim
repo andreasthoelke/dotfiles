@@ -210,9 +210,11 @@ hi! purescriptIdentifier guifg=#BECACD "white-grey"
 
 " purescriptType > Type
 hi! Type guifg=#76E0D9 "middle blue"
+hi! hsTypeComment guifg=#45837F "Types in comments - toned down: brightness: 88 -> 51
 
 " purescriptTypeVar > Identifier
 hi! Identifier guifg=#AAB27C "Misty moss - shift sage yellow from red to green"
+hi! hsTypeVarComment guifg=#4C5037 "Type vars in comment - toned down: 70 -> 32
 
 " purescriptConstructor
 hi! DataConstructor guifg=#983B4D "smoky topaz red"
@@ -242,13 +244,16 @@ exec 'hi! Boolean guifg=' . g:color_sacramento_green_brighter
 
 
 let g:color_ming_green_dark = '#3C6B7C '
+let g:color_ming_green_dark2 = '#284753 '
 let g:color_ming_green = '#3A768C '
 
 " purescriptStructure (data) > Keyword
 exec 'hi! Keyword guifg=' . g:color_ming_green
 
 " purescriptOperator > Operator
-exec 'hi! Operator guifg=' . g:color_ming_green
+" exec 'hi! Operator guifg=' . g:color_ming_green
+" Note: Operator is (automatically?!) linked to all concealed symbols!
+exec 'hi! Operator guifg=' . g:color_ming_green_dark
 
 " purescriptDelimiter > Delimiter
 exec 'hi! Delimiter guifg=' . g:color_ming_green

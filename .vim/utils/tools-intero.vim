@@ -7,6 +7,7 @@ let g:intero_start_immediately = 0
 " This show ghi warnings as opposed to hlint warnings:
 " TODO: toggle warnings without restart vim!
 let g:intero_ghci_options = '-Wall -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
+" let g:intero_ghci_options = '-Wall -Wno-unrecognised-pragmas -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
 " let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 " let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 " https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
@@ -16,17 +17,7 @@ let g:haskellmode_completion_ghc = 1
 " autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 " causes tag error?
 
-" autocmd BufWritePost *.hs GhcModCheckAndLintAsync ■
-" autocmd BufWritePost *.hs call s:check_and_lint()
-" function! s:check_and_lint()
-"   let l:qflist = ghcmod#make('check')
-"   call extend(l:qflist, ghcmod#make('lint'))
-"   call setqflist(l:qflist)
-"   cwindow
-"   if empty(l:qflist)
-"     echo "No errors found"
-"   endif
-" endfunction ▲
+
 
 " GHCI:
 " use :m -<module name> to unload modules
@@ -71,7 +62,8 @@ vnoremap <localleader>ti :InteroInfoInsert<cr>
 nnoremap gei :call InteroEval_SmartShow()<cr>
 
 " Plain Repl Lines:
-nnoremap ges :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
+" nnoremap ges :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
+nnoremap ges :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
 
 " ─   legacy to be reviewed                              ■
 " Run cword in repl - paste returned lines verbally:
@@ -98,6 +90,10 @@ nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<c
 let s:async_alignFnExpr = ''
 let s:async_curType = ''
 
+func! FloatWinAndVirtText( lines )
+  call FloatWin_ShowLines( a:lines )
+  call VirtualtextShowMessage( a:lines[0], 'CommentSection' )
+endfunc
 
 func! InteroEval_SmartShow()
   let typeSigLineNum = TopLevBackwLine()

@@ -396,6 +396,13 @@ Repl format: `gew` does just append all repl returned lines
   * `cnf[ile]` to go the first item in the next file
   * `:cdo {cmd}` run cmd on all qf entries, `cfdo cmd` runs on the files (?)
   * use `p` to open file:loc in preview window, `c-w z` or `P` to close preview
+### LC Warnings AND Errors
+leader ll   - open Loclist
+[L [l ]l    - go to first/prev/next error/warning (while in main win)
+Go (in LLi) - jump to line (but stay in LocList)
+c-m/i       - next/prev in QFL
+p           - does not work! .. could set up a split?
+
 
 ### Examples
   * lvim /vimium/ .vim/notes/** load vimseach results into location list
