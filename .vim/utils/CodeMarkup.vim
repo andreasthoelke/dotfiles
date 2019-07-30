@@ -37,7 +37,7 @@ let g:headingPttn = '\v^("|--)\s─\s'
 " It prevents haskell type colons e.g. :: to match:
 " class Functor f => Align (f :: * -> *) where
 
-let g:labelPttn = '\v^\s*("|--|\#)\s\zs\S[^.]{,50}(:@<!):(\S)@!'
+let g:labelPttn = '\v^\s*("|--|\#)\zs\s*\S[^.]{,50}(:@<!):(\S)@!'
 let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,30}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■

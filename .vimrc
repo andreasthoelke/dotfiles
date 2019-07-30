@@ -864,6 +864,7 @@ func! InsertLeave()
   if getline('.')[col('.')-1] == ' '
     normal! w
   endif
+  " call JumpsToQuickfix()
 endfunc
 
 
@@ -908,9 +909,6 @@ endfunc
 " call AddLocToJumplist([0,1158,30,0])
 
 
-
-
-
 " Jumplist: --------------------------------------
 
 " Add cursor-rests to jumplist
@@ -924,7 +922,7 @@ augroup JumplistTimeout
 augroup END
 " TODO try this with updatime
 " Issue: this interval is also used for tagbar loc update
-set updatetime=1000
+set updatetime=500
 " Note: This also defines the time you have to c-o to get to the insert end location. And after this time the jumplist
 " will also get cleaned up/ suffled a bit. Typically c-i is not useful *after* this time - the jumps then basically become c-o jumps
 
@@ -966,7 +964,7 @@ endfunc
 
 " General: -----------------------------------------------------------------------------
 
-nnoremap <leader>cab :vnew *.cabal<cr>
+nnoremap <leader>Cab :vnew *.cabal<cr>
 
 " TODO this does not show a man page outline
 nnoremap <leader>g0 g0
@@ -1138,16 +1136,18 @@ nnoremap <leader>sc :sign unplace *<cr>
 command! SignsClear :sign unplace *
 command! ClearSigns :sign unplace *
 " Neomake defaults
-let g:neomake_error_sign = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_error_sign = {'text': '✖', 'texthl': 'Comment'}
 let g:neomake_warning_sign = {
    \   'text': '⚠',
-   \   'texthl': 'NeomakeWarningSign',
+   \   'texthl': 'Comment',
    \ }
 let g:neomake_message_sign = {
     \   'text': '➤',
-    \   'texthl': 'NeomakeMessageSign',
+    \   'texthl': 'Comment',
     \ }
 let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
+
+" Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
 " Neomake: ----------------------------------------------------
 
 
@@ -1222,7 +1222,7 @@ nnoremap <leader>P "0P
 nnoremap <leader><c-p> "+P
 
 " nnoremap <leader>vv "+P
-nnoremap <leader>vv "+P:call PurescriptUnicode()<cr>h
+" nnoremap <leader>vv "+P:call PurescriptUnicode()<cr>h
 
 " copy from clipboard
 nnoremap <leader>y "+y
@@ -1703,7 +1703,7 @@ function! QuickfixRefeshStyle()
     exec 'copen'
     exec 'set syntax=purescript'
     exec 'setlocal modifiable'
-    exec 'call PurescriptUnicode()'
+    " exec 'call PurescriptUnicode()'
     exec 'setlocal nomodifiable'
     wincmd p
   else
@@ -2349,14 +2349,40 @@ func! QuickfixMaps()
 endfunc
 
 " nmap <leader>ll :lopen<cr>:Wrap<cr>
-nnoremap <leader>ll :lopen<cr>
+nnoremap <leader>ll :call Location_toggle()<cr>
 " nmap <leader>qq :copen<cr>
 " Todo: this get's overwrittern on quickfix refesh:
 " nnoremap <leader>qq :copen<cr>:set syntax=purescript<cr>
-nnoremap <leader>qq :copen<cr>
+nnoremap <leader>qq :call QuickFix_toggle()<cr>
 
+" Toggle quickfix window
+function! QuickFix_toggle()
+  for i in range(1, winnr('$'))
+    let bnum = winbufnr(i)
+    if getbufvar(bnum, '&buftype') == 'quickfix'
+      cclose
+      return
+    endif
+  endfor
+  copen
+endfunction
 
+function! s:BufferCount() abort
+  return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+endfunction
 
+" Toggle Location List window
+function! Location_toggle()
+  " https://github.com/Valloric/ListToggle/blob/master/plugin/listtoggle.vim
+  let buffer_count_before = s:BufferCount()
+  " Location list can't be closed if there's cursor in it, so we need
+  " to call lclose twice to move cursor to the main pane
+  silent! lclose
+  silent! lclose
+  if s:BufferCount() == buffer_count_before
+    lopen
+  endif
+endfunction
 
 
 hi Directory guifg=#11C8D7 ctermfg=DarkMagenta

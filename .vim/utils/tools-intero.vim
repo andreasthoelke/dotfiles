@@ -1,4 +1,6 @@
 
+" Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
+
 
 " ─   Settings                                          ──
 " Intero starts automatically. Set this if you'd like to prevent that.
@@ -45,17 +47,37 @@ nnoremap dr :InteroReload<cr>
 
 " ─   Legacy Intero Types: TODO                          ■
 " only for identifier, no unicode conversion
-nnoremap <silent> gw :InteroTypeInsert<cr>
+" nnoremap <silent> gw :InteroTypeInsert<cr>
 nnoremap <silent> <localleader>tw :InteroTypeInsert<cr>
 " does not echo any more (changed this in Intero) outputs gentype only in Repl
 map <localleader>tt <Plug>InteroType
 
-map <silent> <localleader>tg <Plug>InteroGenTypeInsert
+map <localleader>tg <Plug>InteroGenTypeInsert
 vnoremap <localleader>tg :InteroGenTypeInsert<cr>
 " map <localleader>tg <Plug>InteroGenericType
 nnoremap <localleader>ti :InteroInfoInsert<cr>
 vnoremap <localleader>ti :InteroInfoInsert<cr>
 " ─^  Legacy Intero Types: TODO                          ▲
+
+
+" ─   Show Type-At symbol or selection                   ■
+map gw :call SetReplCallbackFloatWin()<cr><Plug>InteroType
+vmap gw :<c-u>call SetReplCallbackFloatWin()<cr>gv<Plug>InteroType
+map gW :call SetReplCallbackFloatWin()<cr><Plug>InteroGenericType
+map gW :<c-u>call SetReplCallbackFloatWin()<cr>gv<Plug>InteroGenericType
+
+func! SetReplCallbackFloatWin()
+  call intero#process#add_handler( function( "FloatWin_stripToType" ) )
+endfunc
+
+func! FloatWin_stripToType( lines )
+  let str = join( a:lines, ' ' )
+  let show = join( split( str )[2:], ' ' )
+  call FloatWin_ShowLines( [show] )
+endfunc
+" ─^  Show Type-At symbol or selection                   ▲
+
+
 
 
 " Default:
@@ -78,7 +100,7 @@ nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'Align
 
 " Get repl :type/:kind info for cword / vis-sel:
 nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
-nnoremap gwt :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
+" nnoremap gwt :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
 vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
 nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
 vnoremap gek :call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
@@ -94,6 +116,7 @@ func! FloatWinAndVirtText( lines )
   call FloatWin_ShowLines( a:lines )
   call VirtualtextShowMessage( a:lines[0], 'CommentSection' )
 endfunc
+
 
 func! InteroEval_SmartShow()
   let typeSigLineNum = TopLevBackwLine()
@@ -276,6 +299,18 @@ endfun
 " command! PursRepl :let PursReplID = jobstart("pulp repl", Cbs1)
 " :call jobstart(split(&shell) + split(&shellcmdflag) + ['{cmd}'])
 
+
+" ─   HPack                                             ──
+autocmd BufWritePost package.yaml call Hpack()
+
+func! Hpack()
+  let err = system('hpack ' . expand('%'))
+  echo 'hi'
+  if v:shell_error
+    echo err
+  endif
+endfunc
+
 " ─^  Tools                                              ▲
 
 " ─   Other tools Langserver                             ■
@@ -319,6 +354,7 @@ func! InteroEval( expr, renderFnName, alignFnName ) abort
   call intero#process#add_handler( function( a:renderFnName ) )
   call intero#repl#eval( a:expr )
 endfunc
+
 
 func! InteroEval_SmartShow_step2( replReturnedLines ) " ■
   " 2. Store the type of the expression
@@ -387,6 +423,34 @@ endfunc " ▲
 " endfunc ▲
 
 " ─^  Repl legacy                                        ▲
+
+nnoremap ger :call WebserverRequestResponse()<cr>
+
+func! WebserverRequestResponse()
+  let urlExtension = GetStringInQuotesFromLine( line('.') )
+  let l:cmd = "curl http://localhost:8000/" . urlExtension
+  let l:resultLines = split( system( l:cmd ), '\n' )
+  call FloatWinAndVirtText( l:resultLines[3:] )
+  " call append( line('.'), l:resultLines )
+endfunc
+" !curl http://localhost:8000
+" req "abc"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -65,7 +65,7 @@ func! HoogleFormatInfoOutput()
   normal! ddi-- 
   call append( 1, l:sig)
   normal! jo{-
-  call PurescriptUnicode()
+  " call PurescriptUnicode()
   set syntax=purescript
   normal gg
 endfunc

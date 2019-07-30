@@ -52,8 +52,12 @@ endfunc
 " ─   Tabularize                                        ──
 
 " Tabularize 1st and 2nd column of a motion or selected range of lines based on <space>
-nnoremap <silent> <leader>at :set opfunc=Align_op<cr>g@
-vnoremap <silent> <leader>at :<c-u>call Align_op( visualmode(), 1)<cr>
+" nnoremap <silent> <leader>at :set opfunc=Align_op<cr>g@
+" vnoremap <silent> <leader>at :<c-u>call Align_op( visualmode(), 1)<cr>
+
+nnoremap <silent> <leader>a> :let g:comEx = ['/->/']<cr>:set opfunc=Align_op<cr>g@
+nnoremap <silent> <leader>a- :let g:comEx = ['/-/']<cr>:set opfunc=Align_op<cr>g@
+
 
 " Note for extending this:
 " Below is an example of how to perform multiple easy-alignments on a (motion-) range of lines.
@@ -65,7 +69,8 @@ func! Align_op( motionType, ...)
   " motionType could e.g. be 'char' here - but aligning will only use linewise here
   let motionType = 'lines'
   " The align expression (EasyAlign DSL)
-  let comExpressions = ['\ ', '2\ ']
+  " let comExpressions = ['\ ', '2\ ']
+  " let comExpressions = ['/->/']
   " Get the range of lines from either visual mode ( "'<") or an (operator pending) motion or text object
   if a:0
     let [l1, l2] = ["'<", "'>"]
@@ -76,10 +81,10 @@ func! Align_op( motionType, ...)
   let range = l1.','.l2
   " Call the easyAlign main API function
   " function! easy_align#align(bang, live/preview-mode, visualmode, expr) range
-  for comExpr in comExpressions
+  for comExpr in g:comEx
     execute range . "call easy_align#align(0, 0, motionType, comExpr)"
   endfor
-  call JumpBackSkipCurrentLoc()
+  " call JumpBackSkipCurrentLoc()
 endfunc
 " Opfunction might be abstracted better using this approach? https://vi.stackexchange.com/questions/12555/how-to-allow-count-before-my-custom-operator 
 

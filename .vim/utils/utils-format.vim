@@ -75,8 +75,8 @@ let g:HsReplacemMap_CharsToUnicode = [['->', '→'], ['=>', '⇒'], ['::', '∷'
 let g:HsReplacemMap_CharsToUnicodePtts = ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode )
 let g:HsReplacemMap_UnicodeToChars = FlipListList( g:HsReplacemMap_CharsToUnicode )
 
-command! -range=% HsReplaceCharsToUnicode :<line1>,<line2>call ReplaceStringsInRange( ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode ) )
-command! -range=% HsReplaceUnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:HsReplacemMap_UnicodeToChars )
+command! -range=% CharsToUnicode :<line1>,<line2>call ReplaceStringsInRange( ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode ) )
+command! -range=% UnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:HsReplacemMap_UnicodeToChars )
 " .,+6HsReplaceCharsToUnicode
 " .,+6HsReplaceUnicodeToChars
 " .+3HsReplaceCharsToUnicode
@@ -100,14 +100,14 @@ command! -range=% HsReplaceUnicodeToChars :<line1>,<line2>call ReplaceStringsInR
 
 " To type a unicode char, in insert-mode type "<c-k>a:"
 " nnoremap cuc :%s/::/<c-k>::/g<cr>:%s/forall/<c-k>FA/g<cr>
-nnoremap cuf :%s/forall/<c-k>FA/ge<cr>
-nnoremap cuc :%s/::/<c-k>::/ge<cr>
-nnoremap cua :%s/->/<c-k>->/ge<cr>
-nnoremap cub :%s/<-/<c-k><-/ge<cr>
-nnoremap cue :%s/>=>/>#>/ge<cr>
+" nnoremap cuf :%s/forall/<c-k>FA/ge<cr>
+" nnoremap cuc :%s/::/<c-k>::/ge<cr>
+" nnoremap cua :%s/->/<c-k>->/ge<cr>
+" nnoremap cub :%s/<-/<c-k><-/ge<cr>
+" nnoremap cue :%s/>=>/>#>/ge<cr>
 " safe Kleisi!
-nnoremap cud :%s/=>/<c-k>=>/ge<cr>
-nnoremap cug :%s/>#>/>=>/ge<cr>
+" nnoremap cud :%s/=>/<c-k>=>/ge<cr>
+" nnoremap cug :%s/>#>/>=>/ge<cr>
 " restore Kleisi!
 " vnoremap <leader>bu :s/\%V→/->/ge<cr>:s/\%V∷/::/ge<cr>:s/\%V⇒/=>/ge<cr>
 " vnoremap <leader>bi :s/\%V->/→/ge<cr>:s/\%V::/∷/ge<cr>:s/\%V=> /⇒ /ge<cr>
@@ -123,9 +123,10 @@ nnoremap cug :%s/>#>/>=>/ge<cr>
 " Not needed - now using conceal ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Conceal%20with%20unicode
 " noremap <leader>cu :call PurescriptUnicode()<cr>
 fun! PurescriptUnicode()
+  echoe "Unicode Conversion!! - no longer supported"
   " normal cufcuccuacubcudcue
   " TODO: there was a reason to NOT convert forall, what was it??
-  normal cufcuccuacubcuecudcuf
+  " normal cufcuccuacubcuecudcuf
 endfun
 
 " ─^  Legacy Unicode conversion                          ▲

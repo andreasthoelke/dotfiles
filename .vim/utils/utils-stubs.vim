@@ -1,7 +1,7 @@
 
 
 
-nnoremap <localleader>ct :call CreateInlineTestDec()<cr>
+nnoremap <leader>ct :call CreateInlineTestDec()<cr>
 " e1_database4 = database4 (Just "eins") 123
 func! CreateInlineTestDec()
   let typeSigLineNum = TopLevBackwLine()
@@ -28,7 +28,7 @@ endfunc
 " echo GetNextTestDeclIndex()
 
 
-nnoremap <localleader>ca :call CreateAssertion()<cr>
+nnoremap <leader>ca :call CreateAssertion()<cr>
 " Tests: (uncomment)
 " database4 ∷ String → [(String, String, Int)]
 " e1_database4 = database4 (Just "eins") 123
@@ -100,8 +100,8 @@ endfunc
 
 
 " ─   "unique functions"                                 ■
-nnoremap <localleader>hu icb<esc>:call RandFnName()<cr>2w
-nnoremap <localleader>hU icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
+nnoremap <localleader>hu ^icb<esc>:call RandFnName()<cr>2w
+nnoremap <localleader>hU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
 " produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"

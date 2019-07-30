@@ -13,6 +13,11 @@ func! GetTopLevSymbolNameBackw()
 endfunc
 " echo GetTopLevSymbolNameBackw()
 
+func! GetStringInQuotesFromLine( lineNum )
+  return matchstr( getline( a:lineNum ), '\"\zs.*\ze\"')
+endfunc
+" echo GetStringInQuotesFromLine( line('.') +1 )
+" req "abc def"
 
 " Like <cword> but includes Haskell symbol characters
 func! HsCursorKeyword()

@@ -1,4 +1,11 @@
 
+
+" Test this: ~/Documents/Haskell/6/HsTrainingTypeClasses1/.vim/settings.json#/"languageServerHaskell".%20{
+" Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
+
+" HIE config: ~/Documents/Haskell/6/HsTrainingTypeClasses1/.vim/settings.json#/"diagnosticsDebounceDuration.%2050,
+
+
 " ─   Language Client HIE                                ■
 
 let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper'] }
@@ -45,6 +52,8 @@ map <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
 map <Leader>lS :call LanguageClient_workspace_symbol()<CR>
 
 map <Leader>ga :call LanguageClient_textDocument_documentHighlight()<CR>
+
+map <Leader>lR :LanguageClientStop<cr>:LanguageClientStart<cr>
 
 
 
@@ -93,7 +102,7 @@ func! s:showLC_Diagnostics( stateJSON )
   let message = ''
   let state = json_decode( a:stateJSON.result )
   let diagnostics = get( state.diagnostics, expand('%:p'), [] )
-  echoe string( diagnostics )
+  " echoe string( diagnostics )
   for diag in diagnostics
     if diag.range.start.line +1 == line('.')
       let message = diag.message

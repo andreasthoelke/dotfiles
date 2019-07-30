@@ -53,7 +53,7 @@ function! OnEv1(job_id, data, event) dict
     " let str = self.shell.' exited'
   endif
 
-  call PurescriptUnicode()
+  " call PurescriptUnicode()
 endfunction
 
 " jobsend(7, "ls\n")

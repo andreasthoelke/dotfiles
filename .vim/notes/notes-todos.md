@@ -1104,8 +1104,19 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 ## Temp next
 
-* there is a LC diagnostic warking about this pragma: {-# HLINT ignore cbkt0 #-}
+
+* LC: Test this: ~/Documents/Haskell/6/HsTrainingTypeClasses1/.vim/settings.json#/"languageServerHaskell".%20{
+
+* show number of errors/warnings (of Intero and LC?) in status line?
+
+* can't close the Quickfix/Intero list: "changes have not been written"
+  * not convienient to close LC/loclist -> now added Loclist/Quickfix_toggle() function!
+
+* prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
+
+* there is a LC diagnostic warning about this pragma: {-# HLINT ignore cbkt0 #-}
   I'd like to therefore pass the -Wno-unrecognised-pragmas ghc option to ghc-mod
+  also the intero options would be nice to have for HIE: e.g. WincompletePattern (for case pattern matching)
 
 * adapt other stub maps to not use yank register ~/.vim/utils/utils-stubs.vim#/TODO%20adapt%20other
 
@@ -1170,15 +1181,19 @@ after duplicating a line and then commenting the orig line and moving down with 
 
 " TODO test and finish the various cases: InteroRepl
 
-### finish Markdown cursor indicator
-* SessionOpen markdownPreviewCursorFeature
 
-Overloaded lists/strings: {-# LANGUAGE OverloadedLists, OverloadedStrings,
+
+* finish Markdown cursor indicator
+  SessionOpen markdownPreviewCursorFeature
+
+* Overloaded lists/strings: {-# LANGUAGE OverloadedLists, OverloadedStrings,
   would allow me to write
   oj3 = length @Set.Set [4, 1, 5, 2] instead of
   oj4 = length @Set.Set $ Set.fromList [4, 1, 5, 2]
   but this will alert 'ambigous types'/not compile:
   e3_align0 = align0 [1, 2, 3] ['a', 'b']
+
+* Learn, Config easyAlign ~/.vim/notes-easyalign.md#/Alignment%20rules
 
 Floating win:
 * jump to floating win
@@ -1201,10 +1216,11 @@ leader la   - LC Code action → import symbol!
 insert c-i  - LC show completions with type sig!
 leader hi   - format imports
 
+gw, gW      - In show type at/vis-sel / generic type
 get         - IN show type of symbol or vis sel
-gwt         - IN paste type (with unicode)
 gek         - IN kind at symbol or vis sel
 ges         - IN run symbol
+ger         - Curl send sting in line to localhost, show response
 ged         - LC show diagnostic message in float-win
 
 ### Stubs
@@ -1212,12 +1228,14 @@ ged         - LC show diagnostic message in float-win
 \ ht        - add type stub
 leader es   - add function to type-sig/ expand signature
 leader if   - add an index/num to the signature-symbol name
-\ ct        - create inline test stub
+leader ct   - create inline test stub
 \ ca        - create assertion
 
 ### Search & Docs
 gsh         - search hoogle
 gse         - explore definition
+Fhask       - Haskell code exampes
+Fdeleted    - deleted code in repo
 
 ### Git
 leader gg   - GitGutterToggle
@@ -1244,9 +1262,31 @@ p           - does not work! .. could set up a split?
 \,l/j/}     - intent range of lines to current cursor H
 `>ii`         - shift lines of indent block to the right
 leader al   - easy align
+leader a-ii - align a 'case' block! to '->'
+
+### Motions
+g;          - to revert the InsertLeave jump
+q/Q         - labels
+tab/s-t/,t  - Headers next/prev /end of header
+c-i/m       - ballparks
+Y/I         - columns
+J/K         - start of line | use to jump to virtual line starts in concealed top level binds
+t/T         - next/prev list item
+]t/[t       - into next/prev inner list
+]T          - end of list (to append new elements)
+
+" ─   Bindings, including where/let                     ──
+`]b`, `[b`      - for next/prev binding
+`cib`         - to change the binding name in consequtive lines
+
+### Rename
+leader lm   - LC menu:rename to rename symbol with all it's live/active references
+ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a sortcut for a haskell function rename
+`<leader>rb`  - to rename a binding and its occurences
 
 
 ## Release notes v1.1.2
+* InsertLeave jumps to insert-start. Revert this with `g;` - jumps to end of last insert
 * Conealed anonymous toplevel (test-) binds: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Concealed%20TL-Binds
 * Hlint ignore warning comment conceal: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/syntax%20match%20concealHlintComment
 * `LinkRefToClipBoard` command using rel.vim: ~/.vim/utils/utils-general-helpers.vim#/command.*%20LinkRefToClipBoard%20call

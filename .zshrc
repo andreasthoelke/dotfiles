@@ -89,7 +89,10 @@ alias npmp='/Users/andreas.thoelke/.npm/bin'
 
 # export ONI_NEOVIM_PATH="/usr/local/Cellar/neovim/0.3.3/bin/"
 
-alias nvim4="/Users/andreas.thoelke/Documents/temp/nvim-osx64/bin/nvim"
+alias nvim41="/Users/andreas.thoelke/Documents/temp/nvim-osx64/bin/nvim"
+# NVIM v0.4.0-762-g9420a2127
+alias nvim4="/Users/andreas.thoelke/Documents/vim/nvim-osx64/bin/nvim"
+# NVIM v0.4.0-1414-g2b731a388
 
 # Neovim Remote: ---------------------------------------------------------
 alias vi="nvr -l "

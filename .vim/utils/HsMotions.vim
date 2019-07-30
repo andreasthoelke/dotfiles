@@ -76,7 +76,7 @@ let g:typeSigBind = '^[^=(]*\zs' . MakeOrPttn( ['∷', '::'] )
 let g:nextWordPttn = '\_s\+\zs\S'
 let g:infixOps = ['<$>', '<\*>', '\*>', '>>', '>>=', '++', '<>', ':']
 let g:typeArgs = ['::', '∷', '=>', '⇒', '->', '→']
-let g:columnSeps = ['=', '->', '→', '<-', '←', '>', '$', '\<then', '\<else', 'deriving']
+let g:columnSeps = ['::', '=', '->', '→', '<-', '←', '>', '$', '\<then', '\<else', 'deriving']
 let g:syntaxSym = ['<-', '←', '=', '\$', '`\w*`', '->', '→', '|', ',', '=' ]
 let g:syntaxWords = PrependSepWord( ['let', 'in', 'do', 'where', 'if', 'then', 'else', 'case', 'instance'] )
 let g:numOps   = ['+', '-', '\*', '&&']
@@ -179,7 +179,7 @@ endfunc
 
 " Method 2: Change the name in multiple consecutive lines in place
 nnoremap <leader>hcn :call BindgingChangeName()<cr>
-" This overwrites "cib" textobj above! because this approach allows to change multiple line
+" This overwrites "cib" textobj above! because this approach allows to change multiple lines
 nnoremap cib :call BindingChangeName()<cr>
 func! BindingChangeName()
   normal! m'll
@@ -458,7 +458,8 @@ func! ColumnMotionForw() " ■
   endif
 
   " Now that a column was found, test a few excape conditions:
-  if IsEmptyLine( line('.') ) || IsTypeSignLine(line('.')) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+  " if IsEmptyLine( line('.') ) || IsTypeSignLine(line('.')) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+  if IsEmptyLine( line('.') )
     call ColumnMotionForw()
   endif
 
@@ -498,7 +499,8 @@ func! ColumnMotionBackw() " ■
   endif
 
   " Now that a column was found, test a few excape conditions:
-  if IsEmptyLine( line('.') ) || IsTypeSignLine(line('.')) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+  " if IsEmptyLine( line('.') ) || IsTypeSignLine(line('.')) || CursorIsInsideComment() || IsInsideSyntaxStackId( line('.'), col('.'), 'functionDecl' )
+  if IsEmptyLine( line('.') )
     normal! k
     call ColumnMotionBackw()
   endif
