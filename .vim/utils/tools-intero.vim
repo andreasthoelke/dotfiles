@@ -424,7 +424,6 @@ endfunc " ▲
 " ─^  Repl legacy                                        ▲
 
 nnoremap ger :call WebserverRequestResponse()<cr>
-
 func! WebserverRequestResponse()
   let urlExtension = GetStringInQuotesFromLine( line('.') )
   let l:cmd = "curl http://localhost:8000/" . urlExtension
@@ -435,6 +434,14 @@ endfunc
 " !curl http://localhost:8000
 " req "abc"
 
+nnoremap yoGs :call ShellReturn( 'git status' )<cr>
+nnoremap yoGp :call ShellReturn( 'git push' )<cr>
+
+func! ShellReturn( cmd )
+  let resultLines = split( system( a:cmd ), '\n' )
+  echoe string( resultLines )
+  call FloatWinAndVirtText( resultLines )
+endfunc
 
 
 
