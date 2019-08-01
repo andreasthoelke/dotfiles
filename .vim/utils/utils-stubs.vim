@@ -100,12 +100,12 @@ endfunc
 
 
 " ─   "unique functions"                                 ■
-nnoremap <localleader>hu ^icb<esc>:call RandFnName()<cr>2w
-nnoremap <localleader>hU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
+nnoremap <leader>hu ^icb<esc>:call RandFnName()<cr>2w
+nnoremap <leader>hU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
 " produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"
-nnoremap <leader>hus :call RandSymbol()<cr>
+" nnoremap <leader>hus :call RandSymbol()<cr>
 
 " "expand function" expand a symbol name to a function stub
 " nnoremap <leader>ef A ∷ String<esc>^ywo<esc>PA= undefined<esc>b
@@ -114,7 +114,7 @@ nnoremap <leader>hus :call RandSymbol()<cr>
 " nnoremap <localleader>ht ^yiwko<esc>PA :: a<esc>w
 
 " TODO adapt other stub maps to not use yank register
-nnoremap <localleader>ht :call Stubs_ExpandATypeSign()<cr>
+nnoremap <leader>ht :call Stubs_ExpandATypeSign()<cr>
 func! Stubs_ExpandATypeSign()
   let symbName = GetTopLevSymbolName( line('.') )
   let lineText = symbName . ' :: a'

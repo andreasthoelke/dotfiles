@@ -97,7 +97,7 @@ endfunc
 command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
 
 runtime plugin/grepper.vim    " initialize g:grepper with default values
-let g:grepper.stop = 20
+let g:grepper.stop = 50
 
 au ag FileType GrepperSide
       \  silent execute 'keeppatterns v#'.b:grepper_side.'#'

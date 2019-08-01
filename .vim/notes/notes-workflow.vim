@@ -139,6 +139,11 @@
 
 " ─^  Stack workflow                                     ▲
 
+" ─   Use Hpack to edit .cabal file                     ──
+" Create a package.yaml file from a cabel file: "hpack-convert"
+" editing package.yaml auto updates .cabal file using ~/.vim/utils/tools-intero.vim#/func.%20Hpack..
+" In case the cabal file was edited manually use "hpack --force" in the project dir
+
 " ─   Update HIE                                         ■
 " Most recent update: 14-07-2019
 " 1. Check the current version: hie --version

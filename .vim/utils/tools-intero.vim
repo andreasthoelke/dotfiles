@@ -4,7 +4,7 @@
 
 " ─   Settings                                          ──
 " Intero starts automatically. Set this if you'd like to prevent that.
-let g:intero_start_immediately = 0
+let g:intero_start_immediately = 1
 " let g:intero_use_neomake = 0
 " This show ghi warnings as opposed to hlint warnings:
 " TODO: toggle warnings without restart vim!
@@ -72,8 +72,8 @@ endfunc
 
 func! FloatWin_stripToType( lines )
   let str = join( a:lines, ' ' )
-  let show = join( split( str )[2:], ' ' )
-  call FloatWin_ShowLines( [show] )
+  let type = HsGetTypeFromSignatureStr( str )
+  call FloatWin_ShowLines( [type] )
 endfunc
 " ─^  Show Type-At symbol or selection                   ▲
 
@@ -103,7 +103,7 @@ nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines
 " nnoremap gwt :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
 vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
 nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
-vnoremap gek :call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
+vnoremap gek :<c-u>call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
 
 nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<cr>
 
@@ -305,7 +305,6 @@ autocmd BufWritePost package.yaml call Hpack()
 
 func! Hpack()
   let err = system('hpack ' . expand('%'))
-  echo 'hi'
   if v:shell_error
     echo err
   endif

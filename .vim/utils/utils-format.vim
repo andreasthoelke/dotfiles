@@ -4,7 +4,6 @@
 " tj00 ∷ a
 " tj00 = undefined
 
-
 " Try: - "gqaf"
 " Issue: this behaved strangely when tried in 5.2019
 " set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()

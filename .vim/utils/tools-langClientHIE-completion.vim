@@ -95,6 +95,7 @@ let g:LanguageClient_diagnosticsDisplay = {
 
 nnoremap ged :call ShowLC_Diagnostics()<cr>
 
+" Note (important): To find the source of a LC diagnostic message (warning, error, severity, etc), uncomment the 'echoe' line below
 func! s:showLC_Diagnostics( stateJSON )
   if !has_key(a:stateJSON, 'result')
     return

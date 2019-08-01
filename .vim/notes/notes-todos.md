@@ -996,6 +996,25 @@ when `ga` highlight only appears after first `n`
 
 ## Haskell Todos
 
+Hlint maps and documentation
+  -- Various ways to Hlint ignore:
+  {-# ANN module "HLint: ignore" #-}
+  {-# HLint: ignore #-}
+  {- HLint: ignore -}
+  {-# ANN cbup0 "HLINT: ignore" #-}
+  cbkt0 = sortBy compare [9,3,5,1,7] {- HLINT ignore cbkt0 -}
+
+Filter LC diagnostics: To find the source of a LC diagnostic message (warning, error, severity, etc), uncomment the 'echoe' line below
+  ~/.vim/utils/tools-langClientHIE-completion.vim#/echoe%20string.%20diagnostics
+
+Consider using MultiwayIf and LambdaCase language extensions:
+  \case Just x -> "hi"
+        Nothing -> "no"
+
+  if | x == 3 -> "hi"
+     | y > 4 -> "eins"
+     | otherwise -> "other"
+
 Cabal config
 /Users/andreas.thoelke/.cabal/config
 
@@ -1114,8 +1133,8 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 * prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
 
-* there is a LC diagnostic warning about this pragma: {-# HLINT ignore cbkt0 #-}
-  I'd like to therefore pass the -Wno-unrecognised-pragmas ghc option to ghc-mod
+[x] there is a LC diagnostic warning about this pragma: {-# HLINT ignore cbkt0 #-}
+  I'd like to therefore pass the -Wno-unrecognised-pragmas ghc option to ghc-mod | done! ~/Documents/Haskell/6/HsTrainingTypeClasses1/package.yaml#/-%20-Wno-unrecognised-pragmas
   also the intero options would be nice to have for HIE: e.g. WincompletePattern (for case pattern matching)
 
 * adapt other stub maps to not use yank register ~/.vim/utils/utils-stubs.vim#/TODO%20adapt%20other
@@ -1224,12 +1243,12 @@ ger         - Curl send sting in line to localhost, show response
 ged         - LC show diagnostic message in float-win
 
 ### Stubs
-\ hu        - unique symbol
+leader hu/U - anonymous binding /+ signature
 \ ht        - add type stub
 leader es   - add function to type-sig/ expand signature
 leader if   - add an index/num to the signature-symbol name
 leader ct   - create inline test stub
-\ ca        - create assertion
+leader ca   - create assertion
 
 ### Search & Docs
 gsh         - search hoogle
@@ -1260,6 +1279,7 @@ p           - does not work! .. could set up a split?
 
 ### Align, Indent
 \,l/j/}     - intent range of lines to current cursor H
+dw          - align/pull inwards to the cursorH the first char to the right
 `>ii`         - shift lines of indent block to the right
 leader al   - easy align
 leader a-ii - align a 'case' block! to '->'
@@ -1286,6 +1306,7 @@ ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a
 
 
 ## Release notes v1.1.2
+* Hpack workflow doc: ~/.vim/notes/notes-workflow.vim#/Use%20Hpack%20to
 * InsertLeave jumps to insert-start. Revert this with `g;` - jumps to end of last insert
 * Conealed anonymous toplevel (test-) binds: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Concealed%20TL-Binds
 * Hlint ignore warning comment conceal: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/syntax%20match%20concealHlintComment

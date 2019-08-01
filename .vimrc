@@ -683,7 +683,8 @@ set autoread
 
 " This seems needed to reload files that have changed outside of vim (https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044)
 " autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
-au ag FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+" au ag FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+au ag CursorHold,FocusGained,BufEnter * if mode() != 'c' | checktime | endif
 " autocmd FileChangedShellPost *
 "   \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 " Issue: This is throwing an error in Command history window
@@ -965,6 +966,8 @@ endfunc
 " General: -----------------------------------------------------------------------------
 
 nnoremap <leader>Cab :vnew *.cabal<cr>
+nnoremap <leader>oPa :vnew package.yaml<cr>
+nnoremap <leader>oPA :tabe package.yaml<cr>
 
 " TODO this does not show a man page outline
 nnoremap <leader>g0 g0
@@ -1116,6 +1119,15 @@ hi NeomakeErrorSign   ctermfg=white
 hi NeomakeWarningSign ctermfg=white
 hi NeomakeInfoSign    ctermfg=white
 hi NeomakeMessageSign ctermfg=white
+hi link NeomakeWarning Comment
+hi link NeomakeError Comment
+hi link NeomakeInfo Comment
+hi link NeomakeMessage Comment
+hi link NeomakeVirtualtextError Comment
+hi link NeomakeVirtualtextWarning Comment
+hi link NeomakeVirtualtextInfo Comment
+hi link NeomakeVirtualtextMessage Comment
+let g:neomake_virtualtext_prefix = ''
 
 hi ErrorSign   ctermfg=white
 hi WarningSign ctermfg=white

@@ -370,7 +370,6 @@ hi CommentLabel   guifg=#42606B guibg=#030303
 
 hi htmlLink guifg=#42606B guibg=#030303
 
-"    From Vimrc: ---------------------------------
 " run: RedirMessagesBuf hi Folded
 " to get:
 " guifg=#4B5B61 guibg=#0B0B0B
@@ -404,6 +403,18 @@ highlight! def link vimMapRhs Macro
 " highlight! Normal guifg=Yellow guibg=Green
 " Function       xxx ctermfg=10 guifg=#D1FA71
 
-"    From Vimrc: ---------------------------------
+hi link yamlBlockMappingKey Define
+hi link yamlBlockCollectionItemStart Delimiter
+hi link yamlKeyValueDelimiter Delimiter
+hi link yamlPlainScalar purescriptIdentifier
+
+" cabalStatement -> Statement
+" yamlBlockMappingKey -> Identifier
+" cabalDelimiter -> Delimiter
+" yamlBlockCollectionItemStart -> Label
+" yamlPlainScalar -> yamlPlainScalar
+" yamlKeyValueDelimiter -> Special
+
+
 
 
