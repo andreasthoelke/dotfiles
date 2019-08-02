@@ -116,3 +116,13 @@ func! ShellReturn( cmd )
   call FloatWinAndVirtText( resultLines )
 endfunc
 
+
+func! GitPublish( commitMessage )
+  let cmd = 'git publish "' . a:commitMessage . '"'
+  call ShellReturn( cmd )
+endfunc
+call GitPublish( input('Commit message: ') )
+
+
+
+
