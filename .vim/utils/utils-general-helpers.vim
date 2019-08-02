@@ -109,6 +109,9 @@ endfunc
 
 nnoremap <leader>Sgs :call ShellReturn( 'git status' )<cr>
 nnoremap <leader>Sgp :call ShellReturn( 'git push' )<cr>
+nnoremap <leader>Sgp :call GitPublish( input( 'Commit message: ' ) )<cr>
+vnoremap <leader>Sgp :<c-u>call GitPublish( GetVisSel() )<cr>
+
 nnoremap <leader>Sls :call ShellReturn( 'ls -a' )<cr>
 
 func! ShellReturn( cmd )
@@ -121,7 +124,7 @@ func! GitPublish( commitMessage )
   let cmd = 'git publish "' . a:commitMessage . '"'
   call ShellReturn( cmd )
 endfunc
-call GitPublish( input('Commit message: ') )
+" call GitPublish( input('Commit message: ') )
 
 
 

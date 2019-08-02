@@ -18,6 +18,10 @@ function! Get_visual_selection()
   return join(lines, "\n")
 endfunction
 
+func! GetVisSel()
+  return Get_visual_selection()
+endfunc
+
 func! VisualBlockMode()
   " Activate visual block mode. 'x' option is needed to exec right away.
   call feedkeys("\<c-v>", 'x')
