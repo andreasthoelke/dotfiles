@@ -4,7 +4,7 @@
 nnoremap <leader>ct :call CreateInlineTestDec()<cr>
 " e1_database4 = database4 (Just "eins") 123
 func! CreateInlineTestDec()
-  let typeSigLineNum = TopLevBackwLine()
+  let typeSigLineNum = TypeSigBindBackwLine()
   let funcName       = GetTopLevSymbolName( typeSigLineNum )
   let argumentTypesList = HsExtractArgTypesFromTypeSigStr( getline( typeSigLineNum ) )
   let nextIndex = GetNextTestDeclIndex()

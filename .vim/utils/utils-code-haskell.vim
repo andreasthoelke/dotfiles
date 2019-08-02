@@ -1,10 +1,11 @@
 
 func! GetTopLevSymbolName( lineNum )
-  return matchstr( getline(a:lineNum), '^\S*\ze\s')
+  " return matchstr( getline(a:lineNum), '^\S*\ze\s')
+  return matchstr( getline(a:lineNum), '\v\S+\ze\s')
 endfunc
 " echo GetTopLevSymbolName( line('.') +1 )
-" aber arg = eins
-" aber ∷ eins
+"    eins ∷ eins
+"   aber arg = eins
 
 " Return the previous function name
 func! GetTopLevSymbolNameBackw()

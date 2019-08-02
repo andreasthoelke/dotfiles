@@ -861,6 +861,13 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 
+" TODO make a local map for vim?
+  nnoremap <silent> <c-n> :call HsBindingForw()<cr>:call ScrollOff(16)<cr>
+    ~/.vim/utils/HsMotions.vim#/TODO%20make%20a
+
+" Issue: CursorHold would auto-reload the buffer in a split-window - but causes an error in search-window
+        ~/.vimrc#/Issue.%20CursorHold%20would
+
 `git show --help` in terminal somehow open vim-manpages
 
 after restart I need several undos until the latest change is undone
@@ -993,6 +1000,11 @@ when reloading with `:e` it seems there is an undo point is set
 when `ga` highlight only appears after first `n`
 
 `0` or `^` should go the begin of the text, not start of comment string
+
+## Example Apps
+
+GraphQL access to the spotify rest API:
+~/Documents/Haskell/6/musikell/spotify-creadentials.md#/Dashboard
 
 ## Haskell Todos
 
@@ -1244,11 +1256,17 @@ ged         - LC show diagnostic message in float-win
 
 ### Stubs
 leader hu/U - anonymous binding /+ signature
-\ ht        - add type stub
+leader ht   - add type stub
 leader es   - add function to type-sig/ expand signature
 leader if   - add an index/num to the signature-symbol name
 leader ct   - create inline test stub
 leader ca   - create assertion
+
+### Code Markup
+leader ch   - heading
+leader cs   - close section
+leader cr   - refresh heading/section
+leader cd   - delete/strip heading/section
 
 ### Search & Docs
 gsh         - search hoogle
@@ -1289,6 +1307,7 @@ g;          - to revert the InsertLeave jump
 q/Q         - labels
 tab/s-t/,t  - Headers next/prev /end of header
 c-i/m       - ballparks
+]b[b        - binding-type sig (incl where, let)
 Y/I         - columns
 J/K         - start of line | use to jump to virtual line starts in concealed top level binds
 t/T         - next/prev list item
@@ -1306,6 +1325,7 @@ ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a
 
 
 ## Release notes v1.1.2
+* Show (synchronous) shell commands in FloatingWin: <leader>Sgs :call ShellReturn( 'git status' )
 * Hpack workflow doc: ~/.vim/notes/notes-workflow.vim#/Use%20Hpack%20to
 * InsertLeave jumps to insert-start. Revert this with `g;` - jumps to end of last insert
 * Conealed anonymous toplevel (test-) binds: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Concealed%20TL-Binds

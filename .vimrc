@@ -158,7 +158,7 @@ Plug 'elzr/vim-json'
 Plug 'leafgarland/typescript-vim'
 Plug 'mityu/vim-applescript'
 " Plug 'bendavis78/vim-polymer'
-" Plug 'vmchale/dhall-vim'
+Plug 'vmchale/dhall-vim'
 
 " Markdown: -------------
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
@@ -683,8 +683,9 @@ set autoread
 
 " This seems needed to reload files that have changed outside of vim (https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044)
 " autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
-" au ag FocusGained,BufEnter * if mode() != 'c' | checktime | endif
-au ag CursorHold,FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+au ag FocusGained,BufEnter * if mode() != 'c' | checktime | endif
+" Issue: CursorHold would auto-reload the buffer in a split-window - but causes an error in search-window
+" au ag CursorHold,FocusGained,BufEnter * if mode() != 'c' | checktime | endif
 " autocmd FileChangedShellPost *
 "   \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 " Issue: This is throwing an error in Command history window

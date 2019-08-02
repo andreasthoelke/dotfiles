@@ -137,6 +137,9 @@
 " - github: mightybyte/map-syntax
 "   commit: acebcf0a83ee639e1a0c49850b9c85821d53f621
 
+" Global stack configuration: ~/.stack/config.yaml#/{allow-newer.%20true}
+
+
 " ─^  Stack workflow                                     ▲
 
 " ─   Use Hpack to edit .cabal file                     ──

@@ -415,6 +415,6 @@ hi link yamlPlainScalar purescriptIdentifier
 " yamlPlainScalar -> yamlPlainScalar
 " yamlKeyValueDelimiter -> Special
 
-
+hi link dhallLabel Define
 
 

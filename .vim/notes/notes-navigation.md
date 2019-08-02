@@ -535,7 +535,7 @@ location could be a
 * Match at beginning of line with optional whitespace
 /\v^(\s+)?read
   note that there are other 'read's, see:
-/read
+  read
 
 * AND: matches in a line containing both "co" and "fi"
 /.*co\&.*fi

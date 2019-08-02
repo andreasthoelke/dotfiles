@@ -107,4 +107,12 @@ endfunc
 " ─^  Links Rel                                          ▲
 
 
+nnoremap <leader>Sgs :call ShellReturn( 'git status' )<cr>
+nnoremap <leader>Sgp :call ShellReturn( 'git push' )<cr>
+nnoremap <leader>Sls :call ShellReturn( 'ls -a' )<cr>
+
+func! ShellReturn( cmd )
+  let resultLines = split( system( a:cmd ), '\n' )
+  call FloatWinAndVirtText( resultLines )
+endfunc
 

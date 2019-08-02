@@ -55,18 +55,35 @@ func! MakeOrPttn( listOfPatterns )
 endfunc
 " echo MakeOrPttn( g:infixOps + g:typeArgs )
 
+" TODO migrate to very-magic would require appending the '\v' via a function..!?
+" func! MakeOrPttnMagic( listOfPatterns )
+"   return '(' . join( a:listOfPatterns, '|' ) . ')'
+" endfunc
+" call append( line('.'), MakeOrPttnMagic( [g:hsBinding, '\v^func!'] ) )
+" (\v^\i+\s([(),={}_a-zA-Z0-9]+\s)*\=\_s|\v^func!)
 
 " Haskell Patterns:
 " Line starts in col 1 and is not a comment (non consuming lookaround)
 let g:topLevPttn = '^[^ -]'
-let g:anyCharsNotBracketOrEqu = '[^=(]*'
+let g:anyCharsNotBracketOrEqu = '[^=(]+'
 
 " Top level Haskell type signature. May the colon in a new line. Exclues colons after = and inside (). '\_s' => whitespace or blank lines
-let g:topLevTypeSig = g:topLevPttn . g:anyCharsNotBracketOrEqu . '\_s' . g:anyCharsNotBracketOrEqu . MakeOrPttn( ['∷', '::'] )
+" let g:topLevTypeSig = g:topLevPttn . g:anyCharsNotBracketOrEqu . '\_s' . g:anyCharsNotBracketOrEqu . MakeOrPttn( ['∷', '::'] )
+
+let g:topLevTypeSig = '^\i\+\s\:\:'
+" let g:topLevBind = '^\(\i\+\s\)\+=\s'
+let g:topLevBind = '\v^\i[^:]*\='
+" let g:hsBinding = '\(\i\+\s\)\+=\s'
+" let g:hsBinding = '\v\i+\s([(),={}a-zA-Z0-9]+\s\=\s)'
+" Issue: there are some missing chars '|:"
+" let g:hsBinding = '\v^\i+\s([(),={}_a-zA-Z0-9]+\s)*\=\_s'
+
 let g:topLevOtherPttn = '^' . MakeOrPttn( ['instance', 'data ', 'class', 'type ', 'newtype', 'func!', 'function', 'au ', 'command'] )
 let g:topLevCombined = MakeOrPttn( [ g:topLevTypeSig, g:topLevOtherPttn ] )
+" let g:topLevCombined = MakeOrPttn( [ g:topLevBind, g:topLevOtherPttn ] )
 
-" Note the { - } is conceald in this pattern
+" ^[^ -][^=(]+\_s[^=(]+\(∷\|::\)
+
 let g:multilineTilAfterEqual = '\_.\{-}\s=\_s\+\zs\S'
 
 " all haskell type sig on bindings (where and let)
@@ -99,12 +116,27 @@ endfunc
 
 " ─   TopLevel                                           ■
 
-nnoremap <silent> <c-n> :call TopLevForw()<cr>:call ScrollOff(16)<cr>
+" TODO make a local map for vim?
+nnoremap <silent> <c-n> :call TopLevBindingForw()<cr>:call ScrollOff(16)<cr>
+func! TopLevBindingForw()
+  normal! }
+  call search( g:topLevBind, 'W' )
+endfunc
+
+nnoremap <silent> <c-p> :call TopLevBindingBackw()<cr>:call ScrollOff(10)<cr>
+func! TopLevBindingBackw()
+  call search( g:topLevBind, 'bW' )
+  normal! {
+  call search( g:topLevBind, 'W' )
+endfunc
+
+" TODO still in use?
+" nnoremap <silent> <c-n> :call TopLevForw()<cr>:call ScrollOff(16)<cr>
 func! TopLevForw()
   call search( g:topLevCombined, 'W' )
 endfunc
 
-nnoremap <silent> <c-p> :call TopLevBackw()<cr>:call ScrollOff(10)<cr>
+" nnoremap <silent> <c-p> :call TopLevBackw()<cr>:call ScrollOff(10)<cr>
 func! TopLevBackw()
   call search( g:topLevCombined, 'bW' )
 endfunc
@@ -114,14 +146,19 @@ func! TopLevBackwLine()
 endfunc
 " echo TopLevBackwLine()
 
+func! TypeSigBindBackwLine()
+  return searchpos( g:typeSigBind, 'cnb')[0]
+endfunc
+
 func! PrevBlockLastLine()
   " Seach back to a line that does not start with a comment
   call search('\v^(\s*--.*)@!\s*.', 'bW')
 endfunc
 
 func! TypeSigBackwLineNum()
-  call searchpos( g:topLevTypeSig, 'cnb' )[0]
+  call searchpos( g:topLevBind, 'cnb' )[0]
 endfunc
+
 
 
 nnoremap <silent> ,<c-n> :call HsBlockLastLine()<cr>:call ScrollOff(10)<cr>

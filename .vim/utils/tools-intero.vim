@@ -85,7 +85,7 @@ nnoremap gei :call InteroEval_SmartShow()<cr>
 
 " Plain Repl Lines:
 " nnoremap ges :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
-nnoremap ges :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
+nnoremap <silent> ges :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
 
 " ─   legacy to be reviewed                              ■
 " Run cword in repl - paste returned lines verbally:
@@ -434,14 +434,6 @@ endfunc
 " !curl http://localhost:8000
 " req "abc"
 
-nnoremap yoGs :call ShellReturn( 'git status' )<cr>
-nnoremap yoGp :call ShellReturn( 'git push' )<cr>
-
-func! ShellReturn( cmd )
-  let resultLines = split( system( a:cmd ), '\n' )
-  echoe string( resultLines )
-  call FloatWinAndVirtText( resultLines )
-endfunc
 
 
 
