@@ -5,11 +5,13 @@
 	name = Andreas Thoelke
 	email = andreas.thoelke@gmail.com
 [pager]
-	status = true
+	status = false
 [diff]
 	tool = vimdiff
 [alias]
 	co = checkout
+  publish = "!f() { git add -u ; git commit -m \"$1\" ; git push ; }; f"
+
   ci = commit
   st = status
   br = branch
