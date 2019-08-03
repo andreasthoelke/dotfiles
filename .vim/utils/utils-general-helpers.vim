@@ -106,11 +106,17 @@ endfunc
 
 " ─^  Links Rel                                          ▲
 
+command!          Gitpush   call ShellReturn( 'git push' )
+command!          Gitstatus call ShellReturn( 'git status' )
+command! -range -nargs=* Gitcommit call GitCommitOverload(<q-args>)
+command! -nargs=* Gitpublish call GitPublish(<q-args>)
 
-nnoremap <leader>Sgs :call ShellReturn( 'git status' )<cr>
-nnoremap <leader>Sgp :call ShellReturn( 'git push' )<cr>
-nnoremap <leader>Sgp :call GitPublish( input( 'Commit message: ' ) )<cr>
-vnoremap <leader>Sgp :<c-u>call GitPublish( GetVisSel() )<cr>
+nnoremap <leader><leader>gs :call ShellReturn( 'git status' )<cr>
+nnoremap <leader><leader>gp :call ShellReturn( 'git push' )<cr>
+nnoremap <leader><leader>gP :call GitPublish( input( 'Commit message: ' ) )<cr>
+vnoremap <leader><leader>gP :<c-u>call GitPublish( input( 'Commit message: ', GetVisSel() ) )<cr>
+nnoremap <leader><leader>gc :call GitCommit( input( 'Commit message: ' ) )<cr>
+vnoremap <leader><leader>gc :<c-u>call GitCommit( input( 'Commit message: ', GetVisSel() ) )<cr>
 
 nnoremap <leader>Sls :call ShellReturn( 'ls -a' )<cr>
 
@@ -119,6 +125,16 @@ func! ShellReturn( cmd )
   call FloatWinAndVirtText( resultLines )
 endfunc
 
+func! GitCommitOverload( ... )
+  let visText = GetVisSel()
+  let message = input( 'Commit message: ', visText )
+  call GitCommit( message )
+endfunc
+
+func! GitCommit( commitMessage )
+  let cmd = 'git commit -a -m "' . a:commitMessage . '"'
+  call ShellReturn( cmd )
+endfunc
 
 func! GitPublish( commitMessage )
   let cmd = 'git publish "' . a:commitMessage . '"'
