@@ -4,6 +4,7 @@
 nnoremap you :MundoToggle<cr>:AutoSaveToggle<cr>
 " There may be muliple Magit windows. Only when the focus is on any of there Autosave should be off
 nnoremap yog :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
+nnoremap yoG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 
 nnoremap yot :TagbarToggle<cr>
 

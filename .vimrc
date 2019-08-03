@@ -2092,18 +2092,6 @@ command! Diff execute 'w !git diff --no-index % -'
 " Diffing: --------------------------------------------------------
 
 
-" Magit: ----------------------------------------------------------
-let g:magit_default_show_all_files = 1
-let g:magit_default_fold_level = 1
-" let g:magit_default_sections = ['info', 'global_help', 'commit', 'staged', 'unstaged']
-let g:magit_default_sections = ['commit', 'staged', 'unstaged']
-
-" Z Maps Unimpaired:
-" There may be muliple Magit windows. Only when the focus is on any of there Autosave should be off
-" nnoremap yog :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0
-
-" Magit: ----------------------------------------------------------
-
 " Don't show "-- INSERT --" in command line when in insert mode?
 set noshowmode
 
@@ -2121,58 +2109,8 @@ nnoremap <leader>oa :CtrlPArgs<cr>
 
 
 
-" Fugitive Gitv: -----------------------------------------------------------
-
-nnoremap <leader>gv :Gitv<cr>
-nnoremap <leader>gV :Gitv!<cr>
-
-nnoremap <leader>Gs :Gstatus<cr>
-
-let g:Gitv_CustomMappings = {
-  \'update': 'r',
-\}
-
-" autocmd BufNewFile,BufRead fugitive://* set bufhidden=delete
-
-" Disable neovim terminal when e.g. ":Git checkout master" (experimental)
-let g:fugitive_force_bang_command = 1
-
-" Deletes hidden fugitive buffers when I hide them?
-" au ag BufReadPost fugitive://* set bufhidden=delete
-
-" Fugitive Gitv: -----------------------------------------------------------
 
 
-" ----------------------------------------------------------------------------------
-"  Launching external apps
-command! Browser :call OpenVisSel()
-vmap glb :call OpenVisSel()<cr>
-nnoremap glb :call HandleURL()<cr>
-
-command! ITerm :call OpenITerm()
-nnoremap gli :call OpenITerm()<cr>
-
-command! Finder :call OpenFinder()
-nnoremap glf :call OpenFinder()<cr>
-
-command! Editor :call OpenCurrentFileInSystemEditor()
-nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
-" Tip: alternatively just ":!open $"!
-
-command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
-command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
-" Todo: start Alacritty with options
-" command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --option \"window.decoration\" \"none\"'"
-" command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --config-file /Users/andreas.thoelke/.config/alacritty/alacritty.yml"
-" command! Alacritty exec "silent !open -n '/Applications/Alacritty.app/"
-
-fun! OpenITerm()
-  let path = projectroot#guess()
-  exec 'silent !open -a iTerm ' . path
-endfun
-" this works: :silent !open -a iTerm Documents/purescript
-
-" ----------------------------------------------------------------------------------
 
 
 
@@ -2667,12 +2605,12 @@ source ~/.vim/utils/utils-format.vim
 source ~/.vim/utils/utils-stubs.vim
 
 " ─   " General tools                                   ──
+source ~/.vim/utils/tools-external.vim
 source ~/.vim/utils/utils-terminal.vim
 " Todo: move the helper/commands in this note file
 source ~/.vim/notes/notes-workflow.vim
 source ~/.vim/utils/utils-vimscript-tools.vim
 source ~/.vim/utils/tools-markdown.vim
-source ~/.vim/utils/utils-chromium.vim
 source ~/.vim/utils/utils-floatwin.vim
 source ~/.vim/utils/tools-tab-status-lines.vim
 source ~/.vim/utils/tools-langClientHIE-completion.vim
@@ -2681,7 +2619,6 @@ source ~/.vim/utils/tools-langClientHIE-completion.vim
 " ─   " Minor                                           ──
 source ~/.vim/utils/utils-virtualtext.vim
 source ~/.vim/utils/utils-csv.vim
-source ~/.vim/utils/utils-applescript.vim
 " source ~/.vim/utils/GuiVim.vim
 
 " ─   " Split-out setup sections                        ──
