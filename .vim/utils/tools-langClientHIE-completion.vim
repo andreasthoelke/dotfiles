@@ -47,6 +47,8 @@ map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
 map <Leader>lb :call LanguageClient#textDocument_references()<CR>
 map <Leader>la :call LanguageClient#textDocument_codeAction()<CR>
 
+map <Leader>lc :echo LanguageClient#textDocument_completion()<CR>
+
 map <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
 " This still shows an error - 'no handler for ..'
 map <Leader>lS :call LanguageClient_workspace_symbol()<CR>

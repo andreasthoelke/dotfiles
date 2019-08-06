@@ -966,35 +966,6 @@ endfunc
 
 " General: -----------------------------------------------------------------------------
 
-nnoremap <leader>Cab :vnew *.cabal<cr>
-nnoremap <leader>oPa :vnew package.yaml<cr>
-nnoremap <leader>oPA :tabe package.yaml<cr>
-
-" TODO this does not show a man page outline
-nnoremap <leader>g0 g0
-
-
-" nnoremap <leader>zsh :e ~/.zshrc<cr>
-command! Zshrc   :e ~/.zshrc
-command! ZshOhMy :e ~/.oh-my-zsh/oh-my-zsh.sh
-command! Vimrc   :e ~/.vimrc
-command! Cabal   :vnew *.cabal
-
-" Insert the $PATH shell variable
-command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
-" current as of 5/5/2018:
-" /Users/andreas.thoelke/.cargo/bin
-" /Library/Frameworks/Python.framework/Versions/3.6/bin
-" /usr/local/bin
-" /usr/bin
-" /bin
-" /usr/sbin
-" /sbin
-" /Users/andreas.thoelke/.local/bin <<<<<< install executables HERE!!!
-" /Users/andreas.thoelke/Library/Python/3.6/bin
-
-" TIP: install locations for executables:
-" /Users/andreas.thoelke/.local/bin
 
 " ignored? based on `:checkhealth`
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1

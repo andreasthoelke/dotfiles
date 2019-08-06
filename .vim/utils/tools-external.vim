@@ -7,6 +7,7 @@ func! ShellReturn( cmd )
   call FloatWinAndVirtText( resultLines )
 endfunc
 
+
 " ----------------------------------------------------------------------------------
 "  Launching external apps
 command! Browser :call OpenVisSel()
@@ -38,6 +39,37 @@ endfun
 
 " ----------------------------------------------------------------------------------
 
+nnoremap <leader>Cab :vnew *.cabal<cr>
+nnoremap <leader>oPa :vnew package.yaml<cr>
+nnoremap <leader>oPA :tabe package.yaml<cr>
+
+" TODO this does not show a man page outline
+nnoremap <leader>g0 g0
+
+
+" nnoremap <leader>zsh :e ~/.zshrc<cr>
+command! Zshrc   :e ~/.zshrc
+command! ZshOhMy :e ~/.oh-my-zsh/oh-my-zsh.sh
+command! Vimrc   :e ~/.vimrc
+command! Cabal   :vnew *.cabal
+command! PackageYaml :vnew package.yaml
+
+" Insert the $PATH shell variable
+command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
+" current as of 5/5/2018:
+" /Users/andreas.thoelke/.cargo/bin
+" /Library/Frameworks/Python.framework/Versions/3.6/bin
+" /usr/local/bin
+" /usr/bin
+" /bin
+" /usr/sbin
+" /sbin
+" /Users/andreas.thoelke/.local/bin <<<<<< install executables HERE!!!
+" /Users/andreas.thoelke/Library/Python/3.6/bin
+
+" TIP: install locations for executables:
+" /Users/andreas.thoelke/.local/bin
+
 
 " ─   Git                                                ■
 
@@ -55,8 +87,12 @@ vnoremap <leader><leader>gc :<c-u>call GitCommit( input( 'Commit message: ', Get
 
 
 func! GitCommitOverload( ... )
-  let visText = GetVisSel()
-  let message = input( 'Commit message: ', visText )
+  if a:0
+    let message = a:1
+  else
+    let visText = GetVisSel()
+    let message = input( 'Commit message: ', visText )
+  endif
   call GitCommit( message )
 endfunc
 
@@ -119,6 +155,7 @@ let g:fugitive_force_bang_command = 1
 " au ag BufReadPost fugitive://* set bufhidden=delete
 
 " ─^  Git Tools                                          ▲
+
 
 
 " ─   Launching Chromium                                 ■

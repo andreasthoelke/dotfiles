@@ -1008,6 +1008,11 @@ GraphQL access to the spotify rest API:
 
 ## Haskell Todos
 
+Ghci default imports: ~/.ghc/_ghci.conf#/import%20Control.Applicative
+
+Smart autocomplete: When filling in a function argument val, autocompletion
+    should only show the values suitable values in scope
+
 Hlint maps and documentation
   -- Various ways to Hlint ignore:
   {-# ANN module "HLint: ignore" #-}
@@ -1135,6 +1140,8 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 ## Temp next
 
+* <c-m> (next ballpark) does not jump forward on data .. 'deriving'
+   ~/Documents/Haskell/haskell-ide-engine/src/Haskell/Ide/Engine/Plugin/GhcMod.hs#/}%20deriving%20.Eq,Show,Generic.
 
 * LC: Test this: ~/Documents/Haskell/6/HsTrainingTypeClasses1/.vim/settings.json#/"languageServerHaskell".%20{
 
@@ -1247,12 +1254,13 @@ leader la   - LC Code action → import symbol!
 insert c-i  - LC show completions with type sig!
 leader hi   - format imports
 
-gw, gW      - In show type at/vis-sel / generic type
+gw, gW      - IN show type at/vis-sel / generic type
 get         - IN show type of symbol or vis sel
 gek         - IN kind at symbol or vis sel
 ges         - IN run symbol
 ger         - Curl send sting in line to localhost, show response
 ged         - LC show diagnostic message in float-win
+gd, ,gd     - go to definition /in split
 
 ### Stubs
 leader hu/U - anonymous binding /+ signature

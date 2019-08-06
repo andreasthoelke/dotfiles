@@ -155,15 +155,15 @@ func! PrevBlockLastLine()
   call search('\v^(\s*--.*)@!\s*.', 'bW')
 endfunc
 
-func! TypeSigBackwLineNum()
-  call searchpos( g:topLevBind, 'cnb' )[0]
+func! TopLevTypeSigBackwLineNum()
+  return searchpos( g:topLevTypeSig, 'cnb' )[0]
 endfunc
-
 
 
 nnoremap <silent> ,<c-n> :call HsBlockLastLine()<cr>:call ScrollOff(10)<cr>
 func! HsBlockLastLine()
-  call TopLevForw()
+  " call TopLevForw()
+  call TopLevBindingForw()
   call PrevBlockLastLine()
   call IfOnSpaceGoWord()
 endfunc

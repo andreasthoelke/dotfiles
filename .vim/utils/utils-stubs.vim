@@ -4,7 +4,7 @@
 nnoremap <leader>ct :call CreateInlineTestDec()<cr>
 " e1_database4 = database4 (Just "eins") 123
 func! CreateInlineTestDec()
-  let typeSigLineNum = TypeSigBindBackwLine()
+  let typeSigLineNum = TopLevTypeSigBackwLineNum()
   let funcName       = GetTopLevSymbolName( typeSigLineNum )
   let argumentTypesList = HsExtractArgTypesFromTypeSigStr( getline( typeSigLineNum ) )
   let nextIndex = GetNextTestDeclIndex()
@@ -45,7 +45,7 @@ func! CreateAssertion()
 
   let nextIndex = GetNextAssertionIndex()
   let decSymbolName = GetTopLevSymbolName( lineNumPrevInlineTestDec )
-  let lineText = 'a' . nextIndex . '_' . funcName . ' = id ' . decSymbolName . ' == (i∷ ' . funcReturnType . ')'
+  let lineText = 'a' . nextIndex . '_' . funcName . ' = id ' . decSymbolName . ' == (i:: ' . funcReturnType . ')'
   call append( line('.') -1, lineText )
   normal k^ww
 endfunc

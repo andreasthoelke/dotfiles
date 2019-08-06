@@ -77,7 +77,7 @@ endfunc
 " echo HsGetTypeFromSignatureStr( getline( line('.')-1 ) )
 
 func! ArgsPlacehoderStr ( argumentTypesList )
-  return Reduce( {acc, nextStr -> acc . '(i∷ ' . nextStr . ') '}, a:argumentTypesList )[0:-2]
+  return Reduce( {acc, nextStr -> acc . '(i:: ' . nextStr . ') '}, a:argumentTypesList )[0:-2]
 endfunc
 " echo ArgsPlacehoderStr( ['a → b', 'Maybe a'] )
 

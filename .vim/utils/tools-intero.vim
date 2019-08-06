@@ -8,11 +8,14 @@ let g:intero_start_immediately = 1
 " let g:intero_use_neomake = 0
 " This show ghi warnings as opposed to hlint warnings:
 " TODO: toggle warnings without restart vim!
-let g:intero_ghci_options = '-Wall -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
+
+" See warnings here: https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
+" let g:intero_ghci_options = '-Wall -fdefer-typed-holes -frefinement-level-hole-fits=1 -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
+let g:intero_ghci_options = '-fdefer-typed-holes -frefinement-level-hole-fits=1 -XPartialTypeSignatures'
 " let g:intero_ghci_options = '-Wall -Wno-unrecognised-pragmas -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
 " let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 " let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
-" https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
+
 
 " TODO: when do I need this? ■
 let g:haskellmode_completion_ghc = 1
@@ -48,7 +51,8 @@ nnoremap dr :InteroReload<cr>
 " ─   Legacy Intero Types: TODO                          ■
 " only for identifier, no unicode conversion
 " nnoremap <silent> gw :InteroTypeInsert<cr>
-nnoremap <silent> <localleader>tw :InteroTypeInsert<cr>
+" nnoremap <silent> <localleader>tw :InteroTypeInsert<cr>
+nnoremap <silent> <localleader>gw :InteroTypeInsert<cr>
 " does not echo any more (changed this in Intero) outputs gentype only in Repl
 map <localleader>tt <Plug>InteroType
 
