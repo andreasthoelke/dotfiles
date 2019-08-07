@@ -151,6 +151,8 @@ func! TypeSigBindBackwLine()
 endfunc
 
 func! PrevBlockLastLine()
+  " Go one up to (presumably) the type-sig line
+  normal! k
   " Seach back to a line that does not start with a comment
   call search('\v^(\s*--.*)@!\s*.', 'bW')
 endfunc

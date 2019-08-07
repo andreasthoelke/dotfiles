@@ -50,7 +50,7 @@ let concealID = matchadd("Conceal", "-}", -1, -1, {"conceal": ""})
 let concealID = matchadd("Conceal", "{{{", -1, -1, {"conceal": ""})
 let concealID = matchadd("Conceal", "}}}", -1, -1, {"conceal": ""})
 
-echo matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
+-- echo matchadd('Conceal', '{-', -1, -1, {'conceal': ''})
 call matchadd('Conceal', '-\}', -1, -1, {'conceal': ''})
 call matchadd('Conceal', '\{\{\{', -1, -1, {'conceal': ''})
 call matchadd('Conceal', '\}\}\}', -1, -1, {'conceal': ''})
@@ -72,6 +72,70 @@ endfunc
 eins
 
 HsPsTypesExplore
+
+Prelude data IO a
+module System.IO
+System.IO data IO a
+module GHC.Conc.IO
+module Data.Text.IO
+module Data.Text.Internal.IO
+module Data.Text.Lazy.IO
+Prelude type IOError = IOException
+Control.Exception data IOException
+Control.Exception.Base data IOException
+module Data.IORef
+Data.IORef data IORef a
+System.IO data IOMode
+System.IO.Error type IOError = IOException
+System.IO.Error data IOErrorType
+GHC.Event type IOCallback = FdKey -> Event -> IO ()
+GHC.IO.Device class IODevice a
+GHC.IO.Device data IODeviceType
+Test.QuickCheck.Property IORose :: (IO (Rose a)) -> Rose a
+Data.Vector.Mutable type IOVector = MVector RealWorld
+
+-- Prelude\\\\
+data IO a
+-- module\\\\
+System.IO
+-- System.IO\\\\
+data IO a
+-- module\\\\
+GHC.Conc.IO
+-- module\\\\
+Data.Text.IO
+-- module\\\\
+Data.Text.Internal.IO
+-- module\\\\
+Data.Text.Lazy.IO
+-- Prelude\\\\
+type IOError = IOException
+-- Control.Exception\\\\
+data IOException
+-- Control.Exception.Base\\\\
+data IOException
+-- module\\\\
+Data.IORef
+-- Data.IORef\\\\
+data IORef a
+-- System.IO\\\\
+data IOMode
+-- System.IO.Error\\\\
+type IOError = IOException
+-- System.IO.Error\\\\
+data IOErrorType
+-- GHC.Event\\\\
+type IOCallback = FdKey -> Event -> IO ()
+-- GHC.IO.Device\\\\
+class IODevice a
+-- GHC.IO.Device\\\\
+data IODeviceType
+-- Test.QuickCheck.Property\\\\
+IORose :: (IO (Rose a)) -> Rose a
+-- Data.Vector.Mutable\\\\
+type IOVector = MVector RealWorld
+
+
 
 
 

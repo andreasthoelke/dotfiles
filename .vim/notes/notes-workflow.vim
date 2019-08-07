@@ -139,6 +139,9 @@
 
 " Global stack configuration: ~/.stack/config.yaml#/{allow-newer.%20true}
 
+" stack install: copies executable to ~/.local/bin/
+" stack uninstall is just to remove that executable: "rm ~/.local/bin/intero"
+" there is also "ghc-pkg unregister <package>" - not sure when i would want to use this
 
 " ─^  Stack workflow                                     ▲
 

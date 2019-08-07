@@ -32,12 +32,44 @@ let g:hoogle_search_count = 30
 "
 " 6. setup local maps
 
-nnoremap gsd :call HsAPIRunQueryAndShow( HsCursorKeyword() )<cr>
-nnoremap gsD :call HsAPIRunQueryAndShow( input( 'HsAPI query: ', 'e.', 'var' )<cr>
-vnoremap gsd :call HsAPIRunQueryAndShow( Get_visual_selection() )<cr>
+nnoremap gsd :call HsAPIQueryShow( HsCursorKeyword(), 15, 0 )<cr>
+vnoremap gsd :call HsAPIQueryShow( GetVisSel(),       15, 0 )<cr>
+nnoremap gSd :call HsAPIQueryShow( HsCursorKeyword(), 60, 0 )<cr>
+vnoremap gSd :call HsAPIQueryShow( GetVisSel(),       60, 0 )<cr>
 
-func! HsAPIRunQueryAndShow( searchStr )
+nnoremap gsD :call HsAPIQueryShow( input( 'HsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
+vnoremap gsD :call HsAPIQueryShow( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
+nnoremap gSD :call HsAPIQueryShow( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
+vnoremap gSD :call HsAPIQueryShow( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
 
+nnoremap gsk :call HsAPIQueryShow( HsCursorKeyword(), 15, 1 )<cr>
+vnoremap gsk :call HsAPIQueryShow( GetVisSel(),       15, 1 )<cr>
+
+
+func! HsAPIQueryShow( searchStr, count, infoFlag )
+  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
+  let hoogleLines = split( system( hoogleCmd ), '\n' )
+
+  call FloatWin_ShowLines( hoogleLines )
+
+  call FloatWin_do( 'call HaskellSyntaxAdditions()' )
+
+  if !a:infoFlag
+    " Delete commented lines
+    call FloatWin_do( 'g/--/d' )
+    " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
+    call FloatWin_do( 'g/./normal! Whi0i-- ' )
+
+    " call FloatWin_do( 'call HsTabularizeTypeSigns( 1, ' . ((a:count*2)-0) . ')' )
+    call FloatWin_do( 'call HsTabularizeTypeSigns( 1, line("$") )' )
+  endif
+
+  " if len( s:async_alignFnExpr )
+  "   call FloatWin_do( 'call ' . s:async_alignFnExpr )
+  " endif
+
+  call FloatWin_do( 'normal! gg' )
+  call FloatWin_FitWidthHeight()
 endfunc
 
 
@@ -71,8 +103,8 @@ func! HoogleFormatInfoOutput()
 endfunc
 
 func! GetAPICmdStr( query, limit, infoFlag )
-  let infoArg = ' --info'
-  return 'hoogle "' . a:query . '" -n=' . limit . infoArg
+  let infoArg = a:infoFlag ? ' --info' : ''
+  return 'hoogle "' . a:query . '" -n=' . a:limit . infoArg
 endfunc
 
 

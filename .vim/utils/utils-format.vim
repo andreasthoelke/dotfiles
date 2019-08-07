@@ -165,7 +165,8 @@ endfunction
 " ─^  Formatting Haskell Imports                         ▲
 
 
-let g:hsTypeSigColumns = [ "∷", "⇒", ".*\zs→" ]
+" let g:hsTypeSigColumns = [ "∷", "⇒", ".*\zs→" ]
+let g:hsTypeSigColumns = [ "::", "=>", ".*\\zs\-\>" ]
 " Tabularizes patterns found in TypeSignatures over a range of lines
 func! HsTabularizeTypeSigns( startLine, endLine )
   call TabularizeListOfPttns( g:hsTypeSigColumns, a:startLine, a:endLine )

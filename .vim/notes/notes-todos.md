@@ -1277,10 +1277,16 @@ leader cr   - refresh heading/section
 leader cd   - delete/strip heading/section
 
 ### Search & Docs
-gsh         - search hoogle
-gse         - explore definition
-Fhask       - Haskell code exampes
+gsd         - hoogle search word under cursor or vis-sel
+gsD <c-f>   - hoogle edit vis-sel or wuc: gsD then <c-f> .. <c-c><cr> (?)
+gsh         - search hoogle.org
+gse         - explore definition (haskell-code-explorer.com)
+Fhask       - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** ~/.vim/utils/utils-search.vim#/command.%20-nargs=1%20Fhask 
 Fdeleted    - deleted code in repo
+
+### Win, Buffer Navigation
+c-w n/N     - SymbolNext SplitTop
+c-w i       - into float-win
 
 ### Git
 leader gg   - GitGutterToggle

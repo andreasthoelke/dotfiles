@@ -46,6 +46,7 @@ nnoremap <leader>aff :call FloatWin_ShowLines( testText1 )<cr>
 
 nnoremap <c-w>[ :call FloatWin_close()<cr>
 " there is also a "<c-[>" map
+nnoremap <c-w>i :call nvim_set_current_win( g:floatWin_win )<cr>gg
 
 " Copied most parts from https://github.com/ncm2/float-preview.nvim
 
