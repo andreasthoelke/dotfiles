@@ -29,29 +29,29 @@ Data.Conduit.Internal.List.Stream replicateMS :: Monad m => Int -> m a -> Stream
 
 
 
-Data.Conduit.List replicateM :: Monad m => Int -> m a -> Producer m a
-Data.Conduit.List iterate :: Monad m => (a -> a) -> a -> Producer m a
-Data.Conduit.List unfold :: Monad m => (b -> Maybe (a, b)) -> b -> Producer m a
-Data.Conduit.List unfoldM :: Monad m => (b -> m (Maybe (a, b))) -> b -> Producer m a
-Data.Sequence replicateM :: Monad m => Int -> m a -> m (Seq a)
-Data.Sequence.Internal replicateM :: Monad m => Int -> m a -> m (Seq a)
-Data.Conduit.Internal.List.Stream replicateMS :: Monad m => Int -> m a -> StreamProducer m a
-Control.Error.Safe tryAt :: (Monad m) => e -> [a] -> Int -> ExceptT e m a
-Control.Monad.Loops concatM :: Monad m => [a -> m a] -> (a -> m a)
-Control.Monad.Extra concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
-Extra concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
-Control.Monad.Extra concatForM :: Monad m => [a] -> (a -> m [b]) -> m [b]
-Extra concatForM :: Monad m => [a] -> (a -> m [b]) -> m [b]
-Data.Sequence mapWithIndex :: (Int -> a -> b) -> Seq a -> Seq b
-Data.Sequence.Internal mapWithIndex :: (Int -> a -> b) -> Seq a -> Seq b
-Prelude splitAt :: Int -> [a] -> ([a], [a])
-Data.List splitAt :: Int -> [a] -> ([a], [a])
-GHC.OldList splitAt :: Int -> [a] -> ([a], [a])
-Data.List.Extra splitAtEnd :: Int -> [a] -> ([a], [a])
-Extra splitAtEnd :: Int -> [a] -> ([a], [a])
-Control.Monad.Loops iterateWhile :: Monad m => (a -> Bool) -> m a -> m a
-Control.Monad.Loops iterateUntil :: Monad m => (a -> Bool) -> m a -> m a
-Data.Conduit.Internal.List.Stream iterateS :: Monad m => (a -> a) -> a -> StreamProducer m a
+Data.Conduit.List replicateM ∷ Monad m ⇒ Int → m a → Producer m a
+Data.Conduit.List iterate ∷ Monad m ⇒ (a → a) → a → Producer m a
+Data.Conduit.List unfold ∷ Monad m ⇒ (b → Maybe (a, b)) → b → Producer m a
+Data.Conduit.List unfoldM ∷ Monad m ⇒ (b → m (Maybe (a, b))) → b → Producer m a
+Data.Sequence replicateM ∷ Monad m ⇒ Int → m a → m (Seq a)
+Data.Sequence.Internal replicateM ∷ Monad m ⇒ Int → m a → m (Seq a)
+Data.Conduit.Internal.List.Stream replicateMS ∷ Monad m ⇒ Int → m a → StreamProducer m a
+Control.Error.Safe tryAt ∷ (Monad m) ⇒ e → [a] → Int → ExceptT e m a
+Control.Monad.Loops concatM ∷ Monad m ⇒ [a → m a] → (a → m a)
+Control.Monad.Extra concatMapM ∷ Monad m ⇒ (a → m [b]) → [a] → m [b]
+Extra concatMapM ∷ Monad m ⇒ (a → m [b]) → [a] → m [b]
+Control.Monad.Extra concatForM ∷ Monad m ⇒ [a] → (a → m [b]) → m [b]
+Extra concatForM ∷ Monad m ⇒ [a] → (a → m [b]) → m [b]
+Data.Sequence mapWithIndex ∷ (Int → a → b) → Seq a → Seq b
+Data.Sequence.Internal mapWithIndex ∷ (Int → a → b) → Seq a → Seq b
+Prelude splitAt ∷ Int → [a] → ([a], [a])
+Data.List splitAt ∷ Int → [a] → ([a], [a])
+GHC.OldList splitAt ∷ Int → [a] → ([a], [a])
+Data.List.Extra splitAtEnd ∷ Int → [a] → ([a], [a])
+Extra splitAtEnd ∷ Int → [a] → ([a], [a])
+Control.Monad.Loops iterateWhile ∷ Monad m ⇒ (a → Bool) → m a → m a
+Control.Monad.Loops iterateUntil ∷ Monad m ⇒ (a → Bool) → m a → m a
+Data.Conduit.Internal.List.Stream iterateS ∷ Monad m ⇒ (a → a) → a → StreamProducer m a
 Control.Monad liftM :: (Monad m) => (a1 -> r) -> m a1 -> m r
 Control.Monad (<$!>) :: Monad m => (a -> b) -> m a -> m b
 Control.Monad.Loops iterateM_ :: Monad m => (a -> m a) -> a -> m b

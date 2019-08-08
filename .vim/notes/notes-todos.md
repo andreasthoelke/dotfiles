@@ -861,6 +861,13 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 
+* ignore text in brackets
+  Note there is a solution now:
+    let g:pttnArrowOutsideParan = '\(([^)]*\)\@<!->\([^(]*)\)\@!'
+    let g:pttnArrowOutsideParanUnicode = '\(([^)]*\)\@<!→\([^(]*)\)\@!'
+    " call matchadd('MatchParen', '\(([^)]*\)\@<!->\([^(]*)\)\@!', -1, -1 )
+    " TODO replicate this with PatternToMatchOutsideOfParentheses()
+
 " TODO make a local map for vim?
   nnoremap <silent> <c-n> :call HsBindingForw()<cr>:call ScrollOff(16)<cr>
     ~/.vim/utils/HsMotions.vim#/TODO%20make%20a
@@ -1139,6 +1146,10 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 
 ## Temp next
+
+* (low) haskell alignments with opfunc? ~/.vim/utils/utils-align.vim#/func.%20Align_op.%20motionType,
+
+* use/config repeatable commands carefully (similar to jumplist): comment/uncomment should be a dot/repeatable command
 
 * <c-m> (next ballpark) does not jump forward on data .. 'deriving'
    ~/Documents/Haskell/haskell-ide-engine/src/Haskell/Ide/Engine/Plugin/GhcMod.hs#/}%20deriving%20.Eq,Show,Generic.

@@ -45,6 +45,7 @@ vnoremap gSD :call HsAPIQueryShow( input( 'HsAPI query: ', GetVisSel()),       6
 nnoremap gsk :call HsAPIQueryShow( HsCursorKeyword(), 15, 1 )<cr>
 vnoremap gsk :call HsAPIQueryShow( GetVisSel(),       15, 1 )<cr>
 
+" gsK to insert info into float win - using the module name
 
 func! HsAPIQueryShow( searchStr, count, infoFlag )
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
@@ -52,17 +53,19 @@ func! HsAPIQueryShow( searchStr, count, infoFlag )
 
   call FloatWin_ShowLines( hoogleLines )
 
-  call FloatWin_do( 'call HaskellSyntaxAdditions()' )
 
   if !a:infoFlag
     " Delete commented lines
     call FloatWin_do( 'g/--/d' )
     " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
-    call FloatWin_do( 'g/./normal! Whi0i-- ' )
+    call FloatWin_do( 'g/./normal! Whiki-- ' )
+    " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
+    " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
 
-    " call FloatWin_do( 'call HsTabularizeTypeSigns( 1, ' . ((a:count*2)-0) . ')' )
-    call FloatWin_do( 'call HsTabularizeTypeSigns( 1, line("$") )' )
+    call FloatWin_do( 'call HsAlignTypeSigs()' )
   endif
+
+  call FloatWin_do( 'call HaskellSyntaxAdditions()' )
 
   " if len( s:async_alignFnExpr )
   "   call FloatWin_do( 'call ' . s:async_alignFnExpr )
@@ -120,12 +123,12 @@ endfunc
 
 " EXAMPLES:{{{
 " Can import this (which is split in two lines in the Hoggle result window)
-" Prelude putStrLn ∷ String → IO ()
+" Prelude putStrLn                                                   :: String                                    -> IO ()
 " Hoogle TODO support these:
 " Data.Aeson data Value
 " Data.Aeson type Array = Vector Value
 " Data.Aeson class ToJSON a
-" Data.Aeson (.=) ∷ (KeyValue kv, ToJSON v) ⇒ Text → v → kv}}}
+" Data.Aeson (.=)                                                    :: (KeyValue kv, ToJSON v) => Text -> v        -> kv}}}
 func! HoogleImportIdentifier() "{{{
   let l:split_line_prev = split( getline(line('.') -1) )
   let l:split_line      = split( getline('.') )
@@ -190,7 +193,7 @@ func! HoogleLineJump() "{{{
   let l:module     = l:split_line_prev[ 1 ]
   let l:identifier = l:split_line[ 0 ]
   let l:module_symbol_str = l:module . '.' . l:identifier
-  " since results are given in the format `Data.IntMap.Strict lookup :: Key -> IntMap a -> Maybe a`
+  " since results are given in the format `Data.IntMap.Strict lookup :: Key                            -> IntMap a -> Maybe a`
   " this results in a search of `Data.IntMap.Strict.lookup`
   " call HoogleLookup( l:module_symbol_str, ' --info' )
   call HoogleInsert( l:module_symbol_str, ' --info' )

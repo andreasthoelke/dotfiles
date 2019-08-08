@@ -1,5 +1,6 @@
 
 " This uses a list of lines, not a range in the code like below
+" Note: this returns lines list and needs to replace in the buffer
 fun! SubstituteInLines ( lines, origDelim, newDelim )
   let l:idx = 0
   while l:idx < len(a:lines)
@@ -10,6 +11,12 @@ fun! SubstituteInLines ( lines, origDelim, newDelim )
   return a:lines
 endfun
 
+func! ReplaceInRange( startLine, endLine, replacementMaps )
+  let rangeStr = a:startLine . ',' . a:endLine
+  for [target, replacement] in a:replacementMaps
+    exec 'silent ' . rangeStr 's/' . target . '/' . replacement . '/ge'
+  endfor
+endfunc
 
 " Enhance SubstituteInLines to multiple replacements
 func! ReplaceStringsInLines( lines, listListMap )
@@ -23,6 +30,7 @@ endfunc
 
 " Substitute flags: "g" = all occurances, "e" = surpress/continue at errors
 
+" Note: this only works on vis-sel(?!)
 func! ReplaceStringsInRange( listListMap ) range
   let rangeStr = a:firstline . ',' . a:lastline
   for [target, replacement] in a:listListMap

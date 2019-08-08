@@ -1,5 +1,38 @@
 
 -- Prelude
+foldMap          :: (Foldable t, Monoid m)              => (a -> m) -> t a                   -> m
+-- Data.Foldable
+foldMap          :: (Foldable t, Monoid m)              => (a -> m) -> t a                   -> m
+-- Data.Conduit.List
+foldMap          :: (Monad m, Monoid b)                 => (a -> b)                         -> Consumer a m b
+-- Data.Traversable
+foldMapDefault   :: forall t m a . (Traversable t, Monoid m) => (a -> m) -> t a                   -> m
+-- Data.IntMap.Internal
+foldMapWithKey   :: Monoid m                            => (Key -> a -> m) -> IntMap a        -> m
+-- Data.IntMap.Lazy
+foldMapWithKey   :: Monoid m                            => (Key -> a -> m) -> IntMap a        -> m
+-- Data.IntMap.Strict
+foldMapWithKey   :: Monoid m                            => (Key -> a -> m) -> IntMap a        -> m
+-- Data.Map.Internal
+foldMapWithKey   :: Monoid m                            => (k -> a -> m) -> Map k a           -> m
+-- Data.Map.Lazy
+foldMapWithKey   :: Monoid m                            => (k -> a -> m) -> Map k a           -> m
+-- Data.Map.Strict
+foldMapWithKey   :: Monoid m                            => (k -> a -> m) -> Map k a           -> m
+-- Data.Map.Strict.Internal
+foldMapWithKey   :: Monoid m                            => (k -> a -> m) -> Map k a           -> m
+-- Data.Sequence
+foldMapWithIndex :: Monoid m                            => (Int -> a -> m) -> Seq a           -> m
+-- Data.Sequence.Internal
+foldMapWithIndex :: Monoid m                            => (Int -> a -> m) -> Seq a           -> m
+-- Data.Text.Internal.Fusion.CaseMapping
+foldMapping      :: forall s . Char -> s                                                        -> Step (CC s) Char
+-- Control.Lens.Fold
+foldMapBy        :: Foldable t                          => (r -> r -> r) -> r -> (a -> r) -> t a -> r
+
+
+
+-- Prelude
 traverse  ∷ (Traversable t, Applicative f) ⇒ (a → f b) → t a     → f (t b)
 {- base Prelude
 Map each element of a structure to an action, evaluate these actions

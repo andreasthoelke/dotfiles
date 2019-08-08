@@ -569,6 +569,12 @@ KIWI)
 (ORANGE APPLE) APPLE
 
 * ignore text in brackets
+Note there is a solution now:
+let g:pttnArrowOutsideParan = '\(([^)]*\)\@<!->\([^(]*)\)\@!'
+let g:pttnArrowOutsideParanUnicode = '\(([^)]*\)\@<!→\([^(]*)\)\@!'
+" call matchadd('MatchParen', '\(([^)]*\)\@<!->\([^(]*)\)\@!', -1, -1 )
+" TODO replicate this with PatternToMatchOutsideOfParentheses()
+
 /\ve([\[\]].*\])@!
 
 call search('on\@!')

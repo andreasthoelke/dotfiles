@@ -84,6 +84,14 @@ command! -range=% UnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:H
 " kleisli :: forall e. Example e >=> Line
 " kleisli = do aa <- example
 
+func! HsUnicode( startLine, endLine )
+  call ReplaceInRange( a:startLine, a:endLine, g:HsReplacemMap_CharsToUnicode )
+endfunc
+
+func! HsUnUnicode( startLine, endLine )
+  call ReplaceInRange( a:startLine, a:endLine, g:HsReplacemMap_UnicodeToChars )
+endfunc
+
 " ─   Unicode Maps                                      ──
 " inoremap :: <c-k>::
 " inoremap -> <c-k>->
@@ -163,36 +171,6 @@ function! s:OverwriteBuffer(output)
   call winrestview(winview)
 endfunction
 " ─^  Formatting Haskell Imports                         ▲
-
-
-" let g:hsTypeSigColumns = [ "∷", "⇒", ".*\zs→" ]
-let g:hsTypeSigColumns = [ "::", "=>", ".*\\zs\-\>" ]
-" Tabularizes patterns found in TypeSignatures over a range of lines
-func! HsTabularizeTypeSigns( startLine, endLine )
-  call TabularizeListOfPttns( g:hsTypeSigColumns, a:startLine, a:endLine )
-endfunc
-" call HsTabularizeTypeSigns( 2, 4 )
-" call HsTabularizeTypeSigns( 1, line('$') )
-
-" Obsolete ■
-" func! HoogleAlignSinatures()
-"   GTabularize /∷/
-"   GTabularize /⇒/
-"   GTabularize /.*\zs→/
-" endfunc
-
-" ALIGNING COLUMS OF HASKELL SIGS:{{{
-" run: :browse Data.List.Split in GHCi and copy into a vim buffer
-"
-" align right to ∷ with padding 1:
-" '<,'>Tabularize /::/r1c1l1
-" move lines that contain "Splitter" to the bottom of the file!
-" g/Splitter/m$
-" move lines with two occurences of "Splitter" to the bottom
-" g/Splitter.*Splitter/m$
-" move lines with "Eq" to line 22!
-" '<,'>g/Eq/m22
- " ▲
 
 
 

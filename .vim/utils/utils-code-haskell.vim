@@ -41,6 +41,8 @@ endfunc
 " Control.Monad replicateM ∷ (Applicative m) => Int -> m a -> m [a]
 " echo HsExtractTypeFromLine( line('.')-1 )
 
+" Issue: this will have problems with functions as args. (a -> b) would have to ignore the '->' in brackets
+" Use HsExtractArgTypesFromTypeSigStr instead
 func! SplitTypeSignStr( typeSigStr )
   let list = split( a:typeSigStr, '\v(-\>|→|::|∷|\=\>|⇒)' )
   return TrimListOfStr( list )

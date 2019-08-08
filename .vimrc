@@ -854,8 +854,8 @@ vnoremap ,H H
 
 " Go back to insert start (+ jumplist)
 " autocmd! InsertLeave * exec "normal! m'`["
-au ag InsertLeave * call InsertLeave()
-" autocmd! InsertEnter * exec "normal! m'"
+" au ag InsertLeave * call InsertLeave()
+au ag InsertEnter * exec "normal! m'"
 
 func! InsertLeave()
   " echo 'hi there'
@@ -1160,9 +1160,9 @@ nnoremap [c <Plug>GitGutterPrevHunk
 " undo it with <Leader>hu.
 " TIP: this actually undos the section (hunk). this is specifically useful at
 " the yellow "~", to see what was changed!
-nnoremap <Leader>hr <Plug>GitGutterUndoHunk
+nnoremap <leader><leader>gu <Plug>GitGutterUndoHunk
 " Todo: not sure how staging a hunk works..
-nnoremap <Leader>ha <Plug>GitGutterStageHunk
+" nnoremap <Leader>ha <Plug>GitGutterStageHunk
 
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0

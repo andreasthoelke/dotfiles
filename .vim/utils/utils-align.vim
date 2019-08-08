@@ -130,6 +130,84 @@ endfunc
 " call AlignColumns( ['\,', '2\,'] )
 
 
+" ─   Haskell Align Type Sigs                            ■
+
+let g:pttnArrowOutsideParan = '\(([^)]*\)\@<!->\([^(]*)\)\@!'
+let g:pttnArrowOutsideParanUnicode = '\(([^)]*\)\@<!→\([^(]*)\)\@!'
+" call matchadd('MatchParen', '\(([^)]*\)\@<!->\([^(]*)\)\@!', -1, -1 )
+" TODO replicate this with PatternToMatchOutsideOfParentheses()
+
+" let g:hsTypeSigColumns = [ "::", "=>", ".*\\zs\-\>" ]
+let g:hsTypeSigColumns = [ "::", "=>", g:pttnArrowOutsideParan, ".*\\zs\-\>" ]
+" let g:hsTypeSigColumnsUnicode = [ "∷", "⇒", ".*\\zs→" ]
+let g:hsTypeSigColumnsUnicode = [ "∷", "⇒", g:pttnArrowOutsideParanUnicode, ".*\\zs→" ]
+" Tabularizes patterns found in TypeSignatures over a range of lines
+func! HsTabularizeTypeSigns( startLine, endLine )
+  call TabularizeListOfPttns( g:hsTypeSigColumns, a:startLine, a:endLine )
+endfunc
+
+func! HsTabularizeTypeSignsUnicode( startLine, endLine )
+  call TabularizeListOfPttns( g:hsTypeSigColumnsUnicode, a:startLine, a:endLine )
+endfunc
+" call HsTabularizeTypeSigns( 2, 4 )
+" call HsTabularizeTypeSigns( 1, line('$') )
+
+func! HsAlignTypeSigs(...)
+  let startLine = a:0 ? a:1 : 1
+  let endLine = a:0 ? a:2 : line('$')
+
+  let l:winview = winsaveview()
+  call ReplaceInRange( startLine, endLine, g:HsReplacemMap_CharsToUnicode )
+  call TabularizeListOfPttns( g:hsTypeSigColumnsUnicode, startLine, endLine )
+  call ReplaceInRange( startLine, endLine, g:HsReplacemMap_UnicodeToChars )
+  call winrestview(l:winview)
+endfunc
+
+" Obsolete ■
+" func! HoogleAlignSinatures()
+"   GTabularize /∷/
+"   GTabularize /⇒/
+"   GTabularize /.*\zs→/
+" endfunc
+
+" ALIGNING COLUMS OF HASKELL SIGS:{{{
+" run: :browse Data.List.Split in GHCi and copy into a vim buffer
+"
+" align right to ∷ with padding 1:
+" '<,'>Tabularize /::/r1c1l1
+" move lines that contain "Splitter" to the bottom of the file!
+" g/Splitter/m$
+" move lines with two occurences of "Splitter" to the bottom
+" g/Splitter.*Splitter/m$
+" move lines with "Eq" to line 22!
+" '<,'>g/Eq/m22
+" ▲
+
+
+nnoremap <silent> <leader>ha :set opfunc=AlignTypeSigs_op<cr>g@
+vnoremap <silent> <leader>ha :<c-u>call AlignTypeSigs_op( visualmode(), 1)<cr>
+" Note: This does not work with "V"/ Visual-Block mode
+
+" Perform an align operation on a range of lines. An operator function can/needs to access the range as shown below
+func! AlignTypeSigs_op( motionType, ...)
+  normal! m'
+  " motionType could e.g. be 'char' here - but aligning will only use linewise here
+  " Get the range of lines from either visual mode ( "'<") or an (operator pending) motion or text object
+  if a:0
+    let [l1, l2] = ["'<", "'>"]
+  else
+    let [l1, l2] = [line("'["), line("']")]
+  endif
+
+  call HsAlignTypeSigs( l1, l2 )
+endfunc
+
+
+" ─^  Haskell Align Type Sigs                            ▲
+
+
+
+
 let g:haskell_tabular = 1
 " let g:necoghc_enable_detailed_browse = 0
 
