@@ -42,17 +42,17 @@ vnoremap gsD :call HsAPIQueryShow( input( 'HsAPI query: ', GetVisSel()),       1
 nnoremap gSD :call HsAPIQueryShow( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
 vnoremap gSD :call HsAPIQueryShow( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
 
-nnoremap gsk :call HsAPIQueryShow( HsCursorKeyword(), 15, 1 )<cr>
-vnoremap gsk :call HsAPIQueryShow( GetVisSel(),       15, 1 )<cr>
+nnoremap gsK :call HsAPIQueryShow( HsCursorKeyword(), 0, 1 )<cr>
+vnoremap gsK :call HsAPIQueryShow( GetVisSel(),       0, 1 )<cr>
+nnoremap gsk :call HsAPIQueryShowInline( HsCursorKeyword(), 0, 1 )<cr>
+vnoremap gsk :call HsAPIQueryShowInline( GetVisSel(),       0, 1 )<cr>
 
 " gsK to insert info into float win - using the module name
 
 func! HsAPIQueryShow( searchStr, count, infoFlag )
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
   let hoogleLines = split( system( hoogleCmd ), '\n' )
-
   call FloatWin_ShowLines( hoogleLines )
-
 
   if !a:infoFlag
     " Delete commented lines
@@ -61,19 +61,24 @@ func! HsAPIQueryShow( searchStr, count, infoFlag )
     call FloatWin_do( 'g/./normal! Whiki-- ' )
     " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
     " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
-
     call FloatWin_do( 'call HsAlignTypeSigs()' )
+  else
+    call FloatWin_do( 'normal jjgc}' )
   endif
 
   call FloatWin_do( 'call HaskellSyntaxAdditions()' )
 
-  " if len( s:async_alignFnExpr )
-  "   call FloatWin_do( 'call ' . s:async_alignFnExpr )
-  " endif
-
-  call FloatWin_do( 'normal! gg' )
+  call FloatWin_do( 'normal! gg0' )
   call FloatWin_FitWidthHeight()
 endfunc
+
+func! HsAPIQueryShowInline( searchStr, count, infoFlag )
+  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
+  let hoogleLines = split( system( hoogleCmd ), '\n' )
+  call append( line('.'), hoogleLines )
+  normal jjjgc}kkk
+endfunc
+
 
 
 " func! HsExtractTypeFromLine( lineNr )

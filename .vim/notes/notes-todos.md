@@ -1273,6 +1273,11 @@ ger         - Curl send sting in line to localhost, show response
 ged         - LC show diagnostic message in float-win
 gd, ,gd     - go to definition /in split
 
+### Hs API Explore
+gsD         - to edit vis-sel
+leader hs   - Type-sig align a range: Use l, \j or 'v' visual-sel
+
+
 ### Stubs
 leader hu/U - anonymous binding /+ signature
 leader ht   - add type stub
@@ -1350,6 +1355,7 @@ ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a
 
 
 ## Release notes v1.1.2
+* AlignTypeSig opfunc ~/.vim/utils/utils-align.vim#/func.%20AlignTypeSigs_op.%20motionType,
 * Show (synchronous) shell commands in FloatingWin: <leader>Sgs :call ShellReturn( 'git status' )
 * Hpack workflow doc: ~/.vim/notes/notes-workflow.vim#/Use%20Hpack%20to
 * InsertLeave jumps to insert-start. Revert this with `g;` - jumps to end of last insert

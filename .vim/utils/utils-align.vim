@@ -186,7 +186,7 @@ endfunc
 
 nnoremap <silent> <leader>ha :set opfunc=AlignTypeSigs_op<cr>g@
 vnoremap <silent> <leader>ha :<c-u>call AlignTypeSigs_op( visualmode(), 1)<cr>
-" Note: This does not work with "V"/ Visual-Block mode
+" Note: This *does* work with "V"/ Visual-Block mode or "v"
 
 " Perform an align operation on a range of lines. An operator function can/needs to access the range as shown below
 func! AlignTypeSigs_op( motionType, ...)
@@ -198,7 +198,6 @@ func! AlignTypeSigs_op( motionType, ...)
   else
     let [l1, l2] = [line("'["), line("']")]
   endif
-
   call HsAlignTypeSigs( l1, l2 )
 endfunc
 

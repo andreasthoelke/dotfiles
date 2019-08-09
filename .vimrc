@@ -2358,10 +2358,10 @@ source ~/.vim/utils/utils-syntax-color.vim
 source ~/.vim/utils/utils-general-helpers.vim
 
 " ─   Haskell maps and syntax additions                 ──
-source ~/.vim/utils/HsMotions.vim
+" source ~/.vim/utils/HsMotions.vim
 source ~/.vim/utils/HsSyntaxAdditions.vim
 source ~/.vim/utils/CodeMarkup.vim
-source ~/.vim/utils/HsAPIExplore.vim
+" source ~/.vim/utils/HsAPIExplore.vim
 " Note: There is an unfinished plugin here:
 " tabe .vim/plugged/HsAPIExplore/autoload/HsAPIExplore.vim
 " call HsAPIExplore#start()
