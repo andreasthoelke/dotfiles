@@ -138,13 +138,6 @@ nnoremap <leader>bD :bd!<cr>
 nnoremap <silent> <localleader>QA :wqa<cr>
 nnoremap <localleader>QQ :q<cr>
 
-" Shortcuts to popular folders:
-nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
-nnoremap <leader>on :tabe ~/.vim/notes/<cr>
-nnoremap <leader>ov :tabe ~/.vimrc<cr>
-nnoremap <leader>od :tabe ~/Documents/<cr>
-nnoremap <leader>oh :tabe ~/Documents/Haskell/<cr>
-nnoremap <leader>oc :tabe ~/Documents/Haskell/6/<cr>
 
 " nnoremap gw :w<cr>
 " nnoremap <localleader>w :w<cr>

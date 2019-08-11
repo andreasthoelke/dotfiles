@@ -39,6 +39,21 @@ endfun
 
 " ----------------------------------------------------------------------------------
 
+" Showing the output of shell commands in a buffer:
+command! -nargs=1 AppOut call StdoutToBuffer( <q-args> )
+nnoremap <leader>sab :call StdoutToBuffer( getline('.') )<cr>
+" Tests:
+" ls -o -t -a
+" hasktags --help
+func! StdoutToBuffer ( cmd )
+  let l:resultLines = split( system( a:cmd ), '\n' )
+  exec 'vnew'
+  call append( line('.'), l:resultLines )
+  normal! dd
+endfunc
+
+
+
 nnoremap <leader>Cab :vnew *.cabal<cr>
 nnoremap <leader>oPa :vnew package.yaml<cr>
 nnoremap <leader>oPA :tabe package.yaml<cr>

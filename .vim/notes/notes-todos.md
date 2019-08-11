@@ -1151,6 +1151,9 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 * use/config repeatable commands carefully (similar to jumplist): comment/uncomment should be a dot/repeatable command
 
+* it seems I can not go back many steps in the jump list (it seems to keep cycling). do I have to jump back more
+quickly - so the list is not inverting/resorted automatically?
+
 * <c-m> (next ballpark) does not jump forward on data .. 'deriving'
    ~/Documents/Haskell/haskell-ide-engine/src/Haskell/Ide/Engine/Plugin/GhcMod.hs#/}%20deriving%20.Eq,Show,Generic.
 
@@ -1263,6 +1266,7 @@ np0 = length @[]
 leader lk   - LC Symbol documentation
 leader la   - LC Code action → import symbol!
 insert c-i  - LC show completions with type sig!
+insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
 leader hi   - format imports
 
 gw, gW      - IN show type at/vis-sel / generic type
@@ -1299,10 +1303,14 @@ gsh         - search hoogle.org
 gse         - explore definition (haskell-code-explorer.com)
 Fhask       - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** ~/.vim/utils/utils-search.vim#/command.%20-nargs=1%20Fhask 
 Fdeleted    - deleted code in repo
+Lines, GFiles?, BCommits, Maps, Helptags
+
 
 ### Win, Buffer Navigation
 c-w n/N     - SymbolNext SplitTop
-c-w i       - into float-win
+c-w i       - jump into float-win
+dirvish t   - open in new tab
+dirvish p   - preview in split
 
 ### Git
 leader gg   - GitGutterToggle
@@ -1355,6 +1363,8 @@ ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a
 
 
 ## Release notes v1.1.2
+* Template for simple range/operator/line-motion support: ~/.vim/plugin/file-manage.vim#/Toggle%20arglist%20items.
+* Arglist can be shown in CtrlP. Files can be opened and items deleted with <c-s>
 * AlignTypeSig opfunc ~/.vim/utils/utils-align.vim#/func.%20AlignTypeSigs_op.%20motionType,
 * Show (synchronous) shell commands in FloatingWin: <leader>Sgs :call ShellReturn( 'git status' )
 * Hpack workflow doc: ~/.vim/notes/notes-workflow.vim#/Use%20Hpack%20to
@@ -1426,7 +1436,7 @@ ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a
 * Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
 * add to jumplist on updatetime and ex-command (;/:)
 * camelCaseMotion use `,` leader e.g. `v2i,w`, `vi,e`, `v,b,b,b`
-* go to insert start at InsertLeave, save insert end to jumplist
+* go to insert start at InsertLeave (deactivated now), save insert end to jumplist
 * `,ti` to insert type hole to get the type of a do bind. `,tu` to undo
 * intero neovim custom functions e.g. `InsertEvalExpressionRes` are now in forked repo
 

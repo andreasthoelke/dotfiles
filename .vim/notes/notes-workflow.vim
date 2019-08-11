@@ -308,7 +308,7 @@
 " Use Last Search Pattern: - do "/abc<cr>" (a normal search), then "vim /<c-r>/g %" → "c-r" will expand to the last search
 " Proposed Workflow: - 1. Test search expression with regular search, then 2. use the same expression with vimgrep
 
-" Copy Paste File Path: "%p to put the name of the current file after the cursor. echo @%. let @+=@% Also:  put =@%
+" Copy Paste File Path: "%p to put the name of the current file after the cursor. echo @%. let @*=@% Also:  put =@%
 " Jump To File Path: in split below "<c-w>f", in tab "<c-w>gf"
 " View A Folder Env Variable: e.g. VIMRUNTIMEPATH Folder: - "i<c-r>=$VIM<tab><cr>" in buffer, then "<c-w>f" to open Nerdtree.  Or ":NERDTree $VIM<tabs>"
 
@@ -560,7 +560,7 @@ nnoremap <leader>ccl :CopyAndQuit<cr>
 " ----------------------------------------------------------------------------------
 
 
-                     
+
 " ----------------------------------------------------------------------------------
 " Tryouts:
 
@@ -574,6 +574,7 @@ nnoremap <localleader>sj :set syntax=javascript<cr>
 nnoremap <localleader>sv :set syntax=vim<cr>
 nnoremap <localleader>sm :set syntax=markdown<cr>
 nnoremap <localleader>sp :set syntax=purescript<cr>
+nnoremap <localleader>sd :set syntax=dirvish<cr>
 " TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
 
 " demos:
@@ -631,6 +632,7 @@ cnoremap <C-x>_ <C-r>=split(histget('cmd', -1))[-1]<cr>
 " Insert filename under the cursor
 nnoremap <silent> <Leader>gf :pedit <C-r><C-f><cr>
 
+" copy a folder: cp -a /source/. /dest/
 
 " "<Plug>" is setting up a reference to a (public/API) function in a Plugin that can be called from a mapping like this:
 " nmap _p <Plug>ScriptFunc

@@ -81,17 +81,6 @@ func! HelpOpen( appName )
   exec 'Man!'
 endfunc
 
-command! -nargs=1 AppOut call StdoutToBuffer( <q-args> )
-nnoremap <leader>sab :call StdoutToBuffer( getline('.') )<cr>
-" Tests:
-" ls -o -t -a
-" hasktags --help
-func! StdoutToBuffer ( cmd )
-  let l:resultLines = split( system( a:cmd ), '\n' )
-  exec 'vnew'
-  call append( line('.'), l:resultLines )
-  normal! dd
-endfunc
 
 " This works pretty well. could reuse for other purposes
 command! Todo Grepper -tool git -query -E '(TODO|FIXME|XXX):'
@@ -282,6 +271,8 @@ endfun
 
 
 
+command! -nargs=1 GithubSearch  :call GithubSearch(<args>)
+command! -nargs=1 SearchGithub  :call GithubSearch(<args>)
 
 fun! GithubSearch(selType)
   if a:selType == "word"

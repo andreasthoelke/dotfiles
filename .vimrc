@@ -13,11 +13,12 @@ Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
 " CtrlPArgs will show the arglist
-Plug 'kshenoy/vim-ctrlp-args'
+" Plug 'kshenoy/vim-ctrlp-args'
 
-" Plug 'justinmk/vim-dirvish'
+Plug 'justinmk/vim-dirvish'
+" Plug 'kristijanhusak/vim-dirvish-git'
 " Added a convenient "silent" 'z' buffer local map for the Shdo command window
-Plug 'andreasthoelke/vim-dirvish'
+" Plug 'andreasthoelke/vim-dirvish'
 " test these
 " Plug 'vifm/neovim-vifm'
 " Plug 'vifm/vifm.vim'
@@ -1217,112 +1218,10 @@ nnoremap <leader><m-p> :<c-r>"
 " <c-r>"
 
 
-" SOME TOOLS FUNTIONS TIPS: -------------------------------------------------
-" in insert mode, the key sequence backslash f p will insert the current working directory
-inoremap \fp <C-R>=getcwd()<CR>
-" TIP: Move to a blank line, "V" to visually select it, then "!pwd" or "!ls"
-" TIP: To insert the RETURN VAL OF ANY VIM FUNCTION into insert position:
-" - hit: 'i', then '<strg>r', then '=', then 'SomeTest1("Hi!")'<cr>
-" TIP: can also do i<strg>r=system('ls')<cr>  try this:
-nmap     <leader>dcg i<c-r>=system('ls')<cr><esc>
-nnoremap <leader>ls  i<c-r>=system('ls -a')<cr><esc>
-nnoremap <leader>ds  i<c-r>=system('
-nnoremap <leader>iwd i<c-r>=system('pwd')<cr><esc>
-" Example: a minimal 'choose buffer' prompt:
-nnoremap <leader>aab :ls<cr>:b<space>
-
-" TIP: Refer to the current file: "%" or alternate/previous file "#"
-" Normal mode: "%p
-" Insert mode: i<c-r>%
-
-" nnoremap <leader>fpe :echom @%<cr> " NOTE: use "<c-g>"!
-nnoremap <leader>fpc :let @p = @%<cr>
-" nnoremap <leader>sf i<c-r>=fnamemodify('package.yaml',':h:t')<cr><esc>^
-command! PasteFilepath :normal i<c-r>=expand("%:p")<cr><esc>^
-
-" Abbreviate this string in command mode: "expand('[cursor pos]')" - Note the moved cursor position!
-cabbrev ep expand('')<Left><Left><C-R>=Eatchar('\s')<cr>
-" Learn: Use like this: ":echo ep #" to get "echo expand('<cword>')" , "<cfile>" for filename under the cursor
-" or echo expand('%') echo expand('%:t') " for filename ('tail' of path)
-" Learn: Trigger abbreviation with "c-]", avoid it with "c-v" - e.g. "unabbreviate ep<c-v> <cr>"
-
-function! Eatchar(pat)
-  let c = nr2char(getchar(0))
-  return (c =~ a:pat) ? '' : c " Tip: matching a pattern
-endfunc
-
-" Example: use "getchar()"
-nnoremap <leader>abb :echo getchar()<cr>
-nnoremap <leader>abb i<c-r>=getchar()<cr>
-
-" TODO a useful prompt?
-nnoremap <leader>abb @=
-
-fun! SomeTest1( ar1 )
-  if a:ar1 == "abc"
-    return "stopping here!"
-  endif
-  echo "out: " . a:ar1
-  return "Some arg: " . a:ar1
-endfun
-
-
-" TIP: print the file type: ":echo &ft"
-" (returns filetype as literal string, e.g. 'haskell', instead of 'hs')
-" (note the system-variable expression type "&ft". This gets resolved to the file type)
-" TIP: copy a past ex-command/vim-shell command: hit "q:"
-" TIP: print last messages/errors: ":messages". only "echom" not "echo" writes into this log
-" TIP: create a directory: `:! mkdir src/modules`
-" TIP: use :substitute command: "%s/exports./var /" replaces "exports.jsvar1 = function" with "var jsvar1 = function" in the whole file!
-" TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
-" paste last command: ":p
-" redirect command echo text to register: :redir @t, then pt, later :redir end
-" TIP: :new creates a new buffer, ":read !cat /etc/shells" → append output of the command to the current buffer at cursor positon.
-" run a date/time loop in the shell: "terminal while true; do date; sleep 1; done
-" TIP: The expression register reads-in an arbitary expression into the p-register or insert-mode:
-" "<c-r>=v:version<cr>" will insert the vim-version in insert-mode, "=v:version<cr> will allow to 'p'/'P' in normal mode
-" :let, :let g:, :let b:<cr> lists global-, or buffer-variables
-" example: ":let test12=123<cr>" and then in insert mode: <c-r>=test12<cr> will paste "123"
-" TIP: look through OS-environment variables: ":echo $" and then TAB
-"      example: paste environment variable: "i<c-r>=$SHELL" → /bin/zsh
-" TIP: write an environment variable: ":let $TEST12=321"?
-" TIP: git config --global core.editor "nvim"
-"      lookup: "cat ~/.gitconfig"
-" TIP: ad-hock environment variable: in terminal: "export test44=$PATH:~/Documents" this appends another dir to the PATH
-" TIP: use (%) current file name in shell: ":!cat %"
-" TIP: use 'find' to get full path and then 'gf': terminal: "find $PWD" and then "gf" on the the absolute path
-" If Expressions: echo (v:true ? 'yes' : 'no') -- echo (v:false ? 'yes' : 'no')
-" TIP: set the cursor pos: let cursor = getcurpos(), call cursor(cursor[1], startColumn - 1)
-"      also: line('.') and col('.') get row and column num
-" TIP: "<C-z>" to suspend nvim and get back to the terminal. then run "fg" to
-" get back to nvim.
-" TODO: delete long space between words: "elldw" example: ^ord            next
-
-" TIP: use ":earlier" and ":later" to jump the ":undolist" back and forth in
-" *time* (disregarding branches of the undotree). use ":earlier 10m" or ".. 5h" to go back 10 minutes/ 5 hours
-" TIP: Vim-anywhere replacement: use: "alfred vim(mac vim)", edit text, then
-" do "<leader>ccl" to copy to clipboard and ":q!" vim.
-"
-"
-" SHELL, EMACS MAPPINGS
-" beginning-of-line (C-a)
-" Move to the start of the current line.
-"
-" end-of-line (C-e)
-" Move to the end of the line.
-"
-" forward-char (C-f)
-" Move forward a character.
-"
-" backward-char (C-b)
-" Move back a character.
-"
 " Tip: Link local repo to github remote repo:
 " "git remote add origin https://github.com/andreasthoelke/dotfiles.git",
 " "git push -u origin master" `-u` add upstream tracking(!?)
 " "git pull --rebase origin" pull in changes from remote, put all local changes on top of it.
-"
-" copy a folder: cp -a /source/. /dest/
 "
 
 
@@ -1714,102 +1613,6 @@ endfunction
 
 
 
-" CTRLP:  --------------------------------------------------
-let g:ctrlp_cmd = 'CtrlPBuffer'
-" let g:ctrlp_cmd = 'CtrlPMRU'
-" let g:ctrlp_map = '<localleader>a'
-let g:ctrlp_map = 'go'
-nnoremap gp :CtrlPMRU<cr>
-
-" Don't list files fromm certain folders:
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\.git$\|\.cache$\|\.stack$\|\.stack-work$\|vimtmp\|undo\bower_components$\|dist$\|node_modules$\|project_files$\|test$',
-    \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
-" This needs a restart to take effect.
-
-let g:ctrlp_root_markers = ['src/', '.gitignore', 'package.yaml', '.git/']
-let g:ctrlp_by_filename = 1
-let g:ctrlp_match_window = 'top,order:ttb,min:1,max:20,results:40'
-
-" Use the nearest .git directory as the cwd
-let g:ctrlp_working_path_mode = 'w'
-
-" Select multiple files with <c-z> then do <c-o> to load the first into the current window (r) and
-" the others in vertical splits (v), jump to the first window (j)
-let g:ctrlp_open_multiple_files = 'vjr'
-" include hidden files (of course!)
-let g:ctrlp_show_hidden = 1
-let g:ctrlp_follow_symlinks = 2
-
-" <c-v> to reveal/go to buffer if it's shown in a tab-window anywhere
-" otherwise opens a vertical split.
-let g:ctrlp_switch_buffer = 'V'
-
-let g:ctrlp_match_current_file = 1
-
-" Customize CtrlP mappings:
-let g:ctrlp_prompt_mappings = {
-  \ 'PrtDeleteEnt()':       ['<c-x>'],
-  \ 'PrtClearCache()':      ['<c-R>', '<F5>'],
-  \ 'AcceptSelection("h")': ['<c-cr>', '<c-s>'],
-  \ }
-
-" let g:ctrlp_extensions = ['dir', 'undo', 'line', 'changes']
-" let g:ctrlp_extensions = ['dir', 'line']
-" let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript',
-"                          \ 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
-" let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
-" let g:ctrlp_extensions = ['undo', 'line', 'changes']
-" let g:ctrlp_extensions = ['tag', 'line', 'changes']
-let g:ctrlp_extensions = ['dir']
-
-
-let g:ctrlp_max_files = 2000
-let g:ctrlp_max_depth = 10
-let g:ctrlp_clear_cache_on_exit = 0
-" --- quickfix & loclist ----
-
-" Demo function:
-" Set up a "Delete Buffer" map:
-" let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
-" func! MyCtrlPMappings()
-"     nnoremap <buffer> <silent> <c-x> :call <sid>DeleteBuffer()<cr>
-" endfunc
-" func! s:DeleteBuffer()
-"     let line = getline('.')
-"     " let bufid = line =~ '\[\d\+\*No Name\]$' ? str2nr(matchstr(line, '\d\+')) : fnamemodify(line[2:], ':p')
-"     let bufid = fnamemodify(line[2:], ':p')
-"     exec "bd" bufid
-"     exec "norm \<F5>"
-" endfunc
- " CTRLP:  --------------------------------------------------
-
-
-" Dirvish: --------------------------------------------------
-" Example of how to set up custom maps
-" autocmd FileType dirvish nnoremap <buffer><silent> <c-p> :CtrlP<cr>
-
-" Sort folders at the top
-let g:dirvish_mode = ':sort ,^.*[\/],'
-
-augroup dirvish_config
-  autocmd!
-  " Map `t` to open in new tab.
-  " Example: buffer local maps
-  autocmd FileType dirvish
-        \  nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
-        \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
-  " Map `gr` to reload.
-  autocmd FileType dirvish nnoremap <silent><buffer> gr :<C-U>Dirvish %<CR>
-  " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
-  autocmd FileType dirvish nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
-augroup END
-
-" Dirvish: --------------------------------------------------
-
-" Vifm: -----------------------------------------------------
-let g:vifmSplitWidth = 70
-let g:vifmFixWidth = 0
 
 
 " Show syntax highlighting groups for word under cursor
@@ -1872,9 +1675,6 @@ set noshowmode
 " https://unicode-table.com
 " https://unicode-table.com/en/blocks/supplemental-mathematical-operators/
 
-" Arglist: -----------------
-nnoremap <leader>oa :CtrlPArgs<cr>
-" https://github.com/junegunn/fzf.vim/issues/605
 
 " -----------------------------------------------------------------
 " -----------------------------------------------------------------
