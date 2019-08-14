@@ -1,4 +1,7 @@
 
+" Documentation:
+" https://vim-jp.org/vimdoc-en/index.html
+" https://w0rp.com/blog/post/vim-script-for-the-javascripter/
 
 "  see PasteListAsLines - not needed any more
 nnoremap <leader>bb :call HsStringListToLines()<cr>

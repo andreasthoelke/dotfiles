@@ -32,7 +32,7 @@ endfunction
 
 " Example for nvim_buf_add_highlight: Highlight/mark the char under the cursor
 nnoremap <leader>mc :call nvim_buf_add_highlight( bufnr(''), g:nsid_def, 'WildMenu', line('.')-1, getcurpos()[2]-1, getcurpos()[2])<cr>
-vnoremap <leader>mv :call HighlightVisualSelection(0)<cr>
+" vnoremap <leader>mv :call HighlightVisualSelection(0)<cr>
 " Clear nvim virtual highlights and text
 nnoremap <leader>cv :call VirtualtextClear()<cr>
 

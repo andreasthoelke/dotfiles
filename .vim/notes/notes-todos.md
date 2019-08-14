@@ -1144,8 +1144,18 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 
 
-
 ## Temp next
+
+file manage:
+- folders
+- spaces
+- shortcut usage
+
+* indicate file selection with BGBlack highlight?
+
+* A bookmarks files, where lines (with meta info?) show in a CtrlP view
+* could also include urls?
+    " https://vim-jp.org/vimdoc-en/index.html " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
 
 * (low) haskell alignments with opfunc? ~/.vim/utils/utils-align.vim#/func.%20Align_op.%20motionType,
 
@@ -1262,214 +1272,8 @@ np0 = length @[]
 * put this into the .ghci file?
 :set -XTypeApplications
 
-## Current commands
-leader lk   - LC Symbol documentation
-leader la   - LC Code action → import symbol!
-insert c-i  - LC show completions with type sig!
-insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
-leader hi   - format imports
-
-gw, gW      - IN show type at/vis-sel / generic type
-get         - IN show type of symbol or vis sel
-gek         - IN kind at symbol or vis sel
-ges         - IN run symbol
-ger         - Curl send sting in line to localhost, show response
-ged         - LC show diagnostic message in float-win
-gd, ,gd     - go to definition /in split
-
-### Hs API Explore
-gsD         - to edit vis-sel
-leader hs   - Type-sig align a range: Use l, \j or 'v' visual-sel
 
 
-### Stubs
-leader hu/U - anonymous binding /+ signature
-leader ht   - add type stub
-leader es   - add function to type-sig/ expand signature
-leader if   - add an index/num to the signature-symbol name
-leader ct   - create inline test stub
-leader ca   - create assertion
-
-### Code Markup
-leader ch   - heading
-leader cs   - close section
-leader cr   - refresh heading/section
-leader cd   - delete/strip heading/section
-
-### Search & Docs
-gsd         - hoogle search word under cursor or vis-sel
-gsD <c-f>   - hoogle edit vis-sel or wuc: gsD then <c-f> .. <c-c><cr> (?)
-gsh         - search hoogle.org
-gse         - explore definition (haskell-code-explorer.com)
-Fhask       - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** ~/.vim/utils/utils-search.vim#/command.%20-nargs=1%20Fhask 
-Fdeleted    - deleted code in repo
-Lines, GFiles?, BCommits, Maps, Helptags
-
-
-### Win, Buffer Navigation
-c-w n/N     - SymbolNext SplitTop
-c-w i       - jump into float-win
-dirvish t   - open in new tab
-dirvish p   - preview in split
-
-### Git
-leader gg   - GitGutterToggle
-]c [c       - GitGutter Next/Prev Hunk
-GitGutter.. UndoHunk, ..PreviewHunk
-
-lead lg/lG  - go to definition/ in split
-
-### Intero Errors or Warnings
-leader qq   - open QFL
-[Q [q ]q    - go to first/prev/next error (while in main win)
-c-n/p       - next/prev (while in QFL)
-go (in QFL) - jump to line (but stay in QFL)
-p           - to open file:loc in preview window, `c-w z` or `P` to close preview
-
-### LC Warnings AND Errors
-leader ll   - open Loclist
-[L [l ]l    - go to first/prev/next error/warning (while in main win)
-Go (in LLi) - jump to line (but stay in LocList)
-c-m/i       - next/prev in QFL
-p           - does not work! .. could set up a split?
-
-### Align, Indent
-\,l/j/}     - intent range of lines to current cursor H
-dw          - align/pull inwards to the cursorH the first char to the right
-`>ii`         - shift lines of indent block to the right
-leader al   - easy align
-leader a-ii - align a 'case' block! to '->'
-
-### Motions
-g;          - to revert the InsertLeave jump
-q/Q         - labels
-tab/s-t/,t  - Headers next/prev /end of header
-c-i/m       - ballparks
-]b[b        - binding-type sig (incl where, let)
-Y/I         - columns
-J/K         - start of line | use to jump to virtual line starts in concealed top level binds
-t/T         - next/prev list item
-]t/[t       - into next/prev inner list
-]T          - end of list (to append new elements)
-
-" ─   Bindings, including where/let                     ──
-`]b`, `[b`      - for next/prev binding
-`cib`         - to change the binding name in consequtive lines
-
-### Rename
-leader lm   - LC menu:rename to rename symbol with all it's live/active references
-ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a sortcut for a haskell function rename
-`<leader>rb`  - to rename a binding and its occurences
-
-
-## Release notes v1.1.2
-* Template for simple range/operator/line-motion support: ~/.vim/plugin/file-manage.vim#/Toggle%20arglist%20items.
-* Arglist can be shown in CtrlP. Files can be opened and items deleted with <c-s>
-* AlignTypeSig opfunc ~/.vim/utils/utils-align.vim#/func.%20AlignTypeSigs_op.%20motionType,
-* Show (synchronous) shell commands in FloatingWin: <leader>Sgs :call ShellReturn( 'git status' )
-* Hpack workflow doc: ~/.vim/notes/notes-workflow.vim#/Use%20Hpack%20to
-* InsertLeave jumps to insert-start. Revert this with `g;` - jumps to end of last insert
-* Conealed anonymous toplevel (test-) binds: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Concealed%20TL-Binds
-* Hlint ignore warning comment conceal: ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/syntax%20match%20concealHlintComment
-* `LinkRefToClipBoard` command using rel.vim: ~/.vim/utils/utils-general-helpers.vim#/command.*%20LinkRefToClipBoard%20call
-* Syntax highlighting for rel links: ~/.vim/utils/HsSyntaxAdditions.vim#/func.*%20VimScriptSyntaxAdditions
-* document updating HIE: ~/.vim/notes/notes-workflow.vim#/Update%20HIE%20■
-* `glm`/`gsm` to start/stop iamcco/markdown-preview.nvim
-* `ged` for LanguageClient diagnostics (hlint, ghcmod). see ShowLC_Diagnostics() ~/.vim/utils/tools-langClientHIE-completion.vim#/func.%20s.showLC_Diagnostics.%20stateJSON
-* `\,` + motion (or vis-sel with "v") indents the lines to the current cursor-horz position. `\,l`/`j`/`}` to indent the current line/two lines/block
-* zsh syntax highlight colors
-* zsh consistent `ls` and completion ANSI colors
-* Intero ShowList_asLines() in floating window with column alignment (`gec`, `geC`, `gel`)
-* `leader lm` to open LanguageClient menu, `leader la` to show the available code actions
-* Shortcuts to popular folders <leader>o .. `n` notes, `u` utils, `h` haskell, `c` current
-* Indent motions: `,j` `,k` to move to end/start of indent block. IndentBlockEnd() HsMotions
-*                 `,J` `,K` to move to the next/prev same level indent
-*                `vii` to visually select inside indent block
-* Align maps:
-    `leader al` + [motion, textobject: e.g. `ii` "inside indent block"]
-              + speperatorId (<space>, 2<space>, "," )
-  see: ~/.vim/notes/notes-navigation.md#/##%20Align
-* Tabularize 1st and 2nd column of a motion or selected range of lines based on <space>
-    `leader at` + [range]
-* Repl format: `gew` does just append all repl returned lines
-* `gel` "eval list" on a Haskell identifier will insert a resulting list as lines. see PasteListAsLines()
-* `get` "eval table": After "eval list", it then aligns the first two columns (column separator is <space>)
-* `geT` "tabularizes" the output
-* `gek` to inset the `Kind` (visual-sel and word at cursor)
-* `\tw` or `\tt` to get the type of the identifier
-* `localleader hs` creates a haskell top level function stub with a random and indexed name (used for quick tests). `\hS` also add a type-sig stub
-* Use feedkeys to activate modes: e.g. call feedkeys("\<c-v>", 'x') see VisualBlockMode()
-* `]b`, `[b` for next/prev binding
-* `cib` to change the binding name in consequtive lines
-* `<leader>rb` to rename a binding and its occurences
-* `iB` "inside buffer" textobject
-* `iv` "inside viewable" area in window textobj
-* `leader hsi` "Haskell style imports" (fromatting import lines using stylish-haskell)
-* `<c-x>f` in a file path, in insert mode browses files (vim native!)
-* createHeading `\ch`, closeSection `\cs`, delete/strip Heading `\cd`, refreshHeading `\cr`
-* conceal unicode symbols: `⫩ ⫦ ◇ ⟐` for `<$> >>= <> <*>`
-
-## Release notes v1.1.1 (2019-04-20)
-* Command to search in deleted code: `Fdeleted someString`
-* Search in groups of files: `Frepo Fbuffers Fvim Flug Fhask Fnotes Fdeleted`
-* restucture vimrc into separate files
-* easymotion for paragraph: `<localleader><c-h/l>`
-* `,L` `,H` to jump bottom/top of visible area
-* `Viv` selects the visual area, `yis` copies the visual area. See Textobjects
-* so a regex search then `\r`+`ie``iv``if` to replace matches with prompted text. see ReplaceLastPattern
-* `ga` on a word and then `\riv` replaces that word with prompted text
-* end of paragraph motion/OpPending `,<c-h/l`
-* next/pre arguments movement with `,a`, `,A` - localleader for current arg
-* show no-scrollbar-vim in lightline
-* set foldtext=DefaultFoldtext()
-* SourceVimL Operator function allows e.g.
-  * <leader>saf "source around function"
-  * <leader>si" "source inside quotes"
-* `glt` in dirvish buffers cds new terminal into dirvish folder
-* conceal character indicating hs-function foldmarkers
-* `<leader>pe` does PasteLastEchoText
-* fix bug in easyclip that scrolled buffer to the top
-* `c-n/p` jumps to main haskell definitions applying a useful scrolloffset
-* `zH` `zL` shifts cursor line to the top/bottom of visible area
-
-## Release notes v1.1.0
-* Skip cursor-rest jump if cursor hasn't moved (unfortunate fix)
-* add to jumplist on updatetime and ex-command (;/:)
-* camelCaseMotion use `,` leader e.g. `v2i,w`, `vi,e`, `v,b,b,b`
-* go to insert start at InsertLeave (deactivated now), save insert end to jumplist
-* `,ti` to insert type hole to get the type of a do bind. `,tu` to undo
-* intero neovim custom functions e.g. `InsertEvalExpressionRes` are now in forked repo
-
-## Release notes v1.0.5
-* close win above, below, left, right with `<c-w>d`: `k/j/h/l`
-* Pinning paragraphs and visual selections with `<leader>wp` (visual-split plugin)
-* Indenting settings
-* CamelCaseMotion plugin. Use e.g. `v2iw`, `vie`, `vbbb`
-* Add every yank position to the jumplist. In EasyClip with tag "AT tweak:"
-* Add start of visual mode (`v`) to jumplist
-* Add line motions to jumplist
-* Only the start of 'select word' `ga` next and search adds to the jumplist
-* line text object `al` `il`
-*  (HEAD -> master) Note taking, jumplist, indention                                                                                                          5 hours ago   Andreas Thoelke  [d24bfe4]
-
-## Release notes v1.0.4
-* doc vim-targets, substitute motion
-* vim-better-whitespace plugin
-* easyclip:
-  * delete does not change clipboard, but <localleader>d does
-  * `S` substitute motion
-  * yank stack use with <leader>"<regnum>
-  * persisted and shared with vim instances
-* close all Markbar wins on VimLeave [cleanup](../../.vimrc#Cleanup:)
-* include file-local marks
-* refresh shada to avoid deleted global marks re-apear after vim-restart
-* ctrlP MRU map to `gp`
-* dont jump to markbar win on open
-* use `mo` and `to` to toggle markbar & tagbar
-* use `c-w \ ` to jump to rightmost/mark/tag bar window and `c-w p` to jump back
-* defining links in code with `h rel-links` like ~/.vimrc#/Rel%20Links: using `gk`
-
-old: .vim/notes/commit-nts1.txt
 
 
 

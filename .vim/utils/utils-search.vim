@@ -1,4 +1,6 @@
 
+" https://vim-jp.org/vimdoc-en/index.html " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
+
 nnoremap <silent> gsg :call GoogleSearch("word")<cr>
 vmap <silent> gsg :call GoogleSearch("visSel")<cr>
 
@@ -197,7 +199,7 @@ endfun
 
 fun! DefinitionForCursorWord()
   let keyw = expand("<cword>")
-  let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . keyw
+  " let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . keyw
   let url = 'https://haskell-code-explorer.mfix.io/search/' . keyw
   let comm = 'silent !open ' . url
   exec comm

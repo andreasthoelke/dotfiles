@@ -770,9 +770,11 @@ set nostartofline
 
 
 " COMMAND HISTORY: --------------------------------------------
-" Type a command slightly more quickly: (also → jumplist)
-noremap ; m':
-" This requires that all maps that use ":" (commands!) need to be defiled with "nnoremap"/ "vnoremap"
+" Use c-n and c-i and c-x c-f for completion.
+" c-cr/return to commit in insert mode. leader se in normal mode
+noremap ; q:i
+noremap <leader>; q:i!
+" This requires that all maps that use ":" (commands!) need to be defined with "nnoremap"/ "vnoremap"
 " TODO suspend this. wanted to use this to silence/non-<cr> the dirvish shell commands. → fnid a different map for this
 " nnoremap : :silent !
 
