@@ -1147,9 +1147,12 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 ## Temp next
 
 file manage:
-- folders
-- spaces
-- shortcut usage
+- spaces (hmm, quoting seems difficult - just not handle spaces)
+- folders (sort of works, multiple?)
+
+* refactor to autoload: sort into plugin/runtime (there is an example .vim/autoload/functional.vim)
+  - renaming to filename#function could be helped by a script?
+  - separating maps from functions is quite inconvienient
 
 * indicate file selection with BGBlack highlight?
 

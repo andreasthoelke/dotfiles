@@ -96,7 +96,7 @@
 " call search('\v^("|--)\s─(\^|\s)\s{2}\zs\u.*\S\ze\s*──$')
 " call search('\v^("|--)\s─\s{3}\zs\u.*\S\ze\s*──$', 'bW')
 " echo matchstr(getline (line('.') -1), '\v^("|--)\s─(\^|\s)\s{2}\zs\u.*\S\ze\s*──')
-echo matchstr(getline (line('.') -1), '[a-z]*t')
+" echo matchstr(getline (line('.') -1), '[a-z]*t')
 " ─^  Some tests                                         ▲
 
 

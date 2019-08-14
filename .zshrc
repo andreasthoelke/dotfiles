@@ -281,6 +281,7 @@ function TRAPINT() {
 }
 # -- Vim Mode Indicator ----------
 
+# Shell prompt style showing vim modes and git branch
 # Shell prompt config created by promptline.vim
 # This is used instead of a 'theme'?
 source ~/.promptline.sh

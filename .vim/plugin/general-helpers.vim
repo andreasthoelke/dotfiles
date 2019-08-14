@@ -108,6 +108,133 @@ endfunc
 
 
 
+" Utilities: --------------------------------------------------------------------------
+
+" Make sure the cursor position and view does not change when running the ex-command{{{
+func! ExecKeepView(arg)
+  let l:winview = winsaveview()
+  exec a:arg
+  call winrestview(l:winview)
+endfunc "}}}
+
+" Make sure the cursor position and view does not change when calling the function
+func! CallKeepView( fnname, args )
+  let l:winview = winsaveview()
+  " Calls function of this name with the args in the list (length must be == fn args)
+  call call( a:fnname, a:args )
+  call winrestview(l:winview)
+endfunc
+" Tests{{{
+" echo call( "Test3", ["aber"])
+" echo CallKeepView('Test3', ['eins'])
+" func! Test3( ar )
+"   echo ('the arg: ' . a:ar)
+" endfunc}}}
+
+
+
+function! HandleURL()
+  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;"]*')
+  " See https://regexr.com/41u3c
+  echo s:uri
+  if s:uri != ""
+    silent exec "!open '".s:uri."'"
+  else
+    echo "No URI found in line."
+  endif
+endfunction
+" Works on these lines no matter where the cursor is: test "http://yahoo.com" vs: test http://yahoo.com
+
+" Just like windo, but restore the current window when done.
+function! WinDo(command)
+  let currwin=winnr()
+  execute 'windo ' . a:command
+  execute currwin . 'wincmd w'
+endfunction
+com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
+" Just like Windo, but disable all autocommands for super fast processing.
+com! -nargs=+ -complete=command Windofast noautocmd call WinDo(<q-args>)
+
+" Like tabdo but restore the current tab.
+function! TabDo(command)
+  let currTab=tabpagenr()
+  execute 'tabdo ' . a:command
+  execute 'tabn ' . currTab
+endfunction
+com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
+com! -nargs=+ -complete=command Tabdofast noautocmd call TabDo(<q-args>)
+
+command! JSONFormat exec "%!python -m json.tool"
+
+" Chrome Bookmarks: a simple big JSON file "Library/Application\ Support/Google/Chrome/Default/Bookmarks"
+command! ChromeBookmarks exec ":tabe Library/Application\ Support/Google/Chrome/Default/Bookmarks"
+
+
+" Redirect Vim Messages: --------------------------------------------------------------
+" Code from https://stackoverflow.com/questions/2573021/how-to-redirect-ex-command-output-into-current-buffer-or-file
+function! RedirMessages(msgcmd, destcmd)
+  redir => message
+  " Execute the specified Ex command, capturing any messages that it generates into the message variable.
+  silent execute a:msgcmd
+  redir END
+  if strlen(a:destcmd) " destcmd is not an empty string
+    silent execute a:destcmd
+  endif
+  silent put=message
+endfunction
+
+command! -nargs=+ -complete=command RedirMessagesBuf call RedirMessages(<q-args>, ''       )
+command! -nargs=+ -complete=command RedirMessagesWin call RedirMessages(<q-args>, 'new'    )
+command! -nargs=+ -complete=command RedirMessagesTab call RedirMessages(<q-args>, 'tabnew' )
+" :BufMessage registers
+" :WinMessage ls
+" :WinMessage let g:
+" :WinMessage let b:
+" :WinMessage let v:
+" :TabMessage echo "Key mappings for g.." | map g
+
+" Just an altenative to the above
+funct! RedirMessages2(command, to)
+  exec 'redir '.a:to
+  exec a:command
+  redir END
+endfunct
+" call RedirMessages2('ls', '=>g:buffer_list')
+
+command! -nargs=+ RedirectMessages call call(function('RedirMessages2'), split(<q-args>, '\s\(\S\+\s*$\)\@='))
+" :RedirMessages2 ls @">
+" :RedirMessages2 ls =>g:buffer_list
+" :RedirMessages2 ls >buffer_list.txt
+" Redirect Vim Messages: --------------------------------------------------------------
+
+
+
+" Window Resize: -----------------------------------------------------------------
+function! IsLeftMostWindow()
+  let curNr = winnr()
+  wincmd h
+  if winnr() == curNr
+    return 1
+  endif
+  wincmd p " Move back.
+  return 0
+endfunction
+
+function! IsTopMostWindow()
+  let curNr = winnr()
+  wincmd k
+  if winnr() == curNr
+    return 1
+  endif
+  wincmd p " Move back.
+  return 0
+endfunction
+
+" Window Resize: -----------------------------------------------------------------
+
+
+
+
 " SOME TOOLS FUNTIONS TIPS: -------------------------------------------------
 " in insert mode, the key sequence backslash f p will insert the current working directory
 inoremap \fp <C-R>=getcwd()<CR>

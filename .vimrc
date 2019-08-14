@@ -16,7 +16,7 @@ Plug 'junegunn/fzf.vim'
 " Plug 'kshenoy/vim-ctrlp-args'
 
 Plug 'justinmk/vim-dirvish'
-" Plug 'kristijanhusak/vim-dirvish-git'
+Plug 'kristijanhusak/vim-dirvish-git'
 " Added a convenient "silent" 'z' buffer local map for the Shdo command window
 " Plug 'andreasthoelke/vim-dirvish'
 " test these
@@ -1202,21 +1202,21 @@ endfunction
 " Paste and delete -------------------------------------
 
 " Paste from the yank register
-nnoremap <leader>p "0p
-nnoremap <leader>P "0P
+" nnoremap <leader>p "0p
+" nnoremap <leader>P "0P
 
 " Paste and copy System clipboard
-nnoremap <leader><c-p> "+P
+" nnoremap <leader><c-p> "+P
 
 " nnoremap <leader>vv "+P
 " nnoremap <leader>vv "+P:call PurescriptUnicode()<cr>h
 
 " copy from clipboard
-nnoremap <leader>y "+y
-vnoremap <leader>y "+y
+" nnoremap <leader>y "+y
+" vnoremap <leader>y "+y
 
 " Paste to Command line
-nnoremap <leader><m-p> :<c-r>"
+" nnoremap <leader><m-p> :<c-r>"
 " <c-r>"
 
 
@@ -1755,7 +1755,7 @@ let g:EasyClipShareYanks = 1
 let g:EasyClipYankHistorySize = 6
 " Use a menu to select from the yank buffer
 " Note: use <leader>"<regnumber> instead
-nnoremap <leader>P :IPasteBefore<cr>
+" nnoremap <leader>P :IPasteBefore<cr>
 
 nmap ,p <plug>EasyClipPasteUnformattedAfter
 nmap ,P <plug>EasyClipPasteUnformattedBefore
@@ -2024,175 +2024,50 @@ endfunction
 
 
 
-" Utilities: --------------------------------------------------------------------------
-
-" Make sure the cursor position and view does not change when running the ex-command{{{
-func! ExecKeepView(arg)
-  let l:winview = winsaveview()
-  exec a:arg
-  call winrestview(l:winview)
-endfunc "}}}
-
-" Make sure the cursor position and view does not change when calling the function
-func! CallKeepView( fnname, args )
-  let l:winview = winsaveview()
-  " Calls function of this name with the args in the list (length must be == fn args)
-  call call( a:fnname, a:args )
-  call winrestview(l:winview)
-endfunc
-" Tests{{{
-" echo call( "Test3", ["aber"])
-" echo CallKeepView('Test3', ['eins'])
-" func! Test3( ar )
-"   echo ('the arg: ' . a:ar)
-" endfunc}}}
-
-
-
-function! HandleURL()
-  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;"]*')
-  " See https://regexr.com/41u3c
-  echo s:uri
-  if s:uri != ""
-    silent exec "!open '".s:uri."'"
-  else
-    echo "No URI found in line."
-  endif
-endfunction
-" Works on these lines no matter where the cursor is: test "http://yahoo.com" vs: test http://yahoo.com
-
-" Just like windo, but restore the current window when done.
-function! WinDo(command)
-  let currwin=winnr()
-  execute 'windo ' . a:command
-  execute currwin . 'wincmd w'
-endfunction
-com! -nargs=+ -complete=command Windo call WinDo(<q-args>)
-" Just like Windo, but disable all autocommands for super fast processing.
-com! -nargs=+ -complete=command Windofast noautocmd call WinDo(<q-args>)
-
-" Like tabdo but restore the current tab.
-function! TabDo(command)
-  let currTab=tabpagenr()
-  execute 'tabdo ' . a:command
-  execute 'tabn ' . currTab
-endfunction
-com! -nargs=+ -complete=command Tabdo call TabDo(<q-args>)
-com! -nargs=+ -complete=command Tabdofast noautocmd call TabDo(<q-args>)
-
-command! JSONFormat exec "%!python -m json.tool"
-
-" Chrome Bookmarks: a simple big JSON file "Library/Application\ Support/Google/Chrome/Default/Bookmarks"
-command! ChromeBookmarks exec ":tabe Library/Application\ Support/Google/Chrome/Default/Bookmarks"
-
-
-" Redirect Vim Messages: --------------------------------------------------------------
-" Code from https://stackoverflow.com/questions/2573021/how-to-redirect-ex-command-output-into-current-buffer-or-file
-function! RedirMessages(msgcmd, destcmd)
-  redir => message
-  " Execute the specified Ex command, capturing any messages that it generates into the message variable.
-  silent execute a:msgcmd
-  redir END
-  if strlen(a:destcmd) " destcmd is not an empty string
-      silent execute a:destcmd
-  endif
-  silent put=message
-endfunction
-
-command! -nargs=+ -complete=command RedirMessagesBuf call RedirMessages(<q-args>, ''       )
-command! -nargs=+ -complete=command RedirMessagesWin call RedirMessages(<q-args>, 'new'    )
-command! -nargs=+ -complete=command RedirMessagesTab call RedirMessages(<q-args>, 'tabnew' )
-" :BufMessage registers
-" :WinMessage ls
-" :WinMessage let g:
-" :WinMessage let b:
-" :WinMessage let v:
-" :TabMessage echo "Key mappings for g.." | map g
-
-" Just an altenative to the above
-funct! RedirMessages2(command, to)
-  exec 'redir '.a:to
-  exec a:command
-  redir END
-endfunct
-" call RedirMessages2('ls', '=>g:buffer_list')
-
-command! -nargs=+ RedirectMessages call call(function('RedirMessages2'), split(<q-args>, '\s\(\S\+\s*$\)\@='))
-" :RedirMessages2 ls @">
-" :RedirMessages2 ls =>g:buffer_list
-" :RedirMessages2 ls >buffer_list.txt
-" Redirect Vim Messages: --------------------------------------------------------------
-
-
-
-" Window Resize: -----------------------------------------------------------------
-function! IsLeftMostWindow()
-    let curNr = winnr()
-    wincmd h
-    if winnr() == curNr
-        return 1
-    endif
-    wincmd p " Move back.
-    return 0
-endfunction
-
-function! IsTopMostWindow()
-    let curNr = winnr()
-    wincmd k
-    if winnr() == curNr
-        return 1
-    endif
-    wincmd p " Move back.
-    return 0
-endfunction
-
-" Window Resize: -----------------------------------------------------------------
-
-
 " TODO use runtimepath to lazyload
 
 " ─   " Helper functions                                ──
-source ~/.vim/utils/utils-search.vim
-source ~/.vim/utils/utils-search-replace.vim
-source ~/.vim/utils/utils-code-line-props.vim
-source ~/.vim/utils/utils-code-haskell.vim
-source ~/.vim/utils/utils-syntax-color.vim
-source ~/.vim/utils/utils-general-helpers.vim
+" source ~/.vim/utils/utils-search.vim
+" source ~/.vim/utils/utils-search-replace.vim
+" source ~/.vim/utils/utils-code-line-props.vim
+" source ~/.vim/utils/utils-code-haskell.vim
+" source ~/.vim/utils/utils-syntax-color.vim
+" source ~/.vim/utils/utils-general-helpers.vim
 
 " ─   Haskell maps and syntax additions                 ──
 " source ~/.vim/utils/HsMotions.vim
-source ~/.vim/utils/HsSyntaxAdditions.vim
-source ~/.vim/utils/CodeMarkup.vim
+" source ~/.vim/utils/HsSyntaxAdditions.vim
+" source ~/.vim/utils/CodeMarkup.vim
 " source ~/.vim/utils/HsAPIExplore.vim
 " Note: There is an unfinished plugin here:
 " tabe .vim/plugged/HsAPIExplore/autoload/HsAPIExplore.vim
 " call HsAPIExplore#start()
 " Intero maps and helpers:
-source ~/.vim/utils/tools-intero.vim
-source ~/.vim/utils/utils-navigation.vim
-source ~/.vim/utils/utils-align.vim
-source ~/.vim/utils/utils-format.vim
-source ~/.vim/utils/utils-stubs.vim
+" source ~/.vim/utils/tools-intero.vim
+" source ~/.vim/utils/utils-navigation.vim
+" source ~/.vim/utils/utils-align.vim
+" source ~/.vim/utils/utils-format.vim
+" source ~/.vim/utils/utils-stubs.vim
 
 " ─   " General tools                                   ──
-source ~/.vim/utils/tools-external.vim
-source ~/.vim/utils/utils-terminal.vim
+" source ~/.vim/utils/tools-external.vim
+" source ~/.vim/utils/utils-terminal.vim
 " Todo: move the helper/commands in this note file
-source ~/.vim/notes/notes-workflow.vim
-source ~/.vim/utils/utils-vimscript-tools.vim
-source ~/.vim/utils/tools-markdown.vim
-source ~/.vim/utils/utils-floatwin.vim
-source ~/.vim/utils/tools-tab-status-lines.vim
-source ~/.vim/utils/tools-langClientHIE-completion.vim
+" source ~/.vim/notes/notes-workflow.vim
+" source ~/.vim/utils/utils-vimscript-tools.vim
+" source ~/.vim/utils/tools-markdown.vim
+" source ~/.vim/utils/utils-floatwin.vim
+" source ~/.vim/utils/tools-tab-status-lines.vim
+" source ~/.vim/utils/tools-langClientHIE-completion.vim
 
 
 " ─   " Minor                                           ──
-source ~/.vim/utils/utils-virtualtext.vim
-source ~/.vim/utils/utils-csv.vim
+" source ~/.vim/utils/utils-virtualtext.vim
+" source ~/.vim/utils/utils-csv.vim
 " source ~/.vim/utils/GuiVim.vim
 
 " ─   " Split-out setup sections                        ──
-source ~/.vim/utils/setup-tags.vim
+" source ~/.vim/utils/setup-tags.vim
 
 
 
