@@ -55,7 +55,7 @@ vnoremap gsk :call HsAPIQueryShowInline( GetVisSel(),       0, 1 )<cr>
 " allow intero repl
 " RenameBuffer /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingTypeClasses1/test/test23.hs
 " Prefix type-sigs with 'cb..'?
-" don't seem to need a module name
+" don't seem to need a module name?
 
 func! HsAPIQueryShowBuf( searchStr, count, infoFlag )
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
