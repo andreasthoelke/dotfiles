@@ -9,6 +9,7 @@ gw, gW      - IN show type at/vis-sel / generic type
 get         - IN show type of symbol or vis sel
 gek         - IN kind at symbol or vis sel
 ges         - IN run symbol
+ges vis-sel - IN run expression!
 ger         - Curl send sting in line to localhost, show response
 ged         - LC show diagnostic message in float-win
 gd, ,gd     - go to definition /in split

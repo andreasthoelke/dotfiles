@@ -31,7 +31,7 @@ endfun
 
 
 func! MakeBufferDisposable()
-  setl buftype=nofile
+  " setl buftype=nofile
   setl bufhidden=hide
   setl noswapfile
   " Buffer is shown with ':ls' but not ctrlP
@@ -44,7 +44,7 @@ func! ActivateScratchWindow( bufferNameId )
   let winNr = bufwinnr( bufNr )
   " This makes sure we (1) have a buffer that (2) is visible and (3) the cursor is in it
   if bufNr == -1
-    " There is no scratch buffer with 'bufferNameId' yet, so creat a new buffer
+    " There is no scratch buffer with 'bufferNameId' yet, so create a new buffer
     " this will also open a window (1)
     exec 'new ' . a:bufferNameId
   else

@@ -89,7 +89,9 @@ nnoremap gei :call InteroEval_SmartShow()<cr>
 
 " Plain Repl Lines:
 " nnoremap ges :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
-nnoremap <silent> ges :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
+nnoremap ges :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
+
+vnoremap ges :call InteroEval( Get_visual_selection(), "FloatWinAndVirtText", '' )<cr>
 
 " ─   legacy to be reviewed                              ■
 " Run cword in repl - paste returned lines verbally:
@@ -202,11 +204,11 @@ func! GetReplExpr()
     return topLevelSymbol
   elseif IsTypeSignLineWithArgs( line('.') )
     return topLevelSymbol
+  elseif CursorIsAtStartOfWord()
+    return expand('<cword>')
   elseif isToplevelLine && isDeclarationWithNoArgs
     " echoe 'declaration with no args'
     return topLevelSymbol
-  elseif CursorIsAtStartOfWord()
-    return expand('<cword>')
   else
     echoe 'Could not extract an expression!'
   endif

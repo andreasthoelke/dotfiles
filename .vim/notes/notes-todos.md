@@ -861,6 +861,10 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 
+* Integrate with Draw.io https://www.draw.io/#G1KVzdbQNX1qjWkhFHruOkEvoTH3UCBvF7
+  (not Google.drawing!)
+
+
 * ignore text in brackets
   Note there is a solution now:
     let g:pttnArrowOutsideParan = '\(([^)]*\)\@<!->\([^(]*)\)\@!'
@@ -1015,6 +1019,8 @@ GraphQL access to the spotify rest API:
 
 ## Haskell Todos
 
+* HsAPIExplore - Tests, repl, types, persists of scratchbuffers ~/.vim/plugin/HsAPIExplore.vim#/-%20persists%20the
+
 Ghci default imports: ~/.ghc/_ghci.conf#/import%20Control.Applicative
 
 Smart autocomplete: When filling in a function argument val, autocompletion
@@ -1145,6 +1151,9 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 
 ## Temp next
+
+* horizontal split-wins separators are hard to see
+  - highlight filename of active and inactive window in accent-color?
 
 file manage:
 - spaces (hmm, quoting seems difficult - just not handle spaces)

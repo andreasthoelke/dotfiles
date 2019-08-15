@@ -1,4 +1,15 @@
 
+" Todos: still use real(scratch) buffer as it would allow to
+" - add tests to better understand/document functions
+" - load it into the repl(?)
+" - have the floating win as overlay (multiple floating wins are difficult(?)
+" - keep the buffer (more to a separate tab/split, save, ect?)
+
+" - browse a module
+
+
+
+
 func! HsAPIExplore#start()
   " echo 'HsAPIExplore#start'
 endfunc
@@ -7,49 +18,71 @@ endfunc
 let g:hoogle_search_buf_size = 10
 let g:hoogle_search_count = 30
 
+nnoremap gsd :call HsAPIQueryShowBuf( HsCursorKeyword(), 15, 0 )<cr>
+vnoremap gsd :call HsAPIQueryShowBuf( GetVisSel(),       15, 0 )<cr>
+nnoremap gSd :call HsAPIQueryShowBuf( HsCursorKeyword(), 60, 0 )<cr>
+vnoremap gSd :call HsAPIQueryShowBuf( GetVisSel(),       60, 0 )<cr>
+
+nnoremap gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
+vnoremap gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
+nnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
+vnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
+
+nnoremap ,gsd :call HsAPIQueryShowFloat( HsCursorKeyword(), 15, 0 )<cr>
+vnoremap ,gsd :call HsAPIQueryShowFloat( GetVisSel(),       15, 0 )<cr>
+nnoremap ,gSd :call HsAPIQueryShowFloat( HsCursorKeyword(), 60, 0 )<cr>
+vnoremap ,gSd :call HsAPIQueryShowFloat( GetVisSel(),       60, 0 )<cr>
+
+nnoremap ,gsD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
+vnoremap ,gsD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
+nnoremap ,gSD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
+vnoremap ,gSD :call HsAPIQueryShowFloat( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
 
 
+nnoremap gsK :call HsAPIQueryShowFloat( HsCursorKeyword(), 0, 1 )<cr>
+vnoremap gsK :call HsAPIQueryShowFloat( GetVisSel(),       0, 1 )<cr>
 
-" 1. activate scratch win
-" call ActivateScratchWindow('Test2')
-"
-" 2.1 get keyword, visual-sel, operator, type signature
-" 2.2 assemble cmd string with options for 3 main usecases
-" " browse long list in buffer
-" let g:cmd1 = 'hoogle replicateM -n=20'
-" " description
-" let g:cmd1 = 'hoogle Control.Monad.replicateM --info'
-" " short inline api
-" let g:cmd1 = 'hoogle replicateM -n=3'
-"
-" 3.1 clear any previous content
-" 3.2. run cmd and fill buffer with results
-" call append( 25, split( system( g:cmd1 ), '\n' ) )
-"
-" 4. align tabularize
-"
-" 5. conceal style
-"
-" 6. setup local maps
-
-nnoremap gsd :call HsAPIQueryShow( HsCursorKeyword(), 15, 0 )<cr>
-vnoremap gsd :call HsAPIQueryShow( GetVisSel(),       15, 0 )<cr>
-nnoremap gSd :call HsAPIQueryShow( HsCursorKeyword(), 60, 0 )<cr>
-vnoremap gSd :call HsAPIQueryShow( GetVisSel(),       60, 0 )<cr>
-
-nnoremap gsD :call HsAPIQueryShow( input( 'HsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
-vnoremap gsD :call HsAPIQueryShow( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
-nnoremap gSD :call HsAPIQueryShow( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
-vnoremap gSD :call HsAPIQueryShow( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
-
-nnoremap gsK :call HsAPIQueryShow( HsCursorKeyword(), 0, 1 )<cr>
-vnoremap gsK :call HsAPIQueryShow( GetVisSel(),       0, 1 )<cr>
 nnoremap gsk :call HsAPIQueryShowInline( HsCursorKeyword(), 0, 1 )<cr>
 vnoremap gsk :call HsAPIQueryShowInline( GetVisSel(),       0, 1 )<cr>
 
 " gsK to insert info into float win - using the module name
 
-func! HsAPIQueryShow( searchStr, count, infoFlag )
+" Todo: one command that
+" - persists the buffer into the project folder (but it stays in the same split-below win)
+" - creates concealed toplevelbinds with the full Namespace? Data.List.zip - with type-sig
+" - loads into repl
+" allow langserver types, docs
+" allow intero repl
+" RenameBuffer /Users/andreas.thoelke/Documents/Haskell/6/HsTrainingTypeClasses1/test/test23.hs
+" Prefix type-sigs with 'cb..'?
+" don't seem to need a module name
+
+func! HsAPIQueryShowBuf( searchStr, count, infoFlag )
+  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
+  let hoogleLines = split( system( hoogleCmd ), '\n' )
+  call ActivateScratchWindow('APIquery')
+  normal! VGd
+  call append( line(1), hoogleLines )
+
+  if !a:infoFlag
+    " Delete commented lines
+    exec 'g/--/d'
+    " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
+    exec 'g/./normal! Whiki-- '
+    " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
+    " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
+    call HsAlignTypeSigs()
+  else
+    exec 'normal jjgc}'
+  endif
+
+  call HaskellSyntaxAdditions()
+
+  exec 'normal! gg0'
+  " call FloatWin_FitWidthHeight()
+endfunc
+
+func! HsAPIQueryShowFloat( searchStr, count, infoFlag )
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
   let hoogleLines = split( system( hoogleCmd ), '\n' )
   call FloatWin_ShowLines( hoogleLines )
