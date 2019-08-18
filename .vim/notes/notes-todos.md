@@ -1151,6 +1151,7 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 
 ## Temp next
+- jump back to where insert started? [\`? not <c-o>?
 
 * horizontal split-wins separators are hard to see
   - highlight filename of active and inactive window in accent-color?

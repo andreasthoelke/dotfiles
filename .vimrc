@@ -772,8 +772,11 @@ set nostartofline
 " COMMAND HISTORY: --------------------------------------------
 " Use c-n and c-i and c-x c-f for completion.
 " c-cr/return to commit in insert mode. leader se in normal mode
-noremap ; q:i
-noremap <leader>; q:i!
+noremap : q:i
+noremap ; :
+" noremap ; q:i
+" noremap <leader>; q:i!
+noremap <leader>: q:i!
 " This requires that all maps that use ":" (commands!) need to be defined with "nnoremap"/ "vnoremap"
 " TODO suspend this. wanted to use this to silence/non-<cr> the dirvish shell commands. → fnid a different map for this
 " nnoremap : :silent !
@@ -805,9 +808,20 @@ map <leader>. @:
 " type "<c-f>" then e.g. "yy" to later either "q:jP" or ':<c-r>"'
 " Find in all user commands: - ":filter Intero command" or just ":command"
 
-nnoremap <silent> <leader>pe :call PasteLastEchoText()<cr>
+nnoremap <leader>pe :call PasteLastEchoText()<cr>
 func! PasteLastEchoText()
   exec "RedirMessagesBuf" histget("cmd", -1)
+endfunc
+
+nnoremap <leader>sm :call ShowMessages()<cr>
+nnoremap <leader>cM :messages clear<cr>
+func! ShowMessages()
+  " call FloatWin_ShowLines( RedirMessages( 'messages', '' ) )
+  call ActivateScratchWindow('messages')
+  normal! ggVGd
+  call RedirMessages( 'messages', '' )
+  set syntax=vim
+  exec 'normal! G0'
 endfunc
 
 " COMMAND HISTORY: --------------------------------------------

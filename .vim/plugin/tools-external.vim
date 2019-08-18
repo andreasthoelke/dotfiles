@@ -100,7 +100,7 @@ vnoremap <leader><leader>gP :<c-u>call GitPublish( input( 'Commit message: ', Ge
 nnoremap <leader><leader>gc :call GitCommit( input( 'Commit message: ' ) )<cr>
 vnoremap <leader><leader>gc :<c-u>call GitCommit( input( 'Commit message: ', GetVisSel() ) )<cr>
 
-
+" Note: No quotes needed to enter multiple words
 func! GitCommitOverload( ... )
   if a:0
     let message = a:1

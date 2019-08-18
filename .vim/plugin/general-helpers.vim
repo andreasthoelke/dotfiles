@@ -59,11 +59,20 @@ func! ActivateScratchWindow( bufferNameId )
         exec winNr . 'wincmd w'
       endif
     endif
+
   endif
   call MakeBufferDisposable()
 endfunc
 " call ActivateScratchWindow('Test2')
 
+func! ScratchWin_Show( id, linesToShow )
+  call ActivateScratchWindow( a:id )
+  normal! ggVGd
+  call append( line(1), a:linesToShow )
+  exec 'normal! gg0'
+endfunc
+" call ScratchWin_Show( 'test1', ['hi there!', 'second line'] )
+" call ScratchWin_Show( 'test1', ['.. just one line!'] )
 
 " ─   Links Rel                                          ■
 
@@ -181,6 +190,7 @@ function! RedirMessages(msgcmd, destcmd)
     silent execute a:destcmd
   endif
   silent put=message
+  " return message
 endfunction
 
 command! -nargs=+ -complete=command RedirMessagesBuf call RedirMessages(<q-args>, ''       )

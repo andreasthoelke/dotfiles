@@ -92,8 +92,12 @@ endfunc
 " Tabularize in multiple runs based on a list of different patterns
 " Skips lines where the pattern does not match
 func! TabularizeListOfPttns( listOfColumnPatterns, startLine, endLine )
+  let range = a:startLine.','.a:endLine
+
   for pttn in a:listOfColumnPatterns
-    call ExecRange( "GTabularize " . '/' . pttn . '/', a:startLine, a:endLine )
+    " call ExecRange( "GTabularize " . '/' . pttn . '/', a:startLine, a:endLine )
+    " call ExecRange( "call easy_align#align(0, 0, 'lines', " . '/' . pttn . '/' . ")", a:startLine, a:endLine )
+    execute range . "call easy_align#align(0, 0, 'lines', pttn)"
   endfor
 endfunc
 " Test with: call HsTabularizeTypeSigns( 2, 4 )
@@ -141,6 +145,10 @@ let g:pttnArrowOutsideParanUnicode = '\(([^)]*\)\@<!→\([^(]*)\)\@!'
 let g:hsTypeSigColumns = [ "::", "=>", g:pttnArrowOutsideParan, ".*\\zs\-\>" ]
 " let g:hsTypeSigColumnsUnicode = [ "∷", "⇒", ".*\\zs→" ]
 let g:hsTypeSigColumnsUnicode = [ "∷", "⇒", g:pttnArrowOutsideParanUnicode, ".*\\zs→" ]
+"          can easy align use these regexes?
+"          align last/out arg early
+"          make sections of alignment j
+"          sections automatic/ after some change? after n-lines?
 " Tabularizes patterns found in TypeSignatures over a range of lines
 func! HsTabularizeTypeSigns( startLine, endLine )
   call TabularizeListOfPttns( g:hsTypeSigColumns, a:startLine, a:endLine )
@@ -187,6 +195,8 @@ endfunc
 nnoremap <silent> <leader>ha :set opfunc=AlignTypeSigs_op<cr>g@
 vnoremap <silent> <leader>ha :<c-u>call AlignTypeSigs_op( visualmode(), 1)<cr>
 " Note: This *does* work with "V"/ Visual-Block mode or "v"
+nnoremap <silent> <leader>hA :call HsAlignTypeSigs()<cr>
+" or "viB<space>ha<c-o>"
 
 " Perform an align operation on a range of lines. An operator function can/needs to access the range as shown below
 func! AlignTypeSigs_op( motionType, ...)

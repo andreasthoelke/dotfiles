@@ -154,6 +154,7 @@ func! InteroReplReturnCB( lines )
   endif
 endfunc
 
+" call InteroRun( ':type ' . GetReplExpr(), 'InteroEval_SmartShow_step2', '' ) ▲
 func! InteroRun( replExpr, alignFnExpr )
   let s:async_alignFnExpr = a:alignFnExpr
   call intero#process#add_handler( function( 'InteroReplReturnCB' ) )
@@ -361,6 +362,7 @@ func! InteroEval( expr, renderFnName, alignFnName ) abort
 endfunc
 
 
+" Resume here to finish pretty printing big values ~/.vim/notes/notes-todos.md#/##%20Pretty%20printing
 func! InteroEval_SmartShow_step2( replReturnedLines ) " ■
   " 2. Store the type of the expression
   let firstLine = split( a:replReturnedLines[0], ' ' )

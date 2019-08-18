@@ -87,6 +87,8 @@ dw          - align/pull inwards to the cursorH the first char to the right
 `>ii`         - shift lines of indent block to the right
 leader al   - easy align
 leader a-ii - align a 'case' block! to '->'
+leader ha (+m/vs) - type-sig align (motion or vis-sel) 'aB'-> error?
+leader hA   - type-sig align entire buffer. or "viB<space>ha<c-o>"
 
 ### Motions
 g;          - to revert the InsertLeave jump
@@ -108,4 +110,8 @@ t/T         - next/prev list item
 leader lm   - LC menu:rename to rename symbol with all it's live/active references
 ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a sortcut for a haskell function rename
 `<leader>rb`  - to rename a binding and its occurences
+
+### Vim
+leader sm   - show past vim echoed text (show messages)
+
 

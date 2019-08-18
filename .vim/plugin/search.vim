@@ -18,8 +18,9 @@ vmap <silent> gsi :call GithubSearch("visSel")<cr>
 
 nnoremap <silent> gsr :call GrepSearch("word", "repo")<cr>
 vmap <silent> gsr :call GrepSearch("visSel", "repo")<cr>
-nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
-vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
+" gsb now used to browse namespace
+" nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
+" vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>
 
 
 " Seach Vim Help and fill the quickfix list with the results
