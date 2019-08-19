@@ -15,6 +15,9 @@ nnoremap <leader>oc :tabe ~/Documents/Haskell/6/<cr>
 
 " ─   CtrlP                                              ■
 
+" Notes:
+" ctrlP custom menu: seems quite involved ~/.vim/autoload/ctrlpArgs.vim#/call%20add.g.ctrlp_ext_vars
+
 let g:ctrlp_cmd = 'CtrlPBuffer'
 " let g:ctrlp_cmd = 'CtrlPMRU'
 " let g:ctrlp_map = '<localleader>a'
@@ -68,6 +71,7 @@ let g:ctrlp_max_files = 2000
 let g:ctrlp_max_depth = 10
 let g:ctrlp_clear_cache_on_exit = 0
 " --- quickfix & loclist ----
+
 
 
 " Demo function:
@@ -136,7 +140,7 @@ let g:dirvish_git_indicators = {
 " CtrlP support: Arglist can be shown in CtrlP. Files can be opened and items deleted with <c-s>
 command! CtrlPArgs call ctrlp#init( ctrlpArgs#id() )
 nnoremap <leader>oa :CtrlPArgs<cr>
-nnoremap gi :CtrlPArgs<cr>
+nnoremap <leader>gi :CtrlPArgs<cr>
 
 " Reset the global arg list:
 nnoremap <leader>X :%argdelete<cr>:call ReloadKeepView()<cr>

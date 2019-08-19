@@ -204,12 +204,13 @@ there is also vim-pencil and http://vimwiki.github.io/ and vim-orgmode
 run vim-tutor of https://github.com/reedes/vim-pencil
 or run vimtutor of vim-pad?
 
-  Pandoc
-  links in haskell docs lhs? pandoc
-  support: literate haskell, SoH Markdown
-  not hide/conceile image tags in markdown
-  can I just use html image tags in markdown?
+* Pandoc
+    links in haskell docs lhs? pandoc
+    support: literate haskell, SoH Markdown
+    not hide/conceile image tags in markdown
+    can I just use html image tags in markdown?
 
+* Patat: Presentations (in markdown, literal haskell) using Pandoc https://github.com/jaspervdj/patat examples: https://github.com/NorfairKing/monadic.party
 
 ## Some command line ideas
 
@@ -860,6 +861,11 @@ make `rm -r` commands move to trash?
 
 
 ## Current Todos
+
+* use a menu for options?  ~/.vim/plugin/HsAPIExplore.vim#/Todo.%20consider%20using
+  - could actually use ctrlP or fzf?
+  - ctrlP custom menu seems too involved: ~/.vim/autoload/ctrlpArgs.vim#/call%20add.g.ctrlp_ext_vars
+
 
 * Integrate with Draw.io https://www.draw.io/#G1KVzdbQNX1qjWkhFHruOkEvoTH3UCBvF7
   (not Google.drawing!)

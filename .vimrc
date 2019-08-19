@@ -145,9 +145,9 @@ Plug 'sjl/vitality.vim'
 " Show undotree with inline diffs and search
 " Plug 'simnalamburt/vim-mundo'
 Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in display
-
 " Autosaves buffers on specific events
 Plug '907th/vim-auto-save'
+Plug 'CharlesGueunet/quickmenu.vim'
 
 " Mappings: -----------------
 Plug 'tpope/vim-unimpaired'
@@ -192,6 +192,7 @@ Plug 'tpope/vim-surround'
 Plug 'wellle/targets.vim'
 Plug 'bkad/camelcasemotion'
 Plug 'tomtom/tcomment_vim'
+Plug 'joereynolds/place.vim'
 
 Plug 'kana/vim-textobj-user'
 " This does fail many function types - search alternative
@@ -438,7 +439,7 @@ endfunc
 " Not needed? now after plugin/gitv.vim
 " nnoremap <leader>sd :OpenSession! default<cr>:call OpenSessionCleanup()<cr>
 nnoremap <leader>sd :OpenSession! default<cr>
-nnoremap <leader>so :OpenSession!<cr>
+" nnoremap <leader>so :OpenSession!<cr>
 " Load locked session after a vim crash
 command! SessionLoadLocked OpenSession!
 command! SessionShowName echo xolox#session#find_current_session()
@@ -1360,6 +1361,10 @@ call camelcasemotion#CreateMotionMappings(',')
 " imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
 " CamelCaseMotion: ------------------------------------------------------
 
+" ─   " Vim Place (insterting without moving the cursor)──
+nmap gi <Plug>(place-insert)
+nmap gI <Plug>(place-insert-multiple)
+let g:place_blink = 0
 
 " Sneak Code Navigation: ------------------------------------------------
 " 1-character enhanced 'f'

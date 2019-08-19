@@ -92,6 +92,7 @@ leader hA   - type-sig align entire buffer. or "viB<space>ha<c-o>"
 
 ### Motions
 g;          - to revert the InsertLeave jump
+gI^- <cr>   - to prefix the current line with a '- ' without movng the cursor
 q/Q         - labels
 tab/s-t/,t  - Headers next/prev /end of header
 c-i/m       - ballparks

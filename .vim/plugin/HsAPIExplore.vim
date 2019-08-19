@@ -6,7 +6,42 @@
 " - keep the buffer (more to a separate tab/split, save, ect?)
 
 
+" Ord a => [a] -> [a]
+" Data.Set.insert
+" +bytestring concat
 
+
+nnoremap gso :call BrowserQuery( input( 'Browser query: ', HsCursorKeyword()) )<cr>
+vnoremap gso :call BrowserQuery( input( 'Browser query: ', GetVisSel()) )<cr>
+
+func! BrowserQuery( searchStr )
+  let searchStrEnc = a:searchStr
+  " Note: this does not work - let searchStrEnc = UrlEncode( a:searchStr )
+
+  let choices = ""
+  let choices .= "&Stackage" . "\n"
+  let choices .= "&Hoogle" . "\n"
+  let choices .= "&Pursuit"
+
+  let choice = confirm( 'Search site: ', choices, 2 )
+
+  if choice == 0
+    return
+  elseif choice == 1
+    let url = 'https://www.stackage.org/lts-14.1/hoogle?q=' . searchStrEnc
+  elseif choice == 2
+    let url = 'https://hoogle.haskell.org/?hoogle=' . searchStrEnc
+  elseif choice == 3
+    let url = 'https://pursuit.purescript.org/search?q=' . searchStrEnc
+  elseif choice == 3
+
+  endif
+
+  exec 'silent !open ' . shellescape( url )
+endfunc
+" call BrowserQuery( 'con map' )
+" call BrowserQuery( 'Ord a => [a] -> [a]' )
+" Todo: consider using https://github.com/Timoses/vim-venu or https://github.com/skywind3000/quickmenu.vim
 
 
 func! HsAPIExplore#start()
@@ -51,15 +86,51 @@ vnoremap gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
 
 func! HsAPIBrowseShowBuf( searchStr )
   let browseCmd = ':browse! ' . a:searchStr
-  call InteroEval( browseCmd, "HsAPIBrowseShowBuf_CB", '' )<cr>
+  call InteroEval( browseCmd, "HsAPIBrowseShowBuf_CB", '' )
 endfunc
 
 func! HsAPIBrowseShowBuf_CB( replReturnedLines )
   call ScratchWin_Show( 'APIquery', a:replReturnedLines )
-  " call ActivateScratchWindow('APIquery')
-  " normal! ggVGd
-  " call append( line(1), a:replReturnedLines )
 
+  call CleanupBrowseOutput()
+
+  " call HsAlignTypeSigs()
+
+  call HaskellSyntaxAdditions()
+  exec 'normal! gg0'
+endfunc
+
+
+func! CleanupBrowseOutput()
+  let cmds = []
+  " Crop namespaces e.g. (Data.Vector.Generic.Base.Vector v a,
+  " find first '.', yank the last word, select all, paste
+  call add( cmds, 'g/\i\.\i/normal! f.Eb"tyeBvE"tp' )
+  " as this crops only the first long namespace, make a second pass
+  call add( cmds, 'g/\i\.\i/normal! f.Eb"tyeBvE"tp' )
+
+  " join lines that end with => or :: or ,  - needs several passes
+  call add( cmds, 'g/\(,\|=>\|::\)$/normal! J' )
+  call add( cmds, 'g/\(,\|=>\|::\)$/normal! J' )
+  call add( cmds, 'g/\(,\|=>\|::\)$/normal! J' )
+  " or begin with '->'
+  call add( cmds, 'g/^\s*->/normal! kJ' )
+
+  " Move classes to the end of buffer
+  " call add( cmds, 'g/class/m$' )
+  call add( cmds, 'g/class/d' )
+  call add( cmds, 'g/\.\.\./d' )
+
+  call RunCmdsSilent( cmds )
+endfunc
+
+func! RunCmdsSilent( cmds )
+  for cmd in a:cmds
+    exec 'silent ' . cmd
+  endfor
+endfunc
+
+func! CleanBrowseOutput_bak() " ■
   " Crop namespaces e.g. (Data.Vector.Generic.Base.Vector v a,
   " find first '.', yank the last word, select all, paste
   exec 'g/\i\.\i/normal! f.Eb"tyeBvE"tp'
@@ -77,13 +148,7 @@ func! HsAPIBrowseShowBuf_CB( replReturnedLines )
   " exec 'g/class/m$'
   exec 'g/class/d'
   exec 'g/\.\.\./d'
-
-  " call HsAlignTypeSigs()
-
-  call HaskellSyntaxAdditions()
-  exec 'normal! gg0'
-endfunc
-
+endfunc " ▲
 
 " Global command tricks:
 " prefix a string to some lines

@@ -134,6 +134,15 @@ endfunc
 " call AlignColumns( ['\,', '2\,'] )
 
 
+func! AlignBufferTypeSigs()
+  call ReplaceInRange( 1, line('$'), g:HsReplacemMap_CharsToUnicode )
+
+  call easy_align#align(0, 0, motionType, comExpr)
+  " call TabularizeListOfPttns( g:hsTypeSigColumnsUnicode, startLine, endLine )
+
+  call ReplaceInRange( 1, line('$'), g:HsReplacemMap_UnicodeToChars )
+endfunc
+
 " ─   Haskell Align Type Sigs                            ■
 
 let g:pttnArrowOutsideParan = '\(([^)]*\)\@<!->\([^(]*)\)\@!'
