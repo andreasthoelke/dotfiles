@@ -151,11 +151,12 @@ let g:magit_default_sections = ['commit', 'staged', 'unstaged']
 " There may be muliple Magit windows. Only when the focus is on any of there Autosave should be off
 " nnoremap yog :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 " nnoremap yoG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
-
+nnoremap <leader>og :Magit<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
+nnoremap <leader>oG :tabe<cr>:MagitOnly<cr>:call AttachAutosaveStopEvents()<cr>:let g:auto_save = 0<cr>
 
 " GitV:
-nnoremap <leader>gv :Gitv<cr>
-nnoremap <leader>gV :Gitv!<cr>
+nnoremap <leader>oG :Gitv<cr>
+" nnoremap <leader>oG :Gitv!<cr>
 
 let g:Gitv_CustomMappings = {
       \'update': 'r',
@@ -187,6 +188,8 @@ let g:fugitive_force_bang_command = 1
 command! -nargs=1 Chromium exec ':Dispatch' '/Applications/Chromium.app/Contents/MacOS/Chromium --app=' . <q-args> '--window-size=500,400 --window-position=800,20'
 " With addressbar and terminal in other tab
 command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/MacOS/Chromium ' . <q-args>
+" Test: open more wins per invocation
+" Chromium 'http://purescript.org'
 
 " let Tid = jobstart("/Applications/Chromium.app/Contents/MacOS/Chromium http://purescript.org")
 
@@ -199,11 +202,11 @@ func! LaunchChromium( url ) abort
   if exists('g:launchChromium_job_id')
     call jobstop( g:launchChromium_job_id )
     unlet g:launchChromium_job_id
-  else
-    let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
   endif
+  let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
 endfunc
 " call LaunchChromium( 'http://purescript.org' )
+" call LaunchChromium( 'https://www.stackage.org/lts-14.1/hoogle?q=map' )
 
 func! StopChromium()
   if exists('g:launchChromium_job_id')

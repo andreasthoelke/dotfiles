@@ -157,7 +157,7 @@ nnoremap <leader>op :tabe ~/.vim/plugged/<cr>
 " General: ----------------------------------------------------------
 
 " Exit insert mode
-" inoremap <c-[> <esc>l
+inoremap <c-[> <esc>l
 
 
 " General: ----------------------------------------------------------

@@ -20,7 +20,8 @@ func! TrimListOfStr( listOfStr )
 endfunc
 " echo map( [" eins ", " zwei"], {key, val -> trim(val)} )
 
-func! Reduce( funcRef, list)
+" use functional.vim now
+func! Reduce_depricated( funcRef, list)
   let acc = ''
   for val in a:list[0:]
     let acc = a:funcRef(acc, val)
@@ -37,6 +38,9 @@ func! MakeBufferDisposable()
   " Buffer is shown with ':ls' but not ctrlP
   setl buflisted
 endfunc
+
+
+" ─   Scratch Window                                     ■
 
 " Create or just activate/focus a disposable window
 func! ActivateScratchWindow( bufferNameId )
@@ -73,6 +77,157 @@ func! ScratchWin_Show( id, linesToShow )
 endfunc
 " call ScratchWin_Show( 'test1', ['hi there!', 'second line'] )
 " call ScratchWin_Show( 'test1', ['.. just one line!'] )
+" ─^  Scratch Window                                     ▲
+
+
+" ─   User Choice Menu and Action                        ■
+" Any function (action!) can be supplied with a user selected last argument/value.
+" The user-selected option value will be passed as the last arg to the continuation function. Only string values are
+" supported for now. (the list of continuation args will be supplied to any starting args of the continuation function)
+" Note: that all code that wants to use the selected value/effect needs to run in the contionuationFn. (there should be no
+" code-lines after the call to UserChoiceAction().
+" The forth (optional) arg can either be 'showRight' (default) or 'showBottom'
+" optUserPromtValue_andFirstArg (if not empty!) will be shown in the dialog *and* be used as the first arg to the continuation
+func! UserChoiceAction( userPromptText, optUserPromtValue_andFirstArg, choices, continuationFn, contOtherArgs, ... )
+  let windowPos = (a:0 == 6) ? a:4 : "showRight"
+  " Show the dialog
+  call UserChoiceDialog_show( a:userPromptText, a:optUserPromtValue_andFirstArg, a:choices, windowPos )
+
+  " Store continuation fn+args so the "UserChoiceAction_resume" can run it
+  let g:userChoiceContinuationData = { 'fn': a:continuationFn }
+  let g:userChoiceContinuationData.firstArgs = (a:optUserPromtValue_andFirstArg != '') ?
+                                  \  [a:optUserPromtValue_andFirstArg] + a:contOtherArgs
+                                  \:                                     a:contOtherArgs
+  " Note: async - action call stack will resume with selected value at "UserChoiceAction_resume"
+endfunc
+
+"                      ( userPromptText,      optUserPromtValue_andFirstArg,            choices,       continuationFn,          contOtherArgs,          [winPos] ... )
+" call UserChoiceAction( 'Run query on site', input('Site query: ', HsCursorKeyword()), g:searchSites, function('BrowserQuery'), [{'browser':'default'}] )
+call UserChoiceAction( 'Please select one: ', 'Current data: 1234', g:testUserChoice, function('TestUserChoice'), [{'browser':'default'}] )
+
+func! UserChoiceAction_resume( selOptionValue )
+  call call( g:userChoiceContinuationData.fn,
+        \ g:userChoiceContinuationData.firstArgs + [a:selOptionValue] )
+endfunc
+
+func! UserChoiceDialog_show( userPromptText, userPromtValue, choices, windowPos )
+  call quickmenu#current(100)
+  call quickmenu#reset()
+
+  call quickmenu#header( a:userPromptText )
+  if (a:userPromtValue != '')
+    call quickmenu#append('# ' . a:userPromtValue, '')
+  endif
+
+  for choiceItem in a:choices
+    " call quickmenu#append( choiceItem.label, FormatResumeCall( choiceItem.val ) )
+    "                        | Label           | Callback                          | Helptext             | Trigger key (first char of label!)
+    call quickmenu#append( choiceItem.label, FormatResumeCall( choiceItem.val ), choiceItem.val, '', 0, choiceItem.label[0] )
+    " example:
+    " call quickmenu#append( 'Stackage'      , 'call UserDialgResume( "www.stackage.org" )' )
+  endfor
+
+  if a:windowPos == 'showBottom'
+    call quickmenu#bottom(100)
+  else
+    call quickmenu#toggle(100)
+  endif
+endfunc
+
+func! FormatResumeCall( arg )
+  return 'call UserChoiceAction_resume("' . a:arg . '")'
+endfunc
+" echo FormatResumeCall( 'something in here')
+" exec FormatResumeCall( 'something in here')
+" ─^  User Choice Menu and Action                        ▲
+
+" GetLanguageByCurrentFileExtension
+
+" All search params are optional: could send end empty {}
+let g:exampleSearchParams = {'mainTerm':'fmap'
+                           \,'namespace': 'Control.Applicative'
+                           \,'package':   'async-2.2.1'
+                           \,'language':  'Haskell'
+                           \}
+
+
+let g:searchSites =  [ {'section':'Docs'} ]
+
+" https://www.stackage.org/lts-14.1/hoogle?q=Data.Either.fromLeft
+" namespace_mainTerm should join namespace and mainTerm via a '.' if both are provided
+let g:searchSites += [ {'label':'Stackage',   'baseUrl':'https://www.stackage.org/lts-14.1/'
+                                           \, 'namespace_mainTerm':'hoogle?q='
+                                           \}]
+
+" https://hoogle.haskell.org/?hoogle=Data.Either.fromLeft&scope=package%3Aeither
+let g:searchSites += [ {'label':'Hoogle',     'baseUrl':'https://hoogle.haskell.org/'
+                                           \, 'namespace_mainTerm':'?hoogle='
+                                           \}]
+
+" https://pursuit.purescript.org/search?q=fromLeft
+" Pursuit can only search for a module namespace (Data.List) *or* an identifier (e.g. fromLeft), not a combination of both
+" So searching for a module has to use the 'mainTerm' field
+let g:searchSites += [ {'label':'Pursuit',    'baseurl':'https://pursuit.purescript.org/search?q='
+                                           \, 'mainTerm':'search?q='
+                                           \}]
+
+let g:searchSites += [ {'section':'Web help/ posts'} ]
+
+" https://www.google.de/search?q=traverse+Haskell
+" This usually features Stackoverflow
+let g:searchSites += [ {'label':'Google',     'baseUrl':'google.de/'
+                                           \, 'mainTerm':'search?q='
+                                           \, 'language':'+'
+                                           \}]
+
+" https://www.reddit.com/r/haskell/search/?q=Data.Either.fromLeft&restrict_sr=1
+let g:searchSites += [ {'label':'Redit Haskell', 'baseUrl':'https://www.reddit.com/r/haskell/'
+                                           \, 'mainTerm':'search/?q='
+                                           \, 'options':'&restrict_sr=1'
+                                           \}]
+
+" https://github.com/search?l=&q=traverse+language%3AHaskell&type=Code
+" Can then switch to 'Repos', 'Issues', 'Wikis', ..
+let g:searchSites += [ {'label':'Github',     'baseUrl':'https://github.com/'
+                                           \, 'mainTerm':'search?l=&q='
+                                           \, 'language':'+language%3A'
+                                           \, 'options':'&type=Code'
+                                           \}]
+
+" https://haskell-code-explorer.mfix.io/search/withAsync
+" https://haskell-code-explorer.mfix.io/package/async-2.2.1/search/withAsync
+let g:searchSites += [ {'label':'Hs Code Explorer (Hackage search + browse)'
+                                           \, 'baseUrl':'https://haskell-code-explorer.mfix.io/'
+                                           \, 'package':'package/'
+                                           \, 'mainTerm':'search/'
+                                           \}]
+
+" https://codesearch.aelve.com/haskell/search?query=fromLeft&filter=Data.Either
+let g:searchSites += [ {'label':'Aelve (Hackage code search)'
+                                           \, 'baseUrl':'https://codesearch.aelve.com/haskell/'
+                                           \, 'mainTerm':'search?query='
+                                           \, 'namespace':'&filer='
+                                           \}]
+
+
+
+
+nnoremap gso :call BrowserQuery( input( 'Browser query: ', HsCursorKeyword() ) )<cr>
+vnoremap gso :call BrowserQuery( input( 'Browser query: ', GetVisSel() ) )<cr>
+
+" Open searchUrl + queryStr in the default browser or in Chrome
+func! BrowserQuery( queryStr, browser, searchUrl )
+  let url = a:searchUrl . a:queryStr
+  if a:browser.browser == 'Chromium'
+    call LaunchChromium( url )
+  else
+    exec 'silent !open ' . shellescape( url )
+  endif
+endfunc
+" call BrowserQuery('map', {'browser':'Chromium'}, 'https://hoogle.haskell.org/?hoogle=')
+" call BrowserQuery('map', {'browser':'default'}, 'https://www.stackage.org/lts-14.1/hoogle?q=')
+" call BrowserQuery('map', {'browser':'Chromium'}, 'https://www.stackage.org/lts-14.1/hoogle?q=')
+
 
 " ─   Links Rel                                          ■
 
@@ -177,6 +332,13 @@ command! JSONFormat exec "%!python -m json.tool"
 
 " Chrome Bookmarks: a simple big JSON file "Library/Application\ Support/Google/Chrome/Default/Bookmarks"
 command! ChromeBookmarks exec ":tabe Library/Application\ Support/Google/Chrome/Default/Bookmarks"
+
+" Returns v:true if a window of <filepath> is open in the current tab
+func! WinIsOpen( filepath )
+  return len( functional#filter( {path-> path is# a:filepath}, TabWinFilenames() ) )
+endfunc
+" echo WinIsOpen( '( Markbar )' )
+" echo WinIsOpen( bufname( bufnr('%') ) )
 
 
 " Redirect Vim Messages: --------------------------------------------------------------

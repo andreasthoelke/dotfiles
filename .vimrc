@@ -147,6 +147,8 @@ Plug 'sjl/vitality.vim'
 Plug 'andreasthoelke/vim-mundo' " removed the string 'ago ' to shorten lines in display
 " Autosaves buffers on specific events
 Plug '907th/vim-auto-save'
+" Plug 'skywind3000/quickmenu.vim'
+" This fork allows to define letter shorcuts per menu-item
 Plug 'CharlesGueunet/quickmenu.vim'
 
 " Mappings: -----------------
@@ -393,6 +395,7 @@ let g:mundo_inline_undo = 1
 " Z Maps Unimpaired:
 " There is only one instance/window of Mundo. Whenever a Mundo window is open, Autosave should be off
 " nnoremap you :MundoToggle<cr>:AutoSaveToggle<cr>
+
 " Mundo: ----------------------
 
 
@@ -872,18 +875,31 @@ vnoremap ,H H
 
 " Go back to insert start (+ jumplist)
 " autocmd! InsertLeave * exec "normal! m'`["
-" au ag InsertLeave * call InsertLeave()
-au ag InsertEnter * exec "normal! m'"
+" au! ag InsertLeave * call InsertLeave()
+" au ag InsertEnter * exec "normal! m'"
+" au! ag InsertEnter * call InsertEnter()
+
+" Note: adding to the jumplist on insert Enter/Leave does not seem to work?!
+" Now go to insert start/end explicitly
+
+nnoremap g[ `[
+nnoremap g] `]
+
+func! InsertEnter()
+  " echo 'hi'
+  " call feedkeys( '<c-[', 'x' )
+  " normal! m'
+endfunc
 
 func! InsertLeave()
-  " echo 'hi there'
   " Put end of inserted text into jumplist, then go to the beginning of the insert
-  normal! m'`[
+  " normal! `[h
+  " normal! m'
   " normal! `[
   " Test if character under cursor is a <space>
-  if getline('.')[col('.')-1] == ' '
-    normal! w
-  endif
+  " if getline('.')[col('.')-1] == ' '
+  "   normal! w
+  " endif
   " call JumpsToQuickfix()
 endfunc
 
@@ -1194,7 +1210,7 @@ nmap <silent> [c :GitGutterPrevHunk<CR>
 " nnoremap <expr> ]c &diff ? ']c' : ':call NextHunkAllBuffers()<CR>'
 " nnoremap <expr> [c &diff ? '[c' : ':call PrevHunkAllBuffers()<CR>'
 
-nnoremap <expr> <C-J> &diff ? ']c' : '<C-W>j'
+" nnoremap <expr> <C-J> &diff ? ']c' : '<C-W>j'
 
 "
 " GitGutter: -------------------------------------------------------
@@ -1707,7 +1723,7 @@ set noshowmode
 " nnoremap yot :TagbarToggle<cr>
 " Use this because tagbar is the rightmost win?
 " nnoremap to :TagbarOpen j<cr>
-nnoremap <leader>to :TagbarToggle<cr>
+nnoremap <leader>ot :TagbarToggle<cr>
 " discontinued maps
 " nnoremap <leader>th :TagbarClose<cr>
 " nnoremap <leader>to :TagbarOpen j<cr>
@@ -1797,21 +1813,35 @@ func! MapMarks ()
   " Note this lacks the o, m! for open an update maps
   let l:labels = split( g:markbar_marks_to_display, '\zs')
   for label in l:labels
-    exec 'nmap m'  . label .  ' m' . l:label . ':MarkbarUpdate<cr>'
+    exec 'nnoremap m'  . label .  ' m' . label . ':call MarkbarUpdate()<cr>'
     " exec "nmap \'" . label . " \'" . l:label
     exec 'nnoremap M'  . label .  ' :delm ' . l:label . '<cr>' . ':MarkbarUpdate<cr>' . ':call ForceGlobalRemovalMarks()<cr>'
   endfor
 endfunc
 call MapMarks()
 
-command! MarkbarUpdate call markbar#ui#RefreshMarkbar(g:__active_controller)
+command! MarkbarUpdate call MarkbarUpdate()
+
+func! MarkbarUpdate()
+  if exists('g:__active_controller') && WinIsOpen( '( Markbar )' )
+    echoe 'hi?'
+    call markbar#ui#RefreshMarkbar(g:__active_controller)
+  endif
+endfunc
+
+
+func! WinIsOpen( filepath )
+  return len( functional#filter( {path-> path is# a:filepath}, TabWinFilenames() ) )
+endfunc
+" echo WinIsOpen( '( Markbar )' )
+" echo WinIsOpen( bufname( bufnr('%') ) )
 
 command! DelLocalMarks  exec 'delmarks a-z' | call ForceGlobalRemovalMarks()
 command! DelGlobalMarks exec 'delmarks A-Z' | call ForceGlobalRemovalMarks()
 
 
 " TODO Ctrlp-mark plugin useful?
-nnoremap <leader>om :CtrlPMark<cr>
+" nnoremap <leader>om :CtrlPMark<cr>
 
 " Issue: Deleted markers are currcntly recreated after session save/load a temp fix is to "ShadaClear".
 " Adopted from https://github.com/kshenoy/vim-signature/blob/eaa8af20ac4d46f911a083298d7a19e27be180e0/autoload/signature/mark.vim#L324
@@ -1821,10 +1851,10 @@ function! ForceGlobalRemovalMarks()
 endfunction
 
 " Markbar: --------------------------------------------------------------------------"
-nmap yom <Plug>ToggleMarkbar
+nmap <leader>om <Plug>ToggleMarkbar
 " nmap mo <Plug>OpenMarkbar | wincmd p
-nmap mo :call g:standard_controller.toggleMarkbar()<cr>:wincmd p<cr>
-nmap mm :call markbar#ui#RefreshMarkbar(g:__active_controller)<cr>
+" nmap mo :call g:standard_controller.toggleMarkbar()<cr>:wincmd p<cr>
+" nmap mm :call markbar#ui#RefreshMarkbar(g:__active_controller)<cr>
 let g:markbar_enable_peekaboo = v:false
 let g:markbar_width = 30
 " Default mark name should just be the plain filename- no extension

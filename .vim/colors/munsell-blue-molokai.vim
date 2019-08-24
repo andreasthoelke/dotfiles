@@ -317,7 +317,7 @@ hi! def link mkdLink Underlined2
 
 " Dirvish{{{
 hi! def link DirvishPathTail Function
-hi! def link DirvishArg DataConstructor"
+hi! def link DirvishArg DataConstructor
 
 " Markbar
 exec 'hi! DarkHeader guifg=' . g:color_ming_green_dark
@@ -329,6 +329,20 @@ hi! link markbarID Highlight1
 hi FoldColumn guibg=gray10 guifg=gray20
 hi Folded     guifg=#3D5862 guibg=#121212
 
+
+hi link QuickmenuHeader htmlLink
+hi link QuickmenuBracket Comment
+hi link QuickmenuSection Comment
+hi link QuickmenuOption purescriptIdentifier
+hi link QuickmenuNumber hsTypeComment
+" QuickmenuSelect			Title
+" QuickmenuSection		Statement
+" QuickmenuSelect			Title
+" QuickmenuNumber			Number
+" QuickmenuSpecial		Comment
+" QuickmenuHeader			Title
+" QuickmenuOption			Identifier
+" QuickmenuHelp			Comment
 
 " Vim Native HighlighGroups:
 " This is where to set the main background color

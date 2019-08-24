@@ -102,6 +102,15 @@ J/K         - start of line | use to jump to virtual line starts in concealed to
 t/T         - next/prev list item
 ]t/[t       - into next/prev inner list
 ]T          - end of list (to append new elements)
+g[ g]       - go back to last insert start/end. or native \`[ \`]
+z] z[ zk    - beginning/end of current fold/prev fold
+[c ]c       - prev/next git hunk (TODO: make ]c or c] consistent?)
+
+### Tools
+leader og   - Git magit. Also :GitcommitAuthor
+leader oG   - Git gitV viewer
+leader ot   - Tagbar
+leader om   - Markbar
 
 " ─   Bindings, including where/let                     ──
 `]b`, `[b`      - for next/prev binding

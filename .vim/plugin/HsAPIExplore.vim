@@ -1,4 +1,10 @@
 
+" Note: this is needed for initial autoload?
+func! HsAPIExplore#start()
+  " echo 'HsAPIExplore#start'
+endfunc
+
+
 " Todos: still use real(scratch) buffer as it would allow to
 " - add tests to better understand/document functions
 " - load it into the repl(?)
@@ -10,43 +16,6 @@
 " Data.Set.insert
 " +bytestring concat
 
-
-nnoremap gso :call BrowserQuery( input( 'Browser query: ', HsCursorKeyword()) )<cr>
-vnoremap gso :call BrowserQuery( input( 'Browser query: ', GetVisSel()) )<cr>
-
-func! BrowserQuery( searchStr )
-  let searchStrEnc = a:searchStr
-  " Note: this does not work - let searchStrEnc = UrlEncode( a:searchStr )
-
-  let choices = ""
-  let choices .= "&Stackage" . "\n"
-  let choices .= "&Hoogle" . "\n"
-  let choices .= "&Pursuit"
-
-  let choice = confirm( 'Search site: ', choices, 2 )
-
-  if choice == 0
-    return
-  elseif choice == 1
-    let url = 'https://www.stackage.org/lts-14.1/hoogle?q=' . searchStrEnc
-  elseif choice == 2
-    let url = 'https://hoogle.haskell.org/?hoogle=' . searchStrEnc
-  elseif choice == 3
-    let url = 'https://pursuit.purescript.org/search?q=' . searchStrEnc
-  elseif choice == 3
-
-  endif
-
-  exec 'silent !open ' . shellescape( url )
-endfunc
-" call BrowserQuery( 'con map' )
-" call BrowserQuery( 'Ord a => [a] -> [a]' )
-" Todo: consider using https://github.com/Timoses/vim-venu or https://github.com/skywind3000/quickmenu.vim
-
-
-func! HsAPIExplore#start()
-  " echo 'HsAPIExplore#start'
-endfunc
 
 
 let g:hoogle_search_buf_size = 10

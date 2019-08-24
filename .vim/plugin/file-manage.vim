@@ -230,6 +230,7 @@ func! PreviewFileInFloatWin( filePath )
   call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
 endfunc
 
+
 func! MoveFilesFromLeftWinToRightWin( prompt )
   let folderPathSource = bufname( bufnr('%') )
   " Of the other windows choose the leftmost as the target of the file move

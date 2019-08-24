@@ -771,6 +771,7 @@ Vim Additional Documentation: https://github.com/mhinz/vim-galore
 
 ## Todos
 
+* when going up/down via j/k, use vitual columns to avoid jumps caused by num of concealed chars
 * general: quickly share urls with Android, mac, other iphone
 
 how are check-lists rendered in markdown?
@@ -779,6 +780,7 @@ can I check those or is this implemented in the vim orgmode?
 
   match(it) "" in markdown syntax to highlight strings
 
+Filter "Already installed" in PlugInstall output. using modifiable=on & v/Already/$ -> see global tips and tricks
 
 Image quick view feature
 below was only for nyaovim
@@ -861,6 +863,11 @@ make `rm -r` commands move to trash?
 
 
 ## Current Todos
+
+"HsAPI align" session
+* HsAPI with easy-align: ~/.vim/plugin/utils-align.vim#/func.%20AlignBufferTypeSigs..
+  - can I tabularize the last arrow early?
+  - can I tabularize only the first/second occurance of ->?
 
 * use a menu for options?  ~/.vim/plugin/HsAPIExplore.vim#/Todo.%20consider%20using
   - could actually use ctrlP or fzf?
