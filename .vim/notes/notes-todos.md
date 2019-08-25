@@ -771,6 +771,7 @@ Vim Additional Documentation: https://github.com/mhinz/vim-galore
 
 ## Todos
 
+* move to literalDict once this is releaded in neovim: let mydict = #{zero: 0, one_key: 1, two-key: 2, 333: 3}
 * when going up/down via j/k, use vitual columns to avoid jumps caused by num of concealed chars
 * general: quickly share urls with Android, mac, other iphone
 

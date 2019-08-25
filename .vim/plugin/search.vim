@@ -273,16 +273,6 @@ endfun
 " let extension = expand("%:e")
 
 
-func! GetLanguageByCurrentFileExtension()
-  let extension = GetExtension()
-  if extension == 'purs'
-    return 'PureScript'
-  elseif extension == 'hs'
-    return 'Haskell'
-  else
-    return extension
-  endif
-endfunc
 
 command! -nargs=1 GithubSearch  :call GithubSearch(<args>)
 command! -nargs=1 SearchGithub  :call GithubSearch(<args>)

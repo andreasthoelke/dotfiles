@@ -83,6 +83,12 @@ func! ArgsPlacehoderStr ( argumentTypesList )
 endfunc
 " echo ArgsPlacehoderStr( ['a → b', 'Maybe a'] )
 
+func! Uppercased( str )
+  return a:str[0] =~ '\u'
+endfunc
+" echo Uppercased( 'Monad.bind' )
+" echo Uppercased( 'fmap' )
+
 function! GetModuleName()
   for lineNum in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
     " skip empty lines as those seem to confuse the if == 'module'

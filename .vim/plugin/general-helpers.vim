@@ -39,39 +39,16 @@ func! MakeBufferDisposable()
   setl buflisted
 endfunc
 
-
-
-
-
-" GetLanguageByCurrentFileExtension
-
-" All search params are optional: could send end empty {}
-let g:exampleSearchParams = {'mainTerm':'fmap'
-                           \,'namespace': 'Control.Applicative'
-                           \,'package':   'async-2.2.1'
-                           \,'language':  'Haskell'
-                           \}
-
-
-
-
-
-
-nnoremap gso :call BrowserQuery( input( 'Browser query: ', HsCursorKeyword() ) )<cr>
-vnoremap gso :call BrowserQuery( input( 'Browser query: ', GetVisSel() ) )<cr>
-
-" Open searchUrl + queryStr in the default browser or in Chrome
-func! BrowserQuery( queryStr, browser, searchUrl )
-  let url = a:searchUrl . a:queryStr
-  if a:browser.browser == 'Chromium'
-    call LaunchChromium( url )
+func! GetLanguageByCurrentFileExtension()
+  let extension = GetExtension()
+  if extension == 'purs'
+    return 'PureScript'
+  elseif extension == 'hs'
+    return 'Haskell'
   else
-    exec 'silent !open ' . shellescape( url )
+    return extension
   endif
 endfunc
-" call BrowserQuery('map', {'browser':'Chromium'}, 'https://hoogle.haskell.org/?hoogle=')
-" call BrowserQuery('map', {'browser':'default'}, 'https://www.stackage.org/lts-14.1/hoogle?q=')
-" call BrowserQuery('map', {'browser':'Chromium'}, 'https://www.stackage.org/lts-14.1/hoogle?q=')
 
 
 " ─   Links Rel                                          ■
