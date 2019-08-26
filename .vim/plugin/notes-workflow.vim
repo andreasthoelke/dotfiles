@@ -574,6 +574,7 @@ nnoremap <localleader>sj :set syntax=javascript<cr>
 nnoremap <localleader>sv :set syntax=vim<cr>
 nnoremap <localleader>sm :set syntax=markdown<cr>
 nnoremap <localleader>sp :set syntax=purescript<cr>
+nnoremap <localleader>sP :set syntax=python<cr>
 nnoremap <localleader>sd :set syntax=dirvish<cr>
 " TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
 

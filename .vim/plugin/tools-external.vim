@@ -173,6 +173,23 @@ let g:fugitive_force_bang_command = 1
 " ─^  Git Tools                                          ▲
 
 
+" ─   Reading config/ yaml files                         ■
+" 
+python << EOF
+import yaml
+import vim
+def getHSPackageDependencies():
+  filePath = vim.eval('projectroot#guess()') + '/package.yaml'
+  with open( filePath, 'r') as packageFile:
+  # with open("/Users/andreas.thoelke/Documents/Haskell/6/HsTrainingTypeClasses1/package.yaml", 'r') as packageFile:
+    packageObj = yaml.load(packageFile, Loader=yaml.FullLoader)
+
+  return packageObj['library']['dependencies']
+EOF
+" echo pyeval('getHSPackageDependencies()')
+
+" ─^  Reading config/ yaml files                         ▲
+
 
 " ─   Launching Chromium                                 ■
 

@@ -113,6 +113,8 @@ func! VimScriptSyntaxAdditions() " ■
   call matchadd('Conceal', '#/', 12, -1, {'conceal': '|'})
   " ~/.vim/notes/notes-navigation.md#/Create%20hyperlink%20to
 
+  call SyntaxRange#Include('python\s<<\sEOF', 'EOF', 'python', 'CommentLabel')
+
   set conceallevel=2 " ■
   set concealcursor=ni " ▲
   " This will add one space before the foldmarker comment with doing "zfaf": func! ..ns() "{{_{

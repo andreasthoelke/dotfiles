@@ -163,6 +163,8 @@ Plug 'mityu/vim-applescript'
 " Plug 'bendavis78/vim-polymer'
 Plug 'vmchale/dhall-vim'
 
+Plug 'inkarkat/vim-SyntaxRange'
+
 " Markdown: -------------
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 
