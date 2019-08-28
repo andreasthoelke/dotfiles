@@ -97,11 +97,18 @@ syn match purescriptImportHiding "hiding"
   \ nextgroup=purescriptImportParams
   \ skipwhite
 
+
+" now supports operators: 'syn region purescriptFunctionDecl'
+" like (>>) :: Monad m => m a -> m b -> m b
+" \ excludenl start="^\z(\s*\)\(\(foreign\s\+import\)\_s\+\)\?[_a-z]\(\w\|\'\)*\_s\{-}\(::\|∷\)"
+" ^\(\s*\)\(\(foreign\s\+import\)\_s\+\)\?\(\S\|\'\)*\_s\{-}\(::\|∷\)
+
+
 " Function declaration:
 syn region purescriptFunctionDecl
-  \ excludenl start="^\z(\s*\)\(\(foreign\s\+import\)\_s\+\)\?[_a-z]\(\w\|\'\)*\_s\{-}\(::\|∷\)"
+  \ excludenl start="^\z(\s*\)\(\(foreign\s\+import\)\_s\+\)\?\(\S\|\'\)*\_s\{-}\(::\|∷\)"
   \ end="^\z1\=\S"me=s-1,re=s-1 keepend
-  \ contains=concealedTLbindType,hsInteger,hsForall,hsArrow,hsConstraintArrow,hsTypeColon,purescriptFunctionDeclStart,purescriptForall,purescriptOperatorType,purescriptOperatorTypeSig,purescriptType,purescriptTypeVar,purescriptDelimiter,@purescriptComment
+  \ contains=concealedTLbindType,hsInteger,hsForall,hsArrow,hsConstraintArrow,hsTypeColon,purescriptFunctionDeclStart,purescriptForall,purescriptOperatorType, purescriptOperator, purescriptOperatorTypeSig,purescriptType,purescriptTypeVar,purescriptDelimiter,@purescriptComment
 syn region purescriptFunctionDecl
   \ excludenl start="^\z(\s*\)where\z(\s\+\)[_a-z]\(\w\|\'\)*\_s\{-}\(::\|∷\)"
   \ end="^\(\z1\s\{5}\z2\)\=\S"me=s-1,re=s-1 keepend
@@ -304,6 +311,7 @@ syntax match concealHlintComment '\v\{-\sHLINT.{-}-\}' conceal cchar=␣
 
 
 " Tools:
+" leader hhsg to show the syntax stack: ~/.vim/plugin/syntax-color.vim#/nnoremap%20<leader>hhsg%20.call
 " get syntax group
 " echo synIDattr( synID( line('.'), col('.'), 0), 'name' )
 
