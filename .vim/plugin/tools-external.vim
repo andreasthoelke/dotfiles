@@ -51,7 +51,12 @@ func! StdoutToBuffer ( cmd )
   call append( line('.'), l:resultLines )
   normal! dd
 endfunc
-
+" cabal info async
+" cabal info warp
+" cabal info semantic
+" cabal info wai-cors
+" cabal info these
+" cabal info Network.Socket.Address
 
 
 nnoremap <leader>Cab :vnew *.cabal<cr>

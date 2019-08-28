@@ -137,7 +137,7 @@ endfunc
 func! AlignBufferTypeSigs()
   call ReplaceInRange( 1, line('$'), g:HsReplacemMap_CharsToUnicode )
 
-  call easy_align#align(0, 0, motionType, comExpr)
+  call easy_align#easyAlign(1, line('$'), '/∷/')
   " call TabularizeListOfPttns( g:hsTypeSigColumnsUnicode, startLine, endLine )
 
   call ReplaceInRange( 1, line('$'), g:HsReplacemMap_UnicodeToChars )

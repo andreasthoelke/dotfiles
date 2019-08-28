@@ -768,8 +768,17 @@ consolidate vim Tips "Tip" is redundant?!
 align vim tips to after ":"
 
 Vim Additional Documentation: https://github.com/mhinz/vim-galore
+Python tutorials: https://www.programiz.com/python-programming/string
+
 
 ## Todos
+
+* Optimize workflow: Start vim session with opening current folder: 
+  - after nvim4 and then leader oc I get a directory view of the current folder
+  - -> I may want a start screen with past folders/files?
+  - issue: I currently get an error when `glt` a terminal in that directory view, as there is no project-dir set? (i
+  have to load a file first) -> ~/.vimrc#/func.%20OnTabEnter.path.
+  - also :Frepo does not work in the directory view! - can't open the result with `o` as the path is wrong
 
 * Local syntaxes. this works: call SyntaxRange#Include('python\s...\sEOF', 'EOF', 'python', 'CommentLabel')
 
@@ -866,6 +875,12 @@ make `rm -r` commands move to trash?
 
 
 ## Current Todos
+
+* package - modules browsing
+    ~/Documents/Haskell/6/HsTrainingTypeClasses1/test1.py#/#%20data%20from
+    ~/.vim/plugin/tools-external.vim#/cabal%20info%20async
+
+* open package doc in browser https://hackage.haskell.org/package/async
 
 "HsAPI align" session
 * HsAPI with easy-align: ~/.vim/plugin/utils-align.vim#/func.%20AlignBufferTypeSigs..

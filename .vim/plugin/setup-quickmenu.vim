@@ -22,6 +22,7 @@ call g:quickmenu#append('Vim patterns help'      , 'help search-pattern' )
 call g:quickmenu#append('# Actions'      , '')
 call g:quickmenu#append('Strip Whitespace'    , 'StripWhitespace' , 'also via <leader>sw')
 call g:quickmenu#append("Run %{expand('%:t')}", '!./%', "Run current file")
+call g:quickmenu#append("Run %{expand('%:t')}", '!./%', "Run current file")
 
 call g:quickmenu#append('# Tools'      , '')
 call g:quickmenu#append('Git magit' , 'Magit'  , 'Auther commit' , '' , 0 , 'g')

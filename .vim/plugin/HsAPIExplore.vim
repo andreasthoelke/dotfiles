@@ -6,7 +6,7 @@ endfunc
 
 
 " Todos: still use real(scratch) buffer as it would allow to
-" - add tests to better understand/document functions
+" - add intero-tests to better understand/document functions
 " - load it into the repl(?)
 " - have the floating win as overlay (multiple floating wins are difficult(?)
 " - keep the buffer (more to a separate tab/split, save, ect?)
@@ -160,7 +160,8 @@ func! HsAPIQueryShowBuf( searchStr, count, infoFlag )
     exec 'g/./normal! Whiki-- '
     " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
     " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
-    call HsAlignTypeSigs()
+    " call HsAlignTypeSigs()
+    " call AlignBufferTypeSigs()
   else
     exec 'normal jjgc}'
   endif

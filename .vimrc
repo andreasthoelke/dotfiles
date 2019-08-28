@@ -396,7 +396,7 @@ let g:mundo_inline_undo = 1
 
 " Z Maps Unimpaired:
 " There is only one instance/window of Mundo. Whenever a Mundo window is open, Autosave should be off
-" nnoremap you :MundoToggle<cr>:AutoSaveToggle<cr>
+nnoremap <leader>oU :MundoToggle<cr>:AutoSaveToggle<cr>
 
 " Mundo: ----------------------
 
@@ -793,8 +793,15 @@ noremap <leader>: q:i!
 " nnoremap Q q:k
 " vnoremap Q q:k
 
+" *hist-names*
+"cmd"	 or ":"	  command line history
+"search" or "/"   search pattern history
+"expr"	 or "="   typed expression history
+"input"  or "@"	  input line history
+" call histdel('cmd')
+
 " Default command history is 20
-set history =40
+set history =200
 
 " Issue: Using "q" as sort of a leader key in a custom mapping will delay plugin "q" = quit maps! e.b. in Gstats.
 " workaround may be to double/ "qq" or to "q<space" instead.
