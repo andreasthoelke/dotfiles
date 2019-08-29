@@ -44,9 +44,10 @@ syn region purescriptConstructorDecl matchgroup=purescriptConstructor start="\<[
 
 
 " Function:
-syn match purescriptFunction "\%(\<instance\s\+\|\<class\s\+\)\@18<!\<[_a-z]\(\w\|\'\)*\>" contained
+" syn match purescriptFunction "\%(\<instance\s\+\|\<class\s\+\)\@18<!\<[_a-z]\(\w\|\'\)*\>" contained
+syn match purescriptFunction "\%(\<instance\s\+\|\<class\s\+\)\@18<!\<[_a-z]\k*'\?" contained
 " syn match purescriptFunction "\<[_a-z]\(\w\|\'\)*\>" contained
-syn match purescriptFunction "(\%(\<class\s\+\)\@18<!\(\W\&[^(),\"]\)\+)" contained extend
+" syn match purescriptFunction "(\%(\<class\s\+\)\@18<!\(\W\&[^(),\"]\)\+)" contained extend
 syn match purescriptBacktick "`[_A-Za-z][A-Za-z0-9_\.]*`"
 
 " Class:
