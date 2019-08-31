@@ -4,6 +4,7 @@ func! HsAPIExplore#start()
   " echo 'HsAPIExplore#start'
 endfunc
 
+" let g:ScratchBuffername = 'HsAPIExplore'
 
 " Todos: still use real(scratch) buffer as it would allow to
 " - add intero-tests to better understand/document functions
@@ -54,7 +55,7 @@ vnoremap gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
 
 
 func! HsAPIBrowseShowBuf( searchStr )
-  let browseCmd = ':browse! ' . a:searchStr
+  let browseCmd = ':browse ' . a:searchStr
   call InteroEval( browseCmd, "HsAPIBrowseShowBuf_CB", '' )
 endfunc
 
@@ -63,20 +64,32 @@ func! HsAPIBrowseShowBuf_CB( replReturnedLines )
 
   call CleanupBrowseOutput()
 
-  " call HsAlignTypeSigs()
+  " call AlignBufferTypeSigs()
+  call ReplaceInRange( 1, line('$'), g:HsReplacemMap_CharsToUnicode )
 
   call HaskellSyntaxAdditions()
   exec 'normal! gg0'
 endfunc
+
+func! CropLeadingModuleNames()
+  normal! f.Eb"tyEB
+  if GetCharAtCursor() == '('
+    normal! l
+  endif
+  normal! vE"tp
+endfunc
+" map' :: (Data.Profunctor.Mapping.Mapping p, Functor f) => p a b -> p (f a) (f b)
+" call CropLeadingModuleNames()
 
 
 func! CleanupBrowseOutput()
   let cmds = []
   " Crop namespaces e.g. (Data.Vector.Generic.Base.Vector v a,
   " find first '.', yank the last word, select all, paste
-  call add( cmds, 'g/\i\.\i/normal! f.Eb"tyeBvE"tp' )
+  " call add( cmds, 'g/\i\.\i/normal! f.Eb"tyEBvE"tp' )
+  call add( cmds, 'g/\i\.\i/call CropLeadingModuleNames()' )
   " as this crops only the first long namespace, make a second pass
-  call add( cmds, 'g/\i\.\i/normal! f.Eb"tyeBvE"tp' )
+  call add( cmds, 'g/\i\.\i/call CropLeadingModuleNames()' )
 
   " join lines that end with => or :: or ,  - needs several passes
   call add( cmds, 'g/\(,\|=>\|::\)$/normal! J' )
@@ -161,7 +174,7 @@ func! HsAPIQueryShowBuf( searchStr, count, infoFlag )
     " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
     " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
     " call HsAlignTypeSigs()
-    " call AlignBufferTypeSigs()
+    call AlignBufferTypeSigs()
   else
     exec 'normal jjgc}'
   endif

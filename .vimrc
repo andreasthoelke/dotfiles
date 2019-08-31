@@ -653,6 +653,12 @@ set fileencoding=utf-8
 set encoding=utf-8
 " set backspace=indent,eol,start
 
+" Use only spaces for indentation
+set expandtab
+set shiftwidth=2
+set softtabstop=2
+" http://vim.wikia.com/wiki/Indenting_source_code
+
 " prevents unnecessary execution when sourcing vimrc
 if !exists("g:syntax_on")
   syntax enable

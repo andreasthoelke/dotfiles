@@ -105,6 +105,8 @@ t/T         - next/prev list item
 g[ g]       - go back to last insert start/end. or native \`[ \`]
 z] z[ zk    - beginning/end of current fold/prev fold
 [c ]c       - prev/next git hunk (TODO: make ]c or c] consistent?)
+,a/,A       - 
+
 
 ### Tools
 leader og   - Git magit. Also :GitcommitAuthor

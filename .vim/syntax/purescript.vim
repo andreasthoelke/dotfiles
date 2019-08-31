@@ -189,53 +189,78 @@ syn sync minlines=50
 
 " ─   Conceal with unicode                               ■
 
-" This replaces the following insert maps
-" inoremap :: <c-k>::
-" inoremap -> <c-k>->
-" inoremap <- <c-k><-
-" inoremap => <c-k>=>
-" inoremap <= <c-k><=
-" inoremap forall <c-k>FA
+let g:HsCharsToUnicode = [
+      \  ['\s\zs->',           '→', 'hsArrow']
+      \, ['\s\zs<-',           '←', 'hsArrowBackw']
+      \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
+      \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
+      \, ['::',                '∷', 'hsTypeColon']
+      \, ['\s\zsforall',       '∀', 'hsForall']
+      \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
+      \, [' \zs\.',            '∘', 'Normal']
+      \, [' \zs<\$>',          '⫩', 'Normal']
+      \, [' \zs<\*>',          '⟐', 'Normal']
+      \, [' \zs>>',            '≫', 'Normal']
+      \, [' \zs>>=',           '⫦', 'Normal']
+      \, [' \zs\`elem\`',      '∈', 'Normal']
+      \, [' \zs\`flipElem\`',  '∋', 'Normal']
+      \, [' \zs>=>',           '↣', 'Normal']
+      \, [' \zs<=<',           '↢', 'Normal']
+      \, [' \zs==',            '≡', 'Normal']
+      \, ['==\ze ',            '≡', 'Normal']
+      \, [' \zs/=',            '≠', 'Normal']
+      \, ['/=\ze ',            '≠', 'Normal']
+      \, [' \zs<>',            '◇', 'Normal']
+      \, ['<>\ze ',            '◇', 'Normal']
+      \, [' \zsmempty',        '∅', 'Normal']
+      \, [' \zs++',            '⧺', 'Normal']
+      \, [' \zs<=',            '≤', 'Normal']
+      \, [' \zs>=',            '≥', 'Normal']
+      \, ['Integer',           'ℤ', 'hsInteger']
+      \]
+
+for [pttn, concealUnicodeSym, syntaxGroup] in g:HsCharsToUnicode
+  exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
+endfor
 
 " Note: These IDs need to be included in the 'contains=' section of e.g. 'purescriptFunctionDecl', etc
-
-syntax match hsArrow                '\s\zs->' conceal cchar=→
-syntax match hsArrowBackw           '\s\zs<-' conceal cchar=←
-syntax match hsConstraintArrow      '\s\zs=>' conceal cchar=⇒
-syntax match hsConstraintArrowBackw '\s\zs<=' conceal cchar=⇐
-syntax match hsTypeColon            '::' conceal cchar=∷
-syntax match hsForall               '\s\zsforall' conceal cchar=∀
-
-" Tests:
-" zipThese :: forall a b. Num a => [a] -> [b] -> [These a b]
-" class Functor f => Align (f :: * -> *) where
-
-" Show lambda and conceal unicode characters
-" Issue Question: The highlight group does not seem to have an effect here - the Conceal group is used. Would ideally
-" like to color the conceal character differently.
-" syntax match Normal '\\\%([^\\]\+->\)\@=' conceal cchar=λ
-syntax match Normal '\\\%([^\\]\+\)\@=' conceal cchar=λ
-syntax match Normal ' \zs\.' conceal cchar=∘
-syntax match Normal ' \zs<\$>' conceal cchar=⫩
-syntax match Normal ' \zs<\*>' conceal cchar=⟐
-syntax match Normal ' \zs>>' conceal cchar=≫
-syntax match Normal ' \zs>>=' conceal cchar=⫦
-syntax match Normal ' \zs\`elem\`' conceal cchar=∈
-syntax match Normal ' \zs\`flipElem\`' conceal cchar=∋
-syntax match Normal ' \zs>=>' conceal cchar=↣
-syntax match Normal ' \zs<=<' conceal cchar=↢
-" syntax match Normal ' \zs==' conceal cchar=≡
-syntax match Normal '==\ze ' conceal cchar=≡
-" syntax match Normal ' \zs/=' conceal cchar=≠
-syntax match Normal '/=\ze ' conceal cchar=≠
-" To allow filter (== 4) [1,2]
-" syntax match Normal ' \zs<>' conceal cchar=◇
-syntax match Normal '<>\ze ' conceal cchar=◇
-syntax match Normal ' \zsmempty' conceal cchar=∅
-syntax match Normal ' \zs++' conceal cchar=⧺
-syntax match Normal ' \zs<=' conceal cchar=≤
-syntax match Normal ' \zs>=' conceal cchar=≥
-syntax match hsInteger 'Integer' conceal cchar=ℤ
+" syntax match hsArrow                '\s\zs->' conceal cchar=→
+" syntax match hsArrowBackw           '\s\zs<-' conceal cchar=←
+" syntax match hsConstraintArrow      '\s\zs=>' conceal cchar=⇒
+" syntax match hsConstraintArrowBackw '\s\zs<=' conceal cchar=⇐
+" syntax match hsTypeColon            '::' conceal cchar=∷
+" syntax match hsForall               '\s\zsforall' conceal cchar=∀
+"
+" " Tests:
+" " zipThese :: forall a b. Num a => [a] -> [b] -> [These a b]
+" " class Functor f => Align (f :: * -> *) where
+"
+" " Show lambda and conceal unicode characters
+" " Issue Question: The highlight group does not seem to have an effect here - the Conceal group is used. Would ideally
+" " like to color the conceal character differently.
+" " syntax match Normal '\\\%([^\\]\+->\)\@=' conceal cchar=λ
+" syntax match Normal '\\\%([^\\]\+\)\@=' conceal cchar=λ
+" syntax match Normal ' \zs\.' conceal cchar=∘
+" syntax match Normal ' \zs<\$>' conceal cchar=⫩
+" syntax match Normal ' \zs<\*>' conceal cchar=⟐
+" syntax match Normal ' \zs>>' conceal cchar=≫
+" syntax match Normal ' \zs>>=' conceal cchar=⫦
+" syntax match Normal ' \zs\`elem\`' conceal cchar=∈
+" syntax match Normal ' \zs\`flipElem\`' conceal cchar=∋
+" syntax match Normal ' \zs>=>' conceal cchar=↣
+" syntax match Normal ' \zs<=<' conceal cchar=↢
+" " syntax match Normal ' \zs==' conceal cchar=≡
+" syntax match Normal '==\ze ' conceal cchar=≡
+" " syntax match Normal ' \zs/=' conceal cchar=≠
+" syntax match Normal '/=\ze ' conceal cchar=≠
+" " To allow filter (== 4) [1,2]
+" " syntax match Normal ' \zs<>' conceal cchar=◇
+" syntax match Normal '<>\ze ' conceal cchar=◇
+" syntax match Normal ' \zsmempty' conceal cchar=∅
+" syntax match Normal ' \zs++' conceal cchar=⧺
+" syntax match Normal ' \zs<=' conceal cchar=≤
+" syntax match Normal ' \zs>=' conceal cchar=≥
+" syntax match hsInteger 'Integer' conceal cchar=ℤ
 " Note: How to set up conceal: the following line has the same effect as the line above. The highlightgroup for syntax
 " match seems to have no effect - still uses the Operator highlight?. For matchadd the 'Conceal' group is mandatory.
 " call matchadd('Conceal', ' \zs\.', -1, -1, {'conceal': '∘'})

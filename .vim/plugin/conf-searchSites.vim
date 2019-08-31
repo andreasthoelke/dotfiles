@@ -7,6 +7,7 @@ let g:searchSites += [ {'label':'Stackage',   'baseUrl':'https://www.stackage.or
       \, 'namespace_mainTerm':'hoogle?q='
       \}]
 
+" TODO: use hoogle server , localhost 8080 for speed?
 " https://hoogle.haskell.org/?hoogle=Data.Either.fromLeft&scope=package%3Aeither
 let g:searchSites += [ {'label':'Hoogle',     'baseUrl':'https://hoogle.haskell.org/'
       \, 'namespace_mainTerm':'?hoogle='

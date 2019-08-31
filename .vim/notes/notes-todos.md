@@ -773,6 +773,8 @@ Python tutorials: https://www.programiz.com/python-programming/string
 
 ## Todos
 
+* use hoogle server , localhost 8080 for speed?
+
 * Optimize workflow: Start vim session with opening current folder: 
   - after nvim4 and then leader oc I get a directory view of the current folder
   - -> I may want a start screen with past folders/files?
@@ -875,6 +877,8 @@ make `rm -r` commands move to trash?
 
 
 ## Current Todos
+
+* browse all modules in a package or "below" some module
 
 * package - modules browsing
     ~/Documents/Haskell/6/HsTrainingTypeClasses1/test1.py#/#%20data%20from

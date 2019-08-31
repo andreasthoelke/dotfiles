@@ -68,11 +68,9 @@ func! ExtendOperatorPattern( listListMap )
 endfunc
 " echo ExtendOperatorPattern( [['aa', 'bb'], ['=>', '⇒']] )
 
-let g:ScratchBuffername = 'HsAPIExplore'
 
-let g:HsReplacemMap_CharsToUnicode = [['->', '→'], ['=>', '⇒'], ['::', '∷'], ['forall', '∀'], ["<-", "←"]]
-let g:HsReplacemMap_CharsToUnicodePtts = ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode )
-let g:HsReplacemMap_UnicodeToChars = FlipListList( g:HsReplacemMap_CharsToUnicode )
+" ─   Haskell unicode conversion                         ■
+
 
 command! -range=% CharsToUnicode :<line1>,<line2>call ReplaceStringsInRange( ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode ) )
 command! -range=% UnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:HsReplacemMap_UnicodeToChars )
@@ -92,52 +90,56 @@ func! HsUnUnicode( startLine, endLine )
   call ReplaceInRange( a:startLine, a:endLine, g:HsReplacemMap_UnicodeToChars )
 endfunc
 
-" ─   Unicode Maps                                      ──
-" inoremap :: <c-k>::
-" inoremap -> <c-k>->
-" inoremap <- <c-k><-
-" inoremap => <c-k>=>
-" inoremap <= <c-k><=
-" inoremap forall <c-k>FA
-" TODO do this with conceal as well? what are pros/cons?
-" → I would not have to replace/change code!
+" Note: Replacing even the custom unicode (conceal) symbols only makes sense to simplyfiy visual alignment code
+" TODO: test this. slow?
+func! HsUnicodeAll( startLine, endLine )
+  call ReplaceInRange( a:startLine, a:endLine, g:HsCharsToUnicode )
+endfunc
 
-" ─   Legacy Unicode conversion                          ■
+func! HsUnUnicodeAll( startLine, endLine )
+  call ReplaceInRange( a:startLine, a:endLine, FlipListList( g:HsCharsToUnicode ) )
+endfunc
 
 
-" To type a unicode char, in insert-mode type "<c-k>a:"
-" nnoremap cuc :%s/::/<c-k>::/g<cr>:%s/forall/<c-k>FA/g<cr>
-" nnoremap cuf :%s/forall/<c-k>FA/ge<cr>
-" nnoremap cuc :%s/::/<c-k>::/ge<cr>
-" nnoremap cua :%s/->/<c-k>->/ge<cr>
-" nnoremap cub :%s/<-/<c-k><-/ge<cr>
-" nnoremap cue :%s/>=>/>#>/ge<cr>
-" safe Kleisi!
-" nnoremap cud :%s/=>/<c-k>=>/ge<cr>
-" nnoremap cug :%s/>#>/>=>/ge<cr>
-" restore Kleisi!
-" vnoremap <leader>bu :s/\%V→/->/ge<cr>:s/\%V∷/::/ge<cr>:s/\%V⇒/=>/ge<cr>
-" vnoremap <leader>bi :s/\%V->/→/ge<cr>:s/\%V::/∷/ge<cr>:s/\%V=> /⇒ /ge<cr>
-
-" Alternative for bind? ⤜ or »= or >>= or ≥
+" Setup:
+let g:HsReplacemMap_CharsToUnicode = [['->', '→'], ['=>', '⇒'], ['::', '∷'], ['forall', '∀'], ["<-", "←"]]
+let g:HsReplacemMap_CharsToUnicodePtts = ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode )
+let g:HsReplacemMap_UnicodeToChars = FlipListList( g:HsReplacemMap_CharsToUnicode )
 
 
-" nnoremap cue :%s/<=/<c-k><=/e<cr>
-" TODO: could do the reverse replacement to revert back to non-unicode
-" also: what to do with 'greater-than-or-qual'?
+" Note:  ~/.vim/syntax/purescript.vim#/let%20g.HsCharsToUnicode%20=
+" let g:HsCharsToUnicode = [
+"   \  ['\s\zs->',           '→']
+"   \, ['\s\zs<-',           '←']
+"   \, ['\s\zs=>',           '⇒']
+"   \, ['\s\zs<=',           '⇐']
+"   \, ['::',                '∷']
+"   \, ['\s\zsforall',       '∀']
+"   \, ['\\\%([^\\]\+\)\@=', 'λ']
+"   \, [' \zs\.',            '∘']
+"   \, [' \zs<\$>',          '⫩']
+"   \, [' \zs<\*>',          '⟐']
+"   \, [' \zs>>',            '≫']
+"   \, [' \zs>>=',           '⫦']
+"   \, [' \zs\`elem\`',      '∈']
+"   \, [' \zs\`flipElem\`',  '∋']
+"   \, [' \zs>=>',           '↣']
+"   \, [' \zs<=<',           '↢']
+"   \, [' \zs==',            '≡']
+"   \, ['==\ze ',            '≡']
+"   \, [' \zs/=',            '≠']
+"   \, ['/=\ze ',            '≠']
+"   \, [' \zs<>',            '◇']
+"   \, ['<>\ze ',            '◇']
+"   \, [' \zsmempty',        '∅']
+"   \, [' \zs++',            '⧺']
+"   \, [' \zs<=',            '≤']
+"   \, [' \zs>=',            '≥']
+"   \, ['Integer',           'ℤ']
+"   \]
 
-" Replace all purescript unicode characters
-" Not needed - now using conceal ~/.vim/plugged/purescript-vim/syntax/purescript.vim#/Conceal%20with%20unicode
-" noremap <leader>cu :call PurescriptUnicode()<cr>
-fun! PurescriptUnicode()
-  echoe "Unicode Conversion!! - no longer supported"
-  " normal cufcuccuacubcudcue
-  " TODO: there was a reason to NOT convert forall, what was it??
-  " normal cufcuccuacubcuecudcuf
-endfun
 
-" ─^  Legacy Unicode conversion                          ▲
-
+" ─^  Haskell unicode conversion                         ▲
 
 
 " ─   Formatting Haskell Imports                         ■
