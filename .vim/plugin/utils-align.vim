@@ -3,6 +3,11 @@
 " Note: This has to contain the (easy-align propriaty?) "/" syntax, so we can e.g. refer to the second column via "2\"
 let g:pttnsTypeSigs4 = ['/∷/', '/.*\(∷\zs\s\|\zs⇒\)/', '/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '2/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '/\(([^)]*\)\@<!.*\zs→\([^(]*)\)\@!/']
 
+" TODO in HsAPI output I want ranges of separate alignment. test this e.g. with \j motion and 'ip'
+" - then there should be a script the aligns all paragraps?
+" - to updata alignment, all aligning (multiple?) spaces need to be removed first -  like get back to normal form
+" - perhaps the entire process should therefore be maintained as structured source-data-obj + persistable user
+"   formatting?
 
 " Set the contFn to be called with start/end line
 " contArgs defines other/preceding (optional) args to be applied to the contFn

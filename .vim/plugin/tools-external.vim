@@ -50,6 +50,7 @@ func! StdoutToBuffer ( cmd )
   exec 'vnew'
   call append( line('.'), l:resultLines )
   normal! dd
+  echo 'rather use SystemCmdToScratchBuffer?'
 endfunc
 " cabal info async
 " cabal info warp
@@ -57,6 +58,11 @@ endfunc
 " cabal info wai-cors
 " cabal info these
 " cabal info Network.Socket.Address
+
+func! SystemCmdToScratchBuffer( cmd )
+  let l:resultLines = split( system( a:cmd ), '\n' )
+  call ScratchWin_Show( a:cmd, l:resultLines )
+endfunc
 
 
 nnoremap <leader>Cab :vnew *.cabal<cr>
@@ -180,6 +186,7 @@ let g:fugitive_force_bang_command = 1
 
 " ─   Reading config/ yaml files                         ■
 " 
+" Read the package names (dependencies) of the current project
 python << EOF
 import yaml
 import vim

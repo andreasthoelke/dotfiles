@@ -773,6 +773,8 @@ Python tutorials: https://www.programiz.com/python-programming/string
 
 ## Todos
 
+* `rm` sould `!mv ~/.Trash`
+
 * use hoogle server , localhost 8080 for speed?
 
 * Optimize workflow: Start vim session with opening current folder: 
@@ -881,6 +883,9 @@ make `rm -r` commands move to trash?
 * browse all modules in a package or "below" some module
 
 * package - modules browsing
+  - notes on this are here: ~/.vim/plugin/HsAPI-haddock.vim#/#%20data%20from
+  - also note the python tests here:  ~/.vim/utils/temp-python.vim#/command.%20-range%20VarBasedReplace
+
     ~/Documents/Haskell/6/HsTrainingTypeClasses1/test1.py#/#%20data%20from
     ~/.vim/plugin/tools-external.vim#/cabal%20info%20async
 
@@ -896,7 +901,7 @@ make `rm -r` commands move to trash?
   - ctrlP custom menu seems too involved: ~/.vim/autoload/ctrlpArgs.vim#/call%20add.g.ctrlp_ext_vars
 
 
-* Integrate with Draw.io https://www.draw.io/#G1KVzdbQNX1qjWkhFHruOkEvoTH3UCBvF7
+* For Presentations: Integrate with Draw.io https://www.draw.io/#G1KVzdbQNX1qjWkhFHruOkEvoTH3UCBvF7
   (not Google.drawing!)
 
 
