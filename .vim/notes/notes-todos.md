@@ -880,6 +880,8 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 
+* scratchbook/pinning files into a project dir (from scratch buffer)
+
 * browse all modules in a package or "below" some module
 
 * package - modules browsing

@@ -1,5 +1,7 @@
 
 ## Release notes v1.1.2
+* command: CabalInfo 'these-0.7.6'
+* StripAligningSpaces
 * echo pyeval('getHSPackageDependencies()')
 * Start moving files & refactoring to use runtimepath/.vim/plugin/ & .vim/autoload/
 * Template for simple range/operator/line-motion support: ~/.vim/plugin/file-manage.vim#/Toggle%20arglist%20items.

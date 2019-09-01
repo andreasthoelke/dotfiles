@@ -28,12 +28,11 @@ func! HsAPIBrowseShowBuf( searchStr )
 endfunc
 
 func! HsAPIBrowseShowBuf_CB( replReturnedLines )
-  call ScratchWin_Show( 'APIquery', a:replReturnedLines )
+  call ScratchWin_Show( 'HsAPIdata/APIquery', a:replReturnedLines )
 
   call CleanupBrowseOutput()
 
-  " call AlignBufferTypeSigs()
-  call ReplaceInRange( 1, line('$'), g:HsReplacemMap_CharsToUnicode )
+  " call HsTabu( 0 )
 
   call HaskellSyntaxAdditions()
   exec 'normal! gg0'
@@ -41,7 +40,7 @@ endfunc
 
 func! CropLeadingModuleNames()
   normal! f.Eb"tyEB
-  if GetCharAtCursor() == '('
+  if GetCharAtCursor() =~ '(\|['
     normal! l
   endif
   normal! vE"tp

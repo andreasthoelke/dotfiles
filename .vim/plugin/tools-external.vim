@@ -61,7 +61,7 @@ endfunc
 
 func! SystemCmdToScratchBuffer( cmd )
   let l:resultLines = split( system( a:cmd ), '\n' )
-  call ScratchWin_Show( a:cmd, l:resultLines )
+  call ScratchWin_Show( 'HsAPIdata/' . a:cmd, l:resultLines )
 endfunc
 
 
