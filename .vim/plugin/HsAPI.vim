@@ -32,7 +32,7 @@ func! HsAPIBrowseShowBuf_CB( replReturnedLines )
 
   call CleanupBrowseOutput()
 
-  " call HsTabu( 0 )
+  call HsTabu( [] )
 
   call HaskellSyntaxAdditions()
   exec 'normal! gg0'

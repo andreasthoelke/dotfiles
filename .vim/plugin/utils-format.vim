@@ -82,6 +82,8 @@ command! -range=% UnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:H
 " kleisli :: forall e. Example e >=> Line
 " kleisli = do aa <- example
 
+command! -range=% HsUnicode call HsUnicode( <line1>, <line2> )
+
 func! HsUnicode( startLine, endLine )
   call ReplaceInRange( a:startLine, a:endLine, g:HsReplacemMap_CharsToUnicode )
 endfunc

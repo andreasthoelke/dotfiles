@@ -1,5 +1,6 @@
 
 ## Release notes v1.1.2
+* sort (type-sig HsAPI) columns with c-v Vissort
 * command: CabalInfo 'these-0.7.6'
 * StripAligningSpaces
 * echo pyeval('getHSPackageDependencies()')

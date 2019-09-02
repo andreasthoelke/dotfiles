@@ -40,6 +40,7 @@ endfunc
 
 
 command! -range=% StripAligningSpaces call StripAligningSpaces( <line1>, <line2> )
+" Note: this applies to the whole buffer when no visual-sel
 
 nnoremap ,as      :let g:opContFn='StripAligningSpaces'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfunc<cr>g@
 vnoremap ,as :<c-u>let g:opContFn='StripAligningSpaces'<cr>:let g:opContArgs=[]<cr>:call Gen_opfunc('', 1)<cr>

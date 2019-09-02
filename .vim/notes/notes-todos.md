@@ -735,6 +735,8 @@ let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
 ## Table of Contents
 [toc]
 
+
+
 ## Low priority
 
 a start screen?
@@ -772,6 +774,9 @@ Python tutorials: https://www.programiz.com/python-programming/string
 
 
 ## Todos
+
+* template for opfunc mappings (+vis-sel +command range) is here: ~/.vim/plugin/utils-align.vim#/command.%20-range=%%20StripAligningSpaces
+  -> should apply this consistently
 
 * `rm` sould `!mv ~/.Trash`
 
@@ -1211,8 +1216,6 @@ file manage:
 * A bookmarks files, where lines (with meta info?) show in a CtrlP view
 * could also include urls?
     " https://vim-jp.org/vimdoc-en/index.html " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
-
-* (low) haskell alignments with opfunc? ~/.vim/utils/utils-align.vim#/func.%20Align_op.%20motionType,
 
 * use/config repeatable commands carefully (similar to jumplist): comment/uncomment should be a dot/repeatable command
 

@@ -215,6 +215,7 @@ Plug 'kana/vim-textobj-line'
 " Aligning: ------------------------------------------------------------
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
+Plug 'navicore/vissort.vim'
 
 
 " Plug 'purescript-contrib/purescript-vim'
