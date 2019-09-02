@@ -1066,6 +1066,12 @@ GraphQL access to the spotify rest API:
 
 ## Haskell Todos
 
+### HsAPI
+* setup nvim-hs: http://hackage.haskell.org/package/nvim-hs
+  - then use hoogleDBParser https://github.com/blitzcode/hackage-diff/blob/master/Main.hs
+  - build a module-package-browser view: .hackage/base-modules
+  - filter signatures by (return) type
+
 * HsAPIExplore - Tests, repl, types, persists of scratchbuffers ~/.vim/plugin/HsAPIExplore.vim#/-%20persists%20the
 
 Ghci default imports: ~/.ghc/_ghci.conf#/import%20Control.Applicative

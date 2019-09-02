@@ -215,8 +215,8 @@ Plug 'kana/vim-textobj-line'
 " Aligning: ------------------------------------------------------------
 Plug 'junegunn/vim-easy-align'
 Plug 'godlygeek/tabular'
+" Sorting lines by vis-sel column :Vissort
 Plug 'navicore/vissort.vim'
-
 
 " Plug 'purescript-contrib/purescript-vim'
 Plug 'andreasthoelke/purescript-vim'

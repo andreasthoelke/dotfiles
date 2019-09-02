@@ -34,6 +34,9 @@ endfunc
 " Testfn: Use of TransfTRegAndAppend with higher order function
 nnoremap <leader>cci "tdd:call TransfTRegAndAppend( function('toupper') )<cr>
 
+
+" Note: ~/.vim/plugin/utils-align.vim#/command.%20-range=%%20StripAligningSpaces
+" and: ~/.vim/plugin/HsAPI.vim#/func.%20CleanupBrowseOutput..
 func! StripNewlinesAndMultispaces( str ) " 1. delete all newlines:
   let l:str1 = substitute(  a:str,  '\n',  '', 'ge' )
   " 2. replace sections/words that have more than one space (regex: ' \+') with one space

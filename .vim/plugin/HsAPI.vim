@@ -1,4 +1,7 @@
 
+" ~/.vim/notes/notes-todos.md#/###%20HsAPI
+
+
 nnoremap gsd :call HsAPIQueryShowBuf( HsCursorKeyword(), 15, 0 )<cr>
 vnoremap gsd :call HsAPIQueryShowBuf( GetVisSel(),       15, 0 )<cr>
 nnoremap gSd :call HsAPIQueryShowBuf( HsCursorKeyword(), 60, 0 )<cr>
@@ -11,16 +14,76 @@ vnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),     
 
 
 
-nnoremap gsK :call HsAPIQueryShowFloat( HsCursorKeyword(), 0, 1 )<cr>
-vnoremap gsK :call HsAPIQueryShowFloat( GetVisSel(),       0, 1 )<cr>
+nnoremap gSk :call HsAPIQueryShowFloat( HsCursorKeyword(), 0, 1 )<cr>
+vnoremap gSk :call HsAPIQueryShowFloat( GetVisSel(),       0, 1 )<cr>
 
-nnoremap gsk :call HsAPIQueryShowInline( HsCursorKeyword(), 0, 1 )<cr>
+nnoremap gsk :call HsAPIQueryShowInline( HsCursorKeywordAndModule(), 0, 1 )<cr>
 vnoremap gsk :call HsAPIQueryShowInline( GetVisSel(),       0, 1 )<cr>
-" gsK to insert info into float win - using the module name
+" gsk to insert info into float win - using the module name
+
+nnoremap gsK :call HsAPIQueryShowInline( input( 'Doc string query: ', HsCursorKeywordAndModule()), 0, 1 )<cr>
+vnoremap gsK :call HsAPIQueryShowInline( input( 'Doc string query: ', GetVisSel()),       0, 1 )<cr>
 
 nnoremap gsb :call HsAPIBrowseShowBuf( HsCursorKeyword() )<cr>
 vnoremap gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
+nnoremap gsB :call HsAPIBrowseShowBuf( input( 'Module: ', HsCursorKeyword()) )<cr>
+vnoremap gsB :call HsAPIBrowseShowBuf( input( 'Module: ', GetVisSel()) )<cr>
 
+
+func! HsAPIQueryShowBuf( searchStr, count, infoFlag ) " ■
+  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
+  let hoogleLines = split( system( hoogleCmd ), '\n' )
+  call ActivateScratchWindow('HsAPIdata/APIquery')
+  normal! VGd
+  call append( line(1), hoogleLines )
+  if !a:infoFlag
+    " Delete commented lines
+    exec 'g/--/d'
+    " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
+    exec 'g/./normal! Whiki-- '
+    " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
+    " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
+    " call HsAlignTypeSigs()
+    " call AlignBufferTypeSigs()
+    call HsTabu( [] )
+  else
+    exec 'normal jjgc}'
+  endif
+
+  call HaskellSyntaxAdditions()
+  exec 'normal! gg0'
+endfunc " ▲
+
+func! HsAPIQueryShowFloat( searchStr, count, infoFlag ) " ■
+  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
+  let hoogleLines = split( system( hoogleCmd ), '\n' )
+  call FloatWin_ShowLines( hoogleLines )
+
+  if !a:infoFlag
+    " Delete commented lines
+    call FloatWin_do( 'g/--/d' )
+    " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
+    call FloatWin_do( 'g/./normal! Whiki-- ' )
+    " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
+    " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
+    " call FloatWin_do( 'call HsAlignTypeSigs()' )
+    call FloatWin_do( 'call HsTabu( [] )' )
+  else
+    call FloatWin_do( 'normal jjgc}' )
+  endif
+
+  call FloatWin_do( 'call HaskellSyntaxAdditions()' )
+
+  call FloatWin_do( 'normal! gg0' )
+  call FloatWin_FitWidthHeight()
+endfunc " ▲
+
+func! HsAPIQueryShowInline( searchStr, count, infoFlag ) " ■
+  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
+  let hoogleLines = split( system( hoogleCmd ), '\n' )
+  call append( line('.'), hoogleLines )
+  normal jjjgc}kkk
+endfunc " ▲
 
 func! HsAPIBrowseShowBuf( searchStr )
   let browseCmd = ':browse ' . a:searchStr
@@ -81,12 +144,6 @@ endfunc
 
 
 
-func! HsAPIQueryShowInline( searchStr, count, infoFlag )
-  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
-  let hoogleLines = split( system( hoogleCmd ), '\n' )
-  call append( line('.'), hoogleLines )
-  normal jjjgc}kkk
-endfunc
 
 
 

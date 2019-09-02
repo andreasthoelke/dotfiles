@@ -51,51 +51,6 @@ func! CleanBrowseOutput_bak() " ■
   exec 'g/\.\.\./d'
 endfunc " ▲
 
-func! HsAPIQueryShowBuf( searchStr, count, infoFlag )
-  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
-  let hoogleLines = split( system( hoogleCmd ), '\n' )
-  call ActivateScratchWindow('APIquery')
-  normal! VGd
-  call append( line(1), hoogleLines )
-  if !a:infoFlag
-    " Delete commented lines
-    exec 'g/--/d'
-    " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
-    exec 'g/./normal! Whiki-- '
-    " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
-    " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
-    " call HsAlignTypeSigs()
-    call AlignBufferTypeSigs()
-  else
-    exec 'normal jjgc}'
-  endif
-
-  call HaskellSyntaxAdditions()
-  exec 'normal! gg0'
-endfunc
-
-func! HsAPIQueryShowFloat( searchStr, count, infoFlag )
-  let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
-  let hoogleLines = split( system( hoogleCmd ), '\n' )
-  call FloatWin_ShowLines( hoogleLines )
-
-  if !a:infoFlag
-    " Delete commented lines
-    call FloatWin_do( 'g/--/d' )
-    " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
-    call FloatWin_do( 'g/./normal! Whiki-- ' )
-    " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
-    " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
-    call FloatWin_do( 'call HsAlignTypeSigs()' )
-  else
-    call FloatWin_do( 'normal jjgc}' )
-  endif
-
-  call FloatWin_do( 'call HaskellSyntaxAdditions()' )
-
-  call FloatWin_do( 'normal! gg0' )
-  call FloatWin_FitWidthHeight()
-endfunc
 
 
 " Global command tricks:

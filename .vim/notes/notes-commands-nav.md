@@ -15,8 +15,11 @@ ged         - LC show diagnostic message in float-win
 gd, ,gd     - go to definition /in split
 
 ### Hs API Explore
-gsD         - to edit vis-sel
-leader ha   - Type-sig align a range: Use l, \j or 'v' visual-sel
+gsd/D       - to edit vis-sel and search for it
+gsk         - to insert info into buffer - using the module name
+gsK         - show info in float-win
+gsb/B       - browse module
+,atip/iB    - to HsTabu Type-sig align a range: Use l, \j or 'v' visual-sel
 
 
 ### Stubs
@@ -46,6 +49,7 @@ Lines, GFiles?, BCommits, Maps, Helptags
 ### Win, Buffer Navigation
 c-w n/N     - SymbolNext SplitTop
 c-w i       - jump into float-win
+leader wp   - pin a function/paragraph (or imports) to the top
 #### Dirvish
 t           - open in new tab
 p           - preview in split

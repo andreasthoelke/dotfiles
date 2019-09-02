@@ -30,6 +30,76 @@ func! HsCursorKeyword()
   return keyword
 endfunc
 
+nnoremap <leader>ca :echo HsCursorKeywordAndModule()<cr>
+
+" Prefix the identifier with the module name. Module name is derived from the context (via conventions not the repl)
+func! HsCursorKeyword_findModule()
+  let kw = HsCursorKeyword()
+  " 1) Already fully qualified identifier: Control.Monad.replicateM
+  if     kw =~ '\..*\.' " Keyword already contains full module, e.g. 'Control.Monad.sequence' not just M.sequence
+    return kw
+  " 2) Just a module: Control.Monad
+  elseif kw =~ '\.\u' " kw includes a shortcut e.g. 'Map.lookup'
+    return kw
+    " import qualified Data.Zwei        as M
+    " import qualified Data.Test        as Map
+  " 3) Shortcut qualified identifier: Map.lookup or M.lookup
+  elseif kw =~ '\.' " kw includes a shortcut e.g. 'Map.lookup'
+    let fullModuleName = ModuleName_fromQualifiedShortname( CropLastElem( kw , '\.' ) )
+    if fullModuleName == ''
+      echo 'no module name found: ModuleName_fromQualifiedShortname HsCursorKeywordAndModule'
+    endif
+    let identifier = GetLastElem( kw, '\.' )
+    return fullModuleName . '.' . identifier
+  " 4) HsAPI view 1:
+    " -- Data.Zip
+    " alignWith :: Semialign f => (These a b -> c) -> f a -> f b -> f c
+  elseif getline( line('.')-1 ) =~ '--\s\S\+\.\S\+$' " we are in HsAPI view with commented modules in separate lines
+    let fullModuleName = matchstr( getline( line('.')-1 ), '--\s\zs\S\+')
+    return fullModuleName . '.' . kw
+  " 5) HsAPI view 2:
+  " Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
+  elseif getline('.') =~ '\..*' . kw . '\s\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
+    return GetTopLevSymbolName( line('.') ) . '.' . kw
+  " 6) No module found:
+  else
+    echo 'no module name found: HsCursorKeywordAndModule'
+    return kw
+  endif
+endfunc
+" Tests:
+" Control.Monad.replicateM
+" Control.Monad
+" Map.lookup or M.lookup
+" -- Data.Zip
+" alignWith :: Semialign f => (These a b -> c) -> f a -> f b -> f c
+" Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
+
+
+
+func! GetLastElem( str, separator )
+  let items = split( a:str, a:separator )
+  if len( items )
+    return items[-1]
+  else
+    return a:str
+  endif
+endfunc
+" echo GetLastElem( 'Data.Profunctor.Mapping.somefn', '\.' )
+" echo GetLastElem( 'somefn', '\.' )
+
+func! CropLastElem( str, separator )
+  let items = split( a:str, a:separator )
+  if len( items )
+    return join( items[:-2], '.' )
+  else
+    return ''
+  endif
+endfunc
+" echo CropLastElem( 'Data.Profunctor.Mapping.somefn', '\.' )
+" echo CropLastElem( 'somefn', '\.' )
+
+
 " Get the type signature from line
 func! HsExtractTypeFromLine( lineNum )
   let line  = getline( a:lineNum )
@@ -88,6 +158,15 @@ func! Uppercased( str )
 endfunc
 " echo Uppercased( 'Monad.bind' )
 " echo Uppercased( 'fmap' )
+
+func! ModuleName_fromQualifiedShortname( shortName )
+  let lineNum = searchpos( 'import qualified .*as '.a:shortName.'$', 'nbW' )[0]
+  return matchstr( getline( lineNum ), 'import qualified \zs\S\+\ze\s')
+endfunc
+" import qualified Data.Zwei        as M
+" import qualified Data.Test        as Map
+" echo ModuleName_fromQualifiedShortname( 'Map' )
+" echo ModuleName_fromQualifiedShortname( 'M' )
 
 function! GetModuleName()
   for lineNum in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
