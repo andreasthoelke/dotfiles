@@ -20,6 +20,13 @@ gsk         - to insert info into buffer - using the module name
 gsK         - show info in float-win
 gsb/B       - browse module
 ,atip/iB    - to HsTabu Type-sig align a range: Use l, \j or 'v' visual-sel
+2leader sm  - SplitModulesInLines
+2leader jm  - JoinModulesFromLines
+2leader ht  - HsTabu
+2leader hT  - StripAligningSpaces
+2leader sa  - StripAligningSpaces
+2leader hu  - HsUnicode
+2leader hU  - HsUnUnicode
 
 
 ### Stubs

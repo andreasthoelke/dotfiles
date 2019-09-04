@@ -54,6 +54,12 @@ endfunc
 " ─   Hs format utils from HsAPIExplore                 ──
 
 
+  " Put modules in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
+command! SplitModulesInLines exec 'g/--/d' | exec 'g/./normal! Whiki-- ' | exec 'normal! gg0'
+
+command! JoinModulesFromLines exec 'g/./normal! dwJ' | exec 'StripAligningSpaces' | exec 'normal! gg0'
+
+
 func! PreserveKleisliInUnicodeReplace( listListMap ) "{{{
   call insert( a:listListMap, ['>=>', '>#>'] )
   call add   ( a:listListMap, ['>#>', '>=>'] )
@@ -74,18 +80,20 @@ endfunc
 
 " ─   Haskell unicode conversion                         ■
 
+nnoremap <leader><leader>sm :exec 'SplitModulesInLines'<cr>
+nnoremap <leader><leader>jm :exec 'JoinModulesFromLines'<cr>
 
-command! -range=% CharsToUnicode :<line1>,<line2>call ReplaceStringsInRange( ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode ) )
-command! -range=% UnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:HsReplacemMap_UnicodeToChars )
-" .,+6HsReplaceCharsToUnicode
-" .,+6HsReplaceUnicodeToChars
-" .+3HsReplaceCharsToUnicode
-" Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
-" unfold :: Monad m => (b -> Maybe (a, b)) -> b -> Producer m a
-" kleisli :: forall e. Example e >=> Line
-" kleisli = do aa <- example
+nnoremap <leader><leader>ht :exec 'HsTabu'<cr>
+nnoremap <leader><leader>hT :exec 'StripAligningSpaces'<cr>
+nnoremap <leader><leader>sa :exec 'StripAligningSpaces'<cr>
+
+nnoremap <leader><leader>hu :exec 'HsUnicode'<cr>
+nnoremap <leader><leader>hU :exec 'HsUnUnicode'<cr>
+
+
 
 command! -range=% HsUnicode call HsUnicode( <line1>, <line2> )
+command! -range=% HsUnUnicode call HsUnUnicode( <line1>, <line2> )
 
 func! HsUnicode( startLine, endLine )
   call ReplaceInRange( a:startLine, a:endLine, g:HsReplacemMap_CharsToUnicode )
@@ -111,6 +119,17 @@ let g:HsReplacemMap_CharsToUnicode = [['->', '→'], ['=>', '⇒'], ['::', '∷'
 let g:HsReplacemMap_CharsToUnicodePtts = ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode )
 let g:HsReplacemMap_UnicodeToChars = FlipListList( g:HsReplacemMap_CharsToUnicode )
 
+
+" obsolete?
+command! -range=% CharsToUnicode :<line1>,<line2>call ReplaceStringsInRange( ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode ) )
+command! -range=% UnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:HsReplacemMap_UnicodeToChars )
+" .,+6HsReplaceCharsToUnicode
+" .,+6HsReplaceUnicodeToChars
+" .+3HsReplaceCharsToUnicode
+" Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
+" unfold :: Monad m => (b -> Maybe (a, b)) -> b -> Producer m a
+" kleisli :: forall e. Example e >=> Line
+" kleisli = do aa <- example
 
 " Note:  ~/.vim/syntax/purescript.vim#/let%20g.HsCharsToUnicode%20=
 " let g:HsCharsToUnicode = [

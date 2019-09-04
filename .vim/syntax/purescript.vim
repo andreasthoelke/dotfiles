@@ -195,7 +195,7 @@ let g:HsCharsToUnicode = [
       \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
       \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
       \, ['::',                '∷', 'hsTypeColon']
-      \, ['\s\zsforall',       '∀', 'hsForall']
+      \, ['forall\ze\s',       '∀', 'hsForall']
       \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
       \, [' \zs\.',            '∘', 'Normal']
       \, [' \zs<\$>',          '⫩', 'Normal']

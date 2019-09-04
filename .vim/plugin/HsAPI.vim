@@ -14,15 +14,12 @@ vnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),     
 
 
 
-nnoremap gSk :call HsAPIQueryShowFloat( HsCursorKeyword(), 0, 1 )<cr>
-vnoremap gSk :call HsAPIQueryShowFloat( GetVisSel(),       0, 1 )<cr>
-
-nnoremap gsk :call HsAPIQueryShowInline( HsCursorKeywordAndModule(), 0, 1 )<cr>
-vnoremap gsk :call HsAPIQueryShowInline( GetVisSel(),       0, 1 )<cr>
 " gsk to insert info into float win - using the module name
+nnoremap gsk :call HsAPIShowInfoContext( HsCursorKeyword_findModule() )<cr>
+vnoremap gsk :call HsAPIShowInfoContext( GetVisSel() )<cr>
+nnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', HsCursorKeyword_findModule()) )<cr>
+vnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', GetVisSel()) )<cr>
 
-nnoremap gsK :call HsAPIQueryShowInline( input( 'Doc string query: ', HsCursorKeywordAndModule()), 0, 1 )<cr>
-vnoremap gsK :call HsAPIQueryShowInline( input( 'Doc string query: ', GetVisSel()),       0, 1 )<cr>
 
 nnoremap gsb :call HsAPIBrowseShowBuf( HsCursorKeyword() )<cr>
 vnoremap gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
@@ -34,17 +31,11 @@ func! HsAPIQueryShowBuf( searchStr, count, infoFlag ) " ■
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
   let hoogleLines = split( system( hoogleCmd ), '\n' )
   call ActivateScratchWindow('HsAPIdata/APIquery')
-  normal! VGd
-  call append( line(1), hoogleLines )
+  exec '%delete'
+  call append( 0, hoogleLines )
+  " return
   if !a:infoFlag
-    " Delete commented lines
-    exec 'g/--/d'
-    " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
-    exec 'g/./normal! Whiki-- '
-    " Issue: commenting/uncommenting this line inserts '\' after the 'Whi'
-    " call FloatWin_do( 'g/./normal! Whi\ki-- ' )
-    " call HsAlignTypeSigs()
-    " call AlignBufferTypeSigs()
+    " exec 'SplitModulesInLines'
     call HsTabu( [] )
   else
     exec 'normal jjgc}'
@@ -77,6 +68,14 @@ func! HsAPIQueryShowFloat( searchStr, count, infoFlag ) " ■
   call FloatWin_do( 'normal! gg0' )
   call FloatWin_FitWidthHeight()
 endfunc " ▲
+
+func! HsAPIShowInfoContext( searchStr )
+  if @% == 'HsAPIdata/APIquery'
+    call HsAPIQueryShowInline( a:searchStr, 0, 1 )
+  else
+    call HsAPIQueryShowFloat( a:searchStr, 0, 1 )
+  endif
+endfunc
 
 func! HsAPIQueryShowInline( searchStr, count, infoFlag ) " ■
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
@@ -130,7 +129,7 @@ func! CleanupBrowseOutput()
 
   " Move classes to the end of buffer
   " call add( cmds, 'g/class/m$' )
-  call add( cmds, 'g/class/d' )
+  " call add( cmds, 'g/class/d' )
   call add( cmds, 'g/\.\.\./d' )
 
   call RunCmdsSilent( cmds )

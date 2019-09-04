@@ -32,7 +32,7 @@ endfun
 
 
 func! MakeBufferDisposable()
-  " setl buftype=nofile
+  setl buftype=nofile
   setl bufhidden=hide
   setl noswapfile
   " Buffer is shown with ':ls' but not ctrlP

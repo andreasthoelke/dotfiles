@@ -1,7 +1,12 @@
 
 
 " Note: This has to contain the (easy-align propriaty?) "/" syntax, so we can e.g. refer to the second column via "2\"
-let g:pttnsTypeSigs4 = ['/∷/', '/.*\(∷\zs\s\|\zs⇒\)/', '/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '2/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '/\(([^)]*\)\@<!.*\zs→\([^(]*)\)\@!/']
+" let g:pttnsTypeSigs4 = [                          '/∷/', '/.*\(∷\zs\s\|\zs⇒\)/', '/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '2/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '/\(([^)]*\)\@<!.*\zs→\([^(]*)\)\@!/']
+" let g:pttnsTypeSigs4 = ['/ / {"left_margin": 0, "right_margin": 0}', '/∷/', '/.*\(∷\zs\s\|\zs⇒\)/', '/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '2/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '/\(([^)]*\)\@<!.*\zs→\([^(]*)\)\@!/']
+
+let g:pttnsTypeSigs4 = ['/ / {"left_margin": 0, "right_margin": 0}', '/'. PatternToMatchOutsideOfParentheses('∷','(',')') .'/', '/.*\(∷\zs\s\|\zs⇒\)/', '/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '2/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '/\(([^)]*\)\@<!.*\zs→\([^(]*)\)\@!/']
+" let g:pttnsTypeSigs4 = ['/ / ',                   '/∷/', '/.*\(∷\zs\s\|\zs⇒\)/', '/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '2/\(([^)]*\)\@<!→\([^(]*)\)\@!/', '/\(([^)]*\)\@<!.*\zs→\([^(]*)\)\@!/']
+
 
 " TODO in HsAPI output I want ranges of separate alignment. test this e.g. with \j motion and 'ip'
 " - then there should be a script the aligns all paragraps?
@@ -11,8 +16,10 @@ let g:pttnsTypeSigs4 = ['/∷/', '/.*\(∷\zs\s\|\zs⇒\)/', '/\(([^)]*\)\@<!→
 
 " Set the contFn to be called with start/end line
 " contArgs defines other/preceding (optional) args to be applied to the contFn
-nnoremap ,at      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfunc<cr>g@
-vnoremap ,at :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfunc('', 1)<cr>
+" nnoremap ,at      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfunc<cr>g@
+" vnoremap ,at :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfunc('', 1)<cr>
+nnoremap <leader>t      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfunc<cr>g@
+vnoremap <leader>t :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfunc('', 1)<cr>
 
 func! Gen_opfunc( _, ...)
   " First arg is sent via op-fn. presence of second arg indicates visual-sel
@@ -20,7 +27,7 @@ func! Gen_opfunc( _, ...)
   call call( g:opContFn, g:opContArgs + [l1, l2] )
 endfunc
 
-
+command! -range=% HsTabu call HsTabu( [], <line1>, <line2> ) | normal! gg0
 " Align/Tabularize a list of column-patters over an (optional) range of lines
 func! HsTabu( columnPttns, ...)
   let columnPttns = len(a:columnPttns) ? a:columnPttns : g:pttnsTypeSigs4

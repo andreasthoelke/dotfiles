@@ -1,11 +1,11 @@
 
 func! GetTopLevSymbolName( lineNum )
   " return matchstr( getline(a:lineNum), '^\S*\ze\s')
-  return matchstr( getline(a:lineNum), '\v\S+\ze\s')
+  " return matchstr( getline(a:lineNum), '\v\S+\ze\s')
+  return matchstr( getline(a:lineNum), '\v(--\s*)?\zs\S+\ze\s')
 endfunc
 " echo GetTopLevSymbolName( line('.') +1 )
-"    eins ∷ eins
-"   aber arg = eins
+" Control.Monad replicateM :: (Applicative x) => Int -> x a -> X [a]
 
 " Return the previous function name
 func! GetTopLevSymbolNameBackw()
@@ -74,7 +74,6 @@ endfunc
 " -- Data.Zip
 " alignWith :: Semialign f => (These a b -> c) -> f a -> f b -> f c
 " Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
-
 
 
 func! GetLastElem( str, separator )
