@@ -732,6 +732,10 @@ let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
   - https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions/basic-syntax-extensions
 * this has some nice unicode conceal suggestions  ~/.vim/plugged/vim-haskellConcealPlus/after/syntax/haskell.vim
 
+this is a nice symbol/usecase, btw:
+--   ↓ 1.HttpVersion   ↓ 2.StatusCode  ↓ 3.ReasonPhrase
+-- "  HTTP/1.1         200              OK"
+
 ## Table of Contents
 [toc]
 
@@ -1067,6 +1071,8 @@ GraphQL access to the spotify rest API:
 ## Haskell Todos
 
 ### HsAPI
+* make output/scratch pinable in extra folder. show dirvish or quickmenue?
+
 * setup nvim-hs: http://hackage.haskell.org/package/nvim-hs
   - then use hoogleDBParser https://github.com/blitzcode/hackage-diff/blob/master/Main.hs
   - build a module-package-browser view: .hackage/base-modules

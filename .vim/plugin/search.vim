@@ -1,6 +1,6 @@
 
 " https://vim-jp.org/vimdoc-en/index.html " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
-
+" TODO deprecate these maps
 nnoremap <silent> gsg :call GoogleSearch("word")<cr>
 vmap <silent> gsg :call GoogleSearch("visSel")<cr>
 
@@ -172,13 +172,15 @@ fun! OpenVisSel()
 endfun
 
 fun! DocsForCursorWord()
-  let keyw = expand("<cword>")
+  " let keyw = expand("<cword>")
+  let keyw = HsCursorKeyword_findModule()
   if IsPurs()
     let url = 'https://pursuit.purescript.org\/search\?q\=' . keyw
   else
     " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . keyw
-    let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . keyw
-    " let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . keyw
+    " let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . keyw
+    let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . keyw
+    " let url = 'https://hoogle.haskell.org/?hoogle=' . keyw
   endif
   let comm = 'silent !open ' . url
   exec comm
@@ -191,8 +193,9 @@ fun! DocsForVisSel()
     let url = 'https://pursuit.purescript.org\/search\?q\=' . enckw
   else
     " let url = 'https://www.stackage.org\/lts-8\.22\/hoogle\?q\=' . enckw
-    let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . enckw
-    " let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw
+    " let url = 'https://www.stackage.org\/lts-12.6\/hoogle\?q\=' . enckw
+    let url = 'https://www.haskell.org\/hoogle\/\?hoogle\=' . enckw
+    " let url = 'https://hoogle.haskell.org/?hoogle=' . enckw
   endif
   let comm = 'silent !open ' . url
   exec comm

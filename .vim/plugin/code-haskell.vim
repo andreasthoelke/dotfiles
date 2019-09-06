@@ -63,7 +63,7 @@ func! HsCursorKeyword_findModule()
     return GetTopLevSymbolName( line('.') ) . '.' . kw
   " 6) No module found:
   else
-    echo 'no module name found: HsCursorKeywordAndModule'
+    " echo 'no module name found: HsCursorKeywordAndModule'
     return kw
   endif
 endfunc
@@ -97,6 +97,24 @@ func! CropLastElem( str, separator )
 endfunc
 " echo CropLastElem( 'Data.Profunctor.Mapping.somefn', '\.' )
 " echo CropLastElem( 'somefn', '\.' )
+
+func! LastChar( str )
+  if len( a:str )
+    return a:str[ len(a:str)-1 ]
+  else
+    return ''
+  endif
+endfunc
+" echo GetLastChar('eins')
+
+func! CropLastChar( str )
+  if len( a:str )
+    return a:str[ : len(a:str)-2 ]
+  else
+    return ''
+  endif
+endfunc
+" echo CropLastChar('eins')
 
 
 " Get the type signature from line

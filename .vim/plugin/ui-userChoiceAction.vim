@@ -8,24 +8,23 @@
 " Any function (action!) can be supplied with a user selected last argument/value.
 " The user-selected option value will be passed as the last arg to the continuation function. Only string values are
 " supported for now. (the list of continuation args will be supplied to any starting args of the continuation function)
-" Note: that all code that wants to use the selected value/effect needs to run in the contionuationFn. (there should be no
+" Note: that all code that aims to use the selected value/effect needs to run in the contionuationFn. (there should be no
 " code-lines after the call to UserChoiceAction().
 " The forth (optional) arg can either be 'showRight' (default) or 'showBottom'
 " optUserPromtValue_andFirstArg (if not empty!) will be shown in the dialog *and* be used as the first arg to the continuation
 func! UserChoiceAction( userPromptText, optUserPromtValue_andFirstArg, choices, continuationFn, contOtherArgs, ... )
   let windowPos = (a:0 == 6) ? a:4 : "showRight"
-  " Show the dialog
-  call UserChoiceDialog_show( a:userPromptText, a:optUserPromtValue_andFirstArg, a:choices, windowPos )
-
   " Store continuation fn+args so the "UserChoiceAction_resume" can run it
   let g:userChoiceContinuationData = { 'fn': a:continuationFn }
-  let g:userChoiceContinuationData.firstArgs = (a:optUserPromtValue_andFirstArg != '') ?
+  let g:userChoiceContinuationData.firstArgs = (a:optUserPromtValue_andFirstArg != {}) ?
         \  [a:optUserPromtValue_andFirstArg] + a:contOtherArgs
         \:                                     a:contOtherArgs
   " Note: async - action call stack will resume with selected value at "UserChoiceAction_resume"
+  " Show the dialog
+  call UserChoiceDialog_show( a:userPromptText, a:optUserPromtValue_andFirstArg, a:choices, windowPos )
 endfunc
 
-" The 'choice' objects are expected to have a 'label' key. an underscore (_) at the beginning indicates the the first
+" The 'choice' objects are expected to have a 'label' key. an underscore (_) at the beginning indicates the the first ■
 " char should be used as a shortcut key instead of the index number. 'sections keys create quickmenu sections.
 let g:choicesTest1 = [{'label':'choice 1', 'otherData':111}, {'label':'choice 2', 'otherData':222}]
 let g:choicesTest2 = [{'label':'_Google', 'url':'http://www.google.de/search?q='}, {'section':'Local search:'}, {'label':'_In Hask dir', 'comm':'Fhask'}]
@@ -45,7 +44,6 @@ func! TestUserChoiceSearch ( searchTerm, shouldEcho, choosenObjCmd )
   if a:shouldEcho
     echo 'Searching ' . a:choosenObjCmd.label
   endif
-
   if has_key( a:choosenObjCmd, 'url' )
     exec '!open ' . shellescape( a:choosenObjCmd.url . a:searchTerm )
   elseif has_key( a:choosenObjCmd, 'comm' )
@@ -56,15 +54,15 @@ endfunc
 func! UserChoiceAction_resume( selOptionValue )
   call call( g:userChoiceContinuationData.fn,
         \ g:userChoiceContinuationData.firstArgs + [a:selOptionValue] )
-endfunc
+endfunc " ▲
 
 func! UserChoiceDialog_show( userPromptText, userPromtValue, choices, windowPos )
   call quickmenu#current(100)
   call quickmenu#reset()
 
   call quickmenu#header( a:userPromptText )
-  if (a:userPromtValue != '')
-    call quickmenu#append('# → ' . a:userPromtValue, '')
+  if (a:userPromtValue != {})
+    call quickmenu#append('# → ' . string(a:userPromtValue), '')
   endif
 
   for choiceItem in a:choices
