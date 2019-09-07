@@ -25,10 +25,15 @@ func! HsCursorKeyword()
   let isk = &l:isk
   " Tempoarily extend the isKeyword character range
   setl isk+=.,<,>,$,#,+,-,*,/,%,',&,=,!,:,124,~,?,^
-  let keyword = expand("<cword>")
+  let kword = expand("<cword>")
   let &l:isk = isk
-  return keyword
+  if kword[0] =~ '\a'
+    return kword
+  else
+    return '('.kword.')'
+  endif
 endfunc
+"  == (.) (>>=) >>=
 
 nnoremap <leader>ca :echo HsCursorKeywordAndModule()<cr>
 
@@ -44,7 +49,7 @@ func! HsCursorKeyword_findModule()
     " import qualified Data.Zwei        as M
     " import qualified Data.Test        as Map
   " 3) Shortcut qualified identifier: Map.lookup or M.lookup
-  elseif kw =~ '\.' " kw includes a shortcut e.g. 'Map.lookup'
+  elseif kw =~ '\.\a' " kw includes a shortcut e.g. 'Map.lookup'
     let fullModuleName = ModuleName_fromQualifiedShortname( CropLastElem( kw , '\.' ) )
     if fullModuleName == ''
       echo 'no module name found: ModuleName_fromQualifiedShortname HsCursorKeywordAndModule'
@@ -59,7 +64,8 @@ func! HsCursorKeyword_findModule()
     return fullModuleName . '.' . kw
   " 5) HsAPI view 2:
   " Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
-  elseif getline('.') =~ '\..*' . kw . '\s\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
+  " elseif getline('.') =~ '\..*' . kw . '\s\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
+  elseif getline('.') =~ '^\u\S*\s\+(\?' . kw . ')\?\s\+\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
     return GetTopLevSymbolName( line('.') ) . '.' . kw
   " 6) No module found:
   else
@@ -74,6 +80,13 @@ endfunc
 " -- Data.Zip
 " alignWith :: Semialign f => (These a b -> c) -> f a -> f b -> f c
 " Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
+" Prelude                              (.)      ::      (b -> c) -> (a -> b) -> a -> c
+" Data.Function                        (.)      ::      (b -> c) -> (a -> b) -> a -> c
+" Prelude                              (<$>)      ::      (b -> c) -> (a -> b) -> a -> c
+" Distribution.Compat.Prelude.Internal (.)      :: () => (b -> c) -> (a -> b) -> a -> c
+" Data.Composition                     compose ::      (b -> c) -> (a -> b) -> a -> c
+" Data.Eq                              (==)                             :: Eq a => a -> a -> Bool
+" Control.Applicative                  (.)      ::      (b -> c) -> (a -> b) -> a -> c
 
 
 func! GetLastElem( str, separator )

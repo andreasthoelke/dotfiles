@@ -25,10 +25,11 @@ let g:exampleSearchParams =
 " Search only in current package sets using: echo pyeval('getHSPackageDependencies()')
 
 
-func! GetSearchParams(...)
-  return ParseSearchParams( a:0 ? input(a:1, SearchPropsUserStr()) : SearchPropsUserStr() )
+func! GetSearchParams( mode, ...)
+  let userStr = SearchPropsUserStr( a:mode )
+  return ParseSearchParams( a:0 ? input(a:1, userStr) : userStr )
 endfunc
-" echom string( GetSearchParams('Search props: ') )
+" echom string( GetSearchParams('visual', 'Search props: ') )
 " Control.Applicative fmap ::
 " cursor on 'fmap' will return:
 " {'module': 'Control.Applicative', 'language': 'vim', 'identifier': 'fmap', 'package': 'async-'}
@@ -41,7 +42,7 @@ nnoremap <leader>tti :echoe GetInputStr('Search keyword: ')<cr>
 vnoremap <leader>tti :<c-u>echoe GetInputStr('Search term: ', 'v')<cr>
 
 func! ParseModuleIdentifier( inStr ) " ■
-  let items = split( a:inStr, '\.' )
+  let items = split( a:inStr, '\a\zs\.' )
   if items[-1][0] =~ '\u'
     if len( items ) == 2 " Just two items and the last one uppercase is pased as just a module
       return {'module': join( items, '.' )}
@@ -60,12 +61,15 @@ endfunc
 " echo ParseModuleIdentifier( 'Control.Applicative.Just' )
 " echo ParseModuleIdentifier( 'Control.Applicative.fmap' )
 " echo ParseModuleIdentifier( 'Control.Applicative.(<*>)' )
+" echo ParseModuleIdentifier( 'Control.Applicative.<*>' )
+" echo ParseModuleIdentifier( 'Data.Eq.==' )
+" echo ParseModuleIdentifier( 'Data.Eq.(.)' )
 " echo ParseModuleIdentifier( 'Applicative.fmap' ) ▲
 
 " The user can enter short version of params, this will be turned into a more complete 'search-props-dictionary'
 func! ParseSearchParams( inStr )
   " Comma as a seperator is required when type-sigs are passed
-  let inStrs = a:inStr =~ '\,' ? split(a:inStr, '\,') : split(a:inStr)
+  let inStrs = a:inStr =~ '\;' ? split(a:inStr, '\;') : split(a:inStr)
 
   let searchParams = {}
   for item in inStrs
@@ -101,13 +105,16 @@ func! ParseSearchParams( inStr )
   return searchParams
 endfunc
 " echo ParseSearchParams( 'Control.Applicative fmap async- Haskell' )
+" echo ParseSearchParams( 'Maybe (a -> b) -> Maybe b -> Maybe a,Haskell' )
+
+vnoremap <leader><leader>cc :<c-u>echo SearchPropsUserStr('visual')<cr>
 
 " Gather cursor keyword/module and language in a space separated string
-func! SearchPropsUserStr(...)
-  if a:0 == 1
+func! SearchPropsUserStr( mode )
+  if a:mode == 'visual'
     let inStr = GetVisSel()
     if inStr =~ '\s' " Type (only types can contains spaces!)
-      let str1 = inStr .',' " use comma instead of space in case types are used
+      let str1 = inStr .';' " use semicollon instead of space in case types are used
     else
       let str1 = ParseModuleIdentifier( inStr ) " this may be a selected part of a Data.Module.identifier
     endif
@@ -117,15 +124,19 @@ func! SearchPropsUserStr(...)
   endif
 
   let lang = GetLanguageByCurrentFileExtension()
-  return str1 .' '. lang
+  return str1 . ' ' . lang
 endfunc
+
 
 
 let g:choicesTest2 = [{'label':'_Google', 'url':'http://www.google.de/search?q='}, {'section':'Local search:'}, {'label':'_In Hask dir', 'comm':'Fhask'}]
 
               "                      ( userPromptText,      optUserPromtValue_andFirstArg,    choices,       continuationFn,          contOtherArgs,          [winPos] ... )
-nnoremap gso :call UserChoiceAction( 'Run query on site', GetSearchParams(),                  g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-nnoremap gsO :call UserChoiceAction( 'Run query on site', GetSearchParams('Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap gso :call UserChoiceAction( 'Run query on site', GetSearchParams('n'),                  g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap gsO :call UserChoiceAction( 'Run query on site', GetSearchParams('n', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+
+vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual'),        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+
 
 nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', '', g:choicesTest1, function('TestUserChoice1'), [] )<cr>
 nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', expand("<cword>"), g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
@@ -161,6 +172,22 @@ func! RunSearch ( searchParams, browser, siteProps )
     let mainTermQuery .= a:siteProps.mainTerm
   elseif has_key(a:siteProps, 'module_mainTerm')
     let mainTermQuery .= a:siteProps.module_mainTerm
+  endif
+
+  " Module: Use module searchParams in moduleQueryField if site provides.
+  " Else if there's a module_mainTerm options (the site allows to search for module-qualified identifiers) then prepend with a "."
+  " Else prepend to mainTerm with a space
+  if has_key(a:searchParams,'module')
+    " We got Module info in the searchProps, now what to do with it?
+    if has_key(a:siteProps,'module')
+      " The selected site has a dedicated module -feature/filter, so write the module in the separate module query
+      let moduleQuery = a:siteProps.module . a:searchParams.module
+    elseif has_key(a:siteProps,'module_mainTerm')
+      " The site is known to support module-qualified-identifiers e.g. "Data.Eq.(==)"
+      let mainTermQuery .= a:searchParams.module .'.'
+    else
+      let mainTermQuery .= a:searchParams.module .' '
+    endif
   endif
 
   " Main Term:
@@ -208,18 +235,6 @@ func! RunSearch ( searchParams, browser, siteProps )
     endif
   endif
 
-  " Module: Use module searchParams in moduleQueryField if site provides.
-  " Else if there's a module_mainTerm options (the site allows to search for module-qualified identifiers) then prepend with a "."
-  " Else prepend to mainTerm with a space
-  if has_key(a:searchParams,'module')
-    if has_key(a:siteProps,'module')
-      let moduleQuery = a:siteProps.module . a:searchParams.module
-    elseif has_key(a:siteProps,'module_mainTerm')
-      let mainTermQuery .= a:searchParams.module .'.'. mainTerm
-    else
-      let mainTermQuery .= a:searchParams.module .' '. mainTerm
-    endif
-  endif
 
   let queryStr = packageQuery . moduleQuery . mainTermQuery . languageQuery . optionsQuery
 
@@ -237,19 +252,19 @@ let g:searchSites =  [ {'section':'Docs'} ]
 
 " https://www.stackage.org/lts-14.1/hoogle?q=Data.Either.fromLeft
 " module_mainTerm should join namespace and mainTerm via a '.' if both are provided
-let g:searchSites += [ {'label':'Stackage',   'baseUrl':'https://www.stackage.org/lts-14.1/'
+let g:searchSites += [ {'label':'_Stackage',   'baseUrl':'https://www.stackage.org/lts-14.1/'
       \, 'module_mainTerm':'hoogle?q='
       \}]
 
 " https://hoogle.haskell.org/?hoogle=Data.Either.fromLeft&scope=package%3Aeither
-let g:searchSites += [ {'label':'Hoogle',     'baseUrl':'https://hoogle.haskell.org/'
+let g:searchSites += [ {'label':'_Hoogle',     'baseUrl':'https://hoogle.haskell.org/'
       \, 'module_mainTerm':'?hoogle='
       \}]
 
 " https://pursuit.purescript.org/search?q=fromLeft
 " Pursuit can only search for a module namespace (Data.List) *or* an identifier (e.g. fromLeft), not a combination of both
 " So searching for a module has to use the 'mainTerm' field
-let g:searchSites += [ {'label':'Pursuit',    'baseUrl':'https://pursuit.purescript.org/'
+let g:searchSites += [ {'label':'_Pursuit',    'baseUrl':'https://pursuit.purescript.org/'
       \, 'mainTerm':'search?q='
       \}]
 
@@ -257,13 +272,13 @@ let g:searchSites += [ {'section':'Web help/ posts'} ]
 
 " https://www.google.de/search?q=traverse+Haskell
 " This usually features Stackoverflow
-let g:searchSites += [ {'label':'Google',     'baseUrl':'https://google.de/'
+let g:searchSites += [ {'label':'_Google',     'baseUrl':'https://google.de/'
       \, 'mainTerm':'search?q='
       \, 'language':'+'
       \}]
 
 " https://www.reddit.com/r/haskell/search/?q=Data.Either.fromLeft&restrict_sr=1
-let g:searchSites += [ {'label':'Redit Haskell', 'baseUrl':'https://www.reddit.com/r/haskell/'
+let g:searchSites += [ {'label':'_Redit Haskell', 'baseUrl':'https://www.reddit.com/r/haskell/'
       \, 'mainTerm':'search/?q='
       \, 'options':'&restrict_sr=1'
       \}]
