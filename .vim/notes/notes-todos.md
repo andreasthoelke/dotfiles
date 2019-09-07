@@ -889,8 +889,6 @@ make `rm -r` commands move to trash?
 
 ## Current Todos
 gsk in hsapi breaks comment highlight
-searchSites menu should show keys
-
 
 * scratchbook/pinning files into a project dir (from scratch buffer)
 
@@ -1074,6 +1072,12 @@ GraphQL access to the spotify rest API:
 ## Haskell Todos
 
 ### HsAPI
+
+* make gsd (local hoogle) consistent with gso (web search)
+    " TODO: use ~/.vim/plugin/HsAPI-searchSites.vim#/func.%20GetSearchParams.%20mode,
+    " qualified shortcuts are currently not supported, e.g. "LBSASCII.pack"
+    " integrate with UserChoiceAction ~/.vim/plugin/HsAPI-searchSites.vim#/nnoremap%20gsO%20.call
+
 * make output/scratch pinable in extra folder. show dirvish or quickmenue?
 
 * setup nvim-hs: http://hackage.haskell.org/package/nvim-hs

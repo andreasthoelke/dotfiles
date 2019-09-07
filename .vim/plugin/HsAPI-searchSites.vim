@@ -107,7 +107,6 @@ endfunc
 " echo ParseSearchParams( 'Control.Applicative fmap async- Haskell' )
 " echo ParseSearchParams( 'Maybe (a -> b) -> Maybe b -> Maybe a,Haskell' )
 
-vnoremap <leader><leader>cc :<c-u>echo SearchPropsUserStr('visual')<cr>
 
 " Gather cursor keyword/module and language in a space separated string
 func! SearchPropsUserStr( mode )
@@ -126,6 +125,8 @@ func! SearchPropsUserStr( mode )
   let lang = GetLanguageByCurrentFileExtension()
   return str1 . ' ' . lang
 endfunc
+" Tests:
+vnoremap <leader><leader>cc :<c-u>echo SearchPropsUserStr('visual')<cr>
 
 
 
@@ -136,7 +137,6 @@ nnoremap gso :call UserChoiceAction( 'Run query on site', GetSearchParams('n'), 
 nnoremap gsO :call UserChoiceAction( 'Run query on site', GetSearchParams('n', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 
 vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual'),        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
-
 
 nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choicesTest1, function('TestUserChoice1'), [] )<cr>
 nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'eins':expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>

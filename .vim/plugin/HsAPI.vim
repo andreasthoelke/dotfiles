@@ -12,6 +12,9 @@ vnoremap gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),     
 nnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
 vnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
 
+" TODO: use ~/.vim/plugin/HsAPI-searchSites.vim#/func.%20GetSearchParams.%20mode,
+  " qualified shortcuts are currently not supported, e.g. "LBSASCII.pack" ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Webservers.hs#/asciiMessageBody%20=%20MessageBody
+  " integrate with UserChoiceAction ~/.vim/plugin/HsAPI-searchSites.vim#/nnoremap%20gsO%20.call
 
 
 " gsk to insert info into float win - using the module name
@@ -81,7 +84,9 @@ func! HsAPIQueryShowInline( searchStr, count, infoFlag ) " ■
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
   let hoogleLines = split( system( hoogleCmd ), '\n' )
   call append( line('.'), hoogleLines )
-  normal jjjgc}kkk
+  if len( hoogleLines ) > 3
+    normal 0jjjgc}kkk
+  endif
 endfunc " ▲
 
 func! HsAPIBrowseShowBuf( searchStr )
