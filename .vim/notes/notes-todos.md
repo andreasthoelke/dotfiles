@@ -873,7 +873,7 @@ make `rm -r` commands move to trash?
   c-s-w is awkward and should be consitent
 
   c-s J/K/L/H is pretty intuitive!
-                                                  j
+
   > change dir of underlying terminal so I can <c-z> - fg in a vim related folder easily
   some start Documents/PS/2/pux-todo/node_modules/anymatch
 
@@ -888,6 +888,9 @@ make `rm -r` commands move to trash?
 
 
 ## Current Todos
+gsk in hsapi breaks comment highlight
+searchSites menu should show keys
+
 
 * scratchbook/pinning files into a project dir (from scratch buffer)
 

@@ -138,8 +138,8 @@ nnoremap gsO :call UserChoiceAction( 'Run query on site', GetSearchParams('n', '
 vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual'),        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 
 
-nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', '', g:choicesTest1, function('TestUserChoice1'), [] )<cr>
-nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', expand("<cword>"), g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
+nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choicesTest1, function('TestUserChoice1'), [] )<cr>
+nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'eins':expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
 
 
 " ─   Search Params                                     ──

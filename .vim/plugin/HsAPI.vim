@@ -30,7 +30,7 @@ vnoremap gsB :call HsAPIBrowseShowBuf( input( 'Module: ', GetVisSel()) )<cr>
 func! HsAPIQueryShowBuf( searchStr, count, infoFlag ) " ■
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
   let hoogleLines = split( system( hoogleCmd ), '\n' )
-  call ActivateScratchWindow('HsAPIdata/APIquery')
+  call ActivateScratchWindow('HsAPIdata/APIquery.hs')
   exec '%delete'
   call append( 0, hoogleLines )
   " return
@@ -70,7 +70,7 @@ func! HsAPIQueryShowFloat( searchStr, count, infoFlag ) " ■
 endfunc " ▲
 
 func! HsAPIShowInfoContext( searchStr )
-  if @% == 'HsAPIdata/APIquery'
+  if @% == 'HsAPIdata/APIquery.hs'
     call HsAPIQueryShowInline( a:searchStr, 0, 1 )
   else
     call HsAPIQueryShowFloat( a:searchStr, 0, 1 )
@@ -90,7 +90,7 @@ func! HsAPIBrowseShowBuf( searchStr )
 endfunc
 
 func! HsAPIBrowseShowBuf_CB( replReturnedLines )
-  call ScratchWin_Show( 'HsAPIdata/APIquery', a:replReturnedLines )
+  call ScratchWin_Show( 'HsAPIdata/APIquery.hs', a:replReturnedLines )
 
   call CleanupBrowseOutput()
 
