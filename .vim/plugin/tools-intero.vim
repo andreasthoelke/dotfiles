@@ -85,13 +85,13 @@ endfunc
 
 
 " Default:
-nnoremap gei :call InteroEval_SmartShow()<cr>
+" nnoremap gei :call InteroEval_SmartShow()<cr>
 
 " Plain Repl Lines:
 " nnoremap ges :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
-nnoremap ges :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
+nnoremap gei :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
 
-vnoremap ges :call InteroEval( Get_visual_selection(), "FloatWinAndVirtText", '' )<cr>
+vnoremap gei :call InteroEval( Get_visual_selection(), "FloatWinAndVirtText", '' )<cr>
 
 " ─   legacy to be reviewed                              ■
 " Run cword in repl - paste returned lines verbally:

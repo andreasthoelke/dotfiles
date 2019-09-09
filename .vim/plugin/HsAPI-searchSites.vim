@@ -41,16 +41,17 @@ endfunc
 nnoremap <leader>tti :echoe GetInputStr('Search keyword: ')<cr>
 vnoremap <leader>tti :<c-u>echoe GetInputStr('Search term: ', 'v')<cr>
 
+" Issue: This labels the last sub-module as 'identifier'
 func! ParseModuleIdentifier( inStr ) " ■
   let items = split( a:inStr, '\a\zs\.' )
   if items[-1][0] =~ '\u'
-    if len( items ) == 2 " Just two items and the last one uppercase is pased as just a module
+    " if len( items ) == 2 " Just two items and the last one uppercase. -> is pased as just a module
       return {'module': join( items, '.' )}
-    else
+    " else
       " Assume the last item is a dataconstructor for now. If an explicit is available, then revert to interpret the entire string as a module
-      return {'module': join(items[:-2], '.')
-            \, 'identifier': items[-1]}
-    endif
+      " return {'module': join(items[:-2], '.')
+      "       \, 'identifier': items[-1]}
+    " endif
   else
     " If the last item is lowercase or an infix/symbol char then parse it is identifier
     return {'module': join(items[:-2], '.')
@@ -58,6 +59,7 @@ func! ParseModuleIdentifier( inStr ) " ■
   endif
 endfunc
 " echo ParseModuleIdentifier( 'Control.Applicative.Monoid' )
+" echo ParseModuleIdentifier( 'Data.ByteString.Lazy.Char8' )
 " echo ParseModuleIdentifier( 'Control.Applicative.Just' )
 " echo ParseModuleIdentifier( 'Control.Applicative.fmap' )
 " echo ParseModuleIdentifier( 'Control.Applicative.(<*>)' )
@@ -69,7 +71,7 @@ endfunc
 " The user can enter short version of params, this will be turned into a more complete 'search-props-dictionary'
 func! ParseSearchParams( inStr )
   " Comma as a seperator is required when type-sigs are passed
-  let inStrs = a:inStr =~ '\;' ? split(a:inStr, '\;') : split(a:inStr)
+  let inStrs = a:inStr =~ '\(\;\|->\)' ? split(a:inStr, '\;') : split(a:inStr)
 
   let searchParams = {}
   for item in inStrs
@@ -80,8 +82,8 @@ func! ParseSearchParams( inStr )
       call extend( searchParams, {'identifier': item} )
 
     elseif item =~ '\i\.'  " Module or qualified identifier
-      call extend( searchParams, ParseQualifiedStr( item ) ) " Adds 'module' and maybe 'identifier'
-      let itemQualifiedBackup = copy( item )
+      call extend( searchParams, ParseModuleIdentifier( item ) ) " Adds 'module' and maybe 'identifier'
+      " let itemQualifiedBackup = copy( item )
 
     elseif item =~ '-' "     Package (user needs to add '-' to package name with no version)
       if LastChar(item) == '-'
@@ -105,8 +107,9 @@ func! ParseSearchParams( inStr )
   return searchParams
 endfunc
 " echo ParseSearchParams( 'Control.Applicative fmap async- Haskell' )
-" echo ParseSearchParams( 'Maybe (a -> b) -> Maybe b -> Maybe a,Haskell' )
-
+" echo ParseSearchParams( 'Data.ByteString.Lazy.Char8 Haskell' )
+" echo ParseSearchParams( 'Maybe (a -> b) -> Maybe b -> Maybe a;Haskell' )
+" echo ParseSearchParams( 'Maybe b -> Maybe a' )
 
 " Gather cursor keyword/module and language in a space separated string
 func! SearchPropsUserStr( mode )
@@ -184,9 +187,15 @@ func! RunSearch ( searchParams, browser, siteProps )
       let moduleQuery = a:siteProps.module . a:searchParams.module
     elseif has_key(a:siteProps,'module_mainTerm')
       " The site is known to support module-qualified-identifiers e.g. "Data.Eq.(==)"
-      let mainTermQuery .= a:searchParams.module .'.'
+      let mainTermQuery .= a:searchParams.module
+      if has_key(a:searchParams,'identifier') || has_key(a:searchParams,'type')
+        let mainTermQuery .= '.'
+      endif
     else
-      let mainTermQuery .= a:searchParams.module .' '
+      let mainTermQuery .= a:searchParams.module
+      if has_key(a:searchParams,'identifier') || has_key(a:searchParams,'type')
+        let mainTermQuery .= ' '
+      endif
     endif
   endif
 
@@ -195,10 +204,10 @@ func! RunSearch ( searchParams, browser, siteProps )
     let mainTermQuery .= a:searchParams.mainTerm " set initial mainTerm
     " Addition type/identifier: (rare?)
     if has_key(a:searchParams,'identifier')
-      let mainTermQuery .= ' '. a:searchParams.identifier " add an additional identifier
+      let mainTermQuery .= a:searchParams.identifier " add an additional identifier
     endif
     if has_key(a:searchParams,'type')
-      let mainTermQuery .= ' '. a:searchParams.type " add an additional type
+      let mainTermQuery .= a:searchParams.type " add an additional type
     endif
   else
     " Use identifier and/or type as mainQuery: (a combination of both should be rare?)

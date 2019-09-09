@@ -172,6 +172,7 @@ noremap <leader>hi :call StylishHaskell()<cr>
 command! FormatImports :call StylishHaskell()
 command! Indent :call StylishHaskell()
 
+" Issue: other windows loose their focus!
 function! StylishHaskell()
   write
   " write any changes as otherwise those would be lost - no undo possible!

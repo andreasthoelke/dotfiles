@@ -779,6 +779,11 @@ Python tutorials: https://www.programiz.com/python-programming/string
 
 ## Todos
 
+* windows loose focus when ~/.vim/plugin/utils-format.vim#/function.%20StylishHaskell..
+
+* concealed chars make cursor j/k jump
+* concealed chars make float-win show up too far right
+
 * template for opfunc mappings (+vis-sel +command range) is here: ~/.vim/plugin/utils-align.vim#/command.%20-range=%%20StripAligningSpaces
   -> should apply this consistently
 
@@ -888,7 +893,8 @@ make `rm -r` commands move to trash?
 
 
 ## Current Todos
-gsk in hsapi breaks comment highlight
+
+* finish Intero smartShow. gei could use the new HsAPI flow/features? ~/.vim/plugin/tools-intero.vim#/nnoremap%20gei%20.call
 
 * scratchbook/pinning files into a project dir (from scratch buffer)
 
@@ -1077,6 +1083,8 @@ GraphQL access to the spotify rest API:
     " TODO: use ~/.vim/plugin/HsAPI-searchSites.vim#/func.%20GetSearchParams.%20mode,
     " qualified shortcuts are currently not supported, e.g. "LBSASCII.pack"
     " integrate with UserChoiceAction ~/.vim/plugin/HsAPI-searchSites.vim#/nnoremap%20gsO%20.call
+
+* also Intero gei could use the new flow/features? ~/.vim/plugin/tools-intero.vim#/nnoremap%20gei%20.call
 
 * make output/scratch pinable in extra folder. show dirvish or quickmenue?
 

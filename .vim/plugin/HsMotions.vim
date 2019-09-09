@@ -398,7 +398,7 @@ vmap iv ,Ho,L
 
 " TODO add long moves to jumplist as reverting moves would be challenging to perform?
 
-" Tab is the 'ballpark' motion - it gets you into constituting areas in a function
+" This is the 'ballpark' motion - it gets you into constituting areas in a function
 nnoremap <silent> <c-m> :call FnAreaForw()<cr>
 nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
 func! FnAreaForw()
@@ -616,6 +616,9 @@ func! SkipBinding()
 endfunc
 
 
+" Bring back the normal big-Word textobject
+onoremap i,W iW
+xnoremap i,W iW
 
 " Outer Expression:
 " Textobject to select inside an OuterExpression

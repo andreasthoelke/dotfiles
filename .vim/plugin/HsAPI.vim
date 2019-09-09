@@ -79,6 +79,7 @@ func! HsAPIShowInfoContext( searchStr )
     call HsAPIQueryShowFloat( a:searchStr, 0, 1 )
   endif
 endfunc
+" TODO: refactor - showInline/showFloatingwin should be later in the call stack
 
 func! HsAPIQueryShowInline( searchStr, count, infoFlag ) " ■
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
@@ -89,13 +90,17 @@ func! HsAPIQueryShowInline( searchStr, count, infoFlag ) " ■
   endif
 endfunc " ▲
 
+let g:lastSearchStr = ''
 func! HsAPIBrowseShowBuf( searchStr )
+  echoe a:searchStr
   let browseCmd = ':browse ' . a:searchStr
+  let g:lastSearchStr = a:searchStr
   call InteroEval( browseCmd, "HsAPIBrowseShowBuf_CB", '' )
 endfunc
 
 func! HsAPIBrowseShowBuf_CB( replReturnedLines )
-  call ScratchWin_Show( 'HsAPIdata/APIquery.hs', a:replReturnedLines )
+  let moduleLine = '-- browse ' . g:lastSearchStr
+  call ScratchWin_Show( 'HsAPIdata/APIquery.hs', [moduleLine] + a:replReturnedLines )
 
   call CleanupBrowseOutput()
 
@@ -106,6 +111,9 @@ func! HsAPIBrowseShowBuf_CB( replReturnedLines )
 endfunc
 
 func! CropLeadingModuleNames()
+  if getline('.') =~ '-- browse'
+    return
+  endif
   normal! f.Eb"tyEB
   if GetCharAtCursor() =~ '(\|['
     normal! l
@@ -121,6 +129,9 @@ func! CleanupBrowseOutput()
   " Crop namespaces e.g. (Data.Vector.Generic.Base.Vector v a,
   " find first '.', yank the last word, select all, paste
   " call add( cmds, 'g/\i\.\i/normal! f.Eb"tyEBvE"tp' )
+
+  call add( cmds, '%s/{-.*-}//g' )
+
   call add( cmds, 'g/\i\.\i/call CropLeadingModuleNames()' )
   " as this crops only the first long namespace, make a second pass
   call add( cmds, 'g/\i\.\i/call CropLeadingModuleNames()' )

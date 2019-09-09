@@ -12,7 +12,11 @@ func! CreateInlineTestDec()
   call append( line('.') -1, lineText )
   normal k^ww
 endfunc
-
+" Tests:
+" intStr :: Int -> String
+" intStr i = show i
+" Will produce
+" e1_intStr = intStr (i:: Int)
 
 func! GetNextTestDeclIndex()
   let lineNumPrevInlineTestDec = InlineTestDeclBackwLine()

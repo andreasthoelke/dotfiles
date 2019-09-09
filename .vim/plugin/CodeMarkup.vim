@@ -45,12 +45,14 @@ nnoremap œ :call HeadingForw()<cr>
 " Note that œ is triggerd by a Karabiner Tab map
 func! HeadingForw()
   call search( g:headingPttn, 'W' )
+  call ScrollUpFromMiddle( 20 )
 endfunc
 
 nnoremap Œ :call HeadingBackw()<cr>
 " Note that Œ is triggerd by a Karabiner Tab map
 func! HeadingBackw()
   call search( g:headingPttn, 'bW' )
+  call ScrollUpFromMiddle( 20 )
 endfunc
 
 nnoremap ,œ :call GoSectionEndAbort('')<cr>

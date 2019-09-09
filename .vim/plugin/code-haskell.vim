@@ -67,7 +67,11 @@ func! HsCursorKeyword_findModule()
   " elseif getline('.') =~ '\..*' . kw . '\s\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
   elseif getline('.') =~ '^\u\S*\s\+(\?' . kw . ')\?\s\+\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
     return GetTopLevSymbolName( line('.') ) . '.' . kw
-  " 6) No module found:
+  " 6) HsAPI view 3: browse module output
+  elseif getline(1) =~ '-- browse '
+    let fullModuleName = ModuleName_fromCommandLabel()
+    return fullModuleName . '.' . kw
+  " 7) No module found:
   else
     " echo 'no module name found: HsCursorKeywordAndModule'
     return kw
@@ -179,7 +183,7 @@ endfunc
 " echo HsGetTypeFromSignatureStr( getline( line('.')-1 ) )
 
 func! ArgsPlacehoderStr ( argumentTypesList )
-  return Reduce( {acc, nextStr -> acc . '(i:: ' . nextStr . ') '}, a:argumentTypesList )[0:-2]
+  return functional#foldr( {nextStr, acc -> acc . '(i:: ' . nextStr . ') '}, '', a:argumentTypesList )[0:-2]
 endfunc
 " echo ArgsPlacehoderStr( ['a → b', 'Maybe a'] )
 
@@ -197,6 +201,14 @@ endfunc
 " import qualified Data.Test        as Map
 " echo ModuleName_fromQualifiedShortname( 'Map' )
 " echo ModuleName_fromQualifiedShortname( 'M' )
+
+func! ModuleName_fromCommandLabel()
+  let lineNum = searchpos( '-- browse \u\S*$', 'nbW' )[0]
+  return matchstr( getline( lineNum ), '-- browse\s\zs\S\+\ze$')
+endfunc
+" -- browse Data.ByteString.Lazy.Char8
+" import qualified Data.Test        as Map
+" echo ModuleName_fromCommandLabel()
 
 function! GetModuleName()
   for lineNum in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]

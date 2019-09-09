@@ -57,6 +57,10 @@ Lines, GFiles?, BCommits, Maps, Helptags
 c-w n/N     - SymbolNext SplitTop
 c-w i       - jump into float-win
 leader wp   - pin a function/paragraph (or imports) to the top
+
+### Files
+\v \t       - browse-open file in split/tab
+
 #### Dirvish
 t           - open in new tab
 p           - preview in split

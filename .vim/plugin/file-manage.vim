@@ -12,6 +12,9 @@ nnoremap <leader>oh :vnew ~/Documents/Haskell/6/<cr>
 nnoremap <leader>oH :tabe ~/Documents/Haskell/6/<cr>
 nnoremap <leader>oc :tabe ~/Documents/Haskell/6/<cr>
 
+nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
+nnoremap \t :exec "tabe " . expand('%:p:h')<cr>
+
 
 " ─   CtrlP                                              ■
 

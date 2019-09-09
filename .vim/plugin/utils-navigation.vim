@@ -178,6 +178,19 @@ func! ScrollOff( offset )
   redraw
   exec 'set scrolloff=' . l:scof
 endfunc
+" call ScrollOff( 20 )
+
+func! ScrollUp( lines )
+  call feedkeys( a:lines . "\<c-e>", 'nx')
+endfunc
+" call ScrollOffFix( 20 )
+
+
+func! ScrollUpFromMiddle( lines )
+  normal! zz
+  call ScrollUp( a:lines )
+endfunc
+call ScrollUpFromMiddle( 20 )
 
 " Move when using "c-d" (down) and "c-u" (up)
 set scroll=4
