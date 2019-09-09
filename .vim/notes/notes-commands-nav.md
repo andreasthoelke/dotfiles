@@ -1,22 +1,26 @@
-## Current commands
-leader lk   - LC Symbol documentation
-leader la   - LC Code action → import symbol!
-insert c-i  - LC show completions with type sig!
-insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
-leader hi   - format imports
+# Current commands
 
-gw, gW      - IN show type at/vis-sel / generic type
-get         - IN show type of symbol or vis sel
-gek         - IN kind at symbol or vis sel
-ges         - IN run symbol
-ges vis-sel - IN run expression!
-ger         - Curl send sting in line to localhost, show response
-ged         - LC show diagnostic message in float-win
+### Language client
+ged         - show diagnostic message in float-win
 gd, ,gd     - go to definition /in split
+leader lk   - Symbol documentation
+leader la   - Code action → import symbol!
+insert c-i  - show completions with type sig!
+insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
+
+### Intero
+gw, gW      - show type at/vis-sel / generic type
+get         - show type of symbol or vis sel (also works when module not compiles)
+,gw         - insert type above
+gek         - kind at symbol or vis sel
+ges         - run symbol
+ges vis-sel - run expression!
+
+ger         - Curl send sting in line to localhost, show response
 
 ### Hs API Explore
 gsd/D       - to edit vis-sel and search for it
-gsk         - to insert info into buffer - using the module name
+gsk         - to insert info into buffer - using the module name (cursor on module shows module info!)
 gsK         - show info in float-win
 gsb/B       - browse module
 ,atip/iB    - to HsTabu Type-sig align a range: Use l, \j or 'v' visual-sel
@@ -28,6 +32,7 @@ gsb/B       - browse module
 2leader hu  - HsUnicode
 2leader hU  - HsUnUnicode
 
+leader hi   - format imports
 
 ### Stubs
 leader hu/U - anonymous binding /+ signature

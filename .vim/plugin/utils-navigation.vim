@@ -190,7 +190,7 @@ func! ScrollUpFromMiddle( lines )
   normal! zz
   call ScrollUp( a:lines )
 endfunc
-call ScrollUpFromMiddle( 20 )
+" call ScrollUpFromMiddle( 20 )
 
 " Move when using "c-d" (down) and "c-u" (up)
 set scroll=4

@@ -35,7 +35,7 @@ func! HsCursorKeyword()
 endfunc
 "  == (.) (>>=) >>=
 
-nnoremap <leader>ca :echo HsCursorKeywordAndModule()<cr>
+nnoremap <leader><leader>ca :echo HsCursorKeywordAndModule()<cr>
 
 " Prefix the identifier with the module name. Module name is derived from the context (via conventions not the repl)
 func! HsCursorKeyword_findModule()

@@ -52,7 +52,7 @@ nnoremap dr :InteroReload<cr>
 " only for identifier, no unicode conversion
 " nnoremap <silent> gw :InteroTypeInsert<cr>
 " nnoremap <silent> <localleader>tw :InteroTypeInsert<cr>
-nnoremap <silent> <localleader>gw :InteroTypeInsert<cr>
+" nnoremap <silent> <localleader>gw :InteroTypeInsert<cr>
 " does not echo any more (changed this in Intero) outputs gentype only in Repl
 map <localleader>tt <Plug>InteroType
 
@@ -79,8 +79,21 @@ func! FloatWin_stripToType( lines )
   let type = HsGetTypeFromSignatureStr( str )
   call FloatWin_ShowLines( [type] )
 endfunc
-" ─^  Show Type-At symbol or selection                   ▲
 
+" Use Intero to insert type
+nnoremap <silent> ,gw :InteroTypeInsert<cr>
+
+" Or use a custom intero :type repl evel
+" Get repl :type/:kind info for cword / vis-sel:
+nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+" nnoremap gwt :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
+vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
+nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+vnoremap gek :<c-u>call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
+
+nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<cr>
+
+" ─^  Show Type-At symbol or selection                   ▲
 
 
 
@@ -104,14 +117,6 @@ nnoremap gec :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'Align
 nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'AlignTable' )<cr>
 " ─^  legacy to be reviewed                              ▲
 
-" Get repl :type/:kind info for cword / vis-sel:
-nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
-" nnoremap gwt :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
-vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
-nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
-vnoremap gek :<c-u>call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
-
-nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<cr>
 
 
 " Align function needs to be a script var .. (?)

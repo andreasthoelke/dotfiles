@@ -130,8 +130,21 @@ endfunc
 " cbom0 = compare
 
 " "expand signature" expand a signature to a function stub
-nnoremap <leader>es ^ywo<esc>PA= undefined<esc>b
-nnoremap <leader>hes ^ywo<esc>PA= undefined<esc>w
+nnoremap <leader>es :call Stubs_ExpandTermLevelFromTypeSign()<cr>
+
+func! Stubs_ExpandTermLevelFromTypeSign()
+  let symbName = GetTopLevSymbolName( line('.') )
+  let indentChars = repeat( ' ', col('.')-1)
+  let lineText = indentChars . symbName . ' = undefined'
+  call append( line('.'), lineText )
+  normal! j^ww
+endfunc
+
+func! ExpandSignature()
+  let identif = GetTopLevSymbolName()
+  let fillChars = repeat( ' ', col('.'))
+  call
+endfunc
 
 " "expand undefined": expand a signature to a function stub
 nnoremap <leader>eu yiwo<esc>PA = undefined<esc>b
