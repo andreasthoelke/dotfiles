@@ -134,11 +134,88 @@ nnoremap <leader>es :call Stubs_ExpandTermLevelFromTypeSign()<cr>
 
 func! Stubs_ExpandTermLevelFromTypeSign()
   let symbName = GetTopLevSymbolName( line('.') )
+  let argTypes = HsExtractArgTypesFromTypeSigStr( getline( line('.') ) )
+  let argTypesStr = join( ArgTypesToSuggestedArgNames( argTypes ), ' ' )
   let indentChars = repeat( ' ', col('.')-1)
-  let lineText = indentChars . symbName . ' = undefined'
+  let lineText = indentChars . symbName . ' ' . argTypesStr . ' = undefined'
   call append( line('.'), lineText )
-  normal! j^ww
+  normal! j$b
 endfunc
+
+" ─   ArgTypesToSuggestedArgNames                        ■
+
+func! ArgTypesToSuggestedArgNames( types )
+  return functional#map( 'ArgTypeToSuggArgName', a:types )
+endfunc
+" call append('.', join( ArgTypesToSuggestedArgNames( ['Maybe a', '(Av cc, Int)', 'Maybe Field', '[Maybe b]', '(a -> Ab c -> bcd)', 'Maybe Field -> Maybe bc'] ), ', ') )
+                                                      " mayA,     tavCc_int,       mayFie,        lmayB,       fa_abC_bcd,            fmayFie_mayBc
+
+func! ArgTypeToSuggArgName( type )
+  if a:type =~ '->'
+    let listShorts = functional#map( 'AbbrevSimpleType', SplitArgs( RemoveBrackets( a:type ) ) )
+    return 'f' . join( listShorts, '_' )
+  elseif a:type =~ '[' " note there may be a list within the type
+    return 'l' . AbbrevSimpleType( RemoveBrackets( a:type ) )
+  elseif a:type =~ '('
+    let listShorts = functional#map( 'AbbrevSimpleType', SplitArgs( RemoveBrackets( a:type ) ) )
+    return 't' . join( listShorts, '_' )
+  else
+    return AbbrevSimpleType( RemoveBrackets( a:type ) )
+  endif
+endfunc
+" echo ArgTypeToSuggArgName( '(a -> Ab c -> Maybe Field)' )
+
+" echo functional#map( 'UppercaseFirstChar', ['eins', 'zwei'] )
+
+func! AbbrevSimpleType( str )
+  let listShortened = functional#map( 'CropTo3Chars', split( trim( a:str ) )  )
+  return join( CamelCaseListOfStr( listShortened ), '' )
+endfunc
+" echo AbbrevSimpleType( 'Maybe Field' )
+
+func! RemoveBrackets( str )
+  return substitute( a:str, '\v(\(|\)|\[|\])', '', 'g')
+endfunc
+" echo RemoveBrackets('(a -> Maybe cd)')
+" echo RemoveBrackets('[Maybe cd]')
+" echo RemoveBrackets('(Int, a)')
+
+func! RemoveSpaces( str )
+  return substitute( a:str, '\s', '', 'g')
+endfunc
+
+func! SplitArgs( str )
+  return split( a:str, '\(\,\|->\)' )
+endfunc
+" echo SplitArgs('a -> Maybe cd')
+" echo SplitArgs('a, Maybe cd, Int')
+
+func! CropTo3Chars( str )
+  return a:str[0:2]
+endfunc
+" echo AbbrevTo3Chars('Aber eins')
+
+func! CamelCaseListOfStr( strList )
+  let head = a:strList[0]
+  let tail = a:strList[1:]
+  return [LowercaseFirstChar(head)] + functional#map( 'UppercaseFirstChar', tail )
+endfunc
+" echo CamelCaseListOfStr( ['Abc', 'def', 'ghi'] )
+
+func! UppercaseFirstChar( str )
+  let head = a:str[0]
+  let tail = a:str[1:]
+  return toupper(head) . tail
+endfunc
+
+func! LowercaseFirstChar( str )
+  let head = a:str[0]
+  let tail = a:str[1:]
+  return tolower(head) . tail
+endfunc
+
+" ─^  ArgTypesToSuggestedArgNames                        ▲
+
 
 func! ExpandSignature()
   let identif = GetTopLevSymbolName()

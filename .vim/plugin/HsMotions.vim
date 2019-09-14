@@ -91,7 +91,7 @@ let g:typeSigBind = '^[^=(]*\zs' . MakeOrPttn( ['∷', '::'] )
 
 
 let g:nextWordPttn = '\_s\+\zs\S'
-let g:infixOps = ['<$>', '<\*>', '\*>', '>>', '>>=', '++', '<>', ':']
+let g:infixOps = ['<$>', '<\*>', '\*>', '>>', '>>=', '++', '<>', '<|>', ':']
 let g:typeArgs = ['::', '∷', '=>', '⇒', '->', '→']
 let g:columnSeps = ['::', '=', '->', '→', '<-', '←', '>', '$', '\<then', '\<else', 'deriving']
 let g:syntaxSym = ['<-', '←', '=', '\$', '`\w*`', '->', '→', '|', ',', '=' ]
@@ -620,7 +620,7 @@ endfunc
 onoremap i,W iW
 xnoremap i,W iW
 
-" Outer Expression:
+" ─   Outer Expression                                   ■
 " Textobject to select inside an OuterExpression
 onoremap iW :call ExprOuter_VisSel_Inside()<cr>
 xnoremap iW :<c-u>call ExprOuter_VisSel_Inside()<cr>
@@ -659,6 +659,11 @@ vnoremap <silent> W <esc>:call ChangeVisSel(function('ExprOuterStartForw'))<cr>
 " hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
 func! ExprOuterStartForw() " ■
   if !search('\S', 'nW') " cancel recursive call at end of file
+    return
+  endif
+
+  if IsImportLine( line('.') )
+    normal! W
     return
   endif
 
@@ -718,6 +723,11 @@ onoremap <silent> ,W :call ExprOuterEndForw()<cr>
 vnoremap <silent> ,W <esc>:call ChangeVisSel(function('ExprOuterEndForw'))<cr>h
 " Test: v,W,W
 func! ExprOuterEndForw() " ■
+  if IsImportLine( line('.') )
+    normal! El
+    return
+  endif
+
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
@@ -762,6 +772,11 @@ endfunc " ▲
 nnoremap <silent> B :call ExprOuterStartBackw()<cr>
 vnoremap <silent> B <esc>:call ChangeVisSel(function('ExprOuterStartBackw'))<cr>
 func! ExprOuterStartBackw() " ■
+  if IsImportLine( line('.') )
+    normal! B
+    return
+  endif
+
   let [oLine, oCol] = getpos('.')[1:2]
   " Move backward to (presumably) the prev delim match, so it doesn't match again in this back motion
   normal! B
@@ -811,6 +826,7 @@ func! ExprOuterStartBackw() " ■
   " endif
 endfunc " ▲
 
+" ─^  Outer Expression                                   ▲
 
 " is this needed? - extend to empty bracket?
 func! CursorIsOnEmptyList()
@@ -1041,7 +1057,7 @@ endfunc
 " endfunc ▲
 
 
-" ─   HsWord                                            ──
+" ─   Inner Expression HsWord                            ■
 " - skip brackets and quotes
 " - skip lambda var
 " - skip namesspaced/dots in var - use camelcase motion instead
@@ -1056,6 +1072,11 @@ vnoremap <silent> b <esc>:call ChangeVisSel(function('ExprInnerStartBackw'))<cr>
 " Test: vbbbowww      v        |                v     ← cursor on "|", result sel on "v"
 " hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
 func! ExprInnerStartForw()
+  if IsImportLine( line('.') )
+    normal! w
+    return
+  endif
+
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
   normal! W
@@ -1065,6 +1086,11 @@ func! ExprInnerStartForw()
 endfunc
 
 func! ExprInnerStartBackw()
+  if IsImportLine( line('.') )
+    normal! b
+    return
+  endif
+
   call MoveBackIfOpeningPairIsNext()
   " Could not escape brackets/quotes otherwise
 
@@ -1093,6 +1119,8 @@ func! ExprInnerStartBackw()
     call ExprInnerStartBackw()
   endif
 endfunc
+
+" ─^  Inner Expression HsWord                            ▲
 
 func! NormalMoveBack()
   normal! B

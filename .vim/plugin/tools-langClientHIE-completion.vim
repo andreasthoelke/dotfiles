@@ -46,6 +46,8 @@ map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
 map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
 map <Leader>lb :call LanguageClient#textDocument_references()<CR>
 map <Leader>la :call LanguageClient#textDocument_codeAction()<CR>
+" also a map here: ~/.vim/plugin/HsAPI.vim#/map%20<Leader>lhi%20.call
+" map <Leader>lhi :call LanguageClient#textDocument_codeAction()<CR>
 
 map <Leader>lc :echo LanguageClient#textDocument_completion()<CR>
 

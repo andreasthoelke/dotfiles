@@ -779,6 +779,8 @@ Python tutorials: https://www.programiz.com/python-programming/string
 
 ## Todos
 
+* TODO make Stubs and Markup maps consistent
+
 * windows loose focus when ~/.vim/plugin/utils-format.vim#/function.%20StylishHaskell..
 
 * concealed chars make cursor j/k jump

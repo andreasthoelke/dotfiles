@@ -130,6 +130,7 @@ func! SearchPropsUserStr( mode )
 endfunc
 " Tests:
 vnoremap <leader><leader>cc :<c-u>echo SearchPropsUserStr('visual')<cr>
+nnoremap <leader><leader>cc :echo SearchPropsUserStr('n')<cr>
 
 
 

@@ -56,6 +56,11 @@ func! MatchesInLine( linenum, pttn )
 endfunc
 " echo MatchesInLine( line('.') -1, 'a' )
 
+func! IsImportLine( linenum )
+  return getline( a:linenum ) =~ 'import '
+endfunc
+" echo IsImportLine( line('.') )
+
 func! IsTypeSignLine( linenum )
   return getline( a:linenum ) =~ '\(∷\|::\)'
 endfunc

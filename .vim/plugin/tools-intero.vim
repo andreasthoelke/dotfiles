@@ -439,7 +439,7 @@ endfunc " ▲
 nnoremap ger :call WebserverRequestResponse()<cr>
 func! WebserverRequestResponse()
   let urlExtension = GetStringInQuotesFromLine( line('.') )
-  let l:cmd = "curl http://localhost:8000/" . urlExtension
+  let l:cmd = "curl -v --raw http://localhost:8000/" . urlExtension
   let l:resultLines = split( system( l:cmd ), '\n' )
   call FloatWinAndVirtText( l:resultLines[3:] )
   " call append( line('.'), l:resultLines )

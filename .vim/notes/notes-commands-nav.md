@@ -32,8 +32,12 @@ gsb/B       - browse module
 2leader hu  - HsUnicode
 2leader hU  - HsUnUnicode
 
-leader hi   - format imports
+### Imports
+leade hii/I - (in HsAPI) import identifier
+leader lhi  - import identifier via LClient
+leader hfi  - format imports
 
+TODO make Stubs and Markup maps consistent
 ### Stubs
 leader hu/U - anonymous binding /+ signature
 leader ht   - add type stub
@@ -64,8 +68,7 @@ c-w i       - jump into float-win
 leader wp   - pin a function/paragraph (or imports) to the top
 
 ### Files
-\v \t       - browse-open file in split/tab
-
+\v \T       - browse-open file in split/tab
 #### Dirvish
 t           - open in new tab
 p           - preview in split
@@ -117,6 +120,7 @@ q/Q         - labels
 tab/s-t/,t  - Headers next/prev /end of header
 c-i/m       - ballparks
 ]b[b        - binding-type sig (incl where, let)
+cib         - to change the binding name in consequtive lines
 Y/I         - columns
 J/K         - start of line | use to jump to virtual line starts in concealed top level binds
 t/T         - next/prev list item
@@ -125,8 +129,6 @@ t/T         - next/prev list item
 g[ g]       - go back to last insert start/end. or native \`[ \`]
 z] z[ zk    - beginning/end of current fold/prev fold
 [c ]c       - prev/next git hunk (TODO: make ]c or c] consistent?)
-,a/,A       - 
-
 
 ### Tools
 leader og   - Git magit. Also :GitcommitAuthor
@@ -134,14 +136,10 @@ leader oG   - Git gitV viewer
 leader ot   - Tagbar
 leader om   - Markbar
 
-" ─   Bindings, including where/let                     ──
-`]b`, `[b`      - for next/prev binding
-`cib`         - to change the binding name in consequtive lines
-
 ### Rename
-leader lm   - LC menu:rename to rename symbol with all it's live/active references
+leader lr/m - rename symbol with all it's live/active references
 ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a sortcut for a haskell function rename
-`<leader>rb`  - to rename a binding and its occurences
+leader rb   - to rename a binding and its occurences
 
 ### Vim
 leader sm   - show past vim echoed text (show messages)

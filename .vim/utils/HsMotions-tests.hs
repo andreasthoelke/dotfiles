@@ -335,6 +335,11 @@ intRangeDialog "rStart, rEnd" prompt alert confirm = go 2
         _ → print alert               >> go
 " -- intRangeDialog (1,3) "From 1 to 3" "Arg!" "I got: "
 "
+cbkd0 = Just 4 <|> Just 2
+cbkd0 = Just 4 >>= Just 2
+cbkd0 = Just 4 <*> Just 2
+
+
 " -- | Request a non-blank string, reject non-complient and
 " -- | and confirm success.
 

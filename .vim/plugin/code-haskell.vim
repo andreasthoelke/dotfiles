@@ -14,7 +14,7 @@ func! GetTopLevSymbolNameBackw()
 endfunc
 " echo GetTopLevSymbolNameBackw()
 
-func! GetStringInQuotesFromLine( lineNum )
+func! 3etStringInQuotesFromLine( lineNum )
   return matchstr( getline( a:lineNum ), '\"\zs.*\ze\"')
 endfunc
 " echo GetStringInQuotesFromLine( line('.') +1 )
@@ -71,10 +71,16 @@ func! HsCursorKeyword_findModule()
   elseif getline(1) =~ '-- browse '
     let fullModuleName = ModuleName_fromCommandLabel()
     return fullModuleName . '.' . kw
-  " 7) No module found:
+  " 7) Listed import:
+  " import           Text.Parsec              (replicateM)
+  " replicateM
   else
-    " echo 'no module name found: HsCursorKeywordAndModule'
-    return kw
+    let fullModuleName = ModuleName_fromListedImport( kw )
+    if fullModuleName == ''
+      echo 'no module name found: ModuleName_fromListedImport HsCursorKeywordAndModule'
+    endif
+    let identifier = kw
+    return fullModuleName . '.' . identifier
   endif
 endfunc
 " Tests:
@@ -202,6 +208,13 @@ endfunc
 " echo ModuleName_fromQualifiedShortname( 'Map' )
 " echo ModuleName_fromQualifiedShortname( 'M' )
 
+func! ModuleName_fromListedImport( identifier )
+  let lineNum = searchpos( 'import .*'.a:identifier, 'nbW' )[0]
+  return matchstr( getline( lineNum ), 'import\s\+\zs\S\+\ze\s')
+endfunc
+" import           Text.Parsec              (many)
+" echo ModuleName_fromListedImport( 'many' )
+
 func! ModuleName_fromCommandLabel()
   let lineNum = searchpos( '-- browse \u\S*$', 'nbW' )[0]
   return matchstr( getline( lineNum ), '-- browse\s\zs\S\+\ze$')
@@ -239,5 +252,6 @@ endfun
 fun! HaskellProjectName1()
   return fnamemodify('package.yaml', ':p:h:t')
 endfun
+
 
 

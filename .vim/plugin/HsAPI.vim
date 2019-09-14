@@ -186,7 +186,6 @@ func! HoogleFormatInfoOutput()
   normal! ddi-- 
   call append( 1, l:sig)
   normal! jo{-
-  " call PurescriptUnicode()
   set syntax=purescript
   normal gg
 endfunc
@@ -196,6 +195,17 @@ func! GetAPICmdStr( query, limit, infoFlag )
   return 'hoogle "' . a:query . '" -n=' . a:limit . infoArg
 endfunc
 
+
+nnoremap <leader>hii :call HsImportIdentifier( GetSearchParams('n') )<cr>
+nnoremap <leader>hiI :call HsImportIdentifier( GetSearchParams('n', 'Import identifier: ') )<cr>
+vnoremap <leader>hii :call HsImportIdentifier( GetSearchParams('visual') )<cr>
+vnoremap <leader>hiI :call HsImportIdentifier( GetSearchParams('visual', 'Import identifier: ') )<cr>
+map      <Leader>lhi :call LanguageClient#textDocument_codeAction()<CR>
+func! HsImportIdentifier( userContextProps )
+  " echo a:userContextProps.module .' - '. a:userContextProps.identifier
+  wincmd c
+  call HsImport( a:userContextProps.module, RemoveBrackets( a:userContextProps.identifier ) )
+endfunc
 
 " Import Haskell Identifiers Using Hoogle And Hsimport:{{{
 " 1. Use "gsd" ("go search docs") on a missing identifier

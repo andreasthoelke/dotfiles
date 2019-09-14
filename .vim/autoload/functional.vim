@@ -32,10 +32,13 @@ function! functional#pop(l, i)
   return new_list
 endfunction
 
-func! functional#map(fn, l)
-  let new_list = deepcopy(a:l)
-  return map(new_list, {_, x -> a:fn( x ) })
+func! functional#map(fn, list)
+  let new_list = deepcopy( a:list )
+  " return map(new_list, {_, x -> a:fn( x ) })
+  return map(new_list, {_, x -> call( a:fn, [x]) })
 endfunc
+" echo functional#map( 'toupper', ['eins', 'zwei'] )
+" echo functional#map( 'UppercaseFirstChar', ['eins', 'zwei'] )
 " echo Mapped( {a -> a . 'aa'}, ['bb', 'aa', 'cc'])
 " Could also use an separate function reference ■
 " let Fn2 = {_, x -> a:fn( x ) }
@@ -43,7 +46,7 @@ endfunc
 
 func! functional#filter(fn, l)
   let new_list = deepcopy(a:l)
-  return filter(new_list, {_, x -> a:fn( x )} )
+  return filter(new_list, {_, x -> call( a:fn, [x] )} )
 endfunc
 " echo Filter_( {a -> a == 'aa'}, ['bb', 'aa', 'cc'])
 " echo Filter( {x-> x isnot# 3}, [2, 3, 4] )
@@ -52,7 +55,7 @@ endfunc
 fun! functional#foldr(fabb, initB, listA)
   let accum = copy( a:initB )
   for nextA in a:listA
-    let accum = a:fabb( nextA, accum )
+    let accum = call( a:fabb, [nextA, accum] )
   endfor
   return accum
 endfun

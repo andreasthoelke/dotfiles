@@ -115,6 +115,7 @@ endfunc
 
 
 " Setup:
+" TODO now obsolete? see ~/.vim/syntax/purescript.vim#/let%20g.HsCharsToUnicode%20=
 let g:HsReplacemMap_CharsToUnicode = [['->', '→'], ['=>', '⇒'], ['::', '∷'], ['forall', '∀'], ["<-", "←"]]
 let g:HsReplacemMap_CharsToUnicodePtts = ExtendOperatorPattern( g:HsReplacemMap_CharsToUnicode )
 let g:HsReplacemMap_UnicodeToChars = FlipListList( g:HsReplacemMap_CharsToUnicode )
@@ -168,7 +169,7 @@ command! -range=% UnicodeToChars :<line1>,<line2>call ReplaceStringsInRange( g:H
 
 " ─   Formatting Haskell Imports                         ■
 let g:stylish_haskell_command = 'stylish-haskell'
-noremap <leader>hi :call StylishHaskell()<cr>
+noremap <leader>hfi :call StylishHaskell()<cr>
 command! FormatImports :call StylishHaskell()
 command! Indent :call StylishHaskell()
 

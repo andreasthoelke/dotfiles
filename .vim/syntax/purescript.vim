@@ -204,6 +204,7 @@ let g:HsCharsToUnicode = [
       \, [' \zs>>=',           '⫦', 'Normal']
       \, [' \zs\`elem\`',      '∈', 'Normal']
       \, [' \zs\`flipElem\`',  '∋', 'Normal']
+      \, [' \zs<|>',           '‖', 'Normal']
       \, [' \zs>=>',           '↣', 'Normal']
       \, [' \zs<=<',           '↢', 'Normal']
       \, [' \zs==',            '≡', 'Normal']
@@ -213,11 +214,15 @@ let g:HsCharsToUnicode = [
       \, [' \zs<>',            '◇', 'Normal']
       \, ['<>\ze ',            '◇', 'Normal']
       \, [' \zsmempty',        '∅', 'Normal']
+      \, [' \zsempty',        '∅', 'Normal']
       \, [' \zs++',            '⧺', 'Normal']
       \, [' \zs<=',            '≤', 'Normal']
       \, [' \zs>=',            '≥', 'Normal']
       \, ['Integer',           'ℤ', 'hsInteger']
       \]
+
+      " \, [' \zs<|>',           '⦶', 'Normal']
+            " \, [' \zs<|>',           '‖', 'Normal']
 
 for [pttn, concealUnicodeSym, syntaxGroup] in g:HsCharsToUnicode
   exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
