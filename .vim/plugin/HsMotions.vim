@@ -342,10 +342,11 @@ func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForInde
       " Found a line with this indent level
       let searching = 0
     elseif IndentLevel1stColumn( currTestLine ) ==   a:searchForIndentLevel
-      " Found a line where the first    column fits the search indent level
+      " Found a line where the first column fits the search indent level
       let searching = 0
-    elseif currTestLine - a:searchStartLine > 
-      " Found a line where the first    column fits the search indent level
+    elseif currTestLine - a:searchStartLine > 30
+      " Did not find a column/indent level within 30 lines -> return the searchStartLine to indicate this
+      let currTestLine = a:searchStartLine
       let searching = 0
     else
       let currTestLine += a:dir
@@ -353,7 +354,7 @@ func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForInde
   endwhile
   return currTestLine
 endfunc
-echo FindLineWithIndentLevelOrColumnIndentLevel( line('.'), col('.'), 1 )
+" echo FindLineWithIndentLevelOrColumnIndentLevel( line('.'), col('.'), 1 )
 
 
 " Textobject for Indent Block
