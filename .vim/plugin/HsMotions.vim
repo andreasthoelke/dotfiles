@@ -335,7 +335,7 @@ func! IndentBlockEndPos( lineNum, indentLevel, dir )
   return [a:lineNum + (lineOffset - a:dir), a:indentLevel]
 endfunc
 
-"  strdisplaywidth({expr}
+
 func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForIndentLevel, dir )
   let currTestLine = a:searchStartLine + a:dir
   let searching = 1

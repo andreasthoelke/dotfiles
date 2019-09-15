@@ -22,15 +22,26 @@ func! GetVisSel()
   return Get_visual_selection()
 endfunc
 
-fun! VisualCol()
-  let hiddenCharCount = 0
-  for charIndex in range(0, col('.'))
-    if synconcealed('.', charIndex)[0]
-      let hiddenCharCount += 1
+" The visible column index of a charater column index (recognising conceals/replacements)
+func! VisualCol( lineNum, sourceCharIdx )
+  let concealedCharCount = 0
+  let concealInstanceIds = []
+  for charIdx in range(1, a:sourceCharIdx)
+    let [charConcealed, replacementChar, groupId] = synconcealed( a:lineNum, charIdx )
+    if charConcealed
+      let concealedCharCount += 1 " this char is concealed, but ..
+      if replacementChar != ''
+        " .. it is replaced by a one char wide replacement char, which might represent multiple concealed chars in one
+        " conceal instance. This conceal instance is represented by a (syntax-group) Id which is unique over the line (is it?)
+        call add( concealInstanceIds, groupId ) " track all instance Ids that had replacement chars
+      endif
     endif
   endfor
-  return virtcol('.') - hiddenCharCount
-endfun
+  let replacementInstances = len( uniq( concealInstanceIds ) )
+  let reducedColumnCount = concealedCharCount - replacementInstances
+  return a:sourceCharIdx - reducedColumnCount
+endfunc
+
 
 func! VisualBlockMode()
   " Activate visual block mode. 'x' option is needed to exec right away.
