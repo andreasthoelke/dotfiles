@@ -317,12 +317,12 @@ endfunc
 
 func! IndentLevelForwBackw( direction )
   normal! m'
-  let [oLine, oCol] = getpos('.')[1:2]
+  let [oLine] = getpos('.')[1:2]
   let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), a:direction )
   if sLine == oLine
     " Already at end of current indent block -> search for the next same indent line or column indent line
     " Returns current line if not found
-    let sLine = FindLineWithIndentLevelOrColumnIndentLevel( line('.'), col('.'), a:direction )
+    let sLine = FindLineWithWordStartAtColumn( line('.'), col('.'), a:direction )
   endif
   call setpos('.', [0, sLine, sColumn, 0] )
 endfunc
@@ -335,6 +335,7 @@ func! IndentBlockEndPos( lineNum, indentLevel, dir )
   return [a:lineNum + (lineOffset - a:dir), a:indentLevel]
 endfunc
 
+"  strdisplaywidth({expr}
 func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForIndentLevel, dir )
   let currTestLine = a:searchStartLine + a:dir
   let searching = 1

@@ -22,6 +22,16 @@ func! GetVisSel()
   return Get_visual_selection()
 endfunc
 
+fun! VisualCol()
+  let hiddenCharCount = 0
+  for charIndex in range(0, col('.'))
+    if synconcealed('.', charIndex)[0]
+      let hiddenCharCount += 1
+    endif
+  endfor
+  return virtcol('.') - hiddenCharCount
+endfun
+
 func! VisualBlockMode()
   " Activate visual block mode. 'x' option is needed to exec right away.
   call feedkeys("\<c-v>", 'x')
