@@ -78,7 +78,19 @@ endfunc
 func! IndentLevel1stColumn( lineNum )
   return matchstrpos( getline( a:lineNum ), '\S\s\s\+\zs\S')[1] + 1
 endfunc
-         " echo IndentLevel1stColumn     ( line('.') )
+" echo IndentLevel1stColumn     ( line('.') )
+
+" Returns the column num of the first (min two spaces) column
+func! IndentLevelWordStarts( lineNum )
+  let line = getline( a:lineNum )
+  let words = split( getline( a:lineNum ) )
+  let wordStarts = []
+  for word in words
+    call add( wordStarts, matchstrpos( line, word )[1] +1 )
+  endfor
+  return wordStarts
+endfunc
+" echo IndentLevelWordStarts ( line('.') )
 
 " Return the character under the cursor
 func! GetCharAtCursor()

@@ -296,9 +296,9 @@ nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
 " TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
 
-nnoremap ,j  :call IndentBlockEnd()<cr>
+nnoremap ,j  :call IndentLevelForwBackw(1)<cr>
 onoremap ,j V:call IndentBlockEnd()<cr>
-nnoremap ,k  :call IndentBlockStart()<cr>
+nnoremap ,k  :call IndentLevelForwBackw(-1)<cr>
 onoremap ,k V:call IndentBlockStart()<cr>
 vnoremap <silent> ,j <esc>:call ChangeVisSel(function('IndentBlockEnd'))<cr>
 vnoremap <silent> ,k <esc>:call ChangeVisSel(function('IndentBlockStart'))<cr>
@@ -315,19 +315,20 @@ func! IndentBlockStart()
   call setpos('.', [0, sLine, sColumn, 0] )
 endfunc
 
-func! IndentLevelForw()
+func! IndentLevelForwBackw( direction )
   normal! m'
   let [oLine, oCol] = getpos('.')[1:2]
-  let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), 1 )
+  let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), a:direction )
   if sLine == oLine
-    " No indent motion possible -> search for the next same indent line, skipping 
-    let [sLine, sColumn] = IndentLevelFind( line('.'), col('.'), 1 )
+    " Already at end of current indent block -> search for the next same indent line or column indent line
+    " Returns current line if not found
+    let sLine = FindLineWithIndentLevelOrColumnIndentLevel( line('.'), col('.'), a:direction )
   endif
   call setpos('.', [0, sLine, sColumn, 0] )
 endfunc
 
 func! IndentBlockEndPos( lineNum, indentLevel, dir )
-  let lineOffset = 0
+  let lineOffset = a:dir
   while IndentLevel( a:lineNum + lineOffset ) == a:indentLevel
     let lineOffset = lineOffset + a:dir
   endwhile
@@ -335,7 +336,7 @@ func! IndentBlockEndPos( lineNum, indentLevel, dir )
 endfunc
 
 func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForIndentLevel, dir )
-  let currTestLine = a:searchStartLine + 1
+  let currTestLine = a:searchStartLine + a:dir
   let searching = 1
   while searching
     if IndentLevel( currTestLine ) == a:searchForIndentLevel
@@ -355,6 +356,25 @@ func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForInde
   return currTestLine
 endfunc
 " echo FindLineWithIndentLevelOrColumnIndentLevel( line('.'), col('.'), 1 )
+
+func! FindLineWithWordStartAtColumn( searchStartLine, searchForIndentLevel, dir )
+  let currTestLine = a:searchStartLine + a:dir
+  let searching = 1
+  while searching
+    if len( functional#filter( {x->x==a:searchForIndentLevel}, IndentLevelWordStarts( currTestLine ) ) )
+      " Found a line where some word starts at this column
+      let searching = 0
+    elseif currTestLine - a:searchStartLine > 30
+      " Did not find a column/indent level within 30 lines -> return the searchStartLine to indicate this
+      let currTestLine = a:searchStartLine
+      let searching = 0
+    else
+      let currTestLine += a:dir
+    endif
+  endwhile
+  return currTestLine
+endfunc
+" echo FindLineWithWordStartAtColumn( line('.'), col('.'), 1 )
 
 
 " Textobject for Indent Block

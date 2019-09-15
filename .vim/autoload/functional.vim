@@ -48,7 +48,7 @@ func! functional#filter(fn, l)
   let new_list = deepcopy(a:l)
   return filter(new_list, {_, x -> call( a:fn, [x] )} )
 endfunc
-" echo Filter_( {a -> a == 'aa'}, ['bb', 'aa', 'cc'])
+" echo functional#filter( {x->x==3}, [2, 3, 4] )
 " echo Filter( {x-> x isnot# 3}, [2, 3, 4] )
 
 " foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
