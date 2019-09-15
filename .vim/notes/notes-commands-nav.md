@@ -45,12 +45,25 @@ leader es   - add function to type-sig/ expand signature
 leader if   - add an index/num to the signature-symbol name
 leader ct   - create inline test stub
 leader ca   - create assertion
+>>>>>>>
+leader eu/U - anonymous binding /+ signature
+leader es   - add signature type stub
+leader eb   - add function to type-sig/ expand signature
+leader ei   - add an index/num to the signature-symbol name
+leader et   - create inline test stub
+leader ea   - create assertion
 
 ### Code Markup
 leader ch   - heading
 leader cs   - close section
 leader cr   - refresh heading/section
 leader cd   - delete/strip heading/section
+>>>>>>>
+leader ehs  - heading
+leader ehe  - close section
+leader ehr  - refresh heading/section
+leader ehd  - delete/strip heading/section
+
 
 ### Search & Docs
 gsd         - hoogle search word under cursor or vis-sel
@@ -73,15 +86,15 @@ leader wp   - pin a function/paragraph (or imports) to the top
 t           - open in new tab
 p           - preview in split
 leader P    - preview in float-win
+#### Arglist
+,x          - toggle to from arglist (x, vis-sel, line-motion)
+            - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
+            leader oa   - show arglist in CtrlP. v/t to open. <c-s> to delete
 
 ### Command window
 ;           - then c-n and c-i and c-x c-f for completion.
             " - c-cr/return to commit in insert mode. leader se in normal mode
 
-### Arglist
-,x          - toggle to from arglist (x, vis-sel, line-motion)
-            - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
-            leader oa   - show arglist in CtrlP. v/t to open. <c-s> to delete
 
 ### Git
 leader gg   - GitGutterToggle
@@ -126,9 +139,11 @@ J/K         - start of line | use to jump to virtual line starts in concealed to
 t/T         - next/prev list item
 ]t/[t       - into next/prev inner list
 ]T          - end of list (to append new elements)
-g[ g]       - go back to last insert start/end. or native \`[ \`]
+[g ]g       - go back to last insert start/end. or native \`[ \`]
 z] z[ zk    - beginning/end of current fold/prev fold
 [c ]c       - prev/next git hunk (TODO: make ]c or c] consistent?)
+,j/k        - end/start of indent block
+,J/K        - end/start of indent block
 
 ### Tools
 leader og   - Git magit. Also :GitcommitAuthor

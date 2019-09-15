@@ -28,12 +28,57 @@ func! VisualBlockMode()
 endfunc
 
 
-" Returns the indent level of lineNum
+" Vim Pattern: For applying a function via an operator map, visual selection and command
+nnoremap <leader><leader>lc      :let g:opProcessAction=['LinesOfCodeCount',[],'Echo',['Lines of code']]<cr>:set opfunc=Gen_opfunc2<cr>g@
+vnoremap <leader><leader>lc :<c-u>let g:opProcessAction=['LinesOfCodeCount',[],'Echo',['Lines of code']]<cr>:call Gen_opfunc2(0,1)<cr>g@
+command! -range=% LinesOfCodeCount echo LinesOfCodeCount( <line1>, <line2> )
+
+" And opFunction (operation on lines of code (very common in vim!)) has to be an action/side-effect
+" This allows to write processing code into a pure/resusabel function and then run action on result.
+func! Gen_opfunc2( _, ...)
+  " First arg is sent via op-fn. presence of second arg indicates visual-sel
+  let [startLine, endLine] = a:0 ? [line("'<"), line("'>")] : [line("'["), line("']")]
+  let processorFn   = g:opProcessAction[0]
+  let processorArgs = g:opProcessAction[1]
+  let actionFn   = g:opProcessAction[2]
+  let actionArgs = g:opProcessAction[3]
+
+  let processResult = call( processorFn, processorArgs + [startLine, endLine] )
+  call call( actionFn, actionArgs + [processResult] )
+endfunc
+" TODO: test/unify this with ~/.vim/plugin/utils-align.vim#/func.%20Gen_opfunc.%20_,
+
+" Count non-commented and non-empty lines
+func! LinesOfCodeCount( startLine, endLine )
+  let lines = getline( a:startLine, a:endLine )
+  let count = 0
+  for line in lines
+    if line =~ '^.*--.*$' || line =~ '^$'
+    else
+      let count += 1
+    endif
+  endfor
+  return count
+endfunc
+
+func! Echo( label, val )
+  echom a:label . ': ' . string( a:val )
+endfunc
+" call Echo( 'My list', [2, 3, 4] )
+
+
+" Returns the indent level (column num) of lineNum
 func! IndentLevel( lineNum )
   return matchstrpos( getline( a:lineNum ), '\S')[1] + 1
 endfunc
 " echo matchstrpos("    sta", "\S")
    " echo IndentLevel( line('.') )
+
+" Returns the column num of the first (min two spaces) column
+func! IndentLevel1stColumn( lineNum )
+  return matchstrpos( getline( a:lineNum ), '\S\s\s\+\zs\S')[1] + 1
+endfunc
+         " echo IndentLevel1stColumn     ( line('.') )
 
 " Return the character under the cursor
 func! GetCharAtCursor()

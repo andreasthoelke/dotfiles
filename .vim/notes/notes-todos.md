@@ -1360,6 +1360,8 @@ np0 = length @[]
 :set -XTypeApplications
 
 
+" Vim Pattern: For applying a function via an operator map, visual selection and command!
+~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
 
 
 

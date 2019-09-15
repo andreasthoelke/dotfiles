@@ -1,3 +1,12 @@
+" leader ch   - heading
+" leader cs   - close section
+" leader cr   - refresh heading/section
+" leader cd   - delete/strip heading/section
+" >>>>>>>
+" leader ehs  - heading
+" leader ehe  - close section
+" leader ehr  - refresh heading/section
+" leader ehd  - delete/strip heading/section
 
 
 " This highlights Headings, Sections and Labels in Black
@@ -168,7 +177,7 @@ endfunc
 
 
 " ─   Create, Update, Delete Headings and Sections    ──
-nnoremap <leader>ch :call CreateHeading(0, '', 0)<cr>
+nnoremap <leader>ehs :call CreateHeading(0, '', 0)<cr>
 " Create Section header start or end markers
 " Uses the current line text if headerText is empty string
 func! CreateHeading( isEnd, headerText, isSection )
@@ -192,7 +201,7 @@ endfunc
 
 
 " "CodeMarkup Section" - sort of closes the previous heading at the current line - turning it into a section
-nnoremap <leader>cs :call CloseSection()<cr>
+nnoremap <leader>ehe :call CloseSection()<cr>
 " Create section end marker using the header text of the previous header start line
 func! CloseSection()
   " Make sure that folding does not interfere. this now works with foldlevel=0 → section will autocollapse
@@ -220,7 +229,7 @@ endfunc
 " call CloseSection()
 
 
-nnoremap <leader>cd :call StripHeaderOrSection()<cr>
+nnoremap <leader>ehd :call StripHeaderOrSection()<cr>
 func! StripHeaderOrSection()
   normal! j
   call HeadingBackw()
@@ -238,7 +247,7 @@ func! StripMarker()
 endfunc
 
 " Run this after changing the section header text. Will update and marker and re-align line spacing
-nnoremap <leader>cr :call RefreshHeadingOrSection()<cr>
+nnoremap <leader>ehr :call RefreshHeadingOrSection()<cr>
 func! RefreshHeadingOrSection()
   let l:winview = winsaveview()
   let isSectionHeadering = MatchesInLine( line('.'), '■' )

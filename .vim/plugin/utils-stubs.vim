@@ -1,7 +1,20 @@
+" leader hu/U - anonymous binding /+ signature
+" leader ht   - add type stub
+" leader es   - add function to type-sig/ expand signature
+" leader if   - add an index/num to the signature-symbol name
+" leader ct   - create inline test stub
+" leader ca   - create assertion
+" >>>>>>>
+" leader eu/U - anonymous binding /+ signature
+" leader es   - add signature type stub
+" leader eb   - add function to type-sig/ expand signature
+" leader ei   - add an index/num to the signature-symbol name
+" leader et   - create inline test stub
+" leader ea   - create assertion
 
 
 
-nnoremap <leader>ct :call CreateInlineTestDec()<cr>
+nnoremap <leader>et :call CreateInlineTestDec()<cr>
 " e1_database4 = database4 (Just "eins") 123
 func! CreateInlineTestDec()
   let typeSigLineNum = TopLevTypeSigBackwLineNum()
@@ -32,7 +45,7 @@ endfunc
 " echo GetNextTestDeclIndex()
 
 
-nnoremap <leader>ca :call CreateAssertion()<cr>
+nnoremap <leader>ea :call CreateAssertion()<cr>
 " Tests: (uncomment)
 " database4 ∷ String → [(String, String, Int)]
 " e1_database4 = database4 (Just "eins") 123
@@ -104,8 +117,8 @@ endfunc
 
 
 " ─   "unique functions"                                 ■
-nnoremap <leader>hu ^icb<esc>:call RandFnName()<cr>2w
-nnoremap <leader>hU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
+nnoremap <leader>eu ^icb<esc>:call RandFnName()<cr>2w
+nnoremap <leader>eU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
 " produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"
@@ -118,7 +131,7 @@ nnoremap <leader>hU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= 
 " nnoremap <localleader>ht ^yiwko<esc>PA :: a<esc>w
 
 " TODO adapt other stub maps to not use yank register
-nnoremap <leader>ht :call Stubs_ExpandATypeSign()<cr>
+nnoremap <leader>es :call Stubs_ExpandATypeSign()<cr>
 func! Stubs_ExpandATypeSign()
   let symbName = GetTopLevSymbolName( line('.') )
   let lineText = symbName . ' :: a'
@@ -130,7 +143,7 @@ endfunc
 " cbom0 = compare
 
 " "expand signature" expand a signature to a function stub
-nnoremap <leader>es :call Stubs_ExpandTermLevelFromTypeSign()<cr>
+nnoremap <leader>eb :call Stubs_ExpandTermLevelFromTypeSign()<cr>
 
 func! Stubs_ExpandTermLevelFromTypeSign()
   let symbName = GetTopLevSymbolName( line('.') )

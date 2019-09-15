@@ -304,13 +304,26 @@ vnoremap <silent> ,j <esc>:call ChangeVisSel(function('IndentBlockEnd'))<cr>
 vnoremap <silent> ,k <esc>:call ChangeVisSel(function('IndentBlockStart'))<cr>
 
 func! IndentBlockEnd()
-  normal! m'^
-  call setpos('.', IndentBlockEndPos( line('.'), col('.'), 1 ) )
+  normal! m'
+  let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), 1 )
+  call setpos('.', [0, sLine, sColumn, 0] )
 endfunc
 
 func! IndentBlockStart()
-  normal! m'^
-  call setpos('.', IndentBlockEndPos( line('.'), col('.'), -1 ) )
+  normal! m'
+  let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), -1 )
+  call setpos('.', [0, sLine, sColumn, 0] )
+endfunc
+
+func! IndentLevelForw()
+  normal! m'
+  let [oLine, oCol] = getpos('.')[1:2]
+  let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), 1 )
+  if sLine == oLine
+    " No indent motion possible -> search for the next same indent line, skipping 
+    let [sLine, sColumn] = IndentLevelFind( line('.'), col('.'), 1 )
+  endif
+  call setpos('.', [0, sLine, sColumn, 0] )
 endfunc
 
 func! IndentBlockEndPos( lineNum, indentLevel, dir )
@@ -318,8 +331,30 @@ func! IndentBlockEndPos( lineNum, indentLevel, dir )
   while IndentLevel( a:lineNum + lineOffset ) == a:indentLevel
     let lineOffset = lineOffset + a:dir
   endwhile
-  return [0, a:lineNum + (lineOffset - a:dir), a:indentLevel, 0]
+  return [a:lineNum + (lineOffset - a:dir), a:indentLevel]
 endfunc
+
+func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForIndentLevel, dir )
+  let currTestLine = a:searchStartLine + 1
+  let searching = 1
+  while searching
+    if IndentLevel( currTestLine ) == a:searchForIndentLevel
+      " Found a line with this indent level
+      let searching = 0
+    elseif IndentLevel1stColumn( currTestLine ) ==   a:searchForIndentLevel
+      " Found a line where the first    column fits the search indent level
+      let searching = 0
+    elseif currTestLine - a:searchStartLine > 
+      " Found a line where the first    column fits the search indent level
+      let searching = 0
+    else
+      let currTestLine += a:dir
+    endif
+  endwhile
+  return currTestLine
+endfunc
+echo FindLineWithIndentLevelOrColumnIndentLevel( line('.'), col('.'), 1 )
+
 
 " Textobject for Indent Block
 onoremap ii :<c-u>call IndentBlock_VisSel_Inside()<cr>
@@ -333,7 +368,7 @@ func! IndentBlock_VisSel_Inside()
 endfunc
 
 " From Stackoverflow: move to line of same indent!
-nnoremap ,J ^:call IndentBlockEnd()<cr>:call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<CR>
+nnoremap ,J ^:call IndentBlockEnd()<cr>:call   search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<CR>
 nnoremap ,K ^:call IndentBlockStart()<cr>:call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<CR>
 " TODO where is this useful in typical hasekell layout?
 

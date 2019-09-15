@@ -898,8 +898,10 @@ vnoremap ,H H
 " Note: adding to the jumplist on insert Enter/Leave does not seem to work?!
 " Now go to insert start/end explicitly
 
-nnoremap g[ `[
-nnoremap g] `]
+" nnoremap g[ `[
+" nnoremap g] `]
+nnoremap [g `[
+nnoremap ]g `]
 
 func! InsertEnter()
   " echo 'hi'

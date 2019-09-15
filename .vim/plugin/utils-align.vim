@@ -26,6 +26,7 @@ func! Gen_opfunc( _, ...)
   let [l1, l2] = a:0 ? [line("'<"), line("'>")] : [line("'["), line("']")]
   call call( g:opContFn, g:opContArgs + [l1, l2] )
 endfunc
+" Also note: " Vim Pattern For applying a function via an operator map, visual selection and command ~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
 
 command! -range=% HsTabu call HsTabu( [], <line1>, <line2> ) | normal! gg0
 " Align/Tabularize a list of column-patters over an (optional) range of lines

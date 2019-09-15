@@ -14,7 +14,7 @@ func! GetTopLevSymbolNameBackw()
 endfunc
 " echo GetTopLevSymbolNameBackw()
 
-func! 3etStringInQuotesFromLine( lineNum )
+func! GetStringInQuotesFromLine( lineNum )
   return matchstr( getline( a:lineNum ), '\"\zs.*\ze\"')
 endfunc
 " echo GetStringInQuotesFromLine( line('.') +1 )
