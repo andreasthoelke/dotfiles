@@ -291,6 +291,45 @@ nnoremap <silent> ,<c-h> :<C-u>exec "keepjumps norm! " . v:count1 . "{{}-"<CR>
 nnoremap } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
 nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
+" ─   Line (compensating conceal)                        ■
+
+nnoremap j :call LineForwBackw(1)<cr>
+nnoremap k :call LineForwBackw(-1)<cr>
+
+func! LineForwBackw( direction )
+  let nextLineNum = line('.') + a:direction
+  let currVisualCursorCol = VisualCol( line('.'), col('.'), virtcol('.') )
+  let lineLength = len( getline('.'))
+  let lineLengthNextLine = len( getline( nextLineNum ) )
+  if (virtcol('.') == (lineLength +2))
+    " The cursor is at a spot it may have been set to by this function, because the exact visual-col was not settable.
+    " Therefore don't use the current visual-column but move normally (just set the current col at the next line)
+    if (ReducedColumnsInVisualDisplay(nextLineNum, lineLengthNextLine) > 1)
+      echo 'hi'
+      let charIdxOfVisualColInNextLine = CharIdxOfVisualCol( nextLineNum, currVisualCursorCol )
+      call setpos('.', [0, nextLineNum, charIdxOfVisualColInNextLine, 0] )
+    else
+      if a:direction == 1
+        normal! j
+      else
+        normal! k
+      endif
+    endif
+  else
+    echo 'ho'
+    let charIdxOfVisualColInNextLine = CharIdxOfVisualCol( nextLineNum, currVisualCursorCol )
+    call setpos('.', [0, nextLineNum, charIdxOfVisualColInNextLine, 0] )
+  endif
+  " echo [charIdxOfVisualColInNextLine, virtcol('.')]
+endfunc
+" visualCol ist genau +2 von StringLength of line
+" der letzte Char hat eine VisualCol von > 2 (lots of concealed chars that would expand into the range with the cursor currently is)
+" Issue: below still does not work - but at least the offset reverses when going back
+" 12 Integer 678
+" _24 :: String -> Maybe Int
+
+
+" ─^  Line (compensating conceal)                        ▲
 
 " ─   Indention                                          ■
 
@@ -390,8 +429,8 @@ func! IndentBlock_VisSel_Inside()
 endfunc
 
 " From Stackoverflow: move to line of same indent!
-nnoremap ,J ^:call IndentBlockEnd()<cr>:call   search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<CR>
-nnoremap ,K ^:call IndentBlockStart()<cr>:call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<CR>
+" nnoremap ,J ^:call IndentBlockEnd()<cr>:call   search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<CR>
+" nnoremap ,K ^:call IndentBlockStart()<cr>:call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<CR>
 " TODO where is this useful in typical hasekell layout?
 
 " ─^  Indention                                          ▲
@@ -527,8 +566,8 @@ let g:hlAreaID = 0
 " call clearmatches()
 
 " RHS movement:
-nnoremap J j^
-nnoremap K k^
+" nnoremap J j^
+" nnoremap K k^
 
 " Column movement:
 nnoremap <silent> I :call ColumnMotionForw()<cr>

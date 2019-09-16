@@ -150,6 +150,7 @@ leader og   - Git magit. Also :GitcommitAuthor
 leader oG   - Git gitV viewer
 leader ot   - Tagbar
 leader om   - Markbar
+leader oU   - Undo tree (Mundo)
 
 ### Rename
 leader lr/m - rename symbol with all it's live/active references

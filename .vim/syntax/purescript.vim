@@ -175,11 +175,11 @@ syn match purescriptTypeAliasStart "^type\s\+\([A-Z]\w*\)" contained
 
 " String:
 syn match purescriptChar "'[^'\\]'\|'\\.'\|'\\u[0-9a-fA-F]\{4}'"
-syn region purescriptString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@Spell
+syn region purescriptString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@Spell,concealStringQuotes
 syn region purescriptMultilineString start=+"""+ end=+"""+ fold contains=@Spell
 
 " Comment:
-syn match purescriptLineComment "---*\([^-!#$%&\*\+./<=>\?@\\^|~].*\)\?$" contains=@Spell,concealedTLbindInComment,concealedTLbindTypeInComment,m4,mbr1
+syn match purescriptLineComment "---*\([^-!#$%&\*\+./<=>\?@\\^|~].*\)\?$" contains=@Spell,concealedTLbindInComment,concealedCommentDashes,concealedTLbindTypeInComment,m4,mbr1
 syn region purescriptBlockComment start="{-" end="-}" fold
   \ contains=purescriptBlockComment,@Spell
 syn cluster purescriptComment contains=purescriptLineComment,purescriptBlockComment,@Spell
@@ -272,6 +272,10 @@ endfor
 
 
 " ─^  Conceal with unicode                               ▲
+
+" syntax match concealedCommentDashes '--\s' contained conceal
+" syntax match concealStringQuotes '' contained conceal
+
 
 " ─   Inline Tests conceals                              ■
 

@@ -388,7 +388,7 @@ let g:aab .= 'B'
 " Range Linewise Commands: - "[range]delete, yank, put" (from register), "[range] copy, move" to target line, "[range]join" lines, "[range]normal <cmds>"
 
 " Vim Pattern: For applying a function via an operator map, visual selection and command!
-~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
+" ~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
 
 " Global  Run Ex Commands On Select Lines:- "/zwei<cr>" search, then ":g//" to just print (default cmd) the lines that contain a match. reusing the prev search patthern
 " Global works on all line vs. the line-wise commands which it can be combined with.  "vglobal" or "g!" or "v" in[v]erts the selection "v/:" to show lines that have no ":" in it "Grep" = [g]lobal [re]gular expr [p]rint
@@ -737,7 +737,7 @@ endfunc
 " Delete A Range Of Files: - "'<,'>call delete(getline('.'))"
 
 " Vim Pattern: For applying a function via an operator map, visual selection and command!
-~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
+" ~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
 
 
 " echo join( getline(".", line(".") + 3), "\n" )

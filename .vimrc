@@ -866,8 +866,8 @@ endfunc
 
 " ─   General                                           ──
 " Go up/down in wrapped lines mode as well
-nnoremap j gj
-nnoremap k gk
+" nnoremap j gj
+" nnoremap k gk
 
 " Add start of visual mode to jumplist
 nnoremap v m'v

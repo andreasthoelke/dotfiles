@@ -23,7 +23,16 @@ func! GetVisSel()
 endfunc
 
 " The visible column index of a charater column index (recognising conceals/replacements)
-func! VisualCol( lineNum, sourceCharIdx )
+func! VisualCol( lineNum, sourceCharIdx, sourceVirtualCharIdx )
+  if a:sourceVirtualCharIdx > a:sourceCharIdx
+    " Once the cursor is the virtual (beyond the real chars) area of the line, virtcol() *does* return the visualColumn index!
+    return a:sourceVirtualCharIdx
+  else
+    return a:sourceCharIdx - ReducedColumnsInVisualDisplay( a:lineNum, a:sourceCharIdx )
+  endif
+endfunc
+
+func! ReducedColumnsInVisualDisplay( lineNum, sourceCharIdx )
   let concealedCharCount = 0
   let concealInstanceIds = []
   for charIdx in range(1, a:sourceCharIdx)
@@ -39,8 +48,59 @@ func! VisualCol( lineNum, sourceCharIdx )
   endfor
   let replacementInstances = len( uniq( concealInstanceIds ) )
   let reducedColumnCount = concealedCharCount - replacementInstances
-  return a:sourceCharIdx - reducedColumnCount
+  return reducedColumnCount
 endfunc
+
+" Find the first char(idx) that displays at a visualColumn index
+func! CharIdxOfVisualCol( lineNum, searchVisualColIdx )
+  let currVisualIdx = 0
+  let currConcealInstance = 0
+  let reducedColumnCount = 0
+  let charIdx = -2
+  " Run through all the source-char in the targetLine accessing how they accumulate visual-columns
+  for charIdx in range(1, len(getline(a:lineNum)))
+    let [iCharConcealed, iReplacementChar, iGroupId] = synconcealed( a:lineNum, charIdx )
+    if !iCharConcealed
+      " This char is not concealed and is therefore increasing the visual-column count (at this source char)
+      let currVisualIdx += 1
+    elseif iReplacementChar != ''
+      " This source char is concealed but replaced by a char. ..
+      if currConcealInstance != iGroupId
+        " .. It only adds to the visual-col count if the conceal instance (-> groupId) is new - all following source char
+        " concealed by this conceal instance will *not* add to the visual-column count. Thus only increase the count
+        " in the event of replacementChar != '' *and* new groupId
+        let currConcealInstance = iGroupId
+        let currVisualIdx += 1
+      else
+        " This char is concealed and *has* a replacement, but is not the first char in this conceal-instance/groupId - so that is does not add a visible column
+        let reducedColumnCount += 1
+      endif
+    else
+      " This char is concealed and *has no* replacement - so that is does not add a visible column
+      let reducedColumnCount += 1
+    endif
+
+    " Check if the accumulated visual-colums have reached the visible-column-index we where looking for
+    if currVisualIdx == a:searchVisualColIdx
+      " we can then return the source-character index/count that was needed to get to this visible column-width
+      return charIdx
+      break
+    endif
+  endfor
+  " We ran through all chars until the end of this line, but the a:searchVisualColIdx is beyond this in the 'virtual' column range of this line
+  " setting the cursor in the virtual range actually happens according to *visible* columns!
+  echo 'end'.charIdx
+  if a:searchVisualColIdx < (charIdx + 2)
+    return charIdx + 2
+  else
+    return a:searchVisualColIdx
+  endif
+  " Previous solution: does not work, because setting in the vitual column area does reflect the visual column/compensate conceals!
+    " To match this visual column via source-chars (extending into the virtual range), we have to add the columnsCount that the chars in this line hides/reduced
+    " return a:searchVisualColIdx + reducedColumnCount
+endfunc
+" Tests:
+" call setpos('.', [0, line('.'), CharIdxOfVisualCol(line('.'), 20), 0] )
 
 
 func! VisualBlockMode()

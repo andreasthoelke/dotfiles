@@ -237,7 +237,7 @@ func! ExpandSignature()
 endfunc
 
 " "expand undefined": expand a signature to a function stub
-nnoremap <leader>eu yiwo<esc>PA = undefined<esc>b
+" nnoremap <leader>eu yiwo<esc>PA = undefined<esc>b
 " nmap <leader>fe A :: String<esc>^ywjPA= undefined<esc>b
 
 
