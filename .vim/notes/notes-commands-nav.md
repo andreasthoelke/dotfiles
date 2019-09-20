@@ -134,8 +134,8 @@ tab/s-t/,t  - Headers next/prev /end of header
 c-i/m       - ballparks
 ]b[b        - binding-type sig (incl where, let)
 cib         - to change the binding name in consequtive lines
-Y/I         - columns
-J/K         - start of line | use to jump to virtual line starts in concealed top level binds
+Y/I         - columns - based on unaligned syntax e.g do bindings
+J/K         - Word column corners Forw/Backw (based on aligned visibleColumns)
 t/T         - next/prev list item
 ]t/[t       - into next/prev inner list
 ]T          - end of list (to append new elements)
