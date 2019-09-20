@@ -325,6 +325,22 @@ fun! GetExtension()
 endfun
 " vim
 
+" Return the char-column (1-based!) of searchStr (which may contain special chracters like "(" or "~")
+" Note: Using "\V" very non magic allows literal search of special chars, the "\" is the only char that needs to be escaped
+func! FindPosInStr( sourceStr, searchStr )
+  return matchstrpos( a:sourceStr, '\V'. escape(a:searchStr, '\'))[1] +1
+endfunc
+" (HeaderField x y : xys) | x ~= \name -> case f (Just y) of
+" echo FindPosInStr( getline( line('.')-1 ), '\name' )
+
+func! EscapeSpecialChars( str )
+  " return substitute( a:str, '\([^a-zA-Z0-9_.-]\)', '\="\\" . submatch(1)', 'g')
+  return substitute( a:str, '\([\(\)\~]\)', '\="\\" . submatch(1)', 'g')
+endfunc
+" echo EscapeSpecialChars( 'ein(s)' )
+" echo EscapeSpecialChars( '(~=)' )
+
+
 fun! EncodeChar(char)
   if a:char == '%'
     return '%%'
@@ -345,6 +361,10 @@ endf
 fun! EncodeURL(url)
   return substitute(a:url, '\([^a-zA-Z0-9_.-]\)', '\=EncodeChar(submatch(1))', 'g')
 endf
+" :s/\d\+/\=submatch(0) + 1/
+" :echo substitute(text, '\d\+', '\=submatch(0) + 1', '')
+" This finds the first number in the line and adds one to it.
+" A line break is included as a newline character.
 
 " URL encode a string. ie. Percent-encode (actually backslash!) characters as necessary.
 function! UrlEncode(string)
@@ -393,4 +413,7 @@ nnoremap <leader>sb i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><E
 " nnoremap <leader>sn :echo col([line('.'),'$'])<CR>
 nnoremap <leader>sn i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
 " Vim will insert a newline (<CR>) followed by a number of spaces (<C-R>=repeat(' ',...)) equal to the difference between the column number of the end of the previous line (col([line('.')-1,'$'])) and the current column number (col('.'))
+
+
+
 

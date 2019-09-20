@@ -52,7 +52,7 @@ endfunc
 " echo Filter( {x-> x isnot# 3}, [2, 3, 4] )
 
 " foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
-fun! functional#foldr(fabb, initB, listA)
+func! functional#foldr(fabb, initB, listA)
   let accum = copy( a:initB )
   for nextA in a:listA
     let accum = call( a:fabb, [nextA, accum] )
@@ -62,6 +62,11 @@ endfun
 " echo Foldr( {a, b -> a + b}, 0, [2, 4, 6] )
 " echo Foldr( {a, b -> ( a < 8) && b}, v:true, [2, 4, 6] )
 " echo Foldr( {a, b -> ( a < 8) && b}, v:true, [2, 10, 6] )
+
+func! functional#sum(list)
+  return functional#foldr( {a,b->a+b}, 0, a:list )
+endfunc
+" echo functional#sum( [3, 4, 5] )
 
 
 " Accessing global vars:

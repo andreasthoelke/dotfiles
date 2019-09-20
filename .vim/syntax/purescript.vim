@@ -175,7 +175,7 @@ syn match purescriptTypeAliasStart "^type\s\+\([A-Z]\w*\)" contained
 
 " String:
 syn match purescriptChar "'[^'\\]'\|'\\.'\|'\\u[0-9a-fA-F]\{4}'"
-syn region purescriptString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@Spell,concealStringQuotes
+syn region purescriptString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@Spell
 syn region purescriptMultilineString start=+"""+ end=+"""+ fold contains=@Spell
 
 " Comment:
@@ -273,8 +273,8 @@ endfor
 
 " ─^  Conceal with unicode                               ▲
 
-" syntax match concealedCommentDashes '--\s' contained conceal
-" syntax match concealStringQuotes '' contained conceal
+syntax match concealedCommentDashes '--\s' contained conceal
+" syntax match concealedQuote '\s\zs"' contained conceal
 
 
 " ─   Inline Tests conceals                              ■

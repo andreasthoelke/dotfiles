@@ -55,8 +55,8 @@ func! SourceLines( lines )
   call delete(l:tmpsofile)
 endfunc
 
-nnoremap <silent> ,s m':set opfunc=OpSourceVimL<cr>g@
-vnoremap <silent> ,ss :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
+nnoremap <silent> <leader>s m':set opfunc=OpSourceVimL<cr>g@
+vnoremap <silent> <leader>ss :<c-u>call OpSourceVimL(visualmode(), 1)<cr>
 
 " Uses "h textobj-function" .. ? it does not!?
 " * SourceVimL Operator function allows e.g.

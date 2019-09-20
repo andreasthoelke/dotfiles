@@ -222,7 +222,8 @@ endfunc
 
 
 " ─   Apply args                                         ■
-nnoremap <silent> ]g :call TestArgForw()<cr>:call ScrollOff(16)<cr>
+" Todo: ? was this to automatically apply/run the tests?
+" nnoremap <silent> ]g :call TestArgForw()<cr>:call ScrollOff(16)<cr>
 func! TestArgForw()
   call search( '\v^e\d_', 'W' )
 endfunc
@@ -231,7 +232,7 @@ func! TestArgForwLineNum()
   return searchpos( '\v^e\d_', 'cnb' )[0]
 endfunc
 
-nnoremap <silent> [g :call TestArgBackw()<cr>:call ScrollOff(10)<cr>
+" nnoremap <silent> [g :call TestArgBackw()<cr>:call ScrollOff(10)<cr>
 func! TestArgBackw()
   call search( '\v^e\d_', 'bW' )
 endfunc

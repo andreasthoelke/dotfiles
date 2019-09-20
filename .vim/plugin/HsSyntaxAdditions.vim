@@ -71,7 +71,7 @@ func! HaskellSyntaxAdditions()
   " call matchadd('Conceal', '\\\%([^\\]\+→\)\@=', -1, -1, {'conceal': 'λ'}) |
 
   " Don't show quotes around text. note you can only identify text via the syntax coloring!
-  " call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
   " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely
   set conceallevel=2
   " When the concealcursor is *not* set, the conceald text will reveal when the cursor is in the line

@@ -22,8 +22,12 @@ func! GetVisSel()
   return Get_visual_selection()
 endfunc
 
+func! VisualCol()
+  return VisualColLine( line('.'), col('.'), virtcol('.') )
+endfunc
+
 " The visible column index of a charater column index (recognising conceals/replacements)
-func! VisualCol( lineNum, sourceCharIdx, sourceVirtualCharIdx )
+func! VisualColLine( lineNum, sourceCharIdx, sourceVirtualCharIdx )
   if a:sourceVirtualCharIdx > a:sourceCharIdx
     " Once the cursor is the virtual (beyond the real chars) area of the line, virtcol() *does* return the visualColumn index!
     return a:sourceVirtualCharIdx
@@ -35,7 +39,8 @@ endfunc
 func! ReducedColumnsInVisualDisplay( lineNum, sourceCharIdx )
   let concealedCharCount = 0
   let concealInstanceIds = []
-  for charIdx in range(1, a:sourceCharIdx)
+  let lineStr = getline(a:lineNum)
+  for charIdx in range(1, max([a:sourceCharIdx -1, 0]))
     let [charConcealed, replacementChar, groupId] = synconcealed( a:lineNum, charIdx )
     if charConcealed
       let concealedCharCount += 1 " this char is concealed, but ..
@@ -44,6 +49,8 @@ func! ReducedColumnsInVisualDisplay( lineNum, sourceCharIdx )
         " conceal instance. This conceal instance is represented by a (syntax-group) Id which is unique over the line (is it?)
         call add( concealInstanceIds, groupId ) " track all instance Ids that had replacement chars
       endif
+    elseif lineStr[charIdx-1] == '"'
+      let concealedCharCount += 1 " quotes are concealed by matchadd in syntax-additions
     endif
   endfor
   let replacementInstances = len( uniq( concealInstanceIds ) )
@@ -51,18 +58,30 @@ func! ReducedColumnsInVisualDisplay( lineNum, sourceCharIdx )
   return reducedColumnCount
 endfunc
 
+" Set the cursor to a visual-colomn index
+func! SetCursorVisualCol( lineNum, visualCol )
+  call setpos('.', [0, a:lineNum, CharIdxOfVisualCol(a:lineNum, a:visualCol), 0] )
+endfunc
+
 " Find the first char(idx) that displays at a visualColumn index
 func! CharIdxOfVisualCol( lineNum, searchVisualColIdx )
+  let lineStr = getline(a:lineNum)
   let currVisualIdx = 0
   let currConcealInstance = 0
   let reducedColumnCount = 0
   let charIdx = -2
-  " Run through all the source-char in the targetLine accessing how they accumulate visual-columns
+  " Run through all the source-chars in the targetLine accessing how they accumulate visual-columns
   for charIdx in range(1, len(getline(a:lineNum)))
     let [iCharConcealed, iReplacementChar, iGroupId] = synconcealed( a:lineNum, charIdx )
     if !iCharConcealed
       " This char is not concealed and is therefore increasing the visual-column count (at this source char)
-      let currVisualIdx += 1
+      if lineStr[charIdx-2] == '"'
+        " echo 'got'.charIdx
+        " .. unless it's a quote, then this char will not be visible
+        let reducedColumnCount += 1
+      else
+        let currVisualIdx += 1
+      endif
     elseif iReplacementChar != ''
       " This source char is concealed but replaced by a char. ..
       if currConcealInstance != iGroupId
@@ -89,7 +108,7 @@ func! CharIdxOfVisualCol( lineNum, searchVisualColIdx )
   endfor
   " We ran through all chars until the end of this line, but the a:searchVisualColIdx is beyond this in the 'virtual' column range of this line
   " setting the cursor in the virtual range actually happens according to *visible* columns!
-  echo 'end'.charIdx
+  " echo 'end'.charIdx
   if a:searchVisualColIdx < (charIdx + 2)
     return charIdx + 2
   else
@@ -155,23 +174,56 @@ endfunc
 " echo matchstrpos("    sta", "\S")
    " echo IndentLevel( line('.') )
 
+" Returns the visual column nums of word starts in a:lineNum as a list
+func! WordStartVisualColumns( lineNum )
+  let charColumns = WordStartColumns( getline(a:lineNum) )
+  return functional#map( {charCol-> charCol - ReducedColumnsInVisualDisplay( a:lineNum, charCol )}, charColumns )
+endfunc
+
+" Returns the column nums of word starts in a:str as a list
+func! WordStartColumns( str )
+  let workStr = a:str
+  let wordStartColumns = [0]
+  while v:true
+    let apos = matchstrpos( workStr, '\s\zs\S')[1] + 1
+    if apos > 0
+      let fullPos = apos + wordStartColumns[-1]
+      call add( wordStartColumns, fullPos )
+      let workStr = workStr[apos:]
+    else
+      return wordStartColumns[1:]
+    endif
+  endwhile
+endfunc
+" echo WordStartColumns( getline('.') )
+
 " Returns the column num of the first (min two spaces) column
 func! IndentLevel1stColumn( lineNum )
   return matchstrpos( getline( a:lineNum ), '\S\s\s\+\zs\S')[1] + 1
 endfunc
 " echo IndentLevel1stColumn     ( line('.') )
 
-" Returns the column num of the first (min two spaces) column
+" WordStartColumns seems the better approach
 func! IndentLevelWordStarts( lineNum )
-  let line = getline( a:lineNum )
+  let lineStr = getline( a:lineNum )
   let words = split( getline( a:lineNum ) )
   let wordStarts = []
   for word in words
-    call add( wordStarts, matchstrpos( line, word )[1] +1 )
+    " echo a:lineNum . word .' - '. lineStr
+    " let apos = matchstrpos( lineStr, EscapeSpecialChars(word) )[1] +1
+    " let apos = matchstrpos( lineStr, '\V\'.word )[1] +1
+    let apos = FindPosInStr( lineStr, word )
+    if apos > 0
+      let vispos = apos - ReducedColumnsInVisualDisplay( a:lineNum, apos )
+      call add( wordStarts, vispos )
+      " Issue: what happens when one word appears twice?
+    else
+      " echoe 'IndentLevelWordStarts-word: '. word .' not found in line'
+    endif
   endfor
   return wordStarts
 endfunc
-" echo IndentLevelWordStarts ( line('.') )
+" echo IndentLevelWordStarts(line('.'))
 
 " Return the character under the cursor
 func! GetCharAtCursor()

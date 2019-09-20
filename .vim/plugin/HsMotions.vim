@@ -293,20 +293,26 @@ nnoremap { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
 " ─   Line (compensating conceal)                        ■
 
-nnoremap j :call LineForwBackw(1)<cr>
-nnoremap k :call LineForwBackw(-1)<cr>
+nnoremap <silent> j :call LineForwBackw(1)<cr>
+nnoremap <silent> k :call LineForwBackw(-1)<cr>
 
+" Maintain the visible-column when going to the next/prev line
+" Note: In theory this should work - but some visible postions can not be set - which causes shifting of lines
+" func! LineForwBackw( direction )
+"   let nextLineNum = line('.') + a:direction
+  " call SetCursorVisualCol( nextLineNum, VisualCol() )
+" endfunc
+
+" Maintain the visible-column when going to the next/prev line
 func! LineForwBackw( direction )
   let nextLineNum = line('.') + a:direction
-  let currVisualCursorCol = VisualCol( line('.'), col('.'), virtcol('.') )
   let lineLength = len( getline('.'))
   let lineLengthNextLine = len( getline( nextLineNum ) )
   if (virtcol('.') == (lineLength +2))
     " The cursor is at a spot it may have been set to by this function, because the exact visual-col was not settable.
     " Therefore don't use the current visual-column but move normally (just set the current col at the next line)
     if (ReducedColumnsInVisualDisplay(nextLineNum, lineLengthNextLine) > 1)
-      echo 'hi'
-      let charIdxOfVisualColInNextLine = CharIdxOfVisualCol( nextLineNum, currVisualCursorCol )
+      let charIdxOfVisualColInNextLine = CharIdxOfVisualCol( nextLineNum, VisualCol() )
       call setpos('.', [0, nextLineNum, charIdxOfVisualColInNextLine, 0] )
     else
       if a:direction == 1
@@ -316,14 +322,11 @@ func! LineForwBackw( direction )
       endif
     endif
   else
-    echo 'ho'
-    let charIdxOfVisualColInNextLine = CharIdxOfVisualCol( nextLineNum, currVisualCursorCol )
+    let charIdxOfVisualColInNextLine = CharIdxOfVisualCol( nextLineNum, VisualCol() )
     call setpos('.', [0, nextLineNum, charIdxOfVisualColInNextLine, 0] )
   endif
   " echo [charIdxOfVisualColInNextLine, virtcol('.')]
 endfunc
-" visualCol ist genau +2 von StringLength of line
-" der letzte Char hat eine VisualCol von > 2 (lots of concealed chars that would expand into the range with the cursor currently is)
 " Issue: below still does not work - but at least the offset reverses when going back
 " 12 Integer 678
 " _24 :: String -> Maybe Int
@@ -335,35 +338,38 @@ endfunc
 
 " TIP: get the string/spaces of how much a line is indented: let indent = matchstr(getline(lnr), '^\s*\ze')
 
-nnoremap ,j  :call IndentLevelForwBackw(1)<cr>
-onoremap ,j V:call IndentBlockEnd()<cr>
-nnoremap ,k  :call IndentLevelForwBackw(-1)<cr>
-onoremap ,k V:call IndentBlockStart()<cr>
-vnoremap <silent> ,j <esc>:call ChangeVisSel(function('IndentBlockEnd'))<cr>
-vnoremap <silent> ,k <esc>:call ChangeVisSel(function('IndentBlockStart'))<cr>
+nnoremap J  :call ColumnLevelForwBackw(1)<cr>
+onoremap J V:call IndentBlockEnd()<cr>
+nnoremap K  :call ColumnLevelForwBackw(-1)<cr>
+onoremap K V:call IndentBlockStart()<cr>
+vnoremap <silent> J <esc>:call ChangeVisSel(function('IndentBlockEnd'))<cr>
+vnoremap <silent> K <esc>:call ChangeVisSel(function('IndentBlockStart'))<cr>
 
 func! IndentBlockEnd()
   normal! m'
-  let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), 1 )
+  let [sLine, sColumn] = ColumnBlockEndPos( line('.'), col('.'), 1 )
   call setpos('.', [0, sLine, sColumn, 0] )
 endfunc
 
 func! IndentBlockStart()
   normal! m'
-  let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), -1 )
+  let [sLine, sColumn] = ColumnBlockEndPos( line('.'), col('.'), -1 )
   call setpos('.', [0, sLine, sColumn, 0] )
 endfunc
 
-func! IndentLevelForwBackw( direction )
+func! ColumnLevelForwBackw( direction )
   normal! m'
-  let [oLine] = getpos('.')[1:2]
-  let [sLine, sColumn] = IndentBlockEndPos( line('.'), col('.'), a:direction )
+  let oLine = getpos('.')[1]
+  let sLine = ColumnBlockEndPos( line('.'), VisualCol('), a:direction )
   if sLine == oLine
     " Already at end of current indent block -> search for the next same indent line or column indent line
     " Returns current line if not found
-    let sLine = FindLineWithWordStartAtColumn( line('.'), col('.'), a:direction )
+    let sLine = FindLineWithWordStartAtColumn( line('.'), VisualCol(), a:direction )
+    " echo '--'.sLine
   endif
-  call setpos('.', [0, sLine, sColumn, 0] )
+  if sLine != oLine
+    call SetCursorVisualCol( sLine, VisualCol() )
+  endif
 endfunc
 
 func! IndentBlockEndPos( lineNum, indentLevel, dir )
@@ -371,9 +377,24 @@ func! IndentBlockEndPos( lineNum, indentLevel, dir )
   while IndentLevel( a:lineNum + lineOffset ) == a:indentLevel
     let lineOffset = lineOffset + a:dir
   endwhile
-  return [a:lineNum + (lineOffset - a:dir), a:indentLevel]
+  return a:lineNum + (lineOffset - a:dir)
 endfunc
 
+
+func! ColumnBlockEndPos( searchStartLine, searchForIndentLevel, dir )
+  let currTestLine = a:searchStartLine + a:dir
+  let searching = 1
+  while searching
+    let matchingColumns = functional#filter( {x->x==a:searchForIndentLevel}, WordStartVisualColumns( currTestLine ) )
+    if !len( matchingColumns )
+      return currTestLine - a:dir
+    elseif abs(currTestLine - a:searchStartLine) > 30
+      return currTestLine
+    else
+      let currTestLine += a:dir
+    endif
+  endwhile
+endfunc
 
 func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForIndentLevel, dir )
   let currTestLine = a:searchStartLine + a:dir
@@ -385,7 +406,7 @@ func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForInde
     elseif IndentLevel1stColumn( currTestLine ) ==   a:searchForIndentLevel
       " Found a line where the first column fits the search indent level
       let searching = 0
-    elseif currTestLine - a:searchStartLine > 30
+    elseif abs(currTestLine - a:searchStartLine) > 30
       " Did not find a column/indent level within 30 lines -> return the searchStartLine to indicate this
       let currTestLine = a:searchStartLine
       let searching = 0
@@ -399,20 +420,21 @@ endfunc
 
 func! FindLineWithWordStartAtColumn( searchStartLine, searchForIndentLevel, dir )
   let currTestLine = a:searchStartLine + a:dir
-  let searching = 1
-  while searching
-    if len( functional#filter( {x->x==a:searchForIndentLevel}, IndentLevelWordStarts( currTestLine ) ) )
+  while v:true
+    " if len( functional#filter( {x->x==a:searchForIndentLevel}, IndentLevelWordStarts( currTestLine ) ) )
+    " if len( functional#filter( {x->x==a:searchForIndentLevel}, WordStartColumns( getline(currTestLine) ) ) )
+    let matchingColumns = functional#filter( {x->x==a:searchForIndentLevel}, WordStartVisualColumns( currTestLine ) )
+    if len( matchingColumns )
+      " echo matchingColumns
       " Found a line where some word starts at this column
-      let searching = 0
-    elseif currTestLine - a:searchStartLine > 30
+      return currTestLine
+    elseif abs(currTestLine - a:searchStartLine) > 30
       " Did not find a column/indent level within 30 lines -> return the searchStartLine to indicate this
-      let currTestLine = a:searchStartLine
-      let searching = 0
+      return a:searchStartLine
     else
       let currTestLine += a:dir
     endif
   endwhile
-  return currTestLine
 endfunc
 " echo FindLineWithWordStartAtColumn( line('.'), col('.'), 1 )
 
@@ -566,8 +588,8 @@ let g:hlAreaID = 0
 " call clearmatches()
 
 " RHS movement:
-" nnoremap J j^
-" nnoremap K k^
+nnoremap ,j j^
+nnoremap ,k k^
 
 " Column movement:
 nnoremap <silent> I :call ColumnMotionForw()<cr>
