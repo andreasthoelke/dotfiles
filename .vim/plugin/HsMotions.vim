@@ -347,20 +347,20 @@ vnoremap <silent> K <esc>:call ChangeVisSel(function('IndentBlockStart'))<cr>
 
 func! IndentBlockEnd()
   normal! m'
-  let [sLine, sColumn] = ColumnBlockEndPos( line('.'), col('.'), 1 )
-  call setpos('.', [0, sLine, sColumn, 0] )
+  let sLine = IndentBlockEndPos( line('.'), col('.'), 1 )
+  call setpos('.', [0, sLine, col('.'), 0] )
 endfunc
 
 func! IndentBlockStart()
   normal! m'
-  let [sLine, sColumn] = ColumnBlockEndPos( line('.'), col('.'), -1 )
-  call setpos('.', [0, sLine, sColumn, 0] )
+  let sLine = IndentBlockEndPos( line('.'), col('.'), -1 )
+  call setpos('.', [0, sLine, col('.'), 0] )
 endfunc
 
 func! ColumnLevelForwBackw( direction )
   normal! m'
   let oLine = getpos('.')[1]
-  let sLine = ColumnBlockEndPos( line('.'), VisualCol('), a:direction )
+  let sLine = ColumnBlockEndPos( line('.'), VisualCol(), a:direction )
   if sLine == oLine
     " Already at end of current indent block -> search for the next same indent line or column indent line
     " Returns current line if not found

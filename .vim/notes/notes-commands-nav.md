@@ -118,9 +118,11 @@ c-m/i       - next/prev in QFL
 p           - does not work! .. could set up a split?
 
 ### Align, Indent
-\,l/j/}     - intent range of lines to current cursor H
+\,l/j/}     - intent range of lines to current cursor-column
 dw          - align/pull inwards to the cursorH the first char to the right
 `>ii`         - shift lines of indent block to the right
+,a(motion)(sel) - run a multi-col align template on motion or vis sel
+,aii=       - will align to "=" inside indent block
 leader al   - easy align
 leader a-ii - align a 'case' block! to '->'
 leader ha (+m/vs) - type-sig align (motion or vis-sel) 'aB'-> error?

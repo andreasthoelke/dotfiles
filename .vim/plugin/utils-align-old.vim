@@ -49,8 +49,8 @@ endfunc
 " nnoremap <silent> <leader>at :set opfunc=Align_op<cr>g@
 " vnoremap <silent> <leader>at :<c-u>call Align_op( visualmode(), 1)<cr>
 
-nnoremap <silent> <leader>a> :let g:comEx = ['/->/']<cr>:set opfunc=Align_op<cr>g@
-nnoremap <silent> <leader>a- :let g:comEx = ['/-/']<cr>:set opfunc=Align_op<cr>g@
+" nnoremap <silent> <leader>a> :let g:comEx = ['/->/']<cr>:set opfunc=Align_op<cr>g@
+" nnoremap <silent> <leader>a- :let g:comEx = ['/-/']<cr>:set opfunc=Align_op<cr>g@
 
 
 " Note for extending this:

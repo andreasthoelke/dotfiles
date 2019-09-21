@@ -1246,6 +1246,8 @@ file manage:
 * could also include urls?
     " https://vim-jp.org/vimdoc-en/index.html " https://w0rp.com/blog/post/vim-script-for-the-javascripter/
 
+* add a minor addition to the past (un pushed) git commit
+
 * use/config repeatable commands carefully (similar to jumplist): comment/uncomment should be a dot/repeatable command
 
 * it seems I can not go back many steps in the jump list (it seems to keep cycling). do I have to jump back more

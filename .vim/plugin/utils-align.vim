@@ -18,10 +18,10 @@ let g:pttnsTypeSigs4 = ['/ / {"left_margin": 0, "right_margin": 0}', '/'. Patter
 " contArgs defines other/preceding (optional) args to be applied to the contFn
 " nnoremap ,at      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfunc<cr>g@
 " vnoremap ,at :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfunc('', 1)<cr>
-nnoremap <leader>t      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfunc<cr>g@
-vnoremap <leader>t :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfunc('', 1)<cr>
+nnoremap <leader>t      :let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap <leader>t :<c-u>let g:opContFn='HsTabu'<cr>:let g:opContArgs=[g:pttnsTypeSigs4]<cr>:call Gen_opfuncAc('', 1)<cr>
 
-func! Gen_opfunc( _, ...)
+func! Gen_opfuncAc( _, ...)
   " First arg is sent via op-fn. presence of second arg indicates visual-sel
   let [l1, l2] = a:0 ? [line("'<"), line("'>")] : [line("'["), line("']")]
   call call( g:opContFn, g:opContArgs + [l1, l2] )
@@ -32,8 +32,8 @@ command! -range=% HsTabu call HsTabu( [], <line1>, <line2> ) | normal! gg0
 " Align/Tabularize a list of column-patters over an (optional) range of lines
 func! HsTabu( columnPttns, ...)
   let columnPttns = len(a:columnPttns) ? a:columnPttns : g:pttnsTypeSigs4
-  let startLine = a:0 ? a:1 : 1
-  let endLine = a:0 ? a:2 : line('$')
+  let   startLine = a:0 ? a:1 : 1
+  let   endLine = a:0 ? a:2 : line('$')
   " remove any previous alignment
   call StripAligningSpaces( startLine, endLine )
   " unicode to simplify the process
@@ -47,11 +47,56 @@ endfunc
 " call HsTabu( [] )
 
 
+" ─   Align Templates                                    ■
+
+" Tests: - ",aii=" will align to "=" inside indent block
+
+nnoremap ,a      :let g:opContFn='HsAlignUC'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap ,a :<c-u>let g:opContFn='HsAlignUC'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+
+func! HsAlignUC( ... )
+  let startLine = a:0 ? a:1 : 1
+  let endLine = a:0 ? a:2 : line('$')
+  call UserChoiceAction('Align to:', {}, g:alignTempl, function('HsAlignAp'), [startLine, endLine])
+endfunc
+
+func! HsAlignAp( startLine, endLine, ucProps )
+  call HsAlign( a:ucProps.pttns, a:startLine, a:endLine )
+endfunc
+
+let g:alignTempl = [
+      \  {'label':'_space', 'pttns':['/ / {"left_margin": 0, "right_margin": 0}']}
+      \, {'label':'_= equal', 'pttns':['=']}
+      \, {'label':'_, comma', 'pttns':[',']}
+      \, {'label':'_<- bind', 'pttns':['/<-/']}
+      \]
+
+
+" A simple (non UChoiceAction) way to map multi-column alignments
+" nnoremap <leader>a=      :let g:opContFn='HsAlign'<cr>:let g:opContArgs=[['=']]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+" vnoremap <leader>a= :<c-u>let g:opContFn='HsAlign'<cr>:let g:opContArgs=[['=']]<cr>:call Gen_opfuncAc('', 1)<cr>
+
+command! -nargs=1 -range=% HsAlign call HsAlign ( <args>, <line1>, <line2> )
+" Test: - ":HsAlign []" would align the entire buffer by the first and second space-column
+
+func! HsAlign( columnPttns, ... )
+  let columnPttns = len(a:columnPttns) ? a:columnPttns : ['/ / {"left_margin": 0, "right_margin": 0}', '2/ / {"left_margin": 0, "right_margin": 0}']
+  let startLine = a:0 ? a:1 : 1
+  let endLine = a:0 ? a:2 : line('$')
+  for pttn in columnPttns
+    call easy_align#easyAlign( startLine, endLine, pttn)
+  endfor
+endfunc
+
+
+
+" ─^  Align Templates                                    ▲
+
 command! -range=% StripAligningSpaces call StripAligningSpaces( <line1>, <line2> )
 " Note: this applies to the whole buffer when no visual-sel
 
-nnoremap ,as      :let g:opContFn='StripAligningSpaces'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfunc<cr>g@
-vnoremap ,as :<c-u>let g:opContFn='StripAligningSpaces'<cr>:let g:opContArgs=[]<cr>:call Gen_opfunc('', 1)<cr>
+nnoremap <leader>as      :let g:opContFn='StripAligningSpaces'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap <leader>as :<c-u>let g:opContFn='StripAligningSpaces'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
 
 func! StripAligningSpaces( ... )
   let startLine = a:0 ? a:1 : 1

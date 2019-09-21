@@ -91,14 +91,16 @@ endfunc
 func! DefaultHelpText( choiceItem )
   let vals = values( a:choiceItem )
   if len( vals ) > 1
-    return vals[1]
+    return string( vals[1] )
   else
     return '' " no payload -> no help text
   endif
 endfunc
 
-func! FormatResumeCall( arg )
-  return "call UserChoiceAction_resume(" . string(a:arg) . ")"
+" This puts the entire data-object of a menu item into a string-expression that get's executed in case the menu item is
+" selected, then passing the selected item obj into the UCA-resume function
+func! FormatResumeCall( choiceItemObj )
+  return "call UserChoiceAction_resume(" . string(a:choiceItemObj ) . ")"
 endfunc
 " echo FormatResumeCall( 'something in here')
 " exec FormatResumeCall( 'something in here')
