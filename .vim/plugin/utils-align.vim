@@ -48,7 +48,7 @@ endfunc
 
 
 " ─   Align Templates                                    ■
-
+" ,a(motion)(sel) - run a multi-col align template on motion or vis sel
 " Tests: - ",aii=" will align to "=" inside indent block
 
 nnoremap ,a      :let g:opContFn='HsAlignUC'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
@@ -65,10 +65,12 @@ func! HsAlignAp( startLine, endLine, ucProps )
 endfunc
 
 let g:alignTempl = [
-      \  {'label':'_space', 'pttns':['/ / {"left_margin": 0, "right_margin": 0}']}
-      \, {'label':'_= equal', 'pttns':['=']}
-      \, {'label':'_, comma', 'pttns':[',']}
-      \, {'label':'_<- bind', 'pttns':['/<-/']}
+      \  {'label':'_space',     'pttns': ['/ / {"left_margin": 0, "right_margin": 0}']}
+      \, {'label':'_= equal',   'pttns': ['=']}
+      \, {'label':'_, comma',   'pttns': [',']}
+      \, {'label':'_<- bind',   'pttns': ['/<-/']}
+      \, {'label':'_> case',   'pttns': ['/->/']}
+      \, {'label':'_type sigs', 'pttns': g:pttnsTypeSigs4}
       \]
 
 

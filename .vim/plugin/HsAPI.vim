@@ -160,8 +160,6 @@ endfunc
 
 
 
-
-
 " func! HsExtractTypeFromLine( lineNr )
 " func! HsCursorKeyword()
 

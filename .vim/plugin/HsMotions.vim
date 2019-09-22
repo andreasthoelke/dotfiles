@@ -183,6 +183,26 @@ endfunc
 
 " ─^  TopLevel                                           ▲
 
+" ─   Imports                                            ■
+
+onoremap <silent> iI :<c-u>call Imports_VisSel()<cr>
+vnoremap <silent> iI :<c-u>call Imports_VisSel()<cr>o
+
+func! Imports_VisSel()
+  normal! m'gg
+  call search( '^import ', 'cW' )
+  let [sLine, sCol] = getpos('.')[1:2]
+  normal! G
+  call search( '^import ', 'cbW' )
+  normal! $
+  let [eLine, eCol] = getpos('.')[1:2]
+  call setpos( "'<", [0, sLine, sCol, 0] )
+  call setpos( "'>", [0, eLine, eCol, 0] )
+  normal! gv
+endfunc
+
+
+" ─^  Imports                                            ▲
 
 " ─   Bindings, including where/let                     ──
 " * `]b`, `[b` for next/prev binding

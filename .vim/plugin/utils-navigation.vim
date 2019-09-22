@@ -55,7 +55,7 @@ nnoremap <c-w>< 4<c-w><
 
 " Pinning Windows:
 " Pin paragraph "window pin"
-nmap <leader>wp <Plug>(Visual-Split-SplitAbove)ip
+nmap <leader>wp <Plug>(Visual-Split-SplitAbove)
 xmap <leader>wp <Plug>(Visual-Split-VSSplitAbove)
 
 " Workaround to force vim-help to open below
@@ -63,6 +63,15 @@ xmap <leader>wp <Plug>(Visual-Split-VSSplitAbove)
 "   autocmd!
 "   autocmd BufEnter *.txt if &buftype == 'help' | wincmd J | endif
 " augroup END
+
+" nnoremap <leader> wip :call PinImports()<cr>
+
+func! PinImports()
+  wincmd s
+  wincmd k
+  normal gg
+
+endfunc
 
 " ─^  Windows                                            ▲
 

@@ -134,9 +134,10 @@ nnoremap <leader>eU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= 
 nnoremap <leader>es :call Stubs_ExpandATypeSign()<cr>
 func! Stubs_ExpandATypeSign()
   let symbName = GetTopLevSymbolName( line('.') )
-  let lineText = symbName . ' :: a'
+  let indentChars = repeat( ' ', col('.')-1)
+  let lineText = indentChars . symbName . ' :: a'
   call append( line('.') -1, lineText )
-  normal! ^kww
+  normal! k$lb
 endfunc
 " Test:
 " cbom0 :: a
@@ -168,7 +169,8 @@ func! ArgTypeToSuggArgName( type )
     let listShorts = functional#map( 'AbbrevSimpleType', SplitArgs( RemoveBrackets( a:type ) ) )
     return 'f' . join( listShorts, '_' )
   elseif a:type =~ '[' " note there may be a list within the type
-    return 'l' . AbbrevSimpleType( RemoveBrackets( a:type ) )
+    " return 'l' . AbbrevSimpleType( RemoveBrackets( a:type ) )
+    return AbbrevSimpleType( RemoveBrackets( a:type ) ) . 's'
   elseif a:type =~ '('
     let listShorts = functional#map( 'AbbrevSimpleType', SplitArgs( RemoveBrackets( a:type ) ) )
     return 't' . join( listShorts, '_' )
@@ -179,12 +181,28 @@ endfunc
 " echo ArgTypeToSuggArgName( '(a -> Ab c -> Maybe Field)' )
 
 " echo functional#map( 'UppercaseFirstChar', ['eins', 'zwei'] )
-
 func! AbbrevSimpleType( str )
-  let listShortened = functional#map( 'CropTo3Chars', split( trim( a:str ) )  )
+  let listShortened = functional#map( 'AbbrevSymbolName', split( trim( a:str ) )  )
   return join( CamelCaseListOfStr( listShortened ), '' )
 endfunc
 " echo AbbrevSimpleType( 'Maybe Field' )
+
+func! AbbrevSymbolName( str )
+  let camelCaseChar = tolower( matchstr( a:str, '\U\zs\u' ) )
+  if camelCaseChar != ''
+    let firstChars = tolower( a:str[0] )
+  else
+    let firstChars = tolower( a:str[0:1] )
+  endif
+  return firstChars . camelCaseChar
+endfunc
+echo AbbrevSymbolName( 'HeaderField' )
+
+func! AbbrevSymbolName2( str )
+  let firstChars = LowercaseFirstChar( a:str[0:1] )
+  let secondCamelCaseWordFirstChars = matchstr( a:str, '\U\zs\u.\?' )
+  return firstChars . secondCamelCaseWordFirstChars
+endfunc
 
 func! RemoveBrackets( str )
   return substitute( a:str, '\v(\(|\)|\[|\])', '', 'g')

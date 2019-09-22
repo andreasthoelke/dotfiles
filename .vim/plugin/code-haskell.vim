@@ -35,7 +35,7 @@ func! HsCursorKeyword()
 endfunc
 "  == (.) (>>=) >>=
 
-nnoremap <leader><leader>ca :echo HsCursorKeywordAndModule()<cr>
+nnoremap <leader><leader>ca :echo HsCursorKeyword_findModule()<cr>
 
 " Prefix the identifier with the module name. Module name is derived from the context (via conventions not the repl)
 func! HsCursorKeyword_findModule()
@@ -52,7 +52,7 @@ func! HsCursorKeyword_findModule()
   elseif kw =~ '\.\a' " kw includes a shortcut e.g. 'Map.lookup'
     let fullModuleName = ModuleName_fromQualifiedShortname( CropLastElem( kw , '\.' ) )
     if fullModuleName == ''
-      echo 'no module name found: ModuleName_fromQualifiedShortname HsCursorKeywordAndModule'
+      echo 'no module name found: ModuleName_fromQualifiedShortname HsCursorKeyword_findModule'
     endif
     let identifier = GetLastElem( kw, '\.' )
     return fullModuleName . '.' . identifier
@@ -77,10 +77,11 @@ func! HsCursorKeyword_findModule()
   else
     let fullModuleName = ModuleName_fromListedImport( kw )
     if fullModuleName == ''
-      echo 'no module name found: ModuleName_fromListedImport HsCursorKeywordAndModule'
+      echo 'no module name found: ModuleName_fromListedImport HsCursorKeyword_findModule'
+      return kw
+    else
+      return fullModuleName . '.' . kw
     endif
-    let identifier = kw
-    return fullModuleName . '.' . identifier
   endif
 endfunc
 " Tests:
@@ -97,6 +98,12 @@ endfunc
 " Data.Composition                     compose ::      (b -> c) -> (a -> b) -> a -> c
 " Data.Eq                              (==)                             :: Eq a => a -> a -> Bool
 " Control.Applicative                  (.)      ::      (b -> c) -> (a -> b) -> a -> c
+" import qualified Data.Zwei        as M
+" import qualified Data.Test        as Map
+" import qualified Data.ByteString            as BS
+"   Map.lookup or M.lookup
+"   String
+"   ShowS
 
 
 func! GetLastElem( str, separator )
@@ -209,11 +216,13 @@ endfunc
 " echo ModuleName_fromQualifiedShortname( 'M' )
 
 func! ModuleName_fromListedImport( identifier )
-  let lineNum = searchpos( 'import .*'.a:identifier, 'nbW' )[0]
-  return matchstr( getline( lineNum ), 'import\s\+\zs\S\+\ze\s')
+  let lineNum = searchpos( 'import .*(.*'.a:identifier, 'nbW' )[0]
+  return matchstr( getline( lineNum ), 'import\s\+\zs\u\S\+\ze\s')
 endfunc
 " import           Text.Parsec              (many)
+" import qualified Data.ByteString            as BS
 " echo ModuleName_fromListedImport( 'many' )
+" echo ModuleName_fromListedImport( 'String' )
 
 func! ModuleName_fromCommandLabel()
   let lineNum = searchpos( '-- browse \u\S*$', 'nbW' )[0]

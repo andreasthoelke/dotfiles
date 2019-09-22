@@ -437,10 +437,13 @@ endfunc " ▲
 
 " ─^  Repl legacy                                        ▲
 
-nnoremap ger :call WebserverRequestResponse()<cr>
-func! WebserverRequestResponse()
+nnoremap ger :call WebserverRequestResponse( '' )<cr>
+nnoremap ge,r :call WebserverRequestResponse( '-v' )<cr>
+nnoremap ge,R :call WebserverRequestResponse( '--raw' )<cr>
+nnoremap geR :call WebserverRequestResponse( '-v --raw' )<cr>
+func! WebserverRequestResponse( flags )
   let urlExtension = GetStringInQuotesFromLine( line('.') )
-  let l:cmd = "curl -v --raw http://localhost:8000/" . urlExtension
+  let l:cmd = "curl " . a:flags . " http://localhost:8000/" . urlExtension
   let l:resultLines = split( system( l:cmd ), '\n' )
   call FloatWinAndVirtText( l:resultLines[3:] )
   " call append( line('.'), l:resultLines )
