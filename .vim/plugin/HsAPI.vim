@@ -2,12 +2,12 @@
 " ~/.vim/notes/notes-todos.md#/###%20HsAPI
 
 
-nnoremap gsd :call HsAPIQueryShowBuf( HsCursorKeyword(), 15, 0 )<cr>
+nnoremap gsd :call HsAPIQueryShowBuf( HsCursorKeyword_findModule(), 15, 0 )<cr>
 vnoremap gsd :call HsAPIQueryShowBuf( GetVisSel(),       15, 0 )<cr>
 nnoremap gSd :call HsAPIQueryShowBuf( HsCursorKeyword(), 60, 0 )<cr>
 vnoremap gSd :call HsAPIQueryShowBuf( GetVisSel(),       60, 0 )<cr>
 
-nnoremap gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
+nnoremap gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword_findModule()), 15, 0 )<cr>
 vnoremap gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
 nnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
 vnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
@@ -92,7 +92,7 @@ endfunc " ▲
 
 let g:lastSearchStr = ''
 func! HsAPIBrowseShowBuf( searchStr )
-  echoe a:searchStr
+  " echoe a:searchStr
   let browseCmd = ':browse ' . a:searchStr
   let g:lastSearchStr = a:searchStr
   call InteroEval( browseCmd, "HsAPIBrowseShowBuf_CB", '' )
@@ -130,7 +130,7 @@ func! CleanupBrowseOutput()
   " find first '.', yank the last word, select all, paste
   " call add( cmds, 'g/\i\.\i/normal! f.Eb"tyEBvE"tp' )
 
-  call add( cmds, '%s/{-.*-}//g' )
+  " call add( cmds, '%s/{-.*-}//g' )
 
   call add( cmds, 'g/\i\.\i/call CropLeadingModuleNames()' )
   " as this crops only the first long namespace, make a second pass

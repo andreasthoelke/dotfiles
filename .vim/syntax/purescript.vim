@@ -48,7 +48,6 @@ syn region purescriptConstructorDecl matchgroup=purescriptConstructor start="\<[
 syn match purescriptFunction "\%(\<instance\s\+\|\<class\s\+\)\@18<!\<[_a-z]\k*'\?" contained
 " syn match purescriptFunction "\<[_a-z]\(\w\|\'\)*\>" contained
 " syn match purescriptFunction "(\%(\<class\s\+\)\@18<!\(\W\&[^(),\"]\)\+)" contained extend
-syn match purescriptBacktick "`[_A-Za-z][A-Za-z0-9_\.]*`"
 
 " Class:
 syn region purescriptClassDecl start="^\%(\s*\)class\>"ms=e-5 end="\<where\>\|$"
@@ -178,6 +177,25 @@ syn match purescriptChar "'[^'\\]'\|'\\.'\|'\\u[0-9a-fA-F]\{4}'"
 syn region purescriptString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@Spell
 syn region purescriptMultilineString start=+"""+ end=+"""+ fold contains=@Spell
 
+" Marked infix:
+" syn match purescriptBacktick "`[_A-Za-z][A-Za-z0-9_\.]*`"
+
+" syn region infixBacktick start="`[_A-Za-z][A-Za-z0-9_\.]" end="[_A-Za-z]`" contains=infixBacktickTick,hsElem,abcd
+syn match infixBacktickTick "`" conceal containedin=infixBacktick
+" syn region markedInfix start=+\`+ end=+\`+ contains=@Spell,infixMarks,hsElem
+" syn match Normal '`' conceal cchar=x contained
+syn match hsElem "elem`" conceal cchar=∈ containedin=infixBacktick
+" syn match abcd "[_A-Za-z][A-Za-z0-9_\.]" containedin=infixBacktick
+syn match infixBacktick "`[_A-Za-z][A-Za-z0-9_\.]*`" contains=infixBacktickTick,hsElem
+" Note: it was important to have this encompassing match *after* the included matches!!
+
+" Tests:
+" -- cbnb0 = `any` `eins` `elem` `test`
+" Previous implementation
+      " \, ['\`elem\`',         '∈', 'hsForall']
+      " call matchadd('Conceal', '`', -1, -1, {'conceal': ''})
+
+
 " Comment:
 syn match purescriptLineComment "---*\([^-!#$%&\*\+./<=>\?@\\^|~].*\)\?$" contains=@Spell,concealedTLbindInComment,concealedCommentDashes,concealedTLbindTypeInComment,m4,mbr1
 syn region purescriptBlockComment start="{-" end="-}" fold
@@ -202,7 +220,6 @@ let g:HsCharsToUnicode = [
       \, [' \zs<\*>',          '⟐', 'Normal']
       \, [' \zs>>',            '≫', 'Normal']
       \, [' \zs>>=',           '⫦', 'Normal']
-      \, [' \zs\`elem\`',      '∈', 'Normal']
       \, [' \zs\`flipElem\`',  '∋', 'Normal']
       \, [' \zs<|>',           '‖', 'Normal']
       \, [' \zs>=>',           '↣', 'Normal']
@@ -217,7 +234,7 @@ let g:HsCharsToUnicode = [
       \, [' \zsempty',        '∅', 'Normal']
       \, [' \zs++',            '⧺', 'Normal']
       \, [' \zs<=',            '≤', 'Normal']
-      \, [' \zs>=',            '≥', 'Normal']
+      \, ['>=\ze ',            '≥', 'Normal']
       \, ['Integer',           'ℤ', 'hsInteger']
       \]
 
@@ -288,6 +305,12 @@ syntax match InlineTestNum   'e3' conceal cchar=③
 syntax match InlineTestNum   'e4' conceal cchar=④
 syntax match InlineTestNum   'e5' conceal cchar=⑤
 syntax match InlineTestNum   'e6' conceal cchar=⑥
+syntax match InlineTestNum   'e7' conceal cchar=⑦
+syntax match InlineTestNum   'e8' conceal cchar=⑧
+syntax match InlineTestNum   'e9' conceal cchar=⑨
+syntax match InlineTestNum   'e10' conceal cchar=⑩
+syntax match InlineTestNum   'e11' conceal cchar=⑪
+syntax match InlineTestNum   'e12' conceal cchar=⑫
 syntax match InlineTestIdeSpace '\v_\i+\ze[\)\ ]' contained conceal cchar= 
 " Notes: The '+' is needed to prevent concealing standalone '_'s
 " syntax match InlineTestDecSpace '\v_\i{-}\s\=\ze\s' conceal cchar= 
@@ -413,7 +436,9 @@ highlight def link purescriptTypeVar Identifier
 highlight def link purescriptForall purescriptStatement
 
 highlight def link purescriptChar String
-highlight def link purescriptBacktick purescriptOperator
+" highlight def link purescriptBacktick purescriptOperator
+" highlight def link abcd purescriptOperator
+highlight def link infixBacktick purescriptOperator
 highlight def link purescriptString String
 highlight def link purescriptMultilineString String
 

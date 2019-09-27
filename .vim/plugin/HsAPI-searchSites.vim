@@ -44,7 +44,7 @@ vnoremap <leader>tti :<c-u>echoe GetInputStr('Search term: ', 'v')<cr>
 " Issue: This labels the last sub-module as 'identifier'
 func! ParseModuleIdentifier( inStr ) " ■
   let items = split( a:inStr, '\a\zs\.' )
-  if items[-1][0] =~ '\u'
+  if items[-1][0] =~ '\u' && len( items ) < 3
     " if len( items ) == 2 " Just two items and the last one uppercase. -> is pased as just a module
       return {'module': join( items, '.' )}
     " else
@@ -61,6 +61,7 @@ endfunc
 " echo ParseModuleIdentifier( 'Control.Applicative.Monoid' )
 " echo ParseModuleIdentifier( 'Data.ByteString.Lazy.Char8' )
 " echo ParseModuleIdentifier( 'Control.Applicative.Just' )
+" echo ParseModuleIdentifier( 'Data.Monoid.Sum' )
 " echo ParseModuleIdentifier( 'Control.Applicative.fmap' )
 " echo ParseModuleIdentifier( 'Control.Applicative.(<*>)' )
 " echo ParseModuleIdentifier( 'Control.Applicative.<*>' )
@@ -131,6 +132,7 @@ endfunc
 " Tests:
 vnoremap <leader><leader>cc :<c-u>echo SearchPropsUserStr('visual')<cr>
 nnoremap <leader><leader>cc :echo SearchPropsUserStr('n')<cr>
+nnoremap <leader><leader>cb :echo GetSearchParams('n')<cr>
 
 
 
@@ -141,6 +143,7 @@ nnoremap gso :call UserChoiceAction( 'Run query on site', GetSearchParams('n'), 
 nnoremap gsO :call UserChoiceAction( 'Run query on site', GetSearchParams('n', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 
 vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual'),        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', GetSearchParams('visual', 'Search params: '), g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
 
 nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choicesTest1, function('TestUserChoice1'), [] )<cr>
 nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'eins':expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>

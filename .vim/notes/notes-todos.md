@@ -1081,6 +1081,8 @@ GraphQL access to the spotify rest API:
 
 ### HsAPI
 
+* stubs should use indexDoublicateNames and Haskell integration: ~/.vim/plugin/utils-stubs.vim#/Issue.%20this%20produces
+
 * make gsd (local hoogle) consistent with gso (web search)
     " TODO: use ~/.vim/plugin/HsAPI-searchSites.vim#/func.%20GetSearchParams.%20mode,
     " qualified shortcuts are currently not supported, e.g. "LBSASCII.pack"
@@ -1227,6 +1229,42 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 
 ## Temp next
+* zfaf folding around function misses comment for end fold
+* skip closed folds in c-n/p HsMotion map
+* "in" is not allowed when abbreviating
+* align "=" when a "==" is in the line
+* gsb should show "Browse Module: "
+* when a binding with no args is expanded, there is an redundant space beffore the "="
+* import identifier from main win/not HsApi fails?
+* `elem` is not compensated in aligning via ,aj=
+* don't show HLint at test-assertions - so virtual text of repl result is maintained
+* pasting guard patterns doesn't format well:
+      step (x:xs) | x `elem` intChars = step xs -- don't keep the x/int, contiune scanning
+      | otherwise    = x : xs -- not an int: stop looking. As the algorithm may exit eary it would be hard to write with foldr
+      step []                    = []
+* closing a section leader 'space ehe' dosn't work here: ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Exercises.hs#/--%20Index%20doublicate
+* index a simgle symbol - space ei
+* clarify \raf map with space raf
+* 'enter replacement text: ' should show the current name/ net edit this with c-f
+* HsApi browse should create a named file in the HsApi folder - so I can edit it, keep it - when searching again for e.g. "Data.List" it should open this file.
+* extend test numbers to 10/9: e6_numTable
+* test j/k with new "\`" conceal ~/.vim/plugin/code-line-props.vim#/elseif%20lineStr[charIdx-1]%20==
+- (done sort of) restart running processes: e2_staticResponseServer = staticResponseServer howdyResponse
+  - currently required c-c in intero shell - but this could be sent before restarting?
+* intero: prevent opening floatwin for some messages (e.g. when long-running process is started/canceled)  ~/.vim/plugin/ui-floatWin.vim#/TODO%20move%20this
+* conceal quotes around operators e.g. \`elem\` ~/.vim/plugin/HsSyntaxAdditions.vim#/TODO%20this%20conflicts
+* to to first error/ first item in quickfix list -> doc maps
+* when adding "mtl" to package.yaml it did not update the cabal file
+* map for package.yaml?
+* TODO leader haiB shows missing function
+* Tab-out c-w t of HsApi window does show Dirvish instead ~/Documents/Haskell/6/HsTrainingTypeClasses1/HsAPIdata/Control.Monad.State.hs#/--%20browse%20Control.Monad.State
+* gsk does not insert but vitual-show ~/Documents/Haskell/6/HsTrainingTypeClasses1/HsAPIdata/Control.Monad.State.hs#/evalState%20..%20State
+* roll back to languageclient snapshot?
+* commented unique stubs look identical to normal lines: ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/ReaderStateMonads.hs#/--%20cbgf0%20=
+* arrow unicode conceal does not work in Reader { runReader :: r -> a }
+* conceal char for flip compose? ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Utils.hs#/.<#>.%20=%20flip
+
+
 - jump back to where insert started? [\`? not <c-o>?
 
 * horizontal split-wins separators are hard to see

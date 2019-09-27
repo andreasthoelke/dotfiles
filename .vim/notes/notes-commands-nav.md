@@ -9,12 +9,17 @@ insert c-i  - show completions with type sig!
 insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
 
 ### Intero
+leader io/l/k/h - intero open/load/kill/hide
+leader il   - load just the current module
+dr          - reload ghci
+leader ic   - InteroCancelRunningProcessInGhci
 gw, gW      - show type at/vis-sel / generic type
 get         - show type of symbol or vis sel (also works when module not compiles)
 ,gw         - insert type above
 gek         - kind at symbol or vis sel
-ges         - run symbol
-ges vis-sel - run expression!
+gei         - run symbol
+gei vis-sel - run expression!
+gel/c/C     - show list of strings as lines
 
 ger         - Curl send sting in line to localhost, show response
 
@@ -126,7 +131,17 @@ dw          - align/pull inwards to the cursorH the first char to the right
 leader al   - easy align
 leader a-ii - align a 'case' block! to '->'
 leader ha (+m/vs) - type-sig align (motion or vis-sel) 'aB'-> error?
+              TODO leader haiB show missing function
 leader hA   - type-sig align entire buffer. or "viB<space>ha<c-o>"
+
+### Format
+leader leader sm 'SplitModulesInLines'<cr>
+leader leader jm 'JoinModulesFromLines'<cr>
+leader leader ht 'HsTabu'<cr>
+leader leader hT 'StripAligningSpaces'<cr>
+leader leader sa 'StripAligningSpaces'<cr>
+leader leader hu 'HsUnicode'<cr>
+leader leader hU 'HsUnUnicode'<cr>
 
 ### Motions
 g;          - to revert the InsertLeave jump

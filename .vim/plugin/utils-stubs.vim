@@ -145,6 +145,7 @@ endfunc
 
 " "expand signature" expand a signature to a function stub
 nnoremap <leader>eb :call Stubs_ExpandTermLevelFromTypeSign()<cr>
+" Issue: this produces doublicate var names. use  ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Exercises.hs#/indexDoublicateNames%20..%20[String]
 
 func! Stubs_ExpandTermLevelFromTypeSign()
   let symbName = GetTopLevSymbolName( line('.') )
@@ -163,6 +164,9 @@ func! ArgTypesToSuggestedArgNames( types )
 endfunc
 " call append('.', join( ArgTypesToSuggestedArgNames( ['Maybe a', '(Av cc, Int)', 'Maybe Field', '[Maybe b]', '(a -> Ab c -> bcd)', 'Maybe Field -> Maybe bc'] ), ', ') )
                                                       " mayA,     tavCc_int,       mayFie,        lmayB,       fa_abC_bcd,            fmayFie_mayBc
+
+" call append('.', join( ArgTypesToSuggestedArgNames( ['Maybe a', 'Maybe a', 'Int', 'Int', 'Maybe Field -> Maybe bc'] ), ', ') )
+
 
 func! ArgTypeToSuggArgName( type )
   if a:type =~ '->'
@@ -196,7 +200,7 @@ func! AbbrevSymbolName( str )
   endif
   return firstChars . camelCaseChar
 endfunc
-echo AbbrevSymbolName( 'HeaderField' )
+" echo AbbrevSymbolName( 'HeaderField' )
 
 func! AbbrevSymbolName2( str )
   let firstChars = LowercaseFirstChar( a:str[0:1] )
@@ -265,7 +269,7 @@ nnoremap <leader>uef <leader>us<leader>ef
 nmap <leader>hfs :call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
 
 " "index symbol" append postfix index to function name
-nnoremap <leader>if ea0^jea0^k
+nnoremap <leader>eif ea0^jea0^k
 " nnoremap <leader>his ea0^jea0^k
 
 " Increase/ decrease the index of TypeSig and term level binding together

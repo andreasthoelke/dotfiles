@@ -1,6 +1,8 @@
 
 " Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
 
+" call jobsend(g:intero_job_id, "\<C-u>")
+
 
 " ─   Settings                                          ──
 " Intero starts automatically. Set this if you'd like to prevent that.
@@ -363,10 +365,18 @@ func! InteroEval( expr, renderFnName, alignFnName ) abort
   " exec "InteroReload" " TODO perhaps reload on InsertLeave? otherwise all cmds would take longer..?
   " Set the align function as a script var as it can not be passed to callback(?)
   let s:async_alignFnExpr = a:alignFnName
+  " TODO refactor to support smart command events?
+  if a:expr =~ 'server'
+    call jobsend(g:intero_job_id, "\<C-c>")
+    exec 'InteroOpen'
+  endif
   call intero#process#add_handler( function( a:renderFnName ) )
   call intero#repl#eval( a:expr )
 endfunc
 
+nnoremap <leader>ic :InteroCancelRunningProcessInGhci<cr>:InteroHide<cr>:call FloatWin_close()<cr>
+
+command! InteroCancelRunningProcessInGhci call jobsend(g:intero_job_id, "\<C-c>")
 
 " Resume here to finish pretty printing big values ~/.vim/notes/notes-todos.md#/##%20Pretty%20printing
 func! InteroEval_SmartShow_step2( replReturnedLines ) " ■

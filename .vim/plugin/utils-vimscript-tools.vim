@@ -18,7 +18,7 @@ endfunc
 " the current file
 nnoremap <silent><leader>so :w<cr>:so %<cr>
 " the vimrc
-nnoremap <silent><leader>sv :so $MYVIMRC<cr>
+nnoremap <silent><leader><leader>sv :so $MYVIMRC<cr>
 " the following paragraph/lines
 nnoremap <leader>s} "ty}:@t<cr>
 nnoremap <leader>sip m'"tyip:@t<cr>``

@@ -64,6 +64,10 @@ func! FloatWin_ShowLines( linesToShow, ... )
   if !len( a:linesToShow )
     return
   endif
+  " TODO move this to intero
+  if join( a:linesToShow ) =~ 'CInterrupted'
+    return
+  endif
   let opt = { 'focusable': v:true,
         \ 'width': 50,
         \ 'height': 10,

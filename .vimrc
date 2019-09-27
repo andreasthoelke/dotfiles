@@ -243,7 +243,8 @@ Plug 'autozimu/LanguageClient-neovim', {
 Plug 'andreasthoelke/vim2hs'
 Plug 'andreasthoelke/haskell-env'
 " Interact with Hoogle Haskell API
-Plug 'andreasthoelke/HsAPIExplore'
+" now in vim folder
+" Plug 'andreasthoelke/HsAPIExplore'
 " Add an identifier to the import section of a hasell file
 Plug 'dan-t/vim-hsimport'
 " This does show some nice unicode symbols (see "conceal" screenshots).

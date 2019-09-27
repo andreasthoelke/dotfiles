@@ -166,7 +166,7 @@ set completeopt=noinsert,menuone,noselect
 
 " TODO Not sure what effect this has
 set completefunc=LanguageClient#complete
-set omnifunc=LanguageClient#complete
+" set omnifunc=LanguageClient#complete
 " set omnifunc=syntaxcomplete#Complete
 " set omnifunc=lsp#complete
 

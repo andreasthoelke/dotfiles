@@ -65,7 +65,8 @@ func! HsCursorKeyword_findModule()
   " 5) HsAPI view 2:
   " Control.Monad replicateM :: (Applicative m) => Int -> m a -> m [a]
   " elseif getline('.') =~ '\..*' . kw . '\s\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
-  elseif getline('.') =~ '^\u\S*\s\+(\?' . kw . ')\?\s\+\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
+  " elseif getline('.') =~ '^\u\S*\s\+(\?' . kw . ')\?\s\+\:\:' " we are in a different HsAPI view with module name preceding the identifier separated by a space
+  elseif getline('.') =~ '^\u\S\+\s\+.\+' . kw . '\s' " we are in a different HsAPI view with module name preceding the identifier separated by spaces or other keywords like data, newtype, etc
     return GetTopLevSymbolName( line('.') ) . '.' . kw
   " 6) HsAPI view 3: browse module output
   elseif getline(1) =~ '-- browse '
@@ -104,6 +105,7 @@ endfunc
 "   Map.lookup or M.lookup
 "   String
 "   ShowS
+" Data.Monoid           newtype Sum a
 
 
 func! GetLastElem( str, separator )

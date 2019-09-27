@@ -49,7 +49,8 @@ func! ReducedColumnsInVisualDisplay( lineNum, sourceCharIdx )
         " conceal instance. This conceal instance is represented by a (syntax-group) Id which is unique over the line (is it?)
         call add( concealInstanceIds, groupId ) " track all instance Ids that had replacement chars
       endif
-    elseif lineStr[charIdx-1] == '"'
+      " " TODO test this
+    elseif lineStr[charIdx-1] == '"' || lineStr[charIdx-1] == '`'
       let concealedCharCount += 1 " quotes are concealed by matchadd in syntax-additions
     endif
   endfor
@@ -75,7 +76,9 @@ func! CharIdxOfVisualCol( lineNum, searchVisualColIdx )
     let [iCharConcealed, iReplacementChar, iGroupId] = synconcealed( a:lineNum, charIdx )
     if !iCharConcealed
       " This char is not concealed and is therefore increasing the visual-column count (at this source char)
-      if lineStr[charIdx-2] == '"'
+      " if lineStr[charIdx-2] == '"'
+      " " TODO test this
+      if lineStr[charIdx-2] == '"' || lineStr[charIdx-2] == '`'
         " echo 'got'.charIdx
         " .. unless it's a quote, then this char will not be visible
         let reducedColumnCount += 1
