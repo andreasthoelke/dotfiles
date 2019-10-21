@@ -184,7 +184,7 @@ function! FocusSelection(visual)
 endfunction
 
 
-noremap <leader>ytw :call ToggleOption('wrap')<cr>
+noremap <leader><leader>ytw :call ToggleOption('wrap')<cr>
 function! ToggleOption(option_name, ...)
   let option_scope = 'local'
   if a:0 | let option_scope = '' | endif

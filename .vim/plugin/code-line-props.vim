@@ -254,6 +254,11 @@ func! IsImportLine( linenum )
 endfunc
 " echo IsImportLine( line('.') )
 
+func! IsDoStartLine( linenum )
+  return getline( a:linenum ) =~ ' do'
+endfunc
+" echo IsImportLine( line('.') )
+
 func! IsTypeSignLine( linenum )
   return getline( a:linenum ) =~ '\(∷\|::\)'
 endfunc

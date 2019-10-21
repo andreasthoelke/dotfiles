@@ -108,6 +108,8 @@ func! s:showLC_Diagnostics( stateJSON )
   let state = json_decode( a:stateJSON.result )
   let diagnostics = get( state.diagnostics, expand('%:p'), [] )
   " echoe string( diagnostics )
+  " echoe string( state )
+  " todo: put into a buffer and get other useful things (like the type at the cursor) from it?
   for diag in diagnostics
     if diag.range.start.line +1 == line('.')
       let message = diag.message

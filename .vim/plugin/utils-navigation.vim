@@ -58,6 +58,9 @@ nnoremap <c-w>< 4<c-w><
 nmap <leader>wp <Plug>(Visual-Split-SplitAbove)
 xmap <leader>wp <Plug>(Visual-Split-VSSplitAbove)
 
+" Pin Haskell imports
+nmap <leader>wI <leader>wpiI<c-o><c-w>k
+
 " Workaround to force vim-help to open below
 " augroup vimrc_help
 "   autocmd!

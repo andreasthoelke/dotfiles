@@ -1,5 +1,6 @@
 
 ## Release notes v1.1.2
+* syn match infixBacktick with enclosed conceals
 * J/K map - Word column corners Forw/Backw (based on aligned visibleColumns)
 * Gen_opfunc2: applying a function via an operator map, visual selection and command  ~/.vim/plugin/code-line-props.vim#/Vim%20Pattern.%20For
 * sort (type-sig HsAPI) columns with c-v Vissort

@@ -257,24 +257,6 @@ command! ExtractGenSigs :g/∷.*⇒/t$
 nnoremap <BS> J
 
 
-func! InsertStringAtLoc( str, line, col )
-  let lineText = getline( a:line )
-  let textBefore = lineText[:a:col]
-  let textAfter = lineText[a:col+1:]
-  normal! dd
-  call append( a:line-1, textBefore . a:str . textAfter )
-  normal! k
-endfunc
-" echo InsertStringAtLoc( 'XX', line('.'), col('.')-2 )
-
-" Push text to the right:
-" nnoremap <localleader>> i <esc>
-nnoremap <localleader>> :call InsertStringAtLoc( ' ', line('.'), col('.')-2 )<cr>
-" nnoremap <localleader>> i <Esc>
-" Make it repeatable so the cursor follows the text to the right
-" Followup: it just does this. not sure what the problem was before
-" nmap <Plug>PushTextRight i <esc>l:call repeat#set("\<Plug>PushTextRight")<cr>
-" nmap <localleader>> <Plug>PushTextRight
 
 " Insert line. Related to `]<space>`
 " nnoremap O o<Esc> 

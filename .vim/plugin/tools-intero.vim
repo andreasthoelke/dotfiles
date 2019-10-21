@@ -7,7 +7,7 @@
 " ─   Settings                                          ──
 " Intero starts automatically. Set this if you'd like to prevent that.
 let g:intero_start_immediately = 1
-" let g:intero_use_neomake = 0
+let g:intero_use_neomake = 0
 " This show ghi warnings as opposed to hlint warnings:
 " TODO: toggle warnings without restart vim!
 
@@ -201,12 +201,19 @@ endfunc
 func! GetReplExpr()
   let lineList                = split( getline('.') )
   let secondWordOnwards       = join( l:lineList[1:], ' ')
+  let expressionOfBind        = join( l:lineList[2:], ' ')
   let topLevelSymbol          = lineList[0]
+  let concealedBindingLine    = lineList[0][0:1] == 'cb'
+  let testBindingLine         = lineList[0][0:1] =~ 'e\d'
   let isDeclarationWithNoArgs = lineList[1] == '='
   let isToplevelLine          = IndentLevel( line('.') ) == 1
   let cursorIsAtStartOfLine   = col('.') == 1 " not sure where?
 
-  if CursorIsInsideStringOrComment()
+  if IsDoStartLine( line('.') )
+    return topLevelSymbol
+  elseif concealedBindingLine || testBindingLine
+    return expressionOfBind
+  elseif CursorIsInsideStringOrComment()
     return secondWordOnwards
   elseif IsTypeSignLine( line('.') )
     return topLevelSymbol
@@ -221,6 +228,7 @@ func! GetReplExpr()
     echoe 'Could not extract an expression!'
   endif
 endfunc
+" TODO: document test cases. optimise for non reload. autoreload in case it's needed?
 
 
 " ─   Apply args                                         ■

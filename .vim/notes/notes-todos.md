@@ -1246,6 +1246,7 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 * index a simgle symbol - space ei
 * clarify \raf map with space raf
 * 'enter replacement text: ' should show the current name/ net edit this with c-f
+* HsApi bug: gsB from HsAPI win shows only few results!
 * HsApi browse should create a named file in the HsApi folder - so I can edit it, keep it - when searching again for e.g. "Data.List" it should open this file.
 * extend test numbers to 10/9: e6_numTable
 * test j/k with new "\`" conceal ~/.vim/plugin/code-line-props.vim#/elseif%20lineStr[charIdx-1]%20==
@@ -1263,6 +1264,27 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 * commented unique stubs look identical to normal lines: ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/ReaderStateMonads.hs#/--%20cbgf0%20=
 * arrow unicode conceal does not work in Reader { runReader :: r -> a }
 * conceal char for flip compose? ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Utils.hs#/.<#>.%20=%20flip
+* when gsO don't have language "md"/markdown in the (google) search
+* string literals show Lable/codeMarkup syntax: "Multiple: " <> show mult <> "Fraction " <> show divi >
+* underscores in varnames prevent the conceal cbun0 fb_c fa_b a = fbc $ fab a
+* stubs should support runReader, etc ~/.vim/plugin/utils-stubs.vim#/TODO%20new%20feature
+* move syntax-additions to syntax file:  ~/.vim/plugin/HsSyntaxAdditions.vim#/call%20matchadd.'Conceal',%20'"',
+* when typing ".. this changes the rest of the files syntax highlight to text
+* HsApi bug: browse Data.Set is commented/not alighed
+* HsMotion: how to change BigWord/I.Identity here: rrShow2 :: Show a ⇒ ReaderT a I.Identity String
+* expand big U stub has the cursor too low/ not positioned
+* when I create a signature for a test, and then create a new test, it uses the prev test as function -> skipt test
+* HsImport does not work/close windows what run outside of HsAPI win
+* sometimes I need to :e the files - this looses the window position
+* how long is undo in hs-projects? mundo was just 20 steps recently
+* are HIE settings actually used? turn off hlint?
+* TODO: Auto run this in Ghci?! or have extended defaults? to allow direct repl usage of #fildname
+  - :set -XOverloadedLabels -XTypeOperators -XDataKinds -XFlexibleContexts
+* doing \> to shift needs to be at that char!
+  - it's also not repeatable
+  - .. seems to work now? ~/.vim/plugin/utils-align.vim#/Push%20text%20to
+* leader c-a might also inc signature and function bind that are split across several lines
+
 
 
 - jump back to where insert started? [\`? not <c-o>?

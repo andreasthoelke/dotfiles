@@ -72,6 +72,7 @@ func! HaskellSyntaxAdditions()
 
   " Don't show quotes around text. note you can only identify text via the syntax coloring!
   call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '""', -1, -1, {'conceal': '∅'})
   " TODO this conflicts with `elem` and it unicode replacement
   " call matchadd('Conceal', '`', -1, -1, {'conceal': ''})
   " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely

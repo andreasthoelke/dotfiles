@@ -108,7 +108,7 @@ syn match purescriptImportHiding "hiding"
 syn region purescriptFunctionDecl
   \ excludenl start="^\z(\s*\)\(\(foreign\s\+import\)\_s\+\)\?\(\S\|\'\)*\_s\{-}\(::\|∷\)"
   \ end="^\z1\=\S"me=s-1,re=s-1 keepend
-  \ contains=concealedTLbindType,hsInteger,hsForall,hsArrow,hsConstraintArrow,hsTypeColon,purescriptFunctionDeclStart,purescriptForall,purescriptOperatorType, purescriptOperator, purescriptOperatorTypeSig,purescriptType,purescriptTypeVar,purescriptDelimiter,@purescriptComment
+  \ contains=concealedTLbindType,hsInteger,hsForall,hsArrow,hsArrowBackw,hsConstraintArrow,hsTypeColon,purescriptFunctionDeclStart,purescriptForall,purescriptOperatorType, purescriptOperator, purescriptOperatorTypeSig,purescriptType,purescriptTypeVar,purescriptDelimiter,@purescriptComment
 syn region purescriptFunctionDecl
   \ excludenl start="^\z(\s*\)where\z(\s\+\)[_a-z]\(\w\|\'\)*\_s\{-}\(::\|∷\)"
   \ end="^\(\z1\s\{5}\z2\)\=\S"me=s-1,re=s-1 keepend
@@ -185,8 +185,10 @@ syn match infixBacktickTick "`" conceal containedin=infixBacktick
 " syn region markedInfix start=+\`+ end=+\`+ contains=@Spell,infixMarks,hsElem
 " syn match Normal '`' conceal cchar=x contained
 syn match hsElem "elem`" conceal cchar=∈ containedin=infixBacktick
+syn match hsElemNot "notElem`" conceal cchar=∉ containedin=infixBacktick
+" syn match hsCompForw "compForwBin`" conceal cchar=… containedin=infixBacktick
 " syn match abcd "[_A-Za-z][A-Za-z0-9_\.]" containedin=infixBacktick
-syn match infixBacktick "`[_A-Za-z][A-Za-z0-9_\.]*`" contains=infixBacktickTick,hsElem
+syn match infixBacktick "`[_A-Za-z][A-Za-z0-9_\.]*`" contains=infixBacktickTick,hsElem,hsElemNot,compForwBin
 " Note: it was important to have this encompassing match *after* the included matches!!
 
 " Tests:
@@ -216,7 +218,7 @@ let g:HsCharsToUnicode = [
       \, ['forall\ze\s',       '∀', 'hsForall']
       \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
       \, [' \zs\.',            '∘', 'Normal']
-      \, [' \zs<\$>',          '⫩', 'Normal']
+      \, ['<\$>',          '⫩', 'Normal']
       \, [' \zs<\*>',          '⟐', 'Normal']
       \, [' \zs>>',            '≫', 'Normal']
       \, [' \zs>>=',           '⫦', 'Normal']
@@ -224,13 +226,14 @@ let g:HsCharsToUnicode = [
       \, [' \zs<|>',           '‖', 'Normal']
       \, [' \zs>=>',           '↣', 'Normal']
       \, [' \zs<=<',           '↢', 'Normal']
+      \, [' \zs<<<<',           '…', 'Normal']
       \, [' \zs==',            '≡', 'Normal']
-      \, ['==\ze ',            '≡', 'Normal']
-      \, [' \zs/=',            '≠', 'Normal']
+      \, ['==',            '≡', 'Normal']
+      \, ['/=',            '≠', 'Normal']
       \, ['/=\ze ',            '≠', 'Normal']
       \, [' \zs<>',            '◇', 'Normal']
-      \, ['<>\ze ',            '◇', 'Normal']
-      \, [' \zsmempty',        '∅', 'Normal']
+      \, ['<>',            '◇', 'Normal']
+      \, ['mempty',        '∅', 'Normal']
       \, [' \zsempty',        '∅', 'Normal']
       \, [' \zs++',            '⧺', 'Normal']
       \, [' \zs<=',            '≤', 'Normal']
@@ -240,6 +243,7 @@ let g:HsCharsToUnicode = [
 
       " \, [' \zs<|>',           '⦶', 'Normal']
             " \, [' \zs<|>',           '‖', 'Normal']
+            " ε
 
 for [pttn, concealUnicodeSym, syntaxGroup] in g:HsCharsToUnicode
   exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym

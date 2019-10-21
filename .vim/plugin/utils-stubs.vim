@@ -12,7 +12,11 @@
 " leader et   - create inline test stub
 " leader ea   - create assertion
 
-
+" TODO new feature - support Reader, State with 'runReader ... (r)'
+" cbwl0 :: Reader Int String
+" cbwl0 = asks report <*> asks ((/10).fromIntegral) <*> asks even
+" e1_cbwl0 = runReader cbwl0 (i:: Int)
+" "2. new feature: (x -> Bool) should be 'xp'
 
 nnoremap <leader>et :call CreateInlineTestDec()<cr>
 " e1_database4 = database4 (Just "eins") 123
