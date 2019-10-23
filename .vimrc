@@ -629,6 +629,7 @@ let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
 
 " use "StripWhitespace" and "ToggleWhitespace"  
 nnoremap <leader>sw :StripWhitespace<cr>
+nnoremap yoW :ToggleWhitespace<cr>
 
 " Tested: unprintable chars, tabs, show trailing whitespace chars
 " set list

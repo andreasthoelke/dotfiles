@@ -222,6 +222,7 @@ let g:HsCharsToUnicode = [
       \, [' \zs<\*>',          '⟐', 'Normal']
       \, [' \zs>>',            '≫', 'Normal']
       \, [' \zs>>=',           '⫦', 'Normal']
+      \, [' \zs=<<',           '⫣', 'Normal']
       \, [' \zs\`flipElem\`',  '∋', 'Normal']
       \, [' \zs<|>',           '‖', 'Normal']
       \, [' \zs>=>',           '↣', 'Normal']
@@ -315,14 +316,21 @@ syntax match InlineTestNum   'e9' conceal cchar=⑨
 syntax match InlineTestNum   'e10' conceal cchar=⑩
 syntax match InlineTestNum   'e11' conceal cchar=⑪
 syntax match InlineTestNum   'e12' conceal cchar=⑫
-syntax match InlineTestIdeSpace '\v_\i+\ze[\)\ ]' contained conceal cchar= 
+" syntax match InlineTestIdeSpace '\v_\i+\ze[\)\ ]' contained conceal cchar= 
+syntax match InlineTestIdeSpace '\v_\f{-}\ze\)?\_s' contained conceal cchar= 
 " Notes: The '+' is needed to prevent concealing standalone '_'s
 " syntax match InlineTestDecSpace '\v_\i{-}\s\=\ze\s' conceal cchar= 
-syntax match InlineTestDecSpace '\v_\i{-}\s\=\ze\s' contained conceal cchar= 
+syntax match InlineTestDecSpace '\v_\f{-}\s\=\ze\s' contained conceal cchar= 
 
-syntax match InlineTestIdentifier  '\ve\d_\i{-}\ze[\)| ]' contains=InlineTestNum,InlineTestIdeSpace
+" syntax match InlineTestIdentifier  '\ve\d_\i{-}\ze[\)| ]' contains=InlineTestNum,InlineTestIdeSpace
+syntax match InlineTestIdentifier  '\ve\d_\i{-}\ze[\_s|\)]' contains=InlineTestNum,InlineTestIdeSpace
 " syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s\i{-}\s' contains=InlineTestNum,InlineTestDecSpace
 syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s' contains=InlineTestNum,InlineTestDecSpace
+
+" added \_s and ')' as optional end of the test-identifier. now this works without space at the end of the line:
+" e2_e1_consos12 = (replicateM 100 e1_consos12)
+" e3_e1_consos12 = replicateM 100 e1_consos12
+
 
 " TODO this is sort of benefitial (but coincidential and i could not set up a separate HL-group for this when tried in
 " 7-2019:

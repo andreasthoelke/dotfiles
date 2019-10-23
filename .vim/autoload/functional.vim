@@ -49,7 +49,7 @@ func! functional#filter(fn, l)
   return filter(new_list, {_, x -> call( a:fn, [x] )} )
 endfunc
 " echo functional#filter( {x->x==3}, [2, 3, 4] )
-" echo Filter( {x-> x isnot# 3}, [2, 3, 4] )
+" echo functional#filter( {x-> x isnot# 3}, [2, 3, 4] )
 
 " foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
 func! functional#foldr(fabb, initB, listA)
@@ -77,7 +77,20 @@ endfunc
 " let [folderPathTarget;_] = Filter( {path-> path isnot# folderPathSource}, TabWinFilenames() )
 
 
+func! Id( a )
+  return a:a
+endfunc
 
+" echo Id( 'hi there' )
+" echo call( Comp( function('Id'), function('Id') ), ['ab'] )
+
+func! Comp( f, g )
+  return {x-> a:g( a:f(x) )}
+endfunc
+
+func! Plus2( num )
+  return (num + 2)
+endfunc
 
 
 
