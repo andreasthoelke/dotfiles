@@ -210,7 +210,7 @@ syn sync minlines=50
 " ─   Conceal with unicode                               ■
 
 let g:HsCharsToUnicode = [
-      \  ['\s\zs->',           '→', 'hsArrow']
+      \  ['->',           '→', 'hsArrow']
       \, ['\s\zs<-',           '←', 'hsArrowBackw']
       \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
       \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
@@ -235,6 +235,8 @@ let g:HsCharsToUnicode = [
       \, [' \zs<>',            '◇', 'Normal']
       \, ['<>',            '◇', 'Normal']
       \, ['mempty',        '∅', 'Normal']
+      \, ['flip\s',        '◖', 'Normal']
+      \, ['fmap\s',        'ꜛ', 'Normal']
       \, [' \zsempty',        '∅', 'Normal']
       \, [' \zs++',            '⧺', 'Normal']
       \, [' \zs<=',            '≤', 'Normal']
@@ -298,6 +300,9 @@ endfor
 syntax match concealedCommentDashes '--\s' contained conceal
 " syntax match concealedQuote '\s\zs"' contained conceal
 
+syntax match concealedUndefinedType 'i::' conceal
+syntax match concealedUndefinedType 'undefined::' conceal
+
 
 " ─   Inline Tests conceals                              ■
 
@@ -327,7 +332,7 @@ syntax match InlineTestIdentifier  '\ve\d_\i{-}\ze[\_s|\)]' contains=InlineTestN
 " syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s\i{-}\s' contains=InlineTestNum,InlineTestDecSpace
 syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s' contains=InlineTestNum,InlineTestDecSpace
 
-" added \_s and ')' as optional end of the test-identifier. now this works without space at the end of the line:
+" added \_s and ')' as end of the test-identifier. now this works without space at the end of the line:
 " e2_e1_consos12 = (replicateM 100 e1_consos12)
 " e3_e1_consos12 = replicateM 100 e1_consos12
 
