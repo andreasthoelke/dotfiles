@@ -4,6 +4,10 @@
 " Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
 
 " HIE config: ~/Documents/Haskell/6/HsTrainingTypeClasses1/.vim/settings.json#/"diagnosticsDebounceDuration.%2050,
+" Note GHC warnings: are set here for HIE!
+" ~/Documents/Haskell/6/HsTrainingTypeClasses1/HsTrainingTypeClasses1.cabal#/ghc-options.%20-fdefer-typed-holes%20-fwarn-incomplete-patterns
+" ghc-options: -fdefer-typed-holes -fwarn-incomplete-patterns -frefinement-level-hole-fits=1 -XPartialTypeSignatures
+" Also note ~/Documents/Haskell/6/HsTrainingTypeClasses1/.hlint.yaml#/#%20Ignore%20some
 
 
 " ─   Language Client HIE                                ■

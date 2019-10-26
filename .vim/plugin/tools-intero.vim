@@ -10,14 +10,21 @@ let g:intero_start_immediately = 1
 let g:intero_use_neomake = 0
 " This show ghi warnings as opposed to hlint warnings:
 " TODO: toggle warnings without restart vim!
+" Todo: I may sometimes want -fwarn-unused-imports / disable -fno-warn-unused-imports
 
 " See warnings here: https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
 " let g:intero_ghci_options = '-Wall -fdefer-typed-holes -frefinement-level-hole-fits=1 -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
-let g:intero_ghci_options = '-fdefer-typed-holes -frefinement-level-hole-fits=1 -XPartialTypeSignatures'
+" let g:intero_ghci_options = '-fno-warn-unused-imports -fdefer-typed-holes -frefinement-level-hole-fits=1 -XPartialTypeSignatures'
+let g:intero_ghci_options = '-XOverloadedLabels -XTypeOperators -XDataKinds -XFlexibleContexts -fno-warn-unused-imports -fdefer-typed-holes -frefinement-level-hole-fits=1 -XPartialTypeSignatures'
 " let g:intero_ghci_options = '-Wall -Wno-unrecognised-pragmas -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
 " let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 " let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 
+" Note GHC warnings: are set here for HIE!
+" ~/Documents/Haskell/6/HsTrainingTypeClasses1/HsTrainingTypeClasses1.cabal#/ghc-options.%20-fdefer-typed-holes%20-fwarn-incomplete-patterns
+" ghc-options: -fdefer-typed-holes -fwarn-incomplete-patterns -frefinement-level-hole-fits=1 -XPartialTypeSignatures
+
+" Also note ~/Documents/Haskell/6/HsTrainingTypeClasses1/.hlint.yaml#/#%20Ignore%20some
 
 " TODO: when do I need this? ■
 let g:haskellmode_completion_ghc = 1
