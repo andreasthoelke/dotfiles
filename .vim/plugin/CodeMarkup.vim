@@ -54,14 +54,16 @@ nnoremap œ :call HeadingForw()<cr>
 " Note that œ is triggerd by a Karabiner Tab map
 func! HeadingForw()
   call search( g:headingPttn, 'W' )
-  call ScrollUpFromMiddle( 20 )
+  call ScrollUpFromMiddle( 10 )
+  " Issue: I used 20 as a convenient offset form the middle - but that prevented proper movement when window is split
+  " horizontal/ is too narrow.
 endfunc
 
 nnoremap Œ :call HeadingBackw()<cr>
 " Note that Œ is triggerd by a Karabiner Tab map
 func! HeadingBackw()
   call search( g:headingPttn, 'bW' )
-  call ScrollUpFromMiddle( 20 )
+  call ScrollUpFromMiddle( 10 )
 endfunc
 
 nnoremap ,œ :call GoSectionEndAbort('')<cr>

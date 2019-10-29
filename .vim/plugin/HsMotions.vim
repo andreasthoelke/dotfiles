@@ -755,8 +755,21 @@ endfunc
 
 
 " Bring back the normal big-Word textobject
-onoremap i,W iW
-xnoremap i,W iW
+" onoremap i,W iW
+" xnoremap i,W iW
+" onoremap iw iW
+" xnoremap iw iW
+onoremap iw :call ExprInner_VisSel_Inside()<cr>
+xnoremap iw :<c-u>call ExprInner_VisSel_Inside()<cr>
+
+func! ExprInner_VisSel_Inside()
+  normal! m'
+  " Make sure the cursor is not at the start of the expression, as this would select the previous expression
+  normal! l
+  call ExprInnerStartBackw()
+  normal! v
+  call ExprInnerEndForw()
+endfunc
 
 " ─   Outer Expression                                   ■
 " Textobject to select inside an OuterExpression
@@ -770,7 +783,6 @@ func! ExprOuter_VisSel_Inside()
   normal! l
   call ExprOuterStartBackw()
   normal! v
-  call ExprOuterEndForw()
   " rolling back the 'l' in the ExprOuterEndForw()
   normal! ho
 endfunc
@@ -1204,11 +1216,13 @@ endfunc
 "   * back motion jumps to beginning of var, not adjasant opening bracket/pair
 " - skip empty lines
 nnoremap <silent> w :call ExprInnerStartForw()<cr>
+onoremap <silent> w :call ExprInner_VisSel_Inside()<cr>
 nnoremap <silent> b :call ExprInnerStartBackw()<cr>
 vnoremap <silent> w <esc>:call ChangeVisSel(function('ExprInnerStartForw'))<cr>
 vnoremap <silent> b <esc>:call ChangeVisSel(function('ExprInnerStartBackw'))<cr>
 " Test: vbbbowww      v        |                v     ← cursor on "|", result sel on "v"
 " hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
+" consos13 = Gen.element [1,2] >>= flip replicateM (Gen.element consonants)
 func! ExprInnerStartForw()
   if IsImportLine( line('.') )
     normal! w
@@ -1220,6 +1234,13 @@ func! ExprInnerStartForw()
   normal! W
   if IsEmptyLine( line('.') )
     call ExprInnerStartForw()
+  endif
+endfunc
+
+func! ExprInnerEndForw() " ■
+  normal! E
+  if CursorIsOnClosingBracket() " Want to land at the start of the bracket
+    normal! h
   endif
 endfunc
 
