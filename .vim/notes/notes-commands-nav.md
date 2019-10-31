@@ -20,7 +20,7 @@ gek         - kind at symbol or vis sel
 gei         - run symbol
 gei vis-sel - run expression!
 gel/c/C     - show list of strings as lines
-
+              'gel' needs a list of strings, e.g. 'fmap (fmap show) $'
 ger         - Curl send sting in line to localhost, show response
 
 ### Hs API Explore

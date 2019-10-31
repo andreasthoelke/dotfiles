@@ -431,21 +431,24 @@ endfunc
 " It then aligns the first 2 columns (column separator is <space>)
 func! ShowList_AsLines_Aligned( replReturnedLines ) " ■
   let firstLine = a:replReturnedLines[0]
+  " echo a:replReturnedLines
+  " return
   normal! m'
 
   if firstLine[0:1] == '["'
     " Received a Haskell list of stings - can simply convert-eval it to vimscript of strings!
     call FloatWin_ShowLines( eval( firstLine ) )
-    if len( s:async_alignFnExpr )
-      call FloatWin_do( 'call ' . s:async_alignFnExpr )
-    endif
+    " if len( s:async_alignFnExpr )
+    "   call FloatWin_do( 'call ' . s:async_alignFnExpr )
+    " endif
   elseif
     " Maybe an error?
     call FloatWin_ShowLines( replReturnedLines )
   endif
 
-  call FloatWin_do( 'call HaskellSyntaxAdditions()' )
-  call FloatWin_FitWidthHeight()
+
+  " call FloatWin_do( 'call HaskellSyntaxAdditions()' )
+  " call FloatWin_FitWidthHeight()
 endfunc " ▲
 
 " exec l:startWindowNr . 'wincmd w' ■

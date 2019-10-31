@@ -315,6 +315,28 @@ endfunc
 " Demo: Note how the 'e' in the 'vimCommentString' gets skipped
 " a E b e a (f E a e d) d E "a e" f E
 
+func! CursorIsEol()
+  return GetCharAtCursor() == ''
+endfunc
+
+func! CursorIsOnSpace()
+  return GetCharAtCursorAscii() == 32
+endfunc
+
+
+func! CursorIsOnClosingBracket()
+  let ac = GetCharAtCursorAscii()
+  return ac == 41 || ac == 93 || ac == 125
+endfunc
+" Test: () [] {}
+
+func! CursorIsOnOpeningBracket()
+  let ac = GetCharAtCursorAscii()
+  return ac == 40 || ac == 91 || ac == 123
+endfunc
+" Test: () [] {}
+
+
 func! IsInsideString( line, col )
   return synIDattr( synID( a:line, a:col, 0), 'name' ) =~ 'string'
 endfunc

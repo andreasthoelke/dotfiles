@@ -754,23 +754,6 @@ func! SkipBinding()
 endfunc
 
 
-" Bring back the normal big-Word textobject
-" onoremap i,W iW
-" xnoremap i,W iW
-" onoremap iw iW
-" xnoremap iw iW
-onoremap iw :call ExprInner_VisSel_Inside()<cr>
-xnoremap iw :<c-u>call ExprInner_VisSel_Inside()<cr>
-
-func! ExprInner_VisSel_Inside()
-  normal! m'
-  " Make sure the cursor is not at the start of the expression, as this would select the previous expression
-  normal! l
-  call ExprInnerStartBackw()
-  normal! v
-  call ExprInnerEndForw()
-endfunc
-
 " ─   Outer Expression                                   ■
 " Textobject to select inside an OuterExpression
 onoremap iW :call ExprOuter_VisSel_Inside()<cr>
@@ -1237,6 +1220,46 @@ func! ExprInnerStartForw()
   endif
 endfunc
 
+" Bring back the normal big-Word textobject
+" onoremap i,W iW
+" xnoremap i,W iW
+onoremap iw :call ExprInner_VisSel_Inside()<cr>
+xnoremap iw :<c-u>call ExprInner_VisSel_Inside()<cr>
+
+func! ExprInner_VisSel_Inside()
+  normal! m'
+  if CursorIsOnOpeningBracket()
+    normal! vE
+  elseif CursorIsOnSpace()
+    normal! vw
+    if CursorIsOnOpeningBracket()
+      normal! E
+    else
+      call ExprInnerEndForw()
+    endif
+  else
+    " Make sure the cursor is not at the start of the expression, as this would select the previous expression
+    normal! l
+    if CursorIsEol()
+      normal! hv
+    elseif CursorIsOnSpace()
+      normal! hv
+    else
+      call ExprInnerStartBackw()
+      normal! v
+      call ExprInnerEndForw()
+    endif
+  endif
+
+  normal! l
+  if !CursorIsEol()
+    normal! hwh
+  else
+    normal! h
+  endif
+endfunc
+
+
 func! ExprInnerEndForw() " ■
   normal! E
   if CursorIsOnClosingBracket() " Want to land at the start of the bracket
@@ -1402,17 +1425,6 @@ func! CursorOnSkipBackwStopWord()
   return cw == 'where'
 endfunc
 
-func! CursorIsOnClosingBracket()
-  let ac = GetCharAtCursorAscii()
-  return ac == 41 || ac == 93 || ac == 125
-endfunc
-" Test: () [] {}
-
-func! CursorIsOnOpeningBracket()
-  let ac = GetCharAtCursorAscii()
-  return ac == 40 || ac == 91 || ac == 123
-endfunc
-" Test: () [] {}
 
 func! SkipSyntaxIDs()
   return CursorIsInsideString() || GetSyntaxIDAtCursor() =~ 'where'
