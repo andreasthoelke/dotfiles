@@ -1229,6 +1229,8 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 
 ## Temp next
+* line break at cursor pos between works - deleting remaining last space in line
+* next error is flawed: ]l is for warnings, ]q for intero?, jumps to other files?
 * zfaf folding around function misses comment for end fold
 * skip closed folds in c-n/p HsMotion map
 * "in" is not allowed when abbreviating
@@ -1243,7 +1245,7 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
       | otherwise    = x : xs -- not an int: stop looking. As the algorithm may exit eary it would be hard to write with foldr
       step []                    = []
 * closing a section leader 'space ehe' dosn't work here: ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Exercises.hs#/--%20Index%20doublicate
-* index a simgle symbol - space ei
+* index a single symbol - space ei
 * clarify \raf map with space raf
 * 'enter replacement text: ' should show the current name/ net edit this with c-f
 * HsApi bug: gsB from HsAPI win shows only few results!

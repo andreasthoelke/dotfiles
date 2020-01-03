@@ -82,7 +82,10 @@ Lines, GFiles?, BCommits, Maps, Helptags
 ### Win, Buffer Navigation
 c-w n/N     - SymbolNext SplitTop
 c-w i       - jump into float-win
-leader wp   - pin a function/paragraph (or imports) to the top
+leader wp[ap/af] - pin a function/paragraph (or imports) to the top
+c-w dk      - close the window above
+c-w \       - to jump to rightmost/mark/tag bar window
+c-w p       - to jump back
 
 ### Files
 \v \T       - browse-open file in split/tab
@@ -104,6 +107,7 @@ leader P    - preview in float-win
 leader gg   - GitGutterToggle
 ]c [c       - GitGutter Next/Prev Hunk
 GitGutter.. UndoHunk, ..PreviewHunk
+leader leader gc - Quick git commit (opt with vis-sel text)
 
 lead lg/lG  - go to definition/ in split
 
@@ -158,7 +162,7 @@ t/T         - next/prev list item
 [g ]g       - go back to last insert start/end. or native \`[ \`]
 z] z[ zk    - beginning/end of current fold/prev fold
 [c ]c       - prev/next git hunk (TODO: make ]c or c] consistent?)
-,j/k        - end/start of indent block
+,j/k        - beginning of next/prev line
 ,J/K        - end/start of indent block
 
 ### Tools
@@ -168,6 +172,17 @@ leader ot   - Tagbar
 leader om   - Markbar
 leader oU   - Undo tree (Mundo)
 
+### Marks
+leader om   - open Markbar
+m[A-Z,a-z]  - create global,local mark
+'[A-z]      - go to mark. \` jumps to cursor pos
+M[A-z]      - delete mark
+in markbar:
+c-n/p       - next/prev mark
+o           - open mark at cursor
+c-x         - delete mark
+DelLocalMarks, DelGlobalMarks
+
 ### Rename
 leader lr/m - rename symbol with all it's live/active references
 ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a sortcut for a haskell function rename
@@ -175,5 +190,10 @@ leader rb   - to rename a binding and its occurences
 
 ### Vim
 leader sm   - show past vim echoed text (show messages)
+
+### Links
+glb         - open URL in browser
+gk          - follow rel-link
+
 
 

@@ -607,7 +607,7 @@ let g:hlAreaID = 0
 " call matchdelete( abc )
 " call clearmatches()
 
-" RHS movement:
+" LHS movement:
 nnoremap ,j j^
 nnoremap ,k k^
 
@@ -1199,7 +1199,7 @@ endfunc
 "   * back motion jumps to beginning of var, not adjasant opening bracket/pair
 " - skip empty lines
 nnoremap <silent> w :call ExprInnerStartForw()<cr>
-onoremap <silent> w :call ExprInner_VisSel_Inside()<cr>
+" onoremap <silent> w :call ExprInner_VisSel_Inside()<cr>
 nnoremap <silent> b :call ExprInnerStartBackw()<cr>
 vnoremap <silent> w <esc>:call ChangeVisSel(function('ExprInnerStartForw'))<cr>
 vnoremap <silent> b <esc>:call ChangeVisSel(function('ExprInnerStartBackw'))<cr>
@@ -1223,9 +1223,10 @@ endfunc
 " Bring back the normal big-Word textobject
 " onoremap i,W iW
 " xnoremap i,W iW
-onoremap iw :call ExprInner_VisSel_Inside()<cr>
+" onoremap iw :call ExprInner_VisSel_Inside()<cr>
 xnoremap iw :<c-u>call ExprInner_VisSel_Inside()<cr>
 
+"Todo: still wired behavior in some cases
 func! ExprInner_VisSel_Inside()
   normal! m'
   if CursorIsOnOpeningBracket()

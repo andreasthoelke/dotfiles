@@ -219,9 +219,10 @@ let g:HsCharsToUnicode = [
       \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
       \, [' \zs\.',            '∘', 'Normal']
       \, ['<\$>',          '⫩', 'Normal']
+      \, ['<\#>',          '⧕', 'Normal']
       \, [' \zs<\*>',          '⟐', 'Normal']
       \, [' \zs>>',            '≫', 'Normal']
-      \, [' \zs>>=',           '⫦', 'Normal']
+      \, ['>>=\ze\s',           '⫦', 'Normal']
       \, [' \zs=<<',           '⫣', 'Normal']
       \, [' \zs-<',           '⩹', 'Normal']
       \, [' \zs\`flipElem\`',  '∋', 'Normal']
@@ -242,7 +243,7 @@ let g:HsCharsToUnicode = [
       \, ['bool\ze\s',        '?', 'Normal']
       \, [' \zsempty',        '∅', 'Normal']
       \, [' \zs++',            '⧺', 'Normal']
-      \, [' \zs<=',            '≤', 'Normal']
+      \, ['<=\ze\s',            '≤', 'Normal']
       \, ['>=\ze ',            '≥', 'Normal']
       \, ['Integer',           'ℤ', 'hsInteger']
       \]
@@ -250,6 +251,9 @@ let g:HsCharsToUnicode = [
       " \, [' \zs<|>',           '⦶', 'Normal']
             " \, [' \zs<|>',           '‖', 'Normal']
             " ε
+                  " \, ['<\#>',          '≚', 'Normal']
+
+" https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
 
 for [pttn, concealUnicodeSym, syntaxGroup] in g:HsCharsToUnicode
   exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
@@ -328,6 +332,7 @@ syntax match InlineTestNum   'e12' conceal cchar=⑫
 syntax match InlineTestIdeSpace '\v_\f{-}\ze\)?\_s' contained conceal cchar= 
 " Notes: The '+' is needed to prevent concealing standalone '_'s
 " syntax match InlineTestDecSpace '\v_\i{-}\s\=\ze\s' conceal cchar= 
+" syntax match InlineTestDecSpace '\v_\f{-}\s\=\ze\s' contained conceal cchar= 
 syntax match InlineTestDecSpace '\v_\f{-}\s\=\ze\s' contained conceal cchar= 
 
 " syntax match InlineTestIdentifier  '\ve\d_\i{-}\ze[\)| ]' contains=InlineTestNum,InlineTestIdeSpace
@@ -338,6 +343,10 @@ syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s' contains=InlineTestNum,I
 " added \_s and ')' as end of the test-identifier. now this works without space at the end of the line:
 " e2_e1_consos12 = (replicateM 100 e1_consos12)
 " e3_e1_consos12 = replicateM 100 e1_consos12
+
+" syntax match InlineTestTypeSig '\v^e\d_.*\s::.*' conceal
+syntax match InlineTestDecT    '\v^e\d_\i{-}\ze\s\::' conceal cchar= 
+syntax match InlineTestDecTC   '\v^e\d_\i{-}\s\::\s\ze' contains=hsFunctionDeclComment,InlineTestDecT
 
 
 " TODO this is sort of benefitial (but coincidential and i could not set up a separate HL-group for this when tried in
@@ -350,6 +359,8 @@ syntax match InlineTestDeclaration '\v^e\d_\i{-}\s\=\s' contains=InlineTestNum,I
 " a15__database3 = (snd <$> e1_database4) `flipElem` 123
 " └ (snd <$> ① ) ∋ 123
 syntax match InlineTestAssertDec     '\v^a\d\d_\i{-}\s\=\ze\s' conceal cchar=├
+syntax match InlineTestAssertDecT    '\v^a\d\d_\i{-}\ze\s\::' conceal cchar=├
+syntax match InlineTestAssertDecTC   '\v^a\d\d_\i{-}\s\::\s\ze' contains=hsFunctionDeclComment,InlineTestAssertDecT
 syntax match InlineTestAssertLastDec '\v^a\d\d__\i{-}\s\=\ze\s' conceal cchar=└
 syntax match InlineTestAssertDecAndTestIdentif  '\v^a\d\d_\i{-}\s\=\se\d\i{-}\ze\s' conceal cchar=├
 

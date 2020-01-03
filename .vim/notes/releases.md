@@ -110,7 +110,6 @@
 * refresh shada to avoid deleted global marks re-apear after vim-restart
 * ctrlP MRU map to `gp`
 * dont jump to markbar win on open
-* use `mo` and `to` to toggle markbar & tagbar
 * use `c-w \ ` to jump to rightmost/mark/tag bar window and `c-w p` to jump back
 * defining links in code with `h rel-links` like ~/.vimrc#/Rel%20Links: using `gk`
 

@@ -47,7 +47,7 @@ let g:headingPttn = '\v^("|--)\s─\s'
 " class Functor f => Align (f :: * -> *) where
 
 let g:labelPttn = '\v^\s*("|--|\#)\zs\s*\S[^.]{,50}(:@<!):(\S)@!'
-let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,30}:(\S)@!|("|--)\s─\s)'
+let g:headingOrLabelPttn = '\v^(\s*("|--)\s\zs\S[^.]{,50}:(\S)@!|("|--)\s─\s)'
 
 " ─   Move to Headings and Sections                      ■
 nnoremap œ :call HeadingForw()<cr>
