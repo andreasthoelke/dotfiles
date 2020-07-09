@@ -2,7 +2,8 @@
 
 ### Language client
 ged         - show diagnostic message in float-win
-gd, ,gd     - go to definition /in split
+gd ,gd     - go to definition /in split
+lead lg/lG  - go to definition/ in split
 leader lk   - Symbol documentation
 leader la   - Code action → import symbol!
 insert c-i  - show completions with type sig!
@@ -13,7 +14,10 @@ leader io/l/k/h - intero open/load/kill/hide
 leader il   - load just the current module
 dr          - reload ghci
 leader ic   - InteroCancelRunningProcessInGhci
-gw, gW      - show type at/vis-sel / generic type
+gw, gW      - show instantiated type at/vis-sel / generic type
+              guardP :: Alternative f => (a -> Bool) -> a        -> f a
+              -> instantiated     ((a, [a]) -> Bool) -> (a, [a]) -> Maybe (a, [a])
+              ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Patterns.hs#/utakeWhile%20p%20=
 get         - show type of symbol or vis sel (also works when module not compiles)
 ,gw         - insert type above
 gek         - kind at symbol or vis sel
@@ -79,6 +83,9 @@ Fdeleted    - deleted code in repo
 Lines, GFiles?, BCommits, Maps, Helptags
 
 
+### Mac apps
+tab '       - Mac app/task manager, next app
+
 ### Win, Buffer Navigation
 c-w n/N     - SymbolNext SplitTop
 c-w i       - jump into float-win
@@ -86,13 +93,17 @@ leader wp[ap/af] - pin a function/paragraph (or imports) to the top
 c-w dk      - close the window above
 c-w \       - to jump to rightmost/mark/tag bar window
 c-w p       - to jump back
+\t]         - TabmoveRight /Left
 
 ### Files
-\v \T       - browse-open file in split/tab
+\v \T       - browse-open file in new split/tab from the same project
+gp <c-o>v   - browse-open recent file in a split e.g. from a different project
 #### Dirvish
 t           - open in new tab
 p           - preview in split
 leader P    - preview in float-win
+#### Filepaths
+c-w f       - (on filepath) preview file content in horz-split
 #### Arglist
 ,x          - toggle to from arglist (x, vis-sel, line-motion)
             - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
@@ -108,8 +119,9 @@ leader gg   - GitGutterToggle
 ]c [c       - GitGutter Next/Prev Hunk
 GitGutter.. UndoHunk, ..PreviewHunk
 leader leader gc - Quick git commit (opt with vis-sel text)
-
-lead lg/lG  - go to definition/ in split
+leader og   - Git magit. Also :GitcommitAuthor
+            - use c-n/p to 
+leader oG   - Git gitV viewer (return on commit to view div, 'q' to close)
 
 ### Intero Errors or Warnings
 leader qq   - open QFL
@@ -121,6 +133,8 @@ p           - to open file:loc in preview window, `c-w z` or `P` to close previe
 ### LC Warnings AND Errors
 leader ll   - open Loclist
 [L [l ]l    - go to first/prev/next error/warning (while in main win)
+              important: do exactly as in above and below line!! this goes through errors and warnings - but not a big problem
+              changes update right away in the LocList win!
 Go (in LLi) - jump to line (but stay in LocList)
 c-m/i       - next/prev in QFL
 p           - does not work! .. could set up a split?
@@ -165,6 +179,15 @@ z] z[ zk    - beginning/end of current fold/prev fold
 ,j/k        - beginning of next/prev line
 ,J/K        - end/start of indent block
 
+### Folds, Folding
+`zf` `zd` create/delete fold markers via motions/vis select
+`zk` `zj` to navigate
+`]z` `[z` go to end/beginning of current fold
+`zo` `zc` `z<space>` to open/close/toggle individual folds
+`zM`  `zR` to close/open all folds
+`zm`  `zr` progressively close/open the fold levels (of nested folds)
+`zx` / `zX` update /re apply
+
 ### Tools
 leader og   - Git magit. Also :GitcommitAuthor
 leader oG   - Git gitV viewer
@@ -194,6 +217,8 @@ leader sm   - show past vim echoed text (show messages)
 ### Links
 glb         - open URL in browser
 gk          - follow rel-link
+lead lg/lG  - go to definition/ in split
+gd ,gd     - go to definition /in split
 
 
 

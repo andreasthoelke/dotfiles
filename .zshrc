@@ -89,10 +89,12 @@ alias npmp='/Users/andreas.thoelke/.npm/bin'
 
 # export ONI_NEOVIM_PATH="/usr/local/Cellar/neovim/0.3.3/bin/"
 
-alias nvim41="/Users/andreas.thoelke/Documents/temp/nvim-osx64/bin/nvim"
+alias nvim40="/Users/andreas.thoelke/Documents/vim/nvim-osx64-0.4.0/bin/nvim"
 # NVIM v0.4.0-762-g9420a2127
-alias nvim4="/Users/andreas.thoelke/Documents/vim/nvim-osx64/bin/nvim"
-# NVIM v0.4.0-1414-g2b731a388
+alias nvim4="/Users/andreas.thoelke/Documents/vim/nvim-osx64-0.4.3/bin/nvim"
+# NVIM v0.4.3
+alias nvim5="/Users/andreas.thoelke/Documents/vim/nvim-osx64-0.5.0/bin/nvim"
+# NVIM v0.5.0
 
 # Neovim Remote: ---------------------------------------------------------
 alias vi="nvr -l "
@@ -363,6 +365,10 @@ export LS_COLORS=$fileTypeColors
 # export LS_COLORS="di=31;41:ln=31;41:so=31;41:pi=31;41:ex=31;41:bd=31;41:cd=31;41:su=31;41:sg=31;41:tw=31;41:ow=31;41:"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
-
+# Use pyenv to manage Python installations:
+# https://opensource.com/article/19/5/python-3-default-mac#what-to-do
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
 
 

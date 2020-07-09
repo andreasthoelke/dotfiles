@@ -240,6 +240,7 @@ let g:HsCharsToUnicode = [
       \, ['subtract',        '-', 'Normal']
       \, ['flip\s',        '◖', 'Normal']
       \, ['fmap\s',        'ꜛ', 'Normal']
+      \, ['lift\s',        '˄', 'Normal']
       \, ['bool\ze\s',        '?', 'Normal']
       \, [' \zsempty',        '∅', 'Normal']
       \, [' \zs++',            '⧺', 'Normal']

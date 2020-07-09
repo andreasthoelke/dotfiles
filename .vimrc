@@ -269,7 +269,7 @@ Plug 'Shougo/vimproc.vim', {'do': 'make'}
 " Unicode supporting fork
 " Plug 'unclechu/haskell-vim'
 Plug 'unclechu/haskell-vim', { 'branch': 'my-fork' }
-Plug 'idris-hackers/idris-vim'
+" Plug 'idris-hackers/idris-vim'
 Plug 'itchyny/vim-haskell-indent'
 " Plug 'alx741/vim-hindent'
 
@@ -338,10 +338,14 @@ set verbose=0
 " let $PATH .= (":" . "/Users/andreas.thoelke/.local/bin")
 
 " let g:python2_host_prog = '/usr/local/bin/python'
-let g:python2_host_prog = '/Users/andreas.thoelke/Library/Python/2.7'
-let g:python3_host_prog = '/usr/local/bin/python3'
-" strangely Pyhon 3 is installed here:
+" let g:python2_host_prog = '/Users/andreas.thoelke/Library/Python/2.7'
+" let g:python_host_prog = '/Users/andreas.thoelke/.pyenv/versions/2.7.15/bin/python2'
+" let g:python3_host_prog = '/usr/local/bin/python3'
+let g:python_host_prog = '/Users/andreas.thoelke/.pyenv/versions/3.8.0/bin/python3'
+let g:python3_host_prog = '/Users/andreas.thoelke/.pyenv/versions/3.8.0/bin/python3'
+" originally Pyhon 3 was installed here:
 " /Library/Frameworks/Python.framework/Versions/3.6
+" but it's now managed by pyenv
 
 
 " uncomment this to disable Python support
@@ -1021,14 +1025,14 @@ endfunc
 " General: -----------------------------------------------------------------------------
 
 
-" ignored? based on `:checkhealth`
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+" This is now ignored - see checkhealth
+" let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 
 let &t_SI = "\<Esc>]50;CursorShape=0\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 set termguicolors
-set guicursor=n:block-iCursor
+" set guicursor=n:block-iCursor
 " Option: Blinking cursor: (in ITerm only)
 " set guicursor=n:block-iCursor-blinkwait300-blinkon200-blinkoff150
 " Cursor Speed: run this in terminal (seemed to not have an effect when last tested): "defaults write NSGlobalDomain KeyRepeat -int 0" for max speed - "2" is the setting from system preferences

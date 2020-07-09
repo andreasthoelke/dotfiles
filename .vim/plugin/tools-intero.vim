@@ -15,7 +15,7 @@ let g:intero_use_neomake = 0
 " See warnings here: https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html#warnings
 " let g:intero_ghci_options = '-Wall -fdefer-typed-holes -frefinement-level-hole-fits=1 -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
 " let g:intero_ghci_options = '-fno-warn-unused-imports -fdefer-typed-holes -frefinement-level-hole-fits=1 -XPartialTypeSignatures'
-let g:intero_ghci_options = '-XOverloadedLabels -XTypeOperators -XDataKinds -XFlexibleContexts -fno-warn-unused-imports -fdefer-typed-holes -frefinement-level-hole-fits=1 -XPartialTypeSignatures'
+let g:intero_ghci_options = '-XOverloadedLabels -XBlockArguments -XTypeOperators -XDataKinds -XFlexibleContexts -fno-warn-unused-imports -fdefer-typed-holes -frefinement-level-hole-fits=1 -XPartialTypeSignatures'
 " let g:intero_ghci_options = '-Wall -Wno-unrecognised-pragmas -fno-warn-name-shadowing -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds -XPartialTypeSignatures -Wno-partial-type-signatures'
 " let g:intero_ghci_options = '-Wall -Wno-unused-matches -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'
 " let g:intero_ghci_options = '-Wall -Wno-missing-signatures -Wno-type-defaults -Wno-unused-top-binds'

@@ -1229,7 +1229,8 @@ https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in
 
 
 ## Temp next
-* line break at cursor pos between works - deleting remaining last space in line
+* how could I write/persist little notes in markbar?
+* line break at cursor pos between words - deleting remaining last space in line
 * next error is flawed: ]l is for warnings, ]q for intero?, jumps to other files?
 * zfaf folding around function misses comment for end fold
 * skip closed folds in c-n/p HsMotion map

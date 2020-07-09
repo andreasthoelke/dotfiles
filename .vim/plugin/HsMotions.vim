@@ -101,7 +101,7 @@ let g:numOps   = ['+', '-', '\*', '&&']
 let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do', 'in', 'of', 'let', 'deriving'] )) )
 let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns )
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
-let g:exprDelimPttn = MakeOrPttn( AppendSpace(g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
+let g:exprDelimPttn = MakeOrPttn( AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
 " let g:exprDelimPttn = MakeOrPttn( AsSeparateWord(g:infixOps + g:typeArgs + g:syntax + g:numOps) )
 
 let g:columnSepsPttn = MakeOrPttn( AppendSpace( g:columnSeps ) )
@@ -788,8 +788,8 @@ endfunc
 nnoremap <silent> W :call ExprOuterStartForw()<cr>
 onoremap <silent> W :call ExprOuterStartForw()<cr>
 vnoremap <silent> W <esc>:call ChangeVisSel(function('ExprOuterStartForw'))<cr>
-" Test: vB,WoW     v     |           v        ← cursor on "|", result sel on "v"
-" hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
+" Test: vB,WoWW    v     |           v        ← cursor on "|", result sel on "v"
+" hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc 33 . split 2 <*> Ab
 func! ExprOuterStartForw() " ■
   if !search('\S', 'nW') " cancel recursive call at end of file
     return
@@ -812,8 +812,8 @@ func! ExprOuterStartForw() " ■
   if sLine == oLine
     " Forward and backward matches on the same line
     call setpos('.', [0, sLine, sColumn, 0] )
-    " echo 'Delim motion to: ' . sLine . ' - ' . sColumn
-    normal! W
+    echo 'Delim motion to: ' . sLine . ' - ' . sColumn
+    normal! lW
     " Match found in a later line - move to the start of next line instead!
   else
     " Edge Case: When a () or [] occurs after the last delimiter, 'searchpair' below matches it
