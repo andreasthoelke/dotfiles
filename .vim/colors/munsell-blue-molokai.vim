@@ -330,6 +330,8 @@ hi! link markbarID Highlight1
 hi FoldColumn guibg=gray10 guifg=gray20
 hi Folded     guifg=#3D5862 guibg=#121212
 
+hi SignColumn guifg=#3D5862 guibg=#121212
+
 
 hi link QuickmenuHeader htmlLink
 hi link QuickmenuBracket Comment

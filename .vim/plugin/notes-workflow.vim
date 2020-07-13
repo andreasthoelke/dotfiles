@@ -106,6 +106,11 @@
 
 " ─   HASKELL WORKFLOW                                  ──
 
+" Creating a new project:
+" cd into parent folder
+" "stack new myproject simple", cd myproject
+" "hpack-convert", "hpack --force" (as when the cabal file was manually changed Hpack (and vim) not update the cabel file)
+" copy template for the package.yaml file ~/Documents/Haskell/6/HsTrainingTypeClasses1/package.yaml#/library.
 
 " ─   Stack workflow                                     ■
 

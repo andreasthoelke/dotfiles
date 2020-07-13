@@ -107,8 +107,9 @@
 
 
 ## Dirvish
+  * `g?` to show help (note `o, a` c-n/p to preview and visual selection)
   * `-` open / up/parent folder
-  * `q` close
+  * `gq` close
   * use 'filepath' of dirvish in command:
     * `cd %` set working dir
     * `edit %/foo.txt` create a file **TODO** how to save a temp/unsaved buffer by navigating to a folder, then `w #/filesname`

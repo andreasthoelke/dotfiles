@@ -119,8 +119,10 @@ leader gg   - GitGutterToggle
 ]c [c       - GitGutter Next/Prev Hunk
 GitGutter.. UndoHunk, ..PreviewHunk
 leader leader gc - Quick git commit (opt with vis-sel text)
+leader leader gp - or `Gitpush` to push to Github repo. ~/.vim/plugin/tools-external.vim#/Git
 leader og   - Git magit. Also :GitcommitAuthor
-            - use c-n/p to 
+            - use c-n/p to jump to hunks, `S` to stage hunk, go to file line to stage entire file, then `CC` to write a
+            commit message, `:w` to commit.
 leader oG   - Git gitV viewer (return on commit to view div, 'q' to close)
 
 ### Intero Errors or Warnings
