@@ -6,7 +6,7 @@
 
 " ─   Settings                                          ──
 " Intero starts automatically. Set this if you'd like to prevent that.
-let g:intero_start_immediately = 1
+let g:intero_start_immediately = 0
 let g:intero_use_neomake = 0
 " This show ghi warnings as opposed to hlint warnings:
 " TODO: toggle warnings without restart vim!

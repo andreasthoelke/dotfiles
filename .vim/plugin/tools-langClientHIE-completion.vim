@@ -139,17 +139,15 @@ endfunc
 
 " ─   Completion                                         ■
 
-" call deoplete#enable()
-let g:deoplete#enable_at_startup = 1
-" let g:deoplete#num_processes = 1
 
-inoremap <expr> <c-i> deoplete#manual_complete()
-
-call deoplete#custom#option({
-      \ 'auto_complete_delay': 200,
-      \ 'smart_case': v:true,
-      \ 'auto_complete': v:false,
-      \ })
+" Backup old: using HIE and deoplete
+" let g:deoplete#enable_at_startup = 1
+" inoremap <expr> <c-i> deoplete#manual_complete()
+" call deoplete#custom#option({
+"       \ 'auto_complete_delay': 200,
+"       \ 'smart_case': v:true,
+"       \ 'auto_complete': v:false,
+"       \ })
 
 
 

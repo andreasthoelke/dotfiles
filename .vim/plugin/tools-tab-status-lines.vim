@@ -1,5 +1,9 @@
 
-" Lightline Settings: -------------------------------{{{
+" To review any config data changes (e.g. styling) source the following 3 lines
+" To reload config data, then change tab to refresh
+" call lightline#init()
+" call lightline#update()
+" call lightline#colorscheme()
 
 command! CursorColumnInStatusline call CursorColumnInStatusline()
 " Can also just use "g<c-g>" to output the cursor position
@@ -23,13 +27,9 @@ func! TagInStatusline()
   call lightline#update()
 endfunc
 
-" To reload config data, then change tab to refresh
-" call lightline#init()
-" call lightline#update()
-" call lightline#colorscheme()
-
 let g:lightline = {}
 let g:lightline.colorscheme = 'wombat1'
+" let g:lightline.colorscheme = 'default'
 
 let g:lightline.active = {}
 let g:lightline.inactive = {}
@@ -42,7 +42,7 @@ let g:lightline.active.left = [ ['relativepath'] ]
 let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
 " let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
 " let g:lightline.active.right = [ ['line', 'percent'] ]
-" let g:lightline.inactive.right = [ ['scrollbar'], ['line'] ]
+let g:lightline.inactive.right = [ ['scrollbar'] ]
 " \ , ['gitbranch']
 " \ ]
 
@@ -110,57 +110,6 @@ endfunc
 
 " Lightline Settings: -------------------------------}}}
 
-
-
-" Airline Settings: --------------------------------------------------------------
-" TODO delete airline setting when lightline settings are done
-let g:airline_theme='papercolor'
-" Powerline fonts work but the > seperator doesn't seem expressive for tabs to status
-let g:airline_powerline_fonts = 0
-
-" Airline Extensions: ---
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t:r'
-let g:airline#extensions#tabline#show_close_button = 0
-let g:airline#extensions#tabline#keymap_ignored_filetypes = ['vimfiler', 'nerdtree']
-
-let g:airline#extensions#tabline#tab_nr_type = 2 " splits and tab number
-
-" not sure what this does
-" let g:airline#extensions#tabline#show_tab_type = 0
-
-let g:airline#extensions#hunks#enabled = 1
-" Airline Extensions: ---
-
-
-" Airline Sections: -------
-let g:airline_section_a = '%-0.18{getcwd()}'
-" let g:airline_section_a = '%-0.18{ expand("%:~:.") }'
-" let g:airline_section_b = '%<%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
-let g:airline_section_b = '%<%f %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
-" removed the modified flag 'm' here!
-let g:airline_section_c = ''
-let g:airline_section_x = ''
-let g:airline_section_y = "%{airline#util#wrap(airline#extensions#hunks#get_hunks(),0)}%{airline#util#wrap(airline#extensions#branch#get_head(),0)}"
-" Airline Sections: -------
-
-" Minor Settings:
-" abbriviate vim-mode (e.g. "Normal" to "N"):
-let g:airline_mode_map = {
-      \ '__' : '-',
-      \ 'n'  : 'n',
-      \ 'i'  : 'i',
-      \ 'R'  : 'r',
-      \ 'c'  : 'c',
-      \ 'v'  : 'v',
-      \ 'V'  : 'v',
-      \ '' : 'v',
-      \ 's'  : 's',
-      \ 'S'  : 's',
-      \ '' : 's',
-      \ }
-
-" Airline Settings: --------------------------------------------------------------
 
 
 " ─   Promptline                                         ■

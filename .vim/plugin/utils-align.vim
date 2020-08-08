@@ -109,7 +109,7 @@ endfunc
 " call StripAligningSpaces()
 
 
-" Push text to the right:
+" Push shift text to the right:
 " nnoremap <localleader>> i <esc>
 nnoremap <localleader>> :call InsertStringAtLoc( ' ', line('.'), col('.')-2 )<cr>
 " nnoremap <localleader>> i <Esc>

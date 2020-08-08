@@ -158,10 +158,16 @@ Plug 'tpope/vim-repeat'
 " Language Support: -----------------------------------------------------
 Plug 'jelera/vim-javascript-syntax'
 Plug 'elzr/vim-json'
+Plug 'kevinoid/vim-jsonc'
 Plug 'leafgarland/typescript-vim'
 Plug 'mityu/vim-applescript'
-" Plug 'bendavis78/vim-polymer'
 Plug 'vmchale/dhall-vim'
+" Flutter/Dart
+Plug 'dart-lang/dart-vim-plugin'
+" Does things like go to definition
+" Plug 'natebosch/vim-lsc'
+" Plug 'natebosch/vim-lsc-dart'
+" Plug 'thosakwe/vim-flutter'
 
 Plug 'inkarkat/vim-SyntaxRange'
 
@@ -227,16 +233,10 @@ Plug 'andreasthoelke/purescript-vim'
 " ─   Haskell IDE features                               ■
 
 " Plug 'parsonsmatt/intero-neovim'
-Plug 'andreasthoelke/intero-neovim'
+" Plug 'andreasthoelke/intero-neovim'
 
 " Plug 'Twinside/vim-hoogle'
 Plug 'andreasthoelke/vim-hoogle'
-
-" Haskell IDE Engine HIE:
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': './install.sh'
-      \ }
 
 " lookup ":h vim2hs", e.g. Tabularize haskell_types is useful
 " Plug 'goolord/vim2hs'
@@ -278,26 +278,35 @@ Plug 'sbdchd/neoformat'
 
 " Syntax Checkers:
 " Plug 'jaspervdj/stylish-haskell'
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 " Just 10 lines of code. uses "to" default map
 " Plug 'mpickering/hlint-refactor-vim'
 Plug 'neomake/neomake'
-Plug 'vim-syntastic/syntastic'
+" TODO: do I still need syntasic when having coc-vim
+" Plug 'vim-syntastic/syntastic'
 
 
 " Completion:
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" backup old: HIE and deoplete
+" Haskell IDE Engine HIE:
+" Plug 'autozimu/LanguageClient-neovim', {
+"       \ 'branch': 'next',
+"       \ 'do': './install.sh'
+"       \ }
+" if has('nvim')
+"   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   " Plug 'ncm2/ncm2'
   " Plug 'ncm2/float-preview.nvim'
   " Plug 'roxma/nvim-yarp'
   " Plug 'ncm2/ncm2-bufword'
   " Plug 'ncm2/ncm2-path'
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+" else
+"   Plug 'Shougo/deoplete.nvim'
+  " Plug 'roxma/nvim-yarp'
+  " Plug 'roxma/vim-hug-neovim-rpc'
+" endif
 " Now substituted by HIE
 " Plug 'eagletmt/neco-ghc'
 " Plug 'ervandew/supertab'
@@ -359,6 +368,13 @@ let g:python3_host_prog = '/Users/andreas.thoelke/.pyenv/versions/3.8.0/bin/pyth
 " Nice Python Integration Tutorial:
 " https://vimways.org/2018/a-python-interface-cookbook/
 
+
+" ─   Flutter / Dart                                     ■
+let g:dart_format_on_save = 0
+
+
+
+" ─^  Flutter / Dart                                     ▲
 
 
 
@@ -982,7 +998,7 @@ augroup JumplistTimeout
 augroup END
 " TODO try this with updatime
 " Issue: this interval is also used for tagbar loc update
-set updatetime=500
+set updatetime=300
 " Note: This also defines the time you have to c-o to get to the insert end location. And after this time the jumplist
 " will also get cleaned up/ suffled a bit. Typically c-i is not useful *after* this time - the jumps then basically become c-o jumps
 

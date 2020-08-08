@@ -30,7 +30,6 @@
     * `<c-w>T` to spin off a window to a tab
   with other buffer/file
     * ctrlP `o` + `t`
-    * nerdtree `t`
 
 ### Close vim-Window
   * `<c-w>c`
@@ -67,6 +66,11 @@
 
 
 ## Folders
+how about folders?
+relation to files/buffer/tabs?
+create/remove
+ctrlP navigate
+
 
 ## Arglist
 
@@ -121,28 +125,9 @@
       * go to buffer and `:read <c-r>" the content of the yanked path`
 
 
-## Demo header with Purescript code
-and a *simple* line of text with `code in` there
-
-```purescript
-ab ∷ Maybe Int → String
-ab a = Just "Some"
-  where
-  aa = 123
-  bb = "just some other val"
-```
-ok, could just put some text in here
-
 ## Arglist
   * use `x` and `dax` for arglist
   * `c-w v` then `[A`, `]a` to have a window (`c-w t` or tab) with this group of files!
-
-
-how about folders?
-  relation to files/buffer/tabs?
-  create/remove
-  ctrlP navigate
-
 
 
 ## Buffers
@@ -166,10 +151,10 @@ how about folders?
 
 ## Completion
 
-now via HIE and decomplete
-
+> Plug 'neoclide/coc.nvim', {'branch': 'release'}
+now via haskell-language-server and coc.nvim
+old: via HIE and decomplete
   https://github.com/mhinz/vim-galore#completion
-
 but may want to ckeck out coc.nvim and
   https://github.com/voldikss/coc-browser
 
@@ -192,9 +177,7 @@ Navigate in scrollback history:
   * <c-p> to go back in command history, <c-n> to go forward in history.
 
 code auto completion:
-  Vim Completes me (currently testing)
-  Youcomplete-me is sort of difficult to install?
-  alternative: https://github.com/ncm2/ncm2 or Shougo/deoplete.nvim
+now using CoC nvim
 
 ## Buffers
   Create New (File)

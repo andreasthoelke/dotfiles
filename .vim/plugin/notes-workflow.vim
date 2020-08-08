@@ -110,7 +110,13 @@
 " cd into parent folder
 " "stack new myproject simple", cd myproject
 " "hpack-convert", "hpack --force" (as when the cabal file was manually changed Hpack (and vim) not update the cabel file)
-" copy template for the package.yaml file ~/Documents/Haskell/6/HsTrainingTypeClasses1/package.yaml#/library.
+" copy template excerpts into package.yaml from ~/Documents/Haskell/6/HsTrainingTypeClasses1/package.yaml#/library.
+" "stack init" to create stack.yaml - this will be mostly empty/ only define a resolver. allows to install additional
+" dependencies ~/Documents/Haskell/6/HsTrainingTypeClasses1/stack.yaml#/extra-deps.
+" "git init" - important for project-root features. "leader og", add files and make initial commit
+" "stack setup" - to download ghc version, packages, etc
+" "stack build" - initial build of the project
+
 
 " ─   Stack workflow                                     ■
 
@@ -155,7 +161,20 @@
 " editing package.yaml auto updates .cabal file using ~/.vim/utils/tools-intero.vim#/func.%20Hpack..
 " In case the cabal file was edited manually use "hpack --force" in the project dir
 
-" ─   Update HIE                                         ■
+" installed haskell-language-server:
+" git clone https://github.com/haskell/haskell-language-server --recurse-submodules
+" stack ./install.hs hls
+" Copied executables to /Users/andreas.thoelke/.local/bin:
+" - ghcide
+" - ghcide-bench
+" - ghcide-test-preprocessor
+" - haskell-language-server
+" - haskell-language-server-wrapper
+" # stack (for hls-8.8.3)
+" Build completed in 15m25s
+" "
+
+" ─   old info Update HIE                                         ■
 " Most recent update: 14-07-2019
 " 1. Check the current version: hie --version
 "    Current output is: Version 0.11.0.0, Git revision 58461a056abc6c23b01a4500bcef3095d2afe229 (dirty) (2932 commits) x86_6 4 ghc-8.6.5
@@ -163,7 +182,7 @@
 " 3. Run git pull in /Users/andreas.thoelke/Documents/Haskell/haskell-ide-engine/
 " 4. Run stack ./install.hs hie-8.6.5
 "    - this will take a long time (like 20 mins)
-"    - will install for my current ghc (8.6.5)
+
 "    - stack ./install.hs help
 "    - Will finish with the following output:
 "        Copied executables to /Users/andreas.thoelke/.local/bin:
@@ -172,7 +191,6 @@
 "        # stack (for stack-hie-8.6.5)
 "        Build completed in 11m28s
 
-" ─^  Update HIE                                         ▲
 
 
 " ─   Intero test workflow                               ■

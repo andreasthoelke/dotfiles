@@ -1226,9 +1226,12 @@ https://github.com/quchen/prettyprinter/blob/master/prettyprinter/src/Data/Text/
 ### General haskell setup
 https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in-2018/
 
+g:psc_ide_server_port = 
 
+## Temp next 2020-07
+https://github.com/voldikss/coc-bookmark
+https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
 
-## Temp next
 * how could I write/persist little notes in markbar?
 * line break at cursor pos between words - deleting remaining last space in line
 * next error is flawed: ]l is for warnings, ]q for intero?, jumps to other files?
