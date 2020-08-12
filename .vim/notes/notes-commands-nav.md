@@ -1,5 +1,6 @@
 
 ## Language client
+[g / ]g     - prev/next error/warning
 ged         - show diagnostic message in float-win
 gd ,gd     - go to definition /in split
 lead lg/lG  - go to definition/ in split
@@ -62,8 +63,8 @@ leader ea   - create assertion
 
 ## Code Markup
 leader ehs  - heading
-leader ehe  - close section
-leader ehr  - refresh heading/section
+leader ehe  - close section (does not include the header text in the end?)
+leader ehr  - refresh heading/section (currently on this updates the end text)
 leader ehd  - delete/strip heading/section
 
 
@@ -75,6 +76,11 @@ gse         - explore definition (haskell-code-explorer.com)
 Fhask       - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** ~/.vim/utils/utils-search.vim#/command.%20-nargs=1%20Fhask 
 Fdeleted    - deleted code in repo
 Lines, GFiles?, BCommits, Maps, Helptags
+
+### Search in project folder
+Go to search root folder in Dirvish then
+:Ag searchterm %**
+<c-n/p> to navigate results quickfixlist
 
 
 ## Mac apps
@@ -103,6 +109,11 @@ c-w f       - (on filepath) preview file content in horz-split
 ,x          - toggle to from arglist (x, vis-sel, line-motion)
             - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
             leader oa   - show arglist in CtrlP. v/t to open. <c-s> to delete
+
+### Move / Copy files
+yy in Dirvish - copy the full file path
+navigate to the destination path in Dirvish then `glt` to open a terminal at that location
+mv or cp then <c-[> to go to normal mode then `p` tp paste then insert and `.` to copy/move into current folder
 
 ## Command window
 ;           - then c-n and c-i and c-x c-f for completion.
@@ -177,6 +188,7 @@ z] z[ zk    - beginning/end of current fold/prev fold
 [c ]c       - prev/next git hunk (TODO: make ]c or c] consistent?)
 ,j/k        - beginning of next/prev line
 ,J/K        - end/start of indent block
+g]/g[       - first/last char of prev yanked text
 
 ### Actions
 S$          - substitute / replace to the end of the line

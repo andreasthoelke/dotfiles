@@ -226,9 +226,10 @@ Plug 'navicore/vissort.vim'
 
 " Plug 'purescript-contrib/purescript-vim'
 Plug 'andreasthoelke/purescript-vim'
+" issue: Purs ide throws an error, can't find the project root folder? - it's deactivated now
 " Plug 'FrigoEU/psc-ide-vim'
 " Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
-
+Plug 'sriharshachilakapati/vimmer-ps'
 
 " ─   Haskell IDE features                               ■
 
@@ -291,10 +292,10 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " backup old: HIE and deoplete
 " Haskell IDE Engine HIE:
-" Plug 'autozimu/LanguageClient-neovim', {
-"       \ 'branch': 'next',
-"       \ 'do': './install.sh'
-"       \ }
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': './install.sh'
+      \ }
 " if has('nvim')
 "   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   " Plug 'ncm2/ncm2'
@@ -922,8 +923,8 @@ vnoremap ,H H
 
 " nnoremap g[ `[
 " nnoremap g] `]
-nnoremap [g `[
-nnoremap ]g `]
+nnoremap g[ `[
+nnoremap g] `]
 
 func! InsertEnter()
   " echo 'hi'
@@ -1813,7 +1814,7 @@ nmap P <Plug>G_EasyClipPasteBefore`[
 " Note: not sure what these do - the cursor pos is not maintained. now added "`[" which moves the cursor to the beginning
 xmap p <Plug>XEasyClipPaste`[
 xmap P <Plug>XEasyClipPaste`[
-xmap S <Plug>XEasyClipPaste`[
+" xmap S <Plug>XEasyClipPaste`[
 " Subtitute motion
 nmap S <Plug>G_SubstituteOverMotionMap
 " nmap S <Plug>G_SubstituteToEndOfLine

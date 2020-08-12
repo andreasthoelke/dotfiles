@@ -22,8 +22,6 @@ let g:tagbar_sort = 0
 "   exec fast-tags $fns
 " fi
 
-" ─   Eins                                              ──
-
 " make two separate map - otherwise the deleting can't be explained
 
 " ─   MakeSectionEndMarker Demo line                    ──
@@ -39,6 +37,7 @@ set tags=./tags;
 " set tags=/,codex.tags;/
 " to tell it to use the ./tags
 " set tags+=tags
+" set tags=./tags;,tags
 " TODO: run ctags manually? how would tags work for purescript
 " ctags -f - --format=2 --excmd=pattern --extra= --fields=nksaSmt myfile
 
@@ -114,7 +113,7 @@ set tags=./tags;
 "       \ }
 
 
-let g:tagbar_type_haskell = {
+let g:tagbar_type_purescript = {
       \ 'ctagsbin'    : 'hasktags',
       \ 'ctagsargs'   : '-x -c -o-',
       \ 'kinds'       : [
@@ -207,62 +206,64 @@ let g:tagbar_type_markdown = {
       \ }
 
 " if executable('lushtags') ■
-if 0
-  let g:tagbar_type_haskell = {
-        \ 'ctagsbin' : 'lushtags',
-        \ 'ctagsargs' : '--ignore-parse-error --',
-        \ 'kinds' : [
-        \ 'm:module:0',
-        \ 'e:exports:1',
-        \ 'i:imports:1',
-        \ 't:declarations:0',
-        \ 'd:declarations:1',
-        \ 'n:declarations:1',
-        \ 'f:functions:0',
-        \ 'c:constructors:0'
-        \ ],
-        \ 'sro' : '.',
-        \ 'kind2scope' : {
-        \ 'd' : 'data',
-        \ 'n' : 'newtype',
-        \ 'c' : 'constructor',
-        \ 't' : 'type'
-        \ },
-        \ 'scope2kind' : {
-        \ 'data' : 'd',
-        \ 'newtype' : 'n',
-        \ 'constructor' : 'c',
-        \ 'type' : 't'
-        \ }
-        \ }
-  " Add support for purescript files in tagbar.
-  let g:tagbar_type_purescript = {
-        \ 'ctagsbin' : 'lushtags',
-        \ 'ctagsargs' : '--ignore-parse-error --',
-        \ 'kinds' : [
-        \ 'm:module:0',
-        \ 'e:exports:1',
-        \ 'i:imports:1',
-        \ 't:declarations:0',
-        \ 'd:declarations:1',
-        \ 'n:declarations:1',
-        \ 'f:functions:0',
-        \ 'c:constructors:0'
-        \ ],
-        \ 'sro' : '.',
-        \ 'kind2scope' : {
-        \ 'd' : 'data',
-        \ 'n' : 'newtype',
-        \ 'c' : 'constructor',
-        \ 't' : 'type'
-        \ },
-        \ 'scope2kind' : {
-        \ 'data' : 'd',
-        \ 'newtype' : 'n',
-        \ 'constructor' : 'c',
-        \ 'type' : 't'
-        \ }
-        \ }
+" if 0
+  " let g:tagbar_type_haskell = {
+  "       \ 'ctagsbin' : 'lushtags',
+  "       \ 'ctagsargs' : '--ignore-parse-error --',
+  "       \ 'kinds' : [
+  "       \ 'm:module:0',
+  "       \ 'e:exports:1',
+  "       \ 'i:imports:1',
+  "       \ 't:declarations:0',
+  "       \ 'd:declarations:1',
+  "       \ 'n:declarations:1',
+  "       \ 'f:functions:0',
+  "       \ 'c:constructors:0'
+  "       \ ],
+  "       \ 'sro' : '.',
+  "       \ 'kind2scope' : {
+  "       \ 'd' : 'data',
+  "       \ 'n' : 'newtype',
+  "       \ 'c' : 'constructor',
+  "       \ 't' : 'type'
+  "       \ },
+  "       \ 'scope2kind' : {
+  "       \ 'data' : 'd',
+  "       \ 'newtype' : 'n',
+  "       \ 'constructor' : 'c',
+  "       \ 'type' : 't'
+  "       \ }
+  "       \ }
+
+" Add support for purescript files in tagbar.
+" let g:tagbar_type_purescript = {
+"       \ 'ctagsbin' : 'purs',
+"       \ 'ctagsargs' : 'docs --format ctags',
+"       \ 'kinds' : [
+"       \ 'm:module:0',
+"       \ 'e:exports:1',
+"       \ 'i:imports:1',
+"       \ 't:declarations:0',
+"       \ 'd:declarations:1',
+"       \ 'n:declarations:1',
+"       \ 'f:functions:0',
+"       \ 'c:constructors:0'
+"       \ ],
+"       \ 'sro' : '.',
+"       \ 'kind2scope' : {
+"       \ 'd' : 'data',
+"       \ 'n' : 'newtype',
+"       \ 'c' : 'constructor',
+"       \ 't' : 'type'
+"       \ },
+"       \ 'scope2kind' : {
+"       \ 'data' : 'd',
+"       \ 'newtype' : 'n',
+"       \ 'constructor' : 'c',
+"       \ 'type' : 't'
+"       \ }
+"       \ }
+
   " Add support for markdown files in tagbar.
   " let g:tagbar_type_markdown = {
   "   \ 'ctagstype' : 'markdown',
@@ -272,21 +273,21 @@ if 0
   "       \ 'k:Heading_L3'
   "   \ ]
   " \ }
-  let g:tagbar_type_markdown = {
-        \ 'ctagstype': 'markdown',
-        \ 'ctagsbin' : '~/.vim/plugged/markdown2ctags/markdown2ctags.py',
-        \ 'ctagsargs' : '-f - --sort=yes',
-        \ 'kinds' : [
-        \ 's:sections',
-        \ 'i:images'
-        \ ],
-        \ 'sro' : '|',
-        \ 'kind2scope' : {
-        \ 's' : 'section',
-        \ },
-        \ 'sort': 0,
-        \ }
-endif " ▲
+"   let g:tagbar_type_markdown = {
+"         \ 'ctagstype': 'markdown',
+"         \ 'ctagsbin' : '~/.vim/plugged/markdown2ctags/markdown2ctags.py',
+"         \ 'ctagsargs' : '-f - --sort=yes',
+"         \ 'kinds' : [
+"         \ 's:sections',
+"         \ 'i:images'
+"         \ ],
+"         \ 'sro' : '|',
+"         \ 'kind2scope' : {
+"         \ 's' : 'section',
+"         \ },
+"         \ 'sort': 0,
+"         \ }
+" endif " ▲
 
 
 " ─   MakeSectionEndMarker Demo line                    ──

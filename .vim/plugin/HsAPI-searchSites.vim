@@ -149,6 +149,13 @@ nnoremap <leader>tta :call UserChoiceAction( 'Please select one: ', {}, g:choice
 nnoremap <leader>ttb :call UserChoiceAction( 'Search ..', {'eins':expand("<cword>")}, g:choicesTest2, function('TestUserChoiceSearch'), [v:true] )<cr>
 
 
+" TODO temp purescript version
+nnoremap gso :call UserChoiceAction( 'Run query on site', {'identifier': HsCursorKeyword()},                  g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+nnoremap gsO :call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')},                  g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+vnoremap gso :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetVisSel()},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+vnoremap gsO :<c-u>call UserChoiceAction( 'Run query on site', {'identifier': GetInputStr('Search term: ')},        g:searchSites, 'RunSearch', [{'browser':'default'}] )<cr>
+
+
 " ─   Search Params                                     ──
 " 'mainTerm':   'fmap'
 " 'identifier': '<*>'

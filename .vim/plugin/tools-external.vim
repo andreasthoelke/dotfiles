@@ -66,8 +66,8 @@ endfunc
 
 
 nnoremap <leader>Cab :vnew *.cabal<cr>
-nnoremap <leader>oPa :vnew package.yaml<cr>
-nnoremap <leader>oPA :tabe package.yaml<cr>
+nnoremap <leader>OPa :vnew package.yaml<cr>
+nnoremap <leader>OPA :tabe package.yaml<cr>
 
 " TODO this does not show a man page outline
 nnoremap <leader>g0 g0

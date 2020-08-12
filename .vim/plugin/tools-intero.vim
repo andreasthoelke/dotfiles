@@ -50,8 +50,10 @@ nnoremap <silent> <leader>io :InteroOpen<CR>
 nnoremap <silent> <leader>ih :InteroHide<CR>
 nnoremap <silent> <leader>im :InteroLoadCurrentModule<CR>
 nnoremap <silent> <leader>il :InteroLoadCurrentFile<CR>
-nnoremap <silent>         gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> ,gd :sp<CR>:call LanguageClient_textDocument_definition()<CR>
+
+" nnoremap <silent>         gd :call LanguageClient_textDocument_definition()<CR>
+" nnoremap <silent> ,gd :sp<CR>:call LanguageClient_textDocument_definition()<CR>
+
 " fee mapping
 " nnoremap <silent>         ]d :call GotoDefinition()<CR>
 nnoremap dr :InteroReload<cr>
@@ -74,10 +76,15 @@ vnoremap <localleader>ti :InteroInfoInsert<cr>
 
 
 " ─   Show Type-At symbol or selection                   ■
-map gw :call SetReplCallbackFloatWin()<cr><Plug>InteroType
-vmap gw :<c-u>call SetReplCallbackFloatWin()<cr>gv<Plug>InteroType
-map gW :call SetReplCallbackFloatWin()<cr><Plug>InteroGenericType
-map gW :<c-u>call SetReplCallbackFloatWin()<cr>gv<Plug>InteroGenericType
+
+nmap <silent> gw :call CocAction('doHover')<cr>
+vmap <silent> gw :<c-u>call CocAction('doHover')<cr>
+
+" TODO adapt this approach to use the spago/ghci/stack repl?
+" map gw :call SetReplCallbackFloatWin()<cr><Plug>InteroType
+" vmap gw :<c-u>call SetReplCallbackFloatWin()<cr>gv<Plug>InteroType
+" map gW :call SetReplCallbackFloatWin()<cr><Plug>InteroGenericType
+" map gW :<c-u>call SetReplCallbackFloatWin()<cr>gv<Plug>InteroGenericType
 
 func! SetReplCallbackFloatWin()
   call intero#process#add_handler( function( "FloatWin_stripToType" ) )

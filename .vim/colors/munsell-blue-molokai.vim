@@ -435,3 +435,13 @@ hi link yamlPlainScalar purescriptIdentifier
 hi link dhallLabel Define
 
 
+hi link CocErrorHighlight CocUnderline
+hi! link CocWarningHighlight NONE
+" underline seems not visible?
+hi link CocErrorFloat purescriptIdentifier
+hi link CocWarningFloat purescriptIdentifier
+
+
+
+
+

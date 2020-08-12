@@ -22,6 +22,8 @@ endfunc
 
 " Like <cword> but includes Haskell symbol characters
 func! HsCursorKeyword()
+  return expand("<cword>")
+  " TODO temp: stop here as this currently errors in purescript
   let isk = &l:isk
   " Tempoarily extend the isKeyword character range
   setl isk+=.,<,>,$,#,+,-,*,/,%,',&,=,!,:,124,~,?,^

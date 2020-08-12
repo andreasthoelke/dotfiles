@@ -77,7 +77,7 @@ let Cbs1 = {
       \ 'on_exit': function('OnEv1')
       \ }
 
-command! PursRepl :let PursReplID = jobstart("pulp repl", Cbs1)
+command! PursRepl :let PursReplID = jobstart("spago repl", Cbs1)
 
 " let Tid = jobstart("ls")
 
