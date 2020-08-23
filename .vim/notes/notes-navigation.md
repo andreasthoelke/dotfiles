@@ -667,6 +667,8 @@ Test if char is space OR '-'
 two empty lines/ three consecutive \n:
 /\v\n{3,}
 
+
+
 Consecutive alphanumeric chars
 /\v\w{4}
 exec "normal! " '/\v\w{4}'
@@ -683,6 +685,15 @@ and then still have a non empty char after that
 read/learn about regex in vim
 help pattern.txt
 http://vimdoc.sourceforge.net/htmldoc/pattern.html
+
+match 
+\v\s\zs\w{-}\ze\:\s
+
+  do abc { eins: "some"
+         , zwei: 123
+         }
+
+"  "\_s" matches space OR newline!
 
 ### Demo Seachpair
 Skip to the next 'e' when on a lowercase 'e'

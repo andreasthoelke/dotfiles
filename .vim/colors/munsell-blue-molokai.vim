@@ -58,7 +58,7 @@ hi SpecialKey      guifg=#66D9EF               gui=italic
 hi MatchParen      guifg=#000000 guibg=#FD971F gui=bold
 hi ModeMsg         guifg=#E6DB74
 hi MoreMsg         guifg=#E6DB74
-hi Operator        guifg=#E0306F
+" hi Operator        guifg=#E0306F
 
 " complete menu
 hi Pmenu           guifg=#66D9EF guibg=#000000
@@ -207,6 +207,11 @@ hi! purescriptFunction guifg=#008EB8 guibg=#000000
 " purescriptIdentifier > purescriptIdentifier
 " hi! purescriptIdentifier guifg=#E7F4F7 "anti flash white"
 hi! purescriptIdentifier guifg=#BECACD "white-grey"
+hi! purescriptRecordKeys guifg=#42727A
+hi! purescriptDelimiter guifg=#233D41
+hi! purescriptOperator guifg=#32575E
+hi! purescriptColon guifg=#2D4E54
+hi! Operator guifg=#335A60
 
 " purescriptType > Type
 hi! Type guifg=#76E0D9 "middle blue"
@@ -219,15 +224,19 @@ hi! hsTypeVarComment guifg=#4C5037 "Type vars in comment - toned down: 70 -> 32
 
 " purescriptConstructor
 hi! DataConstructor guifg=#983B4D "smoky topaz red"
-hi! def link purescriptConstructor DataConstructor
+" hi! def link purescriptConstructor DataConstructor
+" hi! purescriptConstructor guifg=#73615B
+" hi! purescriptConstructor guifg=#5C6C60
+hi! purescriptConstructor guifg=#607062
 
 " purescipt Import section
 hi! def link purescriptModule Function
 hi! def link purescriptImport Function
 hi! def link purescriptImportParams Statement
 hi! def link purescriptImportAs Type
+" hi! def link purescriptRecordKeys Identifier
 
-" let g:color_sacramento_green_brighter = '#066150'
+let g:color_sacramento_green_brighterD = '#066150'
 let g:color_sacramento_green_brighter = '#077D67'
 
 " purescriptNumber > Number
@@ -241,7 +250,9 @@ exec 'hi! Float guifg=' . g:color_sacramento_green_brighter
 exec 'hi! String guifg=' . g:color_sacramento_green_brighter
 
 " purescriptBoolean > Boolean
-exec 'hi! Boolean guifg=' . g:color_sacramento_green_brighter
+" exec 'hi! Boolean guifg=' . g:color_sacramento_green_brighter
+hi! Boolean guifg=#66A279
+hi! String guifg=#66A279
 
 
 let g:color_ming_green_dark = '#3C6B7C '
@@ -255,6 +266,7 @@ exec 'hi! Keyword guifg=' . g:color_ming_green
 " exec 'hi! Operator guifg=' . g:color_ming_green
 " Note: Operator is (automatically?!) linked to all concealed symbols!
 exec 'hi! Operator guifg=' . g:color_ming_green_dark
+" exec 'hi! Operator guifg=' . g:color_ming_green_dark2
 
 " purescriptDelimiter > Delimiter
 exec 'hi! Delimiter guifg=' . g:color_ming_green

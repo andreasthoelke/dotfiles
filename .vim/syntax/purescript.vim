@@ -35,6 +35,16 @@ syn match hsTypeComment "\<[_A-Z]\(\w\|\'\)*\>" contained
 syn match hsTypeVarComment "\<[_a-z]\(\w\|\'\)*\>" contained
       \ containedin=hsFunctionDeclComment
 
+" Records:
+syn match purescriptRecordKeys "\v\s\zs\w{-}\ze\:\s"
+syn match purescriptIdentifierDot1 "\v\s\zs\w{-}\ze\.\w"
+highlight def link purescriptIdentifierDot1 purescriptIdentifier
+" syn match purescriptIdentifierDot2 "\v\.\zs\w{-}\ze\s"
+" could not get the above line to match RB.[json] this code:
+" , content: RB.json <$> body
+" so resorting to a matchadd
+call matchadd('purescriptIdentifier', '\v\.\zs\w{-}\ze\_s', -1, -1 )
+"  "\_s" matches space OR newline!
 
 " Constructor:
 syn match purescriptConstructor "\%(\<class\s\+\)\@15<!\<\u\w*\>"
@@ -152,6 +162,13 @@ syn match purescriptOperatorType "\%(\<instance\>.*\)\@40<!\(::\|∷\)"
 syn match purescriptOperatorFunction "\(->\|<-\|[\\→←]\)"
 syn match purescriptOperatorTypeSig "\(->\|<-\|=>\|<=\|::\|[∷∀→←⇒⇐]\)" contained
   \ nextgroup=purescriptType skipwhite skipnl skipempty
+
+" syn match purescriptRecordColon "\v\zs\:\ze\s"
+" again, I could not get the above line to match - using a matchadd instead
+" call matchadd('purescriptColon', '\v\zs\:\ze\s', -1, -1 )
+" call matchadd('MatchParen', '\v\s\w{-}\zs\:\ze\s', -1, -1 )
+" call matchadd('MatchParen', '\v\s\w{-}\zs\:\ze', -1, -1 )
+" call clearmatches()
 
 " Type definition:
 syn region purescriptData start="^data\s\+\([A-Z]\w*\)" end="^\S"me=s-1,re=s-1 transparent
@@ -457,7 +474,7 @@ highlight def link purescriptBoolean Boolean
 highlight def link purescriptNumber Number
 highlight def link purescriptFloat Float
 
-highlight def link purescriptDelimiter Delimiter
+" highlight def link purescriptDelimiter Delimiter
 
 highlight def link purescriptOperatorTypeSig purescriptOperatorType
 highlight def link purescriptOperatorFunction purescriptOperatorType
@@ -487,7 +504,7 @@ highlight def link purescriptStructure purescriptKeyword
 highlight def link purescriptKeyword Keyword
 highlight def link purescriptStatement Statement
 highlight def link purescriptLet Statement
-highlight def link purescriptOperator Operator
+" highlight def link purescriptOperator Operator
 highlight def link purescriptFunction Function
 highlight def link purescriptType Type
 highlight def link purescriptComment Comment

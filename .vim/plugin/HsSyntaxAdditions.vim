@@ -1,8 +1,10 @@
 
 " ─   Filetype Specific Maps Tools Syntax               ──
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead        *.hs call HaskellTools()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
+
+au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
+au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.md          call VimScriptSyntaxAdditions()
@@ -73,6 +75,9 @@ func! HaskellSyntaxAdditions()
   " Don't show quotes around text. note you can only identify text via the syntax coloring!
   call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
   call matchadd('Conceal', '""', -1, -1, {'conceal': '∅'})
+
+  call matchadd('purescriptColon', '\v\zs\:\ze\s', -1, -1 )
+
   " TODO this conflicts with `elem` and it unicode replacement
   " call matchadd('Conceal', '`', -1, -1, {'conceal': ''})
   " conceallevel 1 means that matches are collapsed to one char. '2' collapses completely
