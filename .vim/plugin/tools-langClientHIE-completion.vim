@@ -72,6 +72,12 @@ function! s:show_documentation()
   endif
 endfunction
 
+" this allows to open the menu and get suggestions without any characters typed already.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
+
 " not clear how/if this works?
 " command! -nargs=0 Format :call CocAction('format')
 
@@ -102,7 +108,7 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " let g:psc_ide_server_port = 12441
 " let g:psc_ide_server_port = 38218
 
-" let g:vimmerps_disable_mappings = v:true
+let g:vimmerps_disable_mappings = v:true
 
 " Test this: ~/Documents/Haskell/6/HsTrainingTypeClasses1/.vim/settings.json#/"languageServerHaskell".%20{
 " Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],
@@ -119,8 +125,6 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper'] }
 let g:LanguageClient_serverCommands = { 'purescript': ['purescript-language-server', '--stdio', '--config', '{}'] }
 " let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml', 'spago.dhall']
-
-" surround spago purescript server commands, haskell off? then test vimmer-ps
 
 let g:LanguageClient_autoStart = 1
 " let g:lsp_async_completion = 1
@@ -171,6 +175,15 @@ map <Leader>ga :call LanguageClient_textDocument_documentHighlight()<CR>
 map <Leader>lR :LanguageClientStop<cr>:LanguageClientStart<cr>
 
 map <leader>lt <Plug>(coc-type-definition)
+
+" less clutter while having many warnings - or faster glimpse into the issue?
+let g:LanguageClient_useVirtualText = "No"
+" let g:LanguageClient_fzfOptions = ?
+" let $FZF_DEFAULT_OPTS="--preview=bat --reverse"
+" let g:LanguageClient_fzfOptions = fzf#vim#with_preview().options
+" let g:LanguageClient_fzfOptions = '$FZF_DEFAULT_OPTS'
+let g:LanguageClient_fzfContextMenu = 1
+
 
 " Diagnostics highlighing:
 let g:LanguageClient_diagnosticsDisplay = {
@@ -277,7 +290,8 @@ set completeopt=noinsert,menuone,noselect
 
 " TODO Not sure what effect this has
 set completefunc=LanguageClient#complete
-" set omnifunc=LanguageClient#complete
+
+set omnifunc=LanguageClient#complete
 " set omnifunc=syntaxcomplete#Complete
 " set omnifunc=lsp#complete
 

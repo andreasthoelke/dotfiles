@@ -259,7 +259,6 @@ endfunc
 func! ExpandSignature()
   let identif = GetTopLevSymbolName()
   let fillChars = repeat( ' ', col('.'))
-  call
 endfunc
 
 " "expand undefined": expand a signature to a function stub

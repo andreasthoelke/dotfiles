@@ -10,7 +10,10 @@ Plug 'junegunn/vim-plug'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/ctrlp-mark'
 Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf.vim'
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release', 'do': ':UpdateRemotePlugins' }
 
 " CtrlPArgs will show the arglist
 " Plug 'kshenoy/vim-ctrlp-args'
@@ -160,6 +163,7 @@ Plug 'jelera/vim-javascript-syntax'
 Plug 'elzr/vim-json'
 Plug 'kevinoid/vim-jsonc'
 Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
 Plug 'mityu/vim-applescript'
 Plug 'vmchale/dhall-vim'
 " Flutter/Dart
@@ -227,9 +231,6 @@ Plug 'navicore/vissort.vim'
 " Plug 'purescript-contrib/purescript-vim'
 Plug 'andreasthoelke/purescript-vim'
 " issue: Purs ide throws an error, can't find the project root folder? - it's deactivated now
-" Plug 'FrigoEU/psc-ide-vim'
-" Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
-Plug 'sriharshachilakapati/vimmer-ps'
 
 " ─   Haskell IDE features                               ■
 
@@ -287,15 +288,26 @@ Plug 'neomake/neomake'
 " Plug 'vim-syntastic/syntastic'
 
 
-" Completion:
+" IDE features:
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" backup old: HIE and deoplete
+" Plug 'FrigoEU/psc-ide-vim'
+Plug 'sriharshachilakapati/vimmer-ps'
+
+" does this really echo PS diagnostics?
+Plug 'Shougo/echodoc.vim'
+
+" old:
+" Plug 'coot/psc-ide-vim', { 'branch': 'vim' }
+
+
 " Haskell IDE Engine HIE:
 Plug 'autozimu/LanguageClient-neovim', {
       \ 'branch': 'next',
       \ 'do': './install.sh'
       \ }
+
+" backup old: HIE and deoplete
 " if has('nvim')
 "   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   " Plug 'ncm2/ncm2'

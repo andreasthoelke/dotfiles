@@ -77,7 +77,7 @@ let Cbs1 = {
       \ 'on_exit': function('OnEv1')
       \ }
 
-command! PursRepl :let PursReplID = jobstart("spago repl", Cbs1)
+" command! PursRepl :let PursReplID = jobstart("spago repl", Cbs1)
 
 " let Tid = jobstart("ls")
 
@@ -93,9 +93,10 @@ command! PursRepl :let PursReplID = jobstart("spago repl", Cbs1)
 
 " INSTALLING A PACKAGE REQUIRES:
 " "bower install --save <packagename> | pulp build"
-command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
-      \ PursInstall
-      \ echom jobstart("bower install --save purescript-" . <q-args> . " && pulp build", Cbs1)
+" "spago install <packagename> && spago build"
+" command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
+"       \ PursInstall
+"       \ echom jobstart("spago install " . <q-args> . " && spago build", Cbs1)
 
 
 " nnoremap <leader>sx y$:echom <c-r>"<cr>

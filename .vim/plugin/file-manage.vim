@@ -1,3 +1,4 @@
+
 " Shortcuts to popular folders:
 nnoremap <leader>ou :tabe ~/.vim/utils/<cr>
 nnoremap <leader>or :vnew ~/.vim/plugin/<cr>

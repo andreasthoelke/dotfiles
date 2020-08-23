@@ -24,16 +24,16 @@ endfunc
 func! HsCursorKeyword()
   return expand("<cword>")
   " TODO temp: stop here as this currently errors in purescript
-  let isk = &l:isk
+  " let isk = &l:isk
   " Tempoarily extend the isKeyword character range
-  setl isk+=.,<,>,$,#,+,-,*,/,%,',&,=,!,:,124,~,?,^
-  let kword = expand("<cword>")
-  let &l:isk = isk
-  if kword[0] =~ '\a'
-    return kword
-  else
-    return '('.kword.')'
-  endif
+  " setl isk+=.,<,>,$,#,+,-,*,/,%,',&,=,!,:,124,~,?,^
+  " let kword = expand("<cword>")
+  " let &l:isk = isk
+  " if kword[0] =~ '\a'
+  "   return kword
+  " else
+  "   return '('.kword.')'
+  " endif
 endfunc
 "  == (.) (>>=) >>=
 

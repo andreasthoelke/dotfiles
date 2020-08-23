@@ -45,18 +45,18 @@ let g:haskellmode_completion_ghc = 1
 " nnoremap <silent> <leader>is :InteroStart<CR>
 " nnoremap <silent> <leader>isc :SignsClear<CR>
 " Todo: unify this with purs?
-nnoremap <silent> <leader>ik :InteroKill<CR>
-nnoremap <silent> <leader>io :InteroOpen<CR>
-nnoremap <silent> <leader>ih :InteroHide<CR>
-nnoremap <silent> <leader>im :InteroLoadCurrentModule<CR>
-nnoremap <silent> <leader>il :InteroLoadCurrentFile<CR>
+" nnoremap <silent> <leader>ik :InteroKill<CR>
+" nnoremap <silent> <leader>io :InteroOpen<CR>
+" nnoremap <silent> <leader>ih :InteroHide<CR>
+" nnoremap <silent> <leader>im :InteroLoadCurrentModule<CR>
+" nnoremap <silent> <leader>il :InteroLoadCurrentFile<CR>
 
 " nnoremap <silent>         gd :call LanguageClient_textDocument_definition()<CR>
 " nnoremap <silent> ,gd :sp<CR>:call LanguageClient_textDocument_definition()<CR>
 
 " fee mapping
 " nnoremap <silent>         ]d :call GotoDefinition()<CR>
-nnoremap dr :InteroReload<cr>
+" nnoremap dr :InteroReload<cr>
 " ─^  Maps                                               ▲
 
 " ─   Legacy Intero Types: TODO                          ■
@@ -118,9 +118,10 @@ nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<c
 
 " Plain Repl Lines:
 " nnoremap ges :call InteroEval( GetReplExpr(), "FloatWin_ShowLines", '' )<cr>
-nnoremap gei :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
+" nnoremap gei :call InteroEval( GetReplExpr(), "FloatWinAndVirtText", '' )<cr>
+" nnoremap gei :call ReplEval( GetReplExpr() )<cr>
 
-vnoremap gei :call InteroEval( Get_visual_selection(), "FloatWinAndVirtText", '' )<cr>
+" vnoremap gei :call InteroEval( Get_visual_selection(), "FloatWinAndVirtText", '' )<cr>
 
 " ─   legacy to be reviewed                              ■
 " Run cword in repl - paste returned lines verbally:
@@ -156,29 +157,89 @@ endfunc
 " treat/format it accordingly
 
 
+
+" ─   New Purescript REPL                                ■
+
+nnoremap <silent> <leader>ro :call ReplStart()<cr>
+nnoremap <silent> <leader>rq :call ReplStop()<cr>
+nnoremap <silent> <leader>rl :call ReplEval('import ' . GetModuleName())<cr>
+nnoremap <silent> dr         :call ReplEval(':reload')<cr>
+nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
+
+nnoremap gei      :call ReplEval( GetReplExpr() )<cr>
+vnoremap gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
+
+nnoremap get      :call ReplEval( ':type ' . expand('<cword>') )<cr>
+vnoremap get :<c-u>call ReplEval( ':type ' . Get_visual_selection() )<cr>
+
+
+" Note that the following functions are linked by referring to the same Psci session (PursReplID)
+command! ReplStart :let g:PursReplID = jobstart("spago repl", PursCbs)
+
+func! ReplStart ()
+  let g:PursReplID = jobstart("spago repl", g:ReplCallbacks)
+endfunc
+
+func! ReplStop ()
+  call jobstop( g:PursReplID )
+  unlet g:PursReplID
+endfunc
+
+func! ReplLoadCurrentModule ()
+  call ReplEval ( 'import ' . GetModuleName() )
+endfunc
+
+func! ReplMainCallback(job_id, data, event)
+  call ReplSimpleResponseHandler (a:data)
+endfunc
+
+let g:ReplCallbacks = {
+      \ 'on_stdout': function('ReplMainCallback'),
+      \ 'on_stderr': function('ReplMainCallback'),
+      \ 'on_exit': function('ReplMainCallback')
+      \ }
+
+func! ReplEval( expr )
+  call jobsend(g:PursReplID, a:expr . "\n")
+endfunc
+
+
 " Separates 3 output types:
 " - Forwards multi-line repl-outputs
 " - Splits a list of strings into lines
 " - Forwards other values
-func! InteroReplReturnCB( lines )
-  if len( lines ) == 1
+func! ReplSimpleResponseHandler( lines )
+  if len( a:lines ) == 1
     " Repl returned the typlical one value
-    let hsReturnVal = lines[0]
+    let hsReturnVal = a:lines[0]
     if hsReturnVal[0:1] == '["'
       " Detected list of strings: To split the list into lines, convert to vim list of line-strings!
       call HsShowLinesInFloatWin( eval ( hsReturnVal ) )
     else
       call HsShowLinesInFloatWin( [hsReturnVal] )
     endif
-  elseif
-    call HsShowLinesInFloatWin( lines )
+  elseif len( a:lines ) == 0
+    echo "Repl returned 0 lines"
+  else
+    call HsShowLinesInFloatWin( a:lines )
   endif
 endfunc
+" call PursReplReturnCB (["eins", "zwei"])
+
+
+" "spago install <packagename> && spago build"
+command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
+      \ PursInstall
+      \ echom jobstart("spago install " . <q-args> . " && spago build", g:ReplCallbacks)
+
+" ─^  New Purescript REPL                                ▲
+
+
 
 " call InteroRun( ':type ' . GetReplExpr(), 'InteroEval_SmartShow_step2', '' ) ▲
 func! InteroRun( replExpr, alignFnExpr )
   let s:async_alignFnExpr = a:alignFnExpr
-  call intero#process#add_handler( function( 'InteroReplReturnCB' ) )
+  call intero#process#add_handler( function( 'PursReplReturnCB' ) )
   call intero#repl#eval( a:replExpr )
 endfunc
 
@@ -381,6 +442,7 @@ nnoremap <leader>dhi :echo intero#util#get_haskell_identifier()<cr>
 
 " ─   Repl legacy                                        ■
 
+
 " Evaluate "expr" in ghci. "renderFnName" will receive what ghci returns as a vim list of lines.
 " Renamed from "InsertEvalExpr"
 func! InteroEval( expr, renderFnName, alignFnName ) abort
@@ -485,20 +547,6 @@ func! WebserverRequestResponse( flags )
 endfunc
 " !curl http://localhost:8000
 " req "abc"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

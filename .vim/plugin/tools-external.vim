@@ -97,6 +97,25 @@ command! Path :normal i<c-r>=system("echo $PATH | tr ':' '\n'")<esc>
 " /Users/andreas.thoelke/.local/bin
 
 
+
+function! ShowInPreview(name, fileType, lines)
+  let l:command = "silent! pedit! +setlocal\\ " .
+        \ "buftype=nofile\\ nobuflisted\\ " .
+        \ "noswapfile\\ nonumber\\ " .
+        \ "filetype=" . a:fileType . " " . a:name
+
+  exe l:command
+
+  if has('nvim')
+    let l:bufNr = bufnr(a:name)
+    call nvim_buf_set_lines(l:bufNr, 0, -1, 0, a:lines)
+  else
+    call setbufline(a:name, 1, a:lines)
+  endif
+endfunction
+
+
+
 " ─   Git                                                ■
 
 command!          Gitpush   call ShellReturn( 'git push' )
@@ -278,10 +297,21 @@ endfunc
 " ─^  Running AppleScript                                ▲
 
 
+" ─   Bookmarks                                          ■
+
+nnoremap <leader>bt :CocCommand bookmark.toggle<cr>
+" https://github.com/voldikss/coc-bookmark
 
 
 
 
+" ─^  Bookmarks                                          ▲
 
+command! Explorer CocCommand explorer
+nnoremap <leader>oe :CocCommand explorer<cr>
+
+
+" set filetypes as typescript.tsx
+autocmd! BufNewFile,BufRead *.js,*.tsx,*.jsx set filetype=typescript.tsx
 
 

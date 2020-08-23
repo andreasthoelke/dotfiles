@@ -2,6 +2,18 @@
 
 
 
+
+" Todo: set purescript syntax!
+" ~/.vim/plugged/coc.nvim/autoload/coc/util.vim#/call%20coc#util#do_autocmd.'CocOpenFloat'.
+
+" autocmd! User CocOpenFloat call CocCustomFloatStyle()
+
+func! CocCustomFloatStyle()
+  " echo g:coc_node_env
+  " call nvim_buf_set_option( g:coc_last_float_win, 'syntax', 'purescript')
+endfunc
+
+
 " optional: change highlight, otherwise Pmenu is used
 " call nvim_win_set_option(win, 'winhl', 'Normal:MyHighlight')
 

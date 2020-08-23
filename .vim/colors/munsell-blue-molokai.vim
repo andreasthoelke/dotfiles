@@ -435,11 +435,76 @@ hi link yamlPlainScalar purescriptIdentifier
 hi link dhallLabel Define
 
 
-hi link CocErrorHighlight CocUnderline
-hi! link CocWarningHighlight NONE
+hi link CocErrorHighlight NONE
+hi link CocWarningHighlight NONE
 " underline seems not visible?
 hi link CocErrorFloat purescriptIdentifier
 hi link CocWarningFloat purescriptIdentifier
+
+hi link CocErrorSign purescriptIdentifier
+hi link CocWarningSign purescriptIdentifier
+hi link CocInfoSign purescriptIdentifier
+
+" BG color of floating win?
+hi Quote ctermbg=109 guifg=#83a598
+
+
+" ─   Typescript / React                                ──
+
+" dark red
+" hi tsxTagName guifg=#E06C75
+hi! def link tsxTagName purescriptFunction
+" hi tsxComponentName guifg=#E06C75
+hi! def link tsxComponentName Identifier
+" hi tsxCloseComponentName guifg=#E06C75
+hi! def link tsxCloseComponentName Function
+" orange
+" hi tsxCloseString guifg=#F99575
+hi! def link tsxCloseString purescriptIdentifier
+
+" hi tsxCloseTag guifg=#F99575
+hi! def link tsxCloseTag Function
+
+" hi tsxCloseTagName guifg=#F99575
+hi! def link tsxCloseTagName purescriptFunction
+
+" hi tsxAttributeBraces guifg=#F99575
+hi! def link tsxAttributeBraces Conditional
+
+" hi tsxEqual guifg=#F99575
+hi! def link tsxEqual purescriptFunction
+
+" yellow
+" hi tsxAttrib guifg=#F8BD7F cterm=italic
+hi! def link tsxAttrib Type
+
+" light-grey
+hi tsxTypeBraces guifg=#999999
+" dark-grey
+hi tsxTypes guifg=#666666
+hi! foldBraces guifg=#666666
+
+" hi ReactState guifg=#000000
+hi! def link ReactState DataConstructor
+
+" hi ReactProps guifg=#D19A66
+hi! def link ReactProps DataConstructor
+
+hi ApolloGraphQL guifg=#CB886B
+hi Events ctermfg=204 guifg=#56B6C2
+hi ReduxKeywords ctermfg=204 guifg=#C678DD
+" hi ReduxHooksKeywords ctermfg=204 guifg=#C176A7
+hi! def link ReduxHooksKeywords DataConstructor
+
+hi WebBrowser ctermfg=204 guifg=#56B6C2
+hi ReactLifeCycleMethods ctermfg=204 guifg=#D19A66
+
+hi! def link typescriptEndColons Comment
+hi! def link typescriptBraces Comment
+hi! def link tsxTag Comment
+hi! def link tsxCloseTag Comment
+
+hi! def link foldBraces purescriptIdentifier
 
 
 

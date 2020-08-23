@@ -73,9 +73,11 @@ gsd         - hoogle search word under cursor or vis-sel
 gsD <c-f>   - hoogle edit vis-sel or wuc: gsD then <c-f> .. <c-c><cr> (?)
 gsh         - search hoogle.org
 gse         - explore definition (haskell-code-explorer.com)
-Fhask       - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** ~/.vim/utils/utils-search.vim#/command.%20-nargs=1%20Fhask 
+Fhask, Frepo - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** ~/.vim/utils/utils-search.vim#/command.%20-nargs=1%20Fhask 
+}{          - jump files on search results
 Fdeleted    - deleted code in repo
 Lines, GFiles?, BCommits, Maps, Helptags
+gso, gsO    - to search on websites e.g. pursuit.org
 
 ### Search in project folder
 Go to search root folder in Dirvish then
@@ -195,6 +197,7 @@ S$          - substitute / replace to the end of the line
 <op>J/K     - yank, source lines to the end of the block. e.g.
 ,dJ (with cursor at start of line) - delete / cut into register
 yip         - yank the paragraph
+leader"     - show register bar (peekaboo)
 
 ## Folds, Folding
 `zf` `zd` create/delete fold markers via motions/vis select
@@ -211,6 +214,7 @@ leader oG   - Git gitV viewer
 leader ot   - Tagbar
 leader om   - Markbar
 leader oU   - Undo tree (Mundo)
+:StripWhitespace - removes whitespace
 
 ## Tagbar
 leader ot   - open
