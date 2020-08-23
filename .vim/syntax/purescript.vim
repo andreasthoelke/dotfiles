@@ -231,6 +231,7 @@ let g:HsCharsToUnicode = [
       \, [' \zs<=<',           '↢', 'Normal']
       \, [' \zs<<<<',           '…', 'Normal']
       \, [' \zs==',            '≡', 'Normal']
+      \, [' \zs/\\',            '|', 'Normal']
       \, ['==',            '≡', 'Normal']
       \, ['/=',            '≠', 'Normal']
       \, ['/=\ze ',            '≠', 'Normal']
@@ -253,6 +254,7 @@ let g:HsCharsToUnicode = [
             " \, [' \zs<|>',           '‖', 'Normal']
             " ε
                   " \, ['<\#>',          '≚', 'Normal']
+                        " \, [' \zs/\\',            '⨆', 'Normal']
 
 " https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
 
