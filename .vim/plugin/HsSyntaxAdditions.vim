@@ -1,10 +1,10 @@
 
 " ─   Filetype Specific Maps Tools Syntax               ──
 au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead        *.hs call HaskellMaps()
+" au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead        *.purs call HaskellMaps()
+" au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
 au ag BufNewFile,BufRead,WinNew *.md          call VimScriptSyntaxAdditions()

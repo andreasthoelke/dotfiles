@@ -264,6 +264,12 @@ func! IsTypeSignLine( linenum )
 endfunc
 " echo IsTypeSignLine( line('.') )
 
+func! ContainsPunctuation( str )
+  return a:str =~ '\(\.\|:\)'
+endfunc
+" echo ContainsPunctuation( 'eins.zwei' )
+" echo ContainsPunctuation( 'eins,zwei' )
+
 func! IsTypeSignLineWithArgs( linenum )
   return getline( a:linenum ) =~ '\(∷\|::\).*→'
 endfunc

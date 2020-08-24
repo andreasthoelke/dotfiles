@@ -207,6 +207,9 @@ hi! purescriptFunction guifg=#008EB8 guibg=#000000
 " purescriptIdentifier > purescriptIdentifier
 " hi! purescriptIdentifier guifg=#E7F4F7 "anti flash white"
 hi! purescriptIdentifier guifg=#BECACD "white-grey"
+"sort of nice soft yellow ..
+" hi! purescriptIdentifierDot1 guifg=#BECA00
+hi! purescriptIdentifierDot1 guifg=#8E989A
 hi! purescriptRecordKeys guifg=#42727A
 hi! purescriptDelimiter guifg=#233D41
 hi! purescriptOperator guifg=#32575E

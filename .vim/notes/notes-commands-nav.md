@@ -121,6 +121,7 @@ mv or cp then <c-[> to go to normal mode then `p` tp paste then insert and `.` t
 ;           - then c-n and c-i and c-x c-f for completion.
             " - c-cr/return to commit in insert mode. leader se in normal mode
 
+            mkCounter = component "Counter " \props -> Hooks.do
 
 ## Git
 leader gg   - GitGutterToggle

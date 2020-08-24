@@ -229,7 +229,9 @@ Plug 'godlygeek/tabular'
 Plug 'navicore/vissort.vim'
 
 " Plug 'purescript-contrib/purescript-vim'
-Plug 'andreasthoelke/purescript-vim'
+" TODO this was causing a mapping for 'w' and "e" that would jump across ":" and "."
+" it't not clear why I would need the plugin - it's also unmaintained
+" Plug 'andreasthoelke/purescript-vim'
 " issue: Purs ide throws an error, can't find the project root folder? - it's deactivated now
 
 " ─   Haskell IDE features                               ■
@@ -1594,7 +1596,7 @@ command! ColorPicker VCoolor
 
 " let g:rootmarkers = ['.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
 " Prioritise looking for git repo roots
-let g:rootmarkers = ['.git', '.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md']
+let g:rootmarkers = ['package.json', '.git', 'stack.yaml', '*.cabal', 'README.md']
 
 "
 " open file relative to project-root

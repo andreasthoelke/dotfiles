@@ -38,7 +38,7 @@ syn match hsTypeVarComment "\<[_a-z]\(\w\|\'\)*\>" contained
 " Records:
 syn match purescriptRecordKeys "\v\s\zs\w{-}\ze\:\s"
 syn match purescriptIdentifierDot1 "\v\s\zs\w{-}\ze\.\w"
-highlight def link purescriptIdentifierDot1 purescriptIdentifier
+" highlight def link purescriptIdentifierDot1 purescriptIdentifier
 " syn match purescriptIdentifierDot2 "\v\.\zs\w{-}\ze\s"
 " could not get the above line to match RB.[json] this code:
 " , content: RB.json <$> body

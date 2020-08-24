@@ -1,5 +1,4 @@
 
-
 func! AppendSpace( listOfPatterns )
   let res = []
   for pttn in a:listOfPatterns
@@ -1207,8 +1206,11 @@ vnoremap <silent> b <esc>:call ChangeVisSel(function('ExprInnerStartBackw'))<cr>
 " hello >>= Just 123  >> Just 43 <*> (map eins) >> Abc
 " consos13 = Gen.element [1,2] >>= flip replicateM (Gen.element consonants)
 func! ExprInnerStartForw()
-  if IsImportLine( line('.') )
+  if IsImportLine( line('.') ) || ContainsPunctuation( expand('<cWORD>') )
     normal! w
+    if ContainsPunctuation( GetCharAtCursor() )
+      normal! w
+    endif
     return
   endif
 
