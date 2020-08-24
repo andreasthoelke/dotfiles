@@ -811,7 +811,7 @@ func! ExprOuterStartForw() " ■
   if sLine == oLine
     " Forward and backward matches on the same line
     call setpos('.', [0, sLine, sColumn, 0] )
-    echo 'Delim motion to: ' . sLine . ' - ' . sColumn
+    " echo 'Delim motion to: ' . sLine . ' - ' . sColumn
     normal! lW
     " Match found in a later line - move to the start of next line instead!
   else

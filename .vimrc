@@ -272,7 +272,8 @@ Plug 'Shougo/vimproc.vim', {'do': 'make'}
 " Plug 'neovimhaskell/haskell-vim'
 " Unicode supporting fork
 " Plug 'unclechu/haskell-vim'
-Plug 'unclechu/haskell-vim', { 'branch': 'my-fork' }
+" TODO not sure why is used this
+" Plug 'unclechu/haskell-vim', { 'branch': 'my-fork' }
 " Plug 'idris-hackers/idris-vim'
 Plug 'itchyny/vim-haskell-indent'
 " Plug 'alx741/vim-hindent'

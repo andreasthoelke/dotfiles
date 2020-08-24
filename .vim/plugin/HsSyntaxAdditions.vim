@@ -4,6 +4,10 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 " au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
+
+" au ag BufNewFile,BufRead *.purs setfiletype purescript
+" this is now moved to ftdetect folder - not sure if this is needed
+" ~/.vim/ftdetect/purescript.vim#/au%20BufNewFile,BufRead%20*.purs
 " au ag BufNewFile,BufRead        *.purs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.vim,*.vimrc call VimScriptSyntaxAdditions()
