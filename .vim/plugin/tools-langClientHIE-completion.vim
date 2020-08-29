@@ -38,6 +38,8 @@ else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
+nnoremap <silent> gsi :call CocActionAsync('diagnosticInfo')<cr>
+
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
@@ -52,6 +54,9 @@ endif
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
+nnoremap <leader>ld :CocList diagnostics<cr>
+
+
 " GoTo code navigation. don't seem supported in purescript
 " nmap <silent> gd <Plug>(coc-definition)
 " nmap <silent> gy <Plug>(coc-type-definition)
@@ -62,7 +67,7 @@ nmap <silent>         gd <Plug>(coc-definition)
 nmap <silent> ,gd :sp<CR><Plug>(coc-definition)
 
 " Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> <leader>hK :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -77,6 +82,8 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
+" autocmd User CocOpenFloat call nvim_win_set_config(g:coc_last_float_win, {'relative': 'editor', 'row': 0, 'col': 0})
+" autocmd User CocOpenFloat call nvim_win_set_width(g:coc_last_float_win, 9999)
 
 " not clear how/if this works?
 " command! -nargs=0 Format :call CocAction('format')
@@ -89,10 +96,10 @@ autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 " Search workspace symbols.
 " nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
-" TODO -- use this in HSMotion
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" TODO -- not seem to work? .. use this in HSMotion
+" nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 " nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
@@ -174,6 +181,7 @@ map <Leader>ga :call LanguageClient_textDocument_documentHighlight()<CR>
 
 map <Leader>lR :LanguageClientStop<cr>:LanguageClientStart<cr>
 
+" not available for Purescript - but maybe for Haskell?
 map <leader>lt <Plug>(coc-type-definition)
 
 " less clutter while having many warnings - or faster glimpse into the issue?

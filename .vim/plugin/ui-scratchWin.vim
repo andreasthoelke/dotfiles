@@ -1,5 +1,7 @@
 " ─   Scratch Window                                     ■
 
+command! ScratchWindow call ActivateScratchWindow( 'scratch' )
+
 " Create or just activate/focus a disposable window
 " TODO this currently writes a file names after bufferNameId - there is an option that would work without a written file
 func! ActivateScratchWindow( bufferNameId )

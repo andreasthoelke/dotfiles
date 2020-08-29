@@ -2,15 +2,26 @@
 " ~/.vim/notes/notes-todos.md#/###%20HsAPI
 
 
-nnoremap gsd :call HsAPIQueryShowBuf( HsCursorKeyword_findModule(), 15, 0 )<cr>
-vnoremap gsd :call HsAPIQueryShowBuf( GetVisSel(),       15, 0 )<cr>
-nnoremap gSd :call HsAPIQueryShowBuf( HsCursorKeyword(), 60, 0 )<cr>
-vnoremap gSd :call HsAPIQueryShowBuf( GetVisSel(),       60, 0 )<cr>
+nnoremap Gsd :call HsAPIQueryShowBuf( HsCursorKeyword_findModule(), 15, 0 )<cr>
+vnoremap Gsd :call HsAPIQueryShowBuf( GetVisSel(),       15, 0 )<cr>
+nnoremap GSd :call HsAPIQueryShowBuf( HsCursorKeyword(), 60, 0 )<cr>
+vnoremap GSd :call HsAPIQueryShowBuf( GetVisSel(),       60, 0 )<cr>
 
-nnoremap gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword_findModule()), 15, 0 )<cr>
-vnoremap gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
-nnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
-vnoremap gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
+nnoremap gsd :call PsAPIQuery( HsCursorKeyword(), 15, 0 )<cr>
+vnoremap gsd :<c-u>call PsAPIQuery( GetVisSel(),       15, 0 )<cr>
+nnoremap gSd :call PsAPIQuery( HsCursorKeyword(), 60, 0 )<cr>
+vnoremap gSd :call PsAPIQuery( GetVisSel(),       60, 0 )<cr>
+
+nnoremap GsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword_findModule()), 15, 0 )<cr>
+vnoremap GsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       15, 0 )<cr>
+nnoremap GSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
+vnoremap GSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
+
+nnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword_findModule()), 15, 0 )<cr>
+vnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       15, 0 )<cr>
+nnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
+vnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       60, 0 )<cr>
+
 
 " TODO: use ~/.vim/plugin/HsAPI-searchSites.vim#/func.%20GetSearchParams.%20mode,
   " qualified shortcuts are currently not supported, e.g. "LBSASCII.pack" ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Webservers.hs#/asciiMessageBody%20=%20MessageBody
@@ -23,12 +34,64 @@ vnoremap gsk :call HsAPIShowInfoContext( GetVisSel() )<cr>
 nnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', HsCursorKeyword_findModule()) )<cr>
 vnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', GetVisSel()) )<cr>
 
-
 nnoremap gsb :call HsAPIBrowseShowBuf( HsCursorKeyword() )<cr>
 vnoremap gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
 nnoremap gsB :call HsAPIBrowseShowBuf( input( 'Module: ', HsCursorKeyword()) )<cr>
 vnoremap gsB :call HsAPIBrowseShowBuf( input( 'Module: ', GetVisSel()) )<cr>
 
+func! PsAPIQuery( searchStr, _, __ )
+  call purescript#ide#call(
+        \ {'command': 'complete'
+        \ , 'params':
+        \   { 'matcher': { "matcher": "flex", "params": { "search": a:searchStr } }
+        \   , 'options': { 'groupReexports': v:true }
+        \   }
+        \ },
+        \ 'PsAPI Query - No results for '. a:searchStr,
+        \ 0,
+        \ { response -> PsAPIQueryShowBuf( response ) }
+        \ )
+endfunc
+
+let g:ScratchBufferCounter = 0
+
+func! PsAPIQueryShowBuf( response ) " ■
+  let l:displayLines = PsAPIGetLinesFromResponse( a:response )
+
+  call ActivateScratchWindow('HsAPIdata/APIquery' . g:ScratchBufferCounter . '.hs')
+  let g:ScratchBufferCounter += 1
+
+  exec '%delete'
+  call append( 0, l:displayLines )
+  call HsTabu( [] )
+  call HaskellSyntaxAdditions()
+  exec 'normal! gg0'
+endfunc " ▲
+
+" Code adapted from https://github.com/FrigoEU/psc-ide-vim
+func! PsAPIGetLinesFromResponse( response )
+  if get(a:response, "resultType", "error") !=# "success"
+    return purescript#ide#utils#error(get(a:resp, "result", "error"))
+  endif
+
+  let displayLines = []
+  let querryResult = get(a:response, "result", [])
+
+  for resultItem in querryResult
+    if (has_key(resultItem, "definedAt") && type(resultItem.definedAt) == v:t_dict)
+      let lineNumber = resultItem.definedAt.start[0]
+      let colonNumber = resultItem.definedAt.start[1]
+      let filePath    = resultItem.definedAt.name
+    endif
+    let module = get(resultItem, "module", "")
+
+    let displayLine1 = module . ' ' . resultItem.identifier . ' :: ' . resultItem.type
+
+    call add( displayLines, displayLine1 )
+    " call add( displayLines, displayLine2 )
+  endfor
+  return displayLines
+endfunc
 
 func! HsAPIQueryShowBuf( searchStr, count, infoFlag ) " ■
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
@@ -193,12 +256,23 @@ func! GetAPICmdStr( query, limit, infoFlag )
   return 'hoogle "' . a:query . '" -n=' . a:limit . infoArg
 endfunc
 
+nnoremap <leader>hii :call PsImportIdentifier( HsCursorKeyword() )<cr>
+nnoremap <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', HsCursorKeyword()) )<cr>
+vnoremap <leader>hii :<c-u>call PsImportIdentifier( GetVisSel() )<cr>
+vnoremap <leader>hiI :<c-u>call PsImportIdentifier( input( 'Import identifier: ', GetVisSel()) )<cr>
 
-nnoremap <leader>hii :call HsImportIdentifier( GetSearchParams('n') )<cr>
-nnoremap <leader>hiI :call HsImportIdentifier( GetSearchParams('n', 'Import identifier: ') )<cr>
-vnoremap <leader>hii :call HsImportIdentifier( GetSearchParams('visual') )<cr>
-vnoremap <leader>hiI :call HsImportIdentifier( GetSearchParams('visual', 'Import identifier: ') )<cr>
+func! PsImportIdentifier( identifier )
+  " echoe a:identifier
+  call vimmerps#PaddImport( a:identifier )
+endfunc
+
+nnoremap <leader>Hii :call HsImportIdentifier( GetSearchParams('n') )<cr>
+nnoremap <leader>HiI :call HsImportIdentifier( GetSearchParams('n', 'Import identifier: ') )<cr>
+vnoremap <leader>Hii :call HsImportIdentifier( GetSearchParams('visual') )<cr>
+vnoremap <leader>HiI :call HsImportIdentifier( GetSearchParams('visual', 'Import identifier: ') )<cr>
+
 map      <Leader>lhi :call LanguageClient#textDocument_codeAction()<CR>
+
 func! HsImportIdentifier( userContextProps )
   " echo a:userContextProps.module .' - '. a:userContextProps.identifier
   wincmd c

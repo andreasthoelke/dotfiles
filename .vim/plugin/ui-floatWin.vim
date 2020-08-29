@@ -1,16 +1,21 @@
 
 
 
-
-
 " Todo: set purescript syntax!
 " ~/.vim/plugged/coc.nvim/autoload/coc/util.vim#/call%20coc#util#do_autocmd.'CocOpenFloat'.
 
 " autocmd! User CocOpenFloat call CocCustomFloatStyle()
 
+" call nvim_set_current_win( g:coc_last_float_win )
+
+" autocmd User CocOpenFloat call nvim_win_set_config(g:coc_last_float_win, {'relative': 'editor', 'row': 0, 'col': 0})
+" autocmd User CocOpenFloat call nvim_win_set_width(g:coc_last_float_win, 9999)
+
+" autocmd User CocOpenFloat call nvim_win_set_config(g:coc_last_float_win, {'relative': 'editor', 'row': 0, 'col': 0})
+
+" TODO invalid win ID error
 func! CocCustomFloatStyle()
-  " echo g:coc_node_env
-  " call nvim_buf_set_option( g:coc_last_float_win, 'syntax', 'purescript')
+  call nvim_win_set_option( g:coc_last_float_win, 'syntax', 'purescript')
 endfunc
 
 
@@ -58,7 +63,9 @@ nnoremap <leader>aff :call FloatWin_ShowLines( testText1 )<cr>
 
 nnoremap <c-w>[ :call FloatWin_close()<cr>
 " there is also a "<c-[>" map
-nnoremap <c-w>i :call nvim_set_current_win( g:floatWin_win )<cr>gg
+nnoremap <c-w>I :call nvim_set_current_win( g:floatWin_win )<cr>gg
+nnoremap <c-w>i :call nvim_set_current_win( g:coc_last_float_win )<cr>gg
+" nnoremap <c-w>i <Plug>(coc-float-jump)
 
 " Copied most parts from https://github.com/ncm2/float-preview.nvim
 
@@ -175,6 +182,7 @@ endfunc
 " endfunc
 " echo BufferLineToWinLine( line('.') )
 
+" nmap <leader>ccu <Plug>(coc-float-jump)
 
 func! FloatWin_FitWidth()
   " get the current buffer lines
@@ -227,6 +235,7 @@ func! FloatWin_close()
     let g:floatWin_win = 0
     let s:last_winargs = []
   endif
+  call coc#util#float_hide()
 endfunc
 
 func! FloatWin_display_width(lines, max_width)

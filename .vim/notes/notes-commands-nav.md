@@ -1,13 +1,15 @@
 
 ## Language client
 [g / ]g     - prev/next error/warning
-ged         - show diagnostic message in float-win
+ged         - show diagnostic message in float-win (Lang client)
+gsi         - coc diagnostic - the same as above?
 gd ,gd     - go to definition /in split
 lead lg/lG  - go to definition/ in split
 leader lk   - Symbol documentation
 leader la   - Code action → import symbol!
 insert c-i  - show completions with type sig!
 insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
+leader ld   - CocList diagnostics
 
 ## Intero
 leader io/l/k/h - intero open/load/kill/hide
@@ -42,7 +44,12 @@ gsb/B       - browse module
 2leader hU  - HsUnUnicode
 
 ## Imports
-leade hii/I - (in HsAPI) import identifier
+### Haskell
+leader Hii/I - (in HsAPI) import identifier
+leader lHi  - import identifier via LClient
+leader hfi  - format imports
+### Purescript
+leader hii/I - (in HsAPI) import identifier
 leader lhi  - import identifier via LClient
 leader hfi  - format imports
 
@@ -78,6 +85,8 @@ Fhask, Frepo - search local haskell code exampes: /6/HsTraining1/** 6/HsTraining
 Fdeleted    - deleted code in repo
 Lines, GFiles?, BCommits, Maps, Helptags
 gso, gsO    - to search on websites e.g. pursuit.org
+gsI         - :GithubSearch of word or visSel
+gsi         - show coc diagnostic info of cursor position (cursor needs to be on the error or info)
 
 ### Search in project folder
 Go to search root folder in Dirvish then
@@ -167,7 +176,7 @@ leader hA   - type-sig align entire buffer. or "viB<space>ha<c-o>"
 ## Format
 leader leader sm 'SplitModulesInLines'<cr>
 leader leader jm 'JoinModulesFromLines'<cr>
-leader leader ht 'HsTabu'<cr>
+leader leader ht 'HsTabu'<cr> in entire buffer
 leader leader hT 'StripAligningSpaces'<cr>
 leader leader sa 'StripAligningSpaces'<cr>
 leader leader hu 'HsUnicode'<cr>
@@ -186,6 +195,7 @@ J/K         - Word column corners Forw/Backw (based on aligned visibleColumns)
 t/T         - next/prev list item
 ]t/[t       - into next/prev inner list
 ]T          - end of list (to append new elements)
+TODO - this got overwritten by coc diagnostic next/prev
 [g ]g       - go back to last insert start/end. or native \`[ \`]
 z] z[ zk    - beginning/end of current fold/prev fold
 [c ]c       - prev/next git hunk (TODO: make ]c or c] consistent?)
@@ -266,6 +276,12 @@ glb         - open URL in browser
 gk          - follow rel-link
 lead lg/lG  - go to definition/ in split
 gd ,gd     - go to definition /in split
+
+## Scratch window
+leader os  - ScratchWindow
+<c-w>c     - just close the window / buffer will reopen after leader os
+leader bd/D - delete the buffer. bD for :bd! is not needed
+
 
 
 

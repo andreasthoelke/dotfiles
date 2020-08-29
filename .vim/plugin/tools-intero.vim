@@ -166,15 +166,18 @@ nnoremap <silent> <leader>rl :call ReplEval('import ' . GetModuleName())<cr>
 nnoremap <silent> dr         :call ReplEval(':reload')<cr>
 nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
 
+nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse purs module: ', expand('<cWORD>')))<cr>
+nnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . GetVisSel())<cr>
+
 nnoremap gei      :call ReplEval( GetReplExpr() )<cr>
 vnoremap gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
 
 nnoremap get      :call ReplEval( ':type ' . expand('<cword>') )<cr>
-vnoremap get :<c-u>call ReplEval( ':type ' . Get_visual_selection() )<cr>
+vnoremap get :<c-u>call ReplEval( ':type ' . GetVisSel() )<cr>
 
 
 " Note that the following functions are linked by referring to the same Psci session (PursReplID)
-command! ReplStart :let g:PursReplID = jobstart("spago repl", PursCbs)
+command! ReplStart :let g:PursReplID = jobstart("spago repl", g:ReplCallbacks)
 
 func! ReplStart ()
   let g:PursReplID = jobstart("spago repl", g:ReplCallbacks)
@@ -260,9 +263,12 @@ func! InteroReplTypeReturnCB( lines )
   endif
 endfunc
 
+let g:ReplaceBashEscapeStrings = [['[33m',''], ['[0m','']]
+
 func! HsShowLinesInFloatWin( hsLines )
   normal! m'
-  call FloatWin_ShowLines( a:hsLines )
+  let l:hsLines = ReplaceStringsInLines( a:hsLines, g:ReplaceBashEscapeStrings )
+  call FloatWin_ShowLines( l:hsLines )
   call FloatWin_do( 'call HaskellSyntaxAdditions()' )
   call FloatWin_FitWidthHeight()
   if len( s:async_alignFnExpr )

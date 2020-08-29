@@ -13,11 +13,13 @@ nnoremap <silent> gse :call DefinitionForCursorWord()<cr>
 " nnoremap <silent> gsd :call HoogleForCursorWord()<cr>
 " vmap <silent> gsd :call HoogleForVisSel()<cr>
 
-nnoremap <silent> gsi :call GithubSearch("word")<cr>
-vmap <silent> gsi :call GithubSearch("visSel")<cr>
+command! GithubSearch call GithubSearch("word")
+
+nnoremap <silent> gsI :call GithubSearch("word")<cr>
+vmap <silent> gsI :<c-u>call GithubSearch("visSel")<cr>
 
 nnoremap <silent> gsr :call GrepSearch("word", "repo")<cr>
-vmap <silent> gsr :call GrepSearch("visSel", "repo")<cr>
+vmap <silent> gsr :<c-u>call GrepSearch("visSel", "repo")<cr>
 " gsb now used to browse namespace
 " nnoremap <silent> gsb :call GrepSearch("word", "buffers")<cr>
 " vmap <silent> gsb :call GrepSearch("visSel", "buffers")<cr>

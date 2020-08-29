@@ -235,6 +235,7 @@ let g:HsCharsToUnicode = [
       \, ['forall\ze\s',       '∀', 'hsForall']
       \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
       \, [' \zs\.',            '∘', 'Normal']
+      \, [' \zs<<<\ze\s',      '∘', 'Normal']
       \, ['<\$>',          '⫩', 'Normal']
       \, ['<\#>',          '⧕', 'Normal']
       \, [' \zs<\*>',          '⟐', 'Normal']
@@ -246,7 +247,7 @@ let g:HsCharsToUnicode = [
       \, [' \zs<|>',           '‖', 'Normal']
       \, [' \zs>=>',           '↣', 'Normal']
       \, [' \zs<=<',           '↢', 'Normal']
-      \, [' \zs<<<<',           '…', 'Normal']
+      \, [' \zs<<<<\ze\s',      '…', 'Normal']
       \, [' \zs==',            '≡', 'Normal']
       \, [' \zs/\\',            '|', 'Normal']
       \, ['==',            '≡', 'Normal']
@@ -330,6 +331,7 @@ syntax match concealedCommentDashes '--\s' contained conceal
 syntax match concealedUndefinedType 'i::' conceal
 syntax match concealedUndefinedType 'undefined::' conceal
 
+syntax match concealedUndefinedType 'u:: forall a.' conceal
 
 " ─   Inline Tests conceals                              ■
 

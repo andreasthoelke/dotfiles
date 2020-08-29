@@ -35,7 +35,7 @@ func! HsTabu( columnPttns, ...)
   let   startLine = a:0 ? a:1 : 1
   let   endLine = a:0 ? a:2 : line('$')
   " remove any previous alignment
-  call StripAligningSpaces( startLine, endLine )
+  " call StripAligningSpaces( startLine, endLine )
   " unicode to simplify the process
   call HsUnicode( startLine, endLine )
   for pttn in columnPttns

@@ -294,7 +294,7 @@ Plug 'neomake/neomake'
 " IDE features:
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" Plug 'FrigoEU/psc-ide-vim'
+Plug 'FrigoEU/psc-ide-vim'
 Plug 'sriharshachilakapati/vimmer-ps'
 
 " does this really echo PS diagnostics?
@@ -866,13 +866,15 @@ map <leader>. @:
 " type "<c-f>" then e.g. "yy" to later either "q:jP" or ':<c-r>"'
 " Find in all user commands: - ":filter Intero command" or just ":command"
 
-nnoremap <leader>pe :call PasteLastEchoText()<cr>
+" nnoremap <leader>pe :call PasteLastEchoText()<cr>
 func! PasteLastEchoText()
   exec "RedirMessagesBuf" histget("cmd", -1)
 endfunc
 
-nnoremap <leader>sm :call ShowMessages()<cr>
-nnoremap <leader>cM :messages clear<cr>
+command! EchoTextPaste :call PasteLastEchoText()
+command! MessagesShow call ShowMessages()
+command! MessagesClear messages clear
+
 func! ShowMessages()
   " call FloatWin_ShowLines( RedirMessages( 'messages', '' ) )
   call ActivateScratchWindow('messages')

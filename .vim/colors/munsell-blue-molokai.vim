@@ -134,39 +134,39 @@ endif
 
 let g:materialmonokai_termcolors = 256 " does not support 16 color term right now.
 
-function! s:h(group, style)
-  let s:ctermformat = "NONE"
-  let s:guiformat = "NONE"
-  if has_key(a:style, "format")
-    let s:ctermformat = a:style.format
-    let s:guiformat = a:style.format
-  endif
-  if g:materialmonokai_italic == 0
-    let s:ctermformat = substitute(s:ctermformat, ",italic", "", "")
-    let s:ctermformat = substitute(s:ctermformat, "italic,", "", "")
-    let s:ctermformat = substitute(s:ctermformat, "italic", "", "")
-  endif
-  if g:materialmonokai_gui_italic == 0
-    let s:guiformat = substitute(s:guiformat, ",italic", "", "")
-    let s:guiformat = substitute(s:guiformat, "italic,", "", "")
-    let s:guiformat = substitute(s:guiformat, "italic", "", "")
-  endif
-  if g:materialmonokai_termcolors == 16
-    let l:ctermfg = (has_key(a:style, "fg") ? a:style.fg.cterm16 : "NONE")
-    let l:ctermbg = (has_key(a:style, "bg") ? a:style.bg.cterm16 : "NONE")
-  else
-    let l:ctermfg = (has_key(a:style, "fg") ? a:style.fg.cterm : "NONE")
-    let l:ctermbg = (has_key(a:style, "bg") ? a:style.bg.cterm : "NONE")
-  end
-  execute "highlight" a:group
-    \ "guifg="   (has_key(a:style, "fg")      ? a:style.fg.gui   : "NONE")
-    \ "guibg="   (has_key(a:style, "bg")      ? a:style.bg.gui   : "NONE")
-    \ "guisp="   (has_key(a:style, "sp")      ? a:style.sp.gui   : "NONE")
-    \ "gui="     (!empty(s:guiformat) ? s:guiformat   : "NONE")
-    \ "ctermfg=" . l:ctermfg
-    \ "ctermbg=" . l:ctermbg
-    \ "cterm="   (!empty(s:ctermformat) ? s:ctermformat   : "NONE")
-endfunction
+" function! s:h(group, style)
+"   let s:ctermformat = "NONE"
+"   let s:guiformat = "NONE"
+"   if has_key(a:style, "format")
+"     let s:ctermformat = a:style.format
+"     let s:guiformat = a:style.format
+"   endif
+"   if g:materialmonokai_italic == 0
+"     let s:ctermformat = substitute(s:ctermformat, ",italic", "", "")
+"     let s:ctermformat = substitute(s:ctermformat, "italic,", "", "")
+"     let s:ctermformat = substitute(s:ctermformat, "italic", "", "")
+"   endif
+"   if g:materialmonokai_gui_italic == 0
+"     let s:guiformat = substitute(s:guiformat, ",italic", "", "")
+"     let s:guiformat = substitute(s:guiformat, "italic,", "", "")
+"     let s:guiformat = substitute(s:guiformat, "italic", "", "")
+"   endif
+"   if g:materialmonokai_termcolors == 16
+"     let l:ctermfg = (has_key(a:style, "fg") ? a:style.fg.cterm16 : "NONE")
+"     let l:ctermbg = (has_key(a:style, "bg") ? a:style.bg.cterm16 : "NONE")
+"   else
+"     let l:ctermfg = (has_key(a:style, "fg") ? a:style.fg.cterm : "NONE")
+"     let l:ctermbg = (has_key(a:style, "bg") ? a:style.bg.cterm : "NONE")
+"   end
+"   execute "highlight" a:group
+"     \ "guifg="   (has_key(a:style, "fg")      ? a:style.fg.gui   : "NONE")
+"     \ "guibg="   (has_key(a:style, "bg")      ? a:style.bg.gui   : "NONE")
+"     \ "guisp="   (has_key(a:style, "sp")      ? a:style.sp.gui   : "NONE")
+"     \ "gui="     (!empty(s:guiformat) ? s:guiformat   : "NONE")
+"     \ "ctermfg=" . l:ctermfg
+"     \ "ctermbg=" . l:ctermbg
+"     \ "cterm="   (!empty(s:ctermformat) ? s:ctermformat   : "NONE")
+" endfunction
 
 
 
@@ -212,9 +212,11 @@ hi! purescriptIdentifier guifg=#BECACD "white-grey"
 hi! purescriptIdentifierDot1 guifg=#8E989A
 hi! purescriptRecordKeys guifg=#42727A
 hi! purescriptDelimiter guifg=#233D41
-hi! purescriptOperator guifg=#32575E
+" hi! purescriptOperator guifg=#32575E
+hi! purescriptOperator guifg=#3A666E
 hi! purescriptColon guifg=#2D4E54
 hi! Operator guifg=#335A60
+
 
 " purescriptType > Type
 hi! Type guifg=#76E0D9 "middle blue"
@@ -294,11 +296,22 @@ hi! def link diffSubname Comment
 hi! Todo guibg=bg guifg=#F92672
 hi! def link vimCommentTitle Type
 hi! def link vimString String
+hi! def link vimCommand purescriptStructure
+hi! def link vimFunction purescriptFunction
+hi! def link vimUserFunc vimFuncName
+hi! def link vimOperParen purescriptIdentifier
 hi! def link vimIsCommand purescriptIdentifier
 hi! def link vimFgBgAttrib String
 hi! def link vimHiAttrib String
 hi! VimOption guifg=#F92672
 hi! def link vimOption String
+" hi! link vimMapRhs purescriptRecordKeys
+" hi! link vimMapRhs purescriptConstructor
+hi! link vimMapRhs purescriptIdentifierDot1
+" hi! link vimVar purescriptTypeVar
+hi! link vimVar purescriptIdentifierDot1
+hi! link vimFuncVar purescriptTypeVar
+
 
 " Vim help colors
 hi! def link helpHyperTextEntry Type
@@ -312,6 +325,7 @@ hi! def link helpCommand DataConstructor
 hi! def link TagbarSignature Type
 hi! def link TagbarScope Function
 hi! def link TagbarType Keyword
+hi! def link TagbarKind Type
 
 " Markdown colors
 hi! Title gui=bold guifg=#0087AF "munsell blue"

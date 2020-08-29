@@ -252,7 +252,7 @@ func! BindingChangeName()
 endfunc
 
 " Method 3: Rename binding. Replace all occurrences of the next binding name in the Hs-Block
-nnoremap <leader>rb :call BindingRename()<cr>
+nnoremap <leader>hrb :call BindingRename()<cr>
 func! BindingRename()
   normal! m'll
   call BindingBackw()
