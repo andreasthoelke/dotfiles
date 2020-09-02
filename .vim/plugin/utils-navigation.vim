@@ -61,20 +61,6 @@ xmap <leader>wp <Plug>(Visual-Split-VSSplitAbove)
 " Pin Haskell imports
 nmap <leader>wI <leader>wpiI<c-o><c-w>k
 
-" Workaround to force vim-help to open below
-" augroup vimrc_help
-"   autocmd!
-"   autocmd BufEnter *.txt if &buftype == 'help' | wincmd J | endif
-" augroup END
-
-" nnoremap <leader> wip :call PinImports()<cr>
-
-func! PinImports()
-  wincmd s
-  wincmd k
-  normal gg
-
-endfunc
 
 " ─^  Windows                                            ▲
 
@@ -157,10 +143,10 @@ nnoremap <localleader>QQ :q<cr>
 nnoremap <localleader>t. :t.<cr>
 
 " Vim Plug:
-nnoremap <leader>pc :PlugClean<cr>
-nnoremap <leader>pi :PlugInstall<cr>
+" nnoremap <leader>pc :PlugClean<cr>
+" nnoremap <leader>pi :PlugInstall<cr>
 
-nnoremap <leader>op :tabe ~/.vim/plugged/<cr>
+" nnoremap <leader>op :tabe ~/.vim/plugged/<cr>
 
 " General Leader Cmd Shortcut Maps: ---------------------------------
 

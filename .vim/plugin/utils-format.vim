@@ -56,7 +56,7 @@ endfunc
 
 
   " Put modules in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
-command! SplitModulesInLines exec 'g/--/d' | exec 'g/./normal! Whiki-- ' | exec 'normal! gg0'
+command! SplitModulesInLines exec 'g/--/d' | exec 'g/./normal! Whiki-- ' | StripWhitespace | exec 'normal! gg0'
 
 command! JoinModulesFromLines exec 'g/./normal! dwJ' | exec 'StripAligningSpaces' | exec 'normal! gg0'
 

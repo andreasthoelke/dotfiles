@@ -35,9 +35,9 @@ hi DiffDelete      guifg=#960050 guibg=#1E0010
 hi DiffText                      guibg=#4C4745 gui=italic,bold"
 
 hi Directory       guifg=#A6E22E               gui=bold
-hi Error           guifg=#E6DB74 guibg=#1E0010
+hi Error           guifg=#960050 guibg=#1E0010
 " hi ErrorMsg        guifg=#F92672 guibg=#232526 gui=bold
-hi ErrorMsg        guifg=#F6DC69 guibg=#151719
+hi ErrorMsg        guifg=#960050 guibg=#151719
 hi Exception       guifg=#A6E22E               gui=bold
 hi Float           guifg=#AE81FF
 
@@ -211,7 +211,7 @@ hi! purescriptIdentifier guifg=#BECACD "white-grey"
 " hi! purescriptIdentifierDot1 guifg=#BECA00
 hi! purescriptIdentifierDot1 guifg=#8E989A
 hi! purescriptRecordKeys guifg=#42727A
-hi! purescriptDelimiter guifg=#233D41
+hi! purescriptDelimiter guifg=#2D4F54
 " hi! purescriptOperator guifg=#32575E
 hi! purescriptOperator guifg=#3A666E
 hi! purescriptColon guifg=#2D4E54
@@ -329,7 +329,7 @@ hi! def link TagbarKind Type
 
 " Markdown colors
 hi! Title gui=bold guifg=#0087AF "munsell blue"
-hi! Highlight1 gui=bold guifg=#F6DC69 "vim flashy yellow"
+hi! Highlight1 guifg=#F6DC69
 
 hi! def link mkdHeading Operator
 hi! def link mkdNonListItemBlock purescriptIdentifier

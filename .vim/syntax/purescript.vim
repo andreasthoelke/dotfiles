@@ -386,6 +386,9 @@ syntax match InlineTestAssertDecTC   '\v^a\d\d_\i{-}\s\::\s\ze' contains=hsFunct
 syntax match InlineTestAssertLastDec '\v^a\d\d__\i{-}\s\=\ze\s' conceal cchar=└
 syntax match InlineTestAssertDecAndTestIdentif  '\v^a\d\d_\i{-}\s\=\se\d\i{-}\ze\s' conceal cchar=├
 
+syntax match concealedSourceLink '\v\/Users\S{-}\ze\_s' conceal cchar=˙
+
+
 " syntax match Normal '\v^e1_\S{-}\s\=\s\S{-}\ze\s' conceal cchar=①
 " call matchadd('Conceal', '\v^txe10\s\=\s.{-}\ze\s', 12, -1, {'conceal': '①'})
 " call matchadd('Conceal', 'txe10\s', 12, -1, {'conceal': '①'})

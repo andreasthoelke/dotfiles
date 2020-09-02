@@ -34,11 +34,19 @@ vnoremap gsk :call HsAPIShowInfoContext( GetVisSel() )<cr>
 nnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', HsCursorKeyword_findModule()) )<cr>
 vnoremap gsK :call HsAPIShowInfoContext( input( 'Doc string query: ', GetVisSel()) )<cr>
 
-nnoremap gsb :call HsAPIBrowseShowBuf( HsCursorKeyword() )<cr>
-vnoremap gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
-nnoremap gsB :call HsAPIBrowseShowBuf( input( 'Module: ', HsCursorKeyword()) )<cr>
-vnoremap gsB :call HsAPIBrowseShowBuf( input( 'Module: ', GetVisSel()) )<cr>
+" Browse modules uses Hoogle for Haskell
+nnoremap Gsb :call HsAPIBrowseShowBuf( HsCursorKeyword() )<cr>
+vnoremap Gsb :call HsAPIBrowseShowBuf( GetVisSel() )<cr>
+nnoremap GsB :call HsAPIBrowseShowBuf( input( 'Module: ', HsCursorKeyword()) )<cr>
+vnoremap GsB :call HsAPIBrowseShowBuf( input( 'Module: ', GetVisSel()) )<cr>
 
+" Browse modules uses Psci for Purescript
+nnoremap gsb      :call ReplEval(':browse ' . expand('<cWORD>'))<cr>
+vnoremap gsb :<c-u>call ReplEval(':browse ' . GetVisSel())<cr>
+nnoremap gsB      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
+vnoremap gsB :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
+
+" a "complete" command with a "flex" matcher seems to be a main feature of PursIDE
 func! PsAPIQuery( searchStr, _, __ )
   call purescript#ide#call(
         \ {'command': 'complete'
@@ -49,27 +57,13 @@ func! PsAPIQuery( searchStr, _, __ )
         \ },
         \ 'PsAPI Query - No results for '. a:searchStr,
         \ 0,
-        \ { response -> PsAPIQueryShowBuf( response ) }
+        \ { response -> PsAPIQueryHandleResponse( response ) }
         \ )
 endfunc
 
-let g:ScratchBufferCounter = 0
-
-func! PsAPIQueryShowBuf( response ) " ■
-  let l:displayLines = PsAPIGetLinesFromResponse( a:response )
-
-  call ActivateScratchWindow('HsAPIdata/APIquery' . g:ScratchBufferCounter . '.hs')
-  let g:ScratchBufferCounter += 1
-
-  exec '%delete'
-  call append( 0, l:displayLines )
-  call HsTabu( [] )
-  call HaskellSyntaxAdditions()
-  exec 'normal! gg0'
-endfunc " ▲
-
+" Formats and shows the response
 " Code adapted from https://github.com/FrigoEU/psc-ide-vim
-func! PsAPIGetLinesFromResponse( response )
+func! PsAPIQueryHandleResponse( response )
   if get(a:response, "resultType", "error") !=# "success"
     return purescript#ide#utils#error(get(a:resp, "result", "error"))
   endif
@@ -85,13 +79,39 @@ func! PsAPIGetLinesFromResponse( response )
     endif
     let module = get(resultItem, "module", "")
 
-    let displayLine1 = module . ' ' . resultItem.identifier . ' :: ' . resultItem.type
+    " let displayLine1 = module . ' ' . filePath . '#:' . lineNumber . ':' . colonNumber
+    let displayLine1 = module
+    let displayLine3 = filePath . '#:' . lineNumber . ':' . colonNumber
+    " using h rel.txt format e.g. ~/.vimrc#:10:4
+    let displayLine2 = resultItem.identifier . ' :: ' . resultItem.type
 
     call add( displayLines, displayLine1 )
-    " call add( displayLines, displayLine2 )
+    call add( displayLines, displayLine2 )
+    call add( displayLines, displayLine3 )
   endfor
-  return displayLines
+  call PsShowLinesInBuffer( displayLines )
 endfunc
+
+
+
+let g:ScratchBufferCounter = 0
+
+func! PsShowLinesInBuffer ( lines )
+  let g:ScratchBufferCounter += 1
+  call ActivateScratchWindow('HsAPI' . g:ScratchBufferCounter . '.hs')
+  exec '%delete'
+  call append( 0, a:lines )
+  " Delete blank lines
+  exec 'g/^$/d'
+  "Delete last line
+  " exec 'normal! Gdd'
+  exec 'normal! gg0'
+  call HaskellSyntaxAdditions()
+  " adjust buffer height to max 20 lines
+  let l:height = min( [ 20, line('$') ] )
+  exec ('resize ' . l:height )
+endfunc " ▲
+
 
 func! HsAPIQueryShowBuf( searchStr, count, infoFlag ) " ■
   let hoogleCmd = GetAPICmdStr( a:searchStr, a:count, a:infoFlag )
@@ -256,8 +276,8 @@ func! GetAPICmdStr( query, limit, infoFlag )
   return 'hoogle "' . a:query . '" -n=' . a:limit . infoArg
 endfunc
 
-nnoremap <leader>hii :call PsImportIdentifier( HsCursorKeyword() )<cr>
-nnoremap <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', HsCursorKeyword()) )<cr>
+nnoremap <leader>hii :call PsImportIdentifier( expand('<cWORD>') )<cr>
+nnoremap <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', expand('<cWORD>')) )<cr>
 vnoremap <leader>hii :<c-u>call PsImportIdentifier( GetVisSel() )<cr>
 vnoremap <leader>hiI :<c-u>call PsImportIdentifier( input( 'Import identifier: ', GetVisSel()) )<cr>
 

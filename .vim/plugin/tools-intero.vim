@@ -157,7 +157,6 @@ endfunc
 " treat/format it accordingly
 
 
-
 " ─   New Purescript REPL                                ■
 
 nnoremap <silent> <leader>ro :call ReplStart()<cr>
@@ -166,8 +165,9 @@ nnoremap <silent> <leader>rl :call ReplEval('import ' . GetModuleName())<cr>
 nnoremap <silent> dr         :call ReplEval(':reload')<cr>
 nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
 
-nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse purs module: ', expand('<cWORD>')))<cr>
-nnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . GetVisSel())<cr>
+" Obsolete: use ~/.vim/plugin/HsAPI.vim#/Browse%20modules%20uses
+nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
+vnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
 nnoremap gei      :call ReplEval( GetReplExpr() )<cr>
 vnoremap gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
@@ -223,6 +223,8 @@ func! ReplSimpleResponseHandler( lines )
     endif
   elseif len( a:lines ) == 0
     echo "Repl returned 0 lines"
+  elseif len( a:lines ) > 5
+    call PsShowLinesInBuffer( a:lines )
   else
     call HsShowLinesInFloatWin( a:lines )
   endif

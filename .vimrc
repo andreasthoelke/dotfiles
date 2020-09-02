@@ -46,9 +46,9 @@ Plug 'machakann/vim-highlightedyank'
 " Highlight trailing whitespace
 Plug 'ntpeters/vim-better-whitespace'
 " Display marks with nearby code
-" Plug 'Yilin-Yang/vim-markbar'
+Plug 'Yilin-Yang/vim-markbar'
 " Changed header style
-Plug 'andreasthoelke/vim-markbar'
+" Plug 'andreasthoelke/vim-markbar'
 " Creates vertical window-splits from visual-selections
 Plug 'wellle/visual-split.vim'
 
@@ -487,10 +487,11 @@ nnoremap <leader>sd :OpenSession! default<cr>
 command! SessionLoadLocked OpenSession!
 command! SessionShowName echo xolox#session#find_current_session()
 
-let g:session_autosave = 'yes'
+" let g:session_autosave = 'yes'
 let g:session_autoload = 'no'
 let g:session_command_aliases = 1
 let g:session_menu = 1
+let g:session_verbose_messages = 0
 
 " 'sessionoptions' (default: "blank,buffers,curdir,folds,
 " 					       help,tabpages,winsize"
@@ -665,6 +666,7 @@ let g:better_whitespace_filetypes_blacklist=['gitcommit', 'unite', 'qf', 'help']
 
 " use "StripWhitespace" and "ToggleWhitespace"  
 nnoremap <leader>sw :StripWhitespace<cr>
+nnoremap <leader><leader>sw :StripWhitespace<cr>
 nnoremap yoW :ToggleWhitespace<cr>
 
 " Tested: unprintable chars, tabs, show trailing whitespace chars
@@ -1882,7 +1884,7 @@ command! MarkbarUpdate call MarkbarUpdate()
 
 func! MarkbarUpdate()
   if exists('g:__active_controller') && WinIsOpen( '( Markbar )' )
-    echoe 'hi?'
+    " echoe 'hi?'
     call markbar#ui#RefreshMarkbar(g:__active_controller)
   endif
 endfunc

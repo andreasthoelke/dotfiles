@@ -1,5 +1,7 @@
 " ─   Scratch Window                                     ■
 
+nnoremap <leader>os :ScratchWindow<cr>
+
 command! ScratchWindow call ActivateScratchWindow( 'scratch' )
 
 " Create or just activate/focus a disposable window

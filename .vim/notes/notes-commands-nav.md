@@ -10,6 +10,8 @@ leader la   - Code action → import symbol!
 insert c-i  - show completions with type sig!
 insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
 leader ld   - CocList diagnostics
+gsd/D       - language client fuzzy search - with sources link
+gsb/B       - browse module via :browse in psci. use 2leader ht, leader t[,c-l | ip | J] and leader as [ip | ect]
 
 ## Intero
 leader io/l/k/h - intero open/load/kill/hide
@@ -40,6 +42,7 @@ gsb/B       - browse module
 2leader ht  - HsTabu
 2leader hT  - StripAligningSpaces
 2leader sa  - StripAligningSpaces
+2leader sw  - StripWhitespace
 2leader hu  - HsUnicode
 2leader hU  - HsUnUnicode
 
@@ -55,12 +58,6 @@ leader hfi  - format imports
 
 TODO make Stubs and Markup maps consistent
 ## Stubs
-leader hu/U - anonymous binding /+ signature
-leader ht   - add type stub
-leader es   - add function to type-sig/ expand signature
-leader ct   - create inline test stub
-leader ca   - create assertion
->>>>>>>
 leader eu/U - anonymous binding /+ signature
 leader es   - add signature type stub
 leader eb   - add function to type-sig/ expand signature
@@ -97,7 +94,7 @@ Go to search root folder in Dirvish then
 ## Mac apps
 tab '       - Mac app/task manager, next app
 
-## Win, Buffer Navigation
+## Window, Buffer Navigation
 c-w n/N     - SymbolNext SplitTop
 c-w i       - jump into float-win
 leader wp[ap/af] - pin a function/paragraph (or imports) to the top
@@ -105,6 +102,11 @@ c-w dk      - close the window above
 c-w \       - to jump to rightmost/mark/tag bar window
 c-w p       - to jump back
 \t]         - TabmoveRight /Left
+<leader>wI  - Pin Haskell imports
+
+### Window scrolling
+c-e/y       - up/down
+zt/b        - bottom/top
 
 ## Files
 \v \T       - browse-open file in new split/tab from the same project
@@ -159,7 +161,7 @@ Go (in LLi) - jump to line (but stay in LocList)
 c-m/i       - next/prev in QFL
 p           - does not work! .. could set up a split?
 
-## Align, Indent
+## Align, Indent, format
 \,l/j/}     - intent range of lines to current cursor-column
 dw          - align/pull inwards to the cursorH the first char to the right
 `>ii`         - shift lines of indent block to the right
@@ -172,6 +174,9 @@ leader ha (+m/vs) - type-sig align (motion or vis-sel) 'aB'-> error?
 leader hA   - type-sig align entire buffer. or "viB<space>ha<c-o>"
 ]e,[e       - move/shift line. (lines using vis-sel)
 \>          - push / shift text to the right  ~/.vim/plugin/utils-align.vim#/Push%20shift%20text
+
+## Purs Browse Module
+
 
 ## Format
 leader leader sm 'SplitModulesInLines'<cr>
@@ -195,13 +200,14 @@ J/K         - Word column corners Forw/Backw (based on aligned visibleColumns)
 t/T         - next/prev list item
 ]t/[t       - into next/prev inner list
 ]T          - end of list (to append new elements)
-TODO - this got overwritten by coc diagnostic next/prev
+  TODO - this got overwritten by coc diagnostic next/prev
 [g ]g       - go back to last insert start/end. or native \`[ \`]
 z] z[ zk    - beginning/end of current fold/prev fold
 [c ]c       - prev/next git hunk (TODO: make ]c or c] consistent?)
 ,j/k        - beginning of next/prev line
 ,J/K        - end/start of indent block
 g]/g[       - first/last char of prev yanked text
+
 
 ### Actions
 S$          - substitute / replace to the end of the line

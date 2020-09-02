@@ -34,16 +34,18 @@ let g:lightline.colorscheme = 'wombat1'
 let g:lightline.active = {}
 let g:lightline.inactive = {}
 let g:lightline.active.left = [ ['relativepath'] ]
+let g:lightline.inactive.left = [ ['relativepath'] ]
 
 " let g:lightline.active.right = [ ['lineinfo', 'percent']
 "                              \ , ['fpathBNum', 'percent']
 "                              \ , ['filename', 'fpathBNum'] ]
 
 let g:lightline.active.right = [ ['scrollbar'], ['line'] ]
+let g:lightline.inactive.right = [ ['scrollbar'] ]
 " let g:lightline.active.right = [ ['scrollbar'], ['line', 'column'] ]
 " let g:lightline.active.right = [ ['line', 'percent'] ]
 " let g:lightline.inactive.right = [ ['scrollbar'] ]
-let g:lightline.inactive.right = [ [] ]
+" let g:lightline.inactive.right = [ [] ]
 " \ , ['gitbranch']
 " \ ]
 

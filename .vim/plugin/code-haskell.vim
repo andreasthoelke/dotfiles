@@ -199,8 +199,13 @@ endfunc
 " Control.Monad replicateM ∷ (Applicative m) ⇒ Int → m a → m [a]
 " echo HsGetTypeFromSignatureStr( getline( line('.')-1 ) )
 
+func! UndefinedVarName ()
+  return &filetype=="purescript" ? "u" : "i"
+endfunc
+
+
 func! ArgsPlacehoderStr ( argumentTypesList )
-  return functional#foldr( {nextStr, acc -> acc . '(i:: ' . nextStr . ') '}, '', a:argumentTypesList )[0:-2]
+  return functional#foldr( {nextStr, acc -> acc . '(' . UndefinedVarName() . ':: ' . nextStr . ') '}, '', a:argumentTypesList )[0:-2]
 endfunc
 " echo ArgsPlacehoderStr( ['a → b', 'Maybe a'] )
 

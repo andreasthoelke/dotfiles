@@ -1,10 +1,3 @@
-" leader hu/U - anonymous binding /+ signature
-" leader ht   - add type stub
-" leader es   - add function to type-sig/ expand signature
-" leader if   - add an index/num to the signature-symbol name
-" leader ct   - create inline test stub
-" leader ca   - create assertion
-" >>>>>>>
 " leader eu/U - anonymous binding /+ signature
 " leader es   - add signature type stub
 " leader eb   - add function to type-sig/ expand signature
