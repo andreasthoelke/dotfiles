@@ -253,13 +253,21 @@ vnoremap <leader>exg :g/∷.*⇒/m$<cr>
 command! ExtractSigs :g/∷.*→/t$
 command! ExtractGenSigs :g/∷.*⇒/t$
 " --------------------------------------------------------------------------------
+
 " Join line below with current line
 nnoremap <BS> J
 
+" This 'undo's a line break while staying in insert mode
+inoremap <BS> <c-o>k<c-o>J
+
+" Line break (with indention)
+nnoremap <leader>j hs<cr><c-[>l
 
 
 " Insert line. Related to `]<space>`
 " nnoremap O o<Esc> 
+
+" also note these related map in vimrc  ~/.vimrc#/also%20note%20~/.vim/plugin/utils-align-old.vim#/Join%20line%20below
 
 " TIP: indenting, inserting characters
 function! ExampleIndentByNChars()

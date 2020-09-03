@@ -206,6 +206,8 @@ func! ReplEval( expr )
   call jobsend(g:PursReplID, a:expr . "\n")
 endfunc
 
+" ANSI colors are incoded into the error messages and need to be removed (TODO there is also a setting for psci)
+let g:ReplaceBashEscapeStrings = [['[33m',''], ['[0m','']]
 
 " Separates 3 output types:
 " - Forwards multi-line repl-outputs
@@ -223,10 +225,12 @@ func! ReplSimpleResponseHandler( lines )
     endif
   elseif len( a:lines ) == 0
     echo "Repl returned 0 lines"
-  elseif len( a:lines ) > 5
-    call PsShowLinesInBuffer( a:lines )
+  elseif len( a:lines ) > 10
+    let l:lines = ReplaceStringsInLines( a:lines, g:ReplaceBashEscapeStrings )
+    call PsShowLinesInBuffer( l:lines )
   else
-    call HsShowLinesInFloatWin( a:lines )
+    let l:lines = ReplaceStringsInLines( a:lines, g:ReplaceBashEscapeStrings )
+    call HsShowLinesInFloatWin( l:lines )
   endif
 endfunc
 " call PursReplReturnCB (["eins", "zwei"])
@@ -265,12 +269,9 @@ func! InteroReplTypeReturnCB( lines )
   endif
 endfunc
 
-let g:ReplaceBashEscapeStrings = [['[33m',''], ['[0m','']]
-
 func! HsShowLinesInFloatWin( hsLines )
   normal! m'
-  let l:hsLines = ReplaceStringsInLines( a:hsLines, g:ReplaceBashEscapeStrings )
-  call FloatWin_ShowLines( l:hsLines )
+  call FloatWin_ShowLines( a:hsLines )
   call FloatWin_do( 'call HaskellSyntaxAdditions()' )
   call FloatWin_FitWidthHeight()
   if len( s:async_alignFnExpr )

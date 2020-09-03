@@ -99,6 +99,7 @@ let g:numOps   = ['+', '-', '\*', '&&']
 " let g:fnWirePttn = MakeOrPttn( AppendSpace( ['^[^ -][^=(]*\zs∷', '^[^ -][^=(]*\zs::', 'where', 'do', ' \zsin', '^[^-].*\zsof', 'then', 'let'] ) )
 let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do', 'in', 'of', 'let', 'deriving'] )) )
 let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns + ['.do\_s*\zs'] )
+" this pattern ('.do\_s*\zs') makes sure that "React.do" is included as a function ballpark
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
 let g:exprDelimPttn = MakeOrPttn( AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
 " let g:exprDelimPttn = MakeOrPttn( AsSeparateWord(g:infixOps + g:typeArgs + g:syntax + g:numOps) )

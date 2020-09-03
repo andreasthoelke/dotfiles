@@ -175,6 +175,8 @@ func! IndentLevel( lineNum )
   return matchstrpos( getline( a:lineNum ), '\S')[1] + 1
 endfunc
 " echo matchstrpos("    sta", "\S")
+" echo matchstrpos("     st :: a", "::")[1]
+" echo matchstrpos( getline('.'), "::")[1]
    " echo IndentLevel( line('.') )
 
 " Returns the visual column nums of word starts in a:lineNum as a list

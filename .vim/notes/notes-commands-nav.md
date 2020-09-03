@@ -12,6 +12,7 @@ insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
 leader ld   - CocList diagnostics
 gsd/D       - language client fuzzy search - with sources link
 gsb/B       - browse module via :browse in psci. use 2leader ht, leader t[,c-l | ip | J] and leader as [ip | ect]
+:set ft=text, leader sp - deactivate diagnostic in a buffer
 
 ## Intero
 leader io/l/k/h - intero open/load/kill/hide
@@ -103,6 +104,7 @@ c-w \       - to jump to rightmost/mark/tag bar window
 c-w p       - to jump back
 \t]         - TabmoveRight /Left
 <leader>wI  - Pin Haskell imports
+c-w I       - resize/fit floatwin height width
 
 ### Window scrolling
 c-e/y       - up/down
@@ -189,7 +191,10 @@ leader leader hU 'HsUnUnicode'<cr>
 
 ## Motions
 g;          - to revert the InsertLeave jump
-gI^- <cr>   - to prefix the current line with a '- ' without movng the cursor
+gI^- <cr>   - to prefix the current line with a '- ' without moving the cursor
+leader j    - break line (with indention)
+<BS>        - Join line below with current line
+imap <BS> "  - This 'undo's a line break while staying in insert mode
 q/Q         - labels
 tab/s-t/,t  - Headers next/prev /end of header
 c-i/m       - ballparks
@@ -215,6 +220,7 @@ S$          - substitute / replace to the end of the line
 ,dJ (with cursor at start of line) - delete / cut into register
 yip         - yank the paragraph
 leader"     - show register bar (peekaboo)
+c-r         - paste while in insert mode(!) using register bar
 
 ## Folds, Folding
 `zf` `zd` create/delete fold markers via motions/vis select
@@ -275,7 +281,7 @@ ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a
 leader rb   - to rename a binding and its occurences
 
 ## Vim
-leader sm   - show past vim echoed text (show messages)
+MessagesShow - show past vim echoed text (show messages) in preview window
 
 ## Links
 glb         - open URL in browser

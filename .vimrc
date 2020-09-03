@@ -906,6 +906,8 @@ endfunc
 
 " ─   Movement                                          ──
 
+" also note  ~/.vim/plugin/utils-align-old.vim#/Join%20line%20below
+
 " ─   General                                           ──
 " Go up/down in wrapped lines mode as well
 " nnoremap j gj
@@ -942,8 +944,9 @@ vnoremap ,H H
 
 " nnoremap g[ `[
 " nnoremap g] `]
-nnoremap g[ `[
-nnoremap g] `]
+" nnoremap g[ `[
+" nnoremap g] `]
+" currently used for coc.nvim diagnostics
 
 func! InsertEnter()
   " echo 'hi'
