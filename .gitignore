@@ -13,7 +13,7 @@
 !/.vim/notes
 !/.vim/utils
 
-# It seems it's not seeded to list individual files as one can just "git add -f <file>" as long as there are few files
+# It seems it's not needed to list individual files as one can just "git add -f <file>" as long as there are few files
 !.gitignore
 
 

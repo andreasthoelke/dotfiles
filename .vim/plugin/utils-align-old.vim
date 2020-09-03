@@ -261,7 +261,8 @@ nnoremap <BS> J
 inoremap <BS> <c-o>k<c-o>J
 
 " Line break (with indention)
-nnoremap <leader>j hs<cr><c-[>l
+" nnoremap <leader>j hs<cr><c-[>l
+nnoremap <leader>j gea<cr><c-[>l
 
 
 " Insert line. Related to `]<space>`

@@ -29,6 +29,8 @@ func! ActivateScratchWindow( bufferNameId )
 
   endif
   call MakeBufferDisposable()
+  set filetype=purescript_scratch
+  set syntax=purescript
 endfunc
 " call ActivateScratchWindow('Test2')
 
