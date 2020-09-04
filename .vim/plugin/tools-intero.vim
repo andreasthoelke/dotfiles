@@ -101,13 +101,13 @@ nnoremap <silent> ,gw :InteroTypeInsert<cr>
 
 " Or use a custom intero :type repl evel
 " Get repl :type/:kind info for cword / vis-sel:
-nnoremap get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+nnoremap ,get :call InteroEval( ':type ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
 " nnoremap gwt :call InteroEval( ':type ' . expand('<cword>'), "PasteTypeSig", '' )<cr>
-vnoremap get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
-nnoremap gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
-vnoremap gek :<c-u>call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
+vnoremap ,get :call InteroEval( ':type ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
+nnoremap ,gek :call InteroEval( ':kind ' . expand('<cword>'), "FloatWin_ShowLines", '' )<cr>
+vnoremap ,gek :<c-u>call InteroEval( ':kind ' . Get_visual_selection(), "FloatWin_ShowLines", '' )<cr>
 
-nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<cr>
+" nnoremap geT :call InteroRunType( expand('<cword>'), 'HsShowLinesInFloatWin' )<cr>
 
 " ─^  Show Type-At symbol or selection                   ▲
 
@@ -203,6 +203,7 @@ let g:ReplCallbacks = {
       \ }
 
 func! ReplEval( expr )
+  " echo a:expr
   call jobsend(g:PursReplID, a:expr . "\n")
 endfunc
 
@@ -225,7 +226,7 @@ func! ReplSimpleResponseHandler( lines )
     endif
   elseif len( a:lines ) == 0
     echo "Repl returned 0 lines"
-  elseif len( a:lines ) > 10
+  elseif len( a:lines ) > 15
     let l:lines = ReplaceStringsInLines( a:lines, g:ReplaceBashEscapeStrings )
     call PsShowLinesInBuffer( l:lines )
   else

@@ -408,6 +408,9 @@ hi Search guibg=#3E3E3E guifg=#FFFFFF gui=none
 " Visual selection
 hi Visual guibg=#2E2E2E gui=none
 
+" Hides the tilde at non-existent lines at the end of the buffer
+hi! EndOfBuffer guifg=bg
+
 " Comment syntax additions
 hi BlackBG guibg=#000000
 hi GreyBG guibg=#262626
