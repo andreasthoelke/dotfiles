@@ -111,7 +111,46 @@ endfunc
 " echo 10 + eval( GetAssertionIndex( line('.') +1 ) )
 " a14_database4 = id e1_database4 == (i∷ [(String, Int)])
 
+" ─   Type holes                                         ■
 
+nnoremap <leader>ht      :call CreateTypeHole_LetBind( HsCursorKeyword() )<cr>
+vnoremap <leader>ht :<c-u>call CreateTypeHole_LetBind( GetVisSel() )<cr>
+nnoremap <leader>hT      :call CreateTypeHole_LetBind( input( 'Identifier: ', HsCursorKeyword()) )<cr>
+vnoremap <leader>hT :<c-u>call CreateTypeHole_LetBind( input( 'Identifier: ', GetVisSel()) )<cr>
+
+nnoremap <leader>hh      :call ShowAndUndoTypeHole_LetBind()<cr>
+
+
+func! CreateTypeHole_LetBind ( identifierInScope )
+  let lineText = IndentionString(IndentLevel(line('.'))) . 'let (e1 :: ?_) = ' . a:identifierInScope
+  call append( line('.'), lineText )
+  let s:lineNumOfHole = line('.') +1
+  call SetLC_DiagnosticsChanged_Handler()
+endfunc
+
+func! SetLC_DiagnosticsChanged_Handler ()
+  augroup LCDiagnosticsChanged
+    autocmd!
+    autocmd User LanguageClientDiagnosticsChanged call ShowAndUndoTypeHole_LetBind()
+  augroup END
+endfunc
+
+
+func! ShowAndUndoTypeHole_LetBind ()
+  call ShowLC_Diagnostics( line('.') +1 )
+  silent! autocmd! LCDiagnosticsChanged
+  exec s:lineNumOfHole 'delete _'
+  normal! k
+endfunc
+
+
+func! IndentionString ( indentionColumn )
+  return repeat( ' ', a:indentionColumn -1)
+endfunc
+
+
+
+" ─^  Type holes                                         ▲
 
 " ─   "unique functions"                                 ■
 nnoremap <leader>eu ^icb<esc>:call RandFnName()<cr>2w

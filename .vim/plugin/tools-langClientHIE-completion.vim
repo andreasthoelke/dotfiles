@@ -80,7 +80,7 @@ endfunction
 " this allows to open the menu and get suggestions without any characters typed already.
 inoremap <silent><expr> <c-space> coc#refresh()
 
-autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
 " autocmd User CocOpenFloat call nvim_win_set_config(g:coc_last_float_win, {'relative': 'editor', 'row': 0, 'col': 0})
 " autocmd User CocOpenFloat call nvim_win_set_width(g:coc_last_float_win, 9999)
@@ -229,7 +229,7 @@ let g:LanguageClient_diagnosticsDisplay = {
 
 
 
-nnoremap ged :call ShowLC_Diagnostics()<cr>
+nnoremap ged :call ShowLC_Diagnostics( line('.') )<cr>
 
 " Note (important): To find the source of a LC diagnostic message (warning, error, severity, etc), uncomment the 'echoe' line below
 func! s:showLC_Diagnostics( stateJSON )
@@ -243,11 +243,11 @@ func! s:showLC_Diagnostics( stateJSON )
   " echoe string( state )
   " todo: put into a buffer and get other useful things (like the type at the cursor) from it?
   for diag in diagnostics
-    if diag.range.start.line +1 == line('.')
+    if diag.range.start.line +1 == g:_diagnosticsTargetLine
       let message = diag.message
     endif
   endfor
-  let messageLines = split( message, '\%x00' )
+  let messageLines = LCFilterLines( split( message, '\%x00' ) )
   call FloatWin_ShowLines( messageLines )
 endfunc
 
@@ -259,9 +259,79 @@ endfunc
 " endfunc ▲
 
 
-func! ShowLC_Diagnostics()
+func! ShowLC_Diagnostics ( targetLine )
+  let g:_diagnosticsTargetLine = a:targetLine
   call LanguageClient#getState(function( 's:showLC_Diagnostics' ))
 endfunc
+
+
+func! LCFilterLines ( lines )
+  if a:lines == [] | return a:lines | endif
+
+  if split( a:lines[0] )[0] == 'Hole'
+    return [ ' :: ' . trim( a:lines[ 2 ] ) ]
+  else
+    return a:lines
+  endif
+endfunc
+
+" Hole '_' has the inferred type
+"     HTMLElement
+"   in the following context:
+"     body :: HTMLElement
+
+
+
+" ─   More diagnostics                                   ■
+
+
+" obsolete?
+" function! LCDiagnostics_Update ()
+"     " Get diagnostics state by callback interface
+"     let l:callback_name = 'LCDiagnostics_Update_CB'
+"     call LanguageClient#getState(function(l:callback_name))
+" endfunction
+"
+" " Code from https://github.com/takiyu/lightline-languageclient.vim/
+" function! LCDiagnostics_Update_CB ( state )
+"     try
+"         " Restore result dictionary
+"         let l:result_str = a:state.result
+"         let l:result = LCDiagnostics_ParseJson(l:result_str)
+"
+"         let full_filename = expand('%:p')
+"         let l:diagnostics = l:result.diagnostics
+"         if has_key(l:diagnostics, full_filename)
+"             " Return
+"             let g:last_diag_exists = 1
+"             let g:last_diag_list = l:diagnostics[full_filename]
+"         else
+"             let g:last_diag_exists = 0
+"             let g:last_diag_list = []
+"         endif
+"     catch
+"         echohl 'Something wrong in LanguageClient state parsing for lightline'
+"         let g:last_diag_exists = 0
+"         let g:last_diag_list = []
+"     endtry
+" endfunction
+"
+" function! LCDiagnostics_ParseJson( src_str )
+"     " Replace invalid values for VimScript
+"     let l:json_str = a:src_str
+"     let l:json_str = substitute(l:json_str, "true", "1", "g")
+"     let l:json_str = substitute(l:json_str, "false", "0", "g")
+"     let l:json_str = substitute(l:json_str, "null", "\"\"", "g")
+"     let l:json_str = substitute(l:json_str, "undefined", "\"\"", "g")
+"     " Convert string to dictionary
+"     let l:json_dict = eval(l:json_str)
+"     return l:json_dict
+" endfunction
+"
+"
+
+
+" ─^  More diagnostics                                   ▲
 
 
 

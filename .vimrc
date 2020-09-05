@@ -296,6 +296,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'FrigoEU/psc-ide-vim'
 Plug 'sriharshachilakapati/vimmer-ps'
+Plug 'takiyu/lightline-languageclient.vim'
 
 " does this really echo PS diagnostics?
 Plug 'Shougo/echodoc.vim'
