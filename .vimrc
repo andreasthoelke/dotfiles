@@ -1631,20 +1631,19 @@ map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 " TODO Test Bufenter - TabNewEntered is only for nvim
 " Whenever a new tab is created, set the tab-working dir accordingly
 " autocmd! TabNewEntered * call OnTabEnter(expand("<amatch>"))
-au ag BufEnter * call OnTabEnter(expand("<amatch>"))
+autocmd! ag BufWinEnter * call OnTabEnter(expand("<amatch>"))
 func! OnTabEnter(path)
   if isdirectory(a:path)
     let dirname = a:path
   else
-    " let dirname = fnamemodify(a:path, ":h")
     let dirname = projectroot#guess( a:path )
+    if isdirectory( dirname )
+      exec 'lcd' dirname
+    endif
   endif
-  " Issue: "tcd" makes mksession fail to reload buffers in tabs where tcd was used
-  " execute "tcd ". dirname
-  execute "lcd ". dirname
 endfunc
 
-au ag BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
+" autocmd! ag BufWinEnter * call SetWorkingDirectory(expand("<amatch>"))
 func! SetWorkingDirectory(path)
   let dirname = projectroot#guess( a:path )
     " let dirname = fnamemodify(a:path, ":h")

@@ -153,8 +153,8 @@ endfunc
 " ─^  Type holes                                         ▲
 
 " ─   "unique functions"                                 ■
-nnoremap <leader>eu ^icb<esc>:call RandFnName()<cr>2w
-nnoremap <leader>eU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
+nnoremap <leader>eu ^icb<esc>:call RandFnName()<cr>A = u<esc>^2w
+nnoremap <leader>eU ^icb<esc>:call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= u<esc>^2w
 " produces a (test) haskell function with a random name, ejk.:
 " cp0 = undefined
 " "unique symbol"
@@ -317,7 +317,7 @@ python << EOF
 import string
 import random
 import vim
-vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0 = undefined'
+vim.current.line += ''.join(random.choice(string.ascii_lowercase) for _ in range(2)) + '0'
 EOF
 endfunction
 " Note the Python code must not be indented in a Vim function

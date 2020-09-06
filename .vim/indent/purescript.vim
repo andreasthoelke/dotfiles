@@ -139,13 +139,13 @@ function! GetHaskellIndent() abort
     return match(nonblankline, '\v^\s*(<where>|.*<let>)?\s*\zs') + &shiftwidth
   endif
 
-  if nonblankline =~# '::'
-    return matchstrpos( nonblankline, "::")[1]
-  endif
+  " if nonblankline =~# '::'
+  "   return matchstrpos( nonblankline, "::")[1]
+  " endif
 
-  if nonblankline =~# '->'
-    return matchstrpos( nonblankline, "->")[1]
-  endif
+  " if nonblankline =~# '->'
+  "   return matchstrpos( nonblankline, "->")[1]
+  " endif
 
   if nonblankline =~# '\v<deriving>'
     return s:indent('', '\v^\s*\zs<data>', 0)
