@@ -17,7 +17,7 @@ vnoremap ,gsD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),    
 nnoremap ,gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
 vnoremap ,gSD :call HsAPIQueryShowBuf( input( 'HsAPI query: ', GetVisSel()),       60, 0 )<cr>
 
-nnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword_findModule()), 15, 0 )<cr>
+nnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword()), 15, 0 )<cr>
 vnoremap gsD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       15, 0 )<cr>
 nnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', HsCursorKeyword()), 60, 0 )<cr>
 vnoremap gSD :call PsAPIQuery( input( 'PsAPI query: ', GetVisSel()),       60, 0 )<cr>

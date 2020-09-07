@@ -125,13 +125,13 @@ vnoremap ,gek :<c-u>call InteroEval( ':kind ' . Get_visual_selection(), "FloatWi
 
 " ─   legacy to be reviewed                              ■
 " Run cword in repl - paste returned lines verbally:
-nnoremap <silent> gew :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", '' )<cr>
-nnoremap geW :call InteroEval( GetReplExpr(), "PasteLines", '' )<cr>
+" nnoremap <silent> gew :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", '' )<cr>
+" nnoremap geW :call InteroEval( GetReplExpr(), "PasteLines", '' )<cr>
 " -                   - Haskell list as lines:
-nnoremap gel :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", '' )<cr>
+" nnoremap gel :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", '' )<cr>
 " -                   - Haskell list as table:
-nnoremap gec :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'AlignColumns('')' )<cr>
-nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'AlignTable' )<cr>
+" nnoremap gec :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'AlignColumns('')' )<cr>
+" nnoremap geC :call InteroEval( GetReplExpr(), "ShowList_AsLines_Aligned", 'AlignTable' )<cr>
 " ─^  legacy to be reviewed                              ▲
 
 
@@ -156,6 +156,22 @@ endfunc
 " TODO consideration: could use the ":set +t" ghci feature to always get the type alongside the returned value and
 " treat/format it accordingly
 
+" Repl mutiple lines:
+nnoremap gel      :let g:opContFn='ReplEvalLines'<cr>:let g:opContArgs=[]<cr>:set opfunc=Gen_opfuncAc<cr>g@
+vnoremap gel :<c-u>let g:opContFn='ReplEvalLines'<cr>:let g:opContArgs=[]<cr>:call Gen_opfuncAc('', 1)<cr>
+
+func! ReplEvalLines( ... )
+  let startLine = a:0 ? a:1 : 1
+  let endLine = a:0 ? a:2 : line('$')
+  " let l:lines = getline( startLine, endLine)
+  " call PsShowLinesInBuffer( l:lines )
+  " for lineStr in l:lines
+  for lineNum in range(startLine, endLine)
+    call ReplEval( GetReplExprLN( lineNum ) )
+  endfor
+endfunc
+
+
 
 " ─   New Purescript REPL                                ■
 
@@ -166,8 +182,8 @@ nnoremap <silent> dr         :call ReplEval(':reload')<cr>
 nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
 
 " Obsolete: use ~/.vim/plugin/HsAPI.vim#/Browse%20modules%20uses
-nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
-vnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
+" nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
+" vnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
 nnoremap gei      :call ReplEval( GetReplExpr() )<cr>
 vnoremap gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
@@ -180,10 +196,18 @@ vnoremap get :<c-u>call ReplEval( ':type ' . GetVisSel() )<cr>
 command! ReplStart :let g:PursReplID = jobstart("spago repl", g:ReplCallbacks)
 
 func! ReplStart ()
+  if exists('g:PursReplID')
+    echo 'Repl is already running'
+    return
+  endif
   let g:PursReplID = jobstart("spago repl", g:ReplCallbacks)
 endfunc
 
 func! ReplStop ()
+  if !exists('g:PursReplID')
+    echo 'Repl is not running'
+    return
+  endif
   call jobstop( g:PursReplID )
   unlet g:PursReplID
 endfunc
@@ -196,14 +220,24 @@ func! ReplMainCallback(job_id, data, event)
   call ReplSimpleResponseHandler (a:data)
 endfunc
 
+func! ReplErrorCallback(job_id, data, event)
+  echom a:data
+endfunc
+
+func! ReplExitCallback(job_id, data, event)
+  echom a:data
+endfunc
+
+
 let g:ReplCallbacks = {
       \ 'on_stdout': function('ReplMainCallback'),
-      \ 'on_stderr': function('ReplMainCallback'),
-      \ 'on_exit': function('ReplMainCallback')
+      \ 'on_stderr': function('ReplErrorCallback'),
+      \ 'on_exit': function('ReplExitCallback')
       \ }
 
 func! ReplEval( expr )
-  " echo a:expr
+  " if a:expr == "" | return | endif
+  if a:expr =~ '^.*--.*$' || a:expr =~ '^$' | return | endif
   call jobsend(g:PursReplID, a:expr . "\n")
 endfunc
 
@@ -215,6 +249,12 @@ let g:ReplaceBashEscapeStrings = [['[33m',''], ['[0m','']]
 " - Splits a list of strings into lines
 " - Forwards other values
 func! ReplSimpleResponseHandler( lines )
+  " if (type(a:lines) != type(v:t_list))
+  "   echom a:lines
+  "   " call HsShowLinesInFloatWin( [a:lines] )
+  "   return
+  " endif
+
   if len( a:lines ) == 1
     " Repl returned the typlical one value
     let hsReturnVal = a:lines[0]
@@ -241,6 +281,8 @@ endfunc
 command! -nargs=1 -complete=custom,PSCIDEcompleteIdentifier
       \ PursInstall
       \ echom jobstart("spago install " . <q-args> . " && spago build", g:ReplCallbacks)
+
+" add :CocRestart and Prebuild to this
 
 " ─^  New Purescript REPL                                ▲
 
@@ -294,7 +336,9 @@ func! GetReplExpr()
   let isToplevelLine          = IndentLevel( line('.') ) == 1
   let cursorIsAtStartOfLine   = col('.') == 1 " not sure where?
 
-  if IsDoStartLine( line('.') )
+  if IsImportLine( line('.') )
+    return getline('.')
+  elseif IsDoStartLine( line('.') )
     return topLevelSymbol
   elseif concealedBindingLine || testBindingLine
     return expressionOfBind
@@ -315,6 +359,43 @@ func! GetReplExpr()
 endfunc
 " TODO: document test cases. optimise for non reload. autoreload in case it's needed?
 
+
+func! GetReplExprLN( lineNum )
+  if IsEmptyLine( a:lineNum )
+    return ""
+  endif
+
+  let lineList                = split( getline( a:lineNum ) )
+  let secondWordOnwards       = join( l:lineList[1:], ' ')
+  let expressionOfBind        = join( l:lineList[2:], ' ')
+  let topLevelSymbol          = lineList[0]
+  let concealedBindingLine    = lineList[0][0:1] == 'cb'
+  let testBindingLine         = lineList[0][0:1] =~ 'e\d'
+  let isDeclarationWithNoArgs = lineList[1] == '='
+  let isToplevelLine          = IndentLevel( a:lineNum ) == 1
+  let cursorIsAtStartOfLine   = col('.') == 1 " not sure where?
+
+  if IsImportLine( a:lineNum )
+    return getline( a:lineNum )
+  elseif IsDoStartLine( a:lineNum )
+    return topLevelSymbol
+  elseif concealedBindingLine || testBindingLine
+    return expressionOfBind
+  elseif CursorIsInsideStringOrComment()
+    return secondWordOnwards
+  elseif IsTypeSignLine( a:lineNum )
+    return topLevelSymbol
+  elseif IsTypeSignLineWithArgs( a:lineNum )
+    return topLevelSymbol
+  elseif CursorIsAtStartOfWord()
+    return expand('<cword>')
+  elseif isToplevelLine && isDeclarationWithNoArgs
+    " echoe 'declaration with no args'
+    return topLevelSymbol
+  else
+    echoe 'Could not extract an expression!'
+  endif
+endfunc
 
 " ─   Apply args                                         ■
 " Todo: ? was this to automatically apply/run the tests?

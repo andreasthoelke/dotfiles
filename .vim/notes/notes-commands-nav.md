@@ -28,8 +28,10 @@ get         - show type of symbol or vis sel (also works when module not compile
 gek         - kind at symbol or vis sel
 gei         - run symbol
 gei vis-sel - run expression!
-gel/c/C     - show list of strings as lines
-              'gel' needs a list of strings, e.g. 'fmap (fmap show) $'
+gel }/iI/ip - run multiple lines
+      currently off
+      gel/c/C     - show list of strings as lines
+                    'gel' needs a list of strings, e.g. 'fmap (fmap show) $'
 ger         - Curl send sting in line to localhost, show response
 
 ## Hs API Explore
@@ -105,6 +107,7 @@ c-w p       - to jump back
 \t]         - TabmoveRight /Left
 <leader>wI  - Pin Haskell imports
 c-w I       - resize/fit floatwin height width
+1<c-w>x     - swap window with the one above/at top of screen (2 is below)
 
 ### Window scrolling
 c-e/y       - up/down

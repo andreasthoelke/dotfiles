@@ -290,6 +290,13 @@ let g:searchSites += [ {'label':'_Pursuit',    'baseUrl':'https://pursuit.puresc
 
 let g:searchSites += [ {'section':'Web help/ posts'} ]
 
+" https://book.purescript.org/index.html?search=
+let g:searchSites += [ {'label':'_Book Purscript',     'baseUrl':'https://book.purescript.org/index.html'
+      \, 'mainTerm':'?search='
+      \, 'language':'+'
+      \}]
+
+
 " https://www.google.de/search?q=traverse+Haskell
 " This usually features Stackoverflow
 let g:searchSites += [ {'label':'_Google',     'baseUrl':'https://google.de/'
