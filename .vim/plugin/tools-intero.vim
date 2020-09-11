@@ -188,8 +188,9 @@ nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
 nnoremap gei      :call ReplEval( GetReplExpr() )<cr>
 vnoremap gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
 
-nnoremap get      :call ReplEval( ':type ' . expand('<cword>') )<cr>
-vnoremap get :<c-u>call ReplEval( ':type ' . GetVisSel() )<cr>
+" now moved to ~/.vim/plugin/HsAPI.vim#/Get%20.type%20from
+" nnoremap get      :call ReplEval( ':type ' . expand('<cword>') )<cr>
+" vnoremap get :<c-u>call ReplEval( ':type ' . GetVisSel() )<cr>
 
 
 " Note that the following functions are linked by referring to the same Psci session (PursReplID)

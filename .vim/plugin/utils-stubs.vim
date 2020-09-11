@@ -301,7 +301,7 @@ endfunc
 nnoremap <leader>uef <leader>us<leader>ef
 " Test stub:
 " nmap <leader>ts <leader>us<leader>ef
-nmap <leader>hfs :call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>w
+nmap <leader>hfs :call RandSymbol()<cr>A :: String<esc>^ywo<esc>PA= undefined<esc>wdx0rq0
 
 " "index symbol" append postfix index to function name
 nnoremap <leader>eif ea0^jea0^k

@@ -28,11 +28,13 @@ get         - show type of symbol or vis sel (also works when module not compile
 gek         - kind at symbol or vis sel
 gei         - run symbol
 gei vis-sel - run expression!
-gel }/iI/ip - run multiple lines
+gel }/iI/ip - run multiple lines, e.g. imports
       currently off
       gel/c/C     - show list of strings as lines
                     'gel' needs a list of strings, e.g. 'fmap (fmap show) $'
 ger         - Curl send sting in line to localhost, show response
+leader ht/T - type hole
+
 
 ## Hs API Explore
 gsd/D       - to edit vis-sel and search for it
@@ -108,6 +110,7 @@ c-w p       - to jump back
 <leader>wI  - Pin Haskell imports
 c-w I       - resize/fit floatwin height width
 1<c-w>x     - swap window with the one above/at top of screen (2 is below)
+go, c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
 
 ### Window scrolling
 c-e/y       - up/down
@@ -296,6 +299,17 @@ gd ,gd     - go to definition /in split
 leader os  - ScratchWindow
 <c-w>c     - just close the window / buffer will reopen after leader os
 leader bd/D - delete the buffer. bD for :bd! is not needed
+leader oS af/ip/\j or visSel - put lines into a scratch window
+note this alternative:
+leader wp af/ip ..
+
+### Todo
+getnextscratchpath from project root + create that dir, count files
+Ag search
+list all autocmd mksession
+
+#### Todo: highlight halogen and react-basic hooks functions
+like 'state' and 'onClick'
 
 
 

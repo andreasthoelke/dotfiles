@@ -107,7 +107,6 @@ let g:exprDelimPttn = MakeOrPttn( AppendSpace(['\s\zs\.'] + g:infixOps + g:typeA
 let g:columnSepsPttn = MakeOrPttn( AppendSpace( g:columnSeps ) )
 
 
-
 " Buffer local maps
 func! HaskellMaps()
   onoremap <silent><buffer> af :call HsBlockVisSel()<cr>

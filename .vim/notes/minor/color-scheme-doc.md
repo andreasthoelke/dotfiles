@@ -12,7 +12,7 @@ hi clear DataConstructor
 verbose hi DataConstructor
 
 * Syntax stack 
-`<leader>hsg :call SyntaxStack()`
+nnoremap <leader>hsg :call SyntaxStack()
 * Syntax group → Highlight group 
 `<leader>hhg :call SyntaxGroup()`
 * Highlight group - color values

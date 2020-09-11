@@ -209,8 +209,9 @@ Plug 'tomtom/tcomment_vim'
 Plug 'joereynolds/place.vim'
 
 Plug 'kana/vim-textobj-user'
-" This does fail many function types - search alternative
+" This does fail many function types - search alternative - new using HaskellMaps() in HsMotion!
 " Plug 'gilligan/vim-textobj-haskell'
+" textobj#function#haskell#select
 " TODO test/document this
 Plug 'kana/vim-textobj-fold'
 Plug 'coachshea/vim-textobj-markdown'
@@ -488,10 +489,10 @@ nnoremap <leader>sd :OpenSession! default<cr>
 command! SessionLoadLocked OpenSession!
 command! SessionShowName echo xolox#session#find_current_session()
 
-" let g:session_autosave = 'yes'
+let g:session_autosave = 'no'
 let g:session_autoload = 'no'
 let g:session_command_aliases = 1
-let g:session_menu = 1
+let g:session_menu = 0
 let g:session_verbose_messages = 0
 
 " 'sessionoptions' (default: "blank,buffers,curdir,folds,
@@ -1729,11 +1730,8 @@ endfunc
 " Record it into the register t: qt---q
 " show the t register :reg t
 " paste the t register :put t or "tp
-" edit the text, keep wired characters 'f,lli'
-" then visually select the macro characters f,lli and type "dy to yank it
 " into the d register
 " alternativly you can v-select the following let statement
-" let @s = 'f,lli\'
 " type y, then deselect and then
 " paste it into the command line with <leader><alt>p and return
 " you can now run the macro by typing @d

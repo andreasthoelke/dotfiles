@@ -259,6 +259,17 @@ exec 'hi! String guifg=' . g:color_sacramento_green_brighter
 hi! Boolean guifg=#66A279
 hi! String guifg=#66A279
 
+hi! purescriptState guibg=black guifg=#483F2F
+" hi! purescriptStateKey guibg=none guifg=#807460
+hi! purescriptStateKey guibg=none guifg=#6A6359
+
+" hi! purescriptState guifg=#BECACD guibg=#13354A
+" hi! purescriptState guifg=#BECACD guibg=#54320A
+" hi! purescriptState guibg=black guifg=#544136
+" hi! purescriptStateKey guibg=black guifg=#483F2F
+" hi! purescriptStateKey guibg=black guifg=#42727A
+" hi! purescriptStateKey guibg=none guifg=#938877
+" hi! purescriptState guibg=black guifg=#555C2E
 
 let g:color_ming_green_dark = '#3C6B7C '
 let g:color_ming_green_dark2 = '#284753 '

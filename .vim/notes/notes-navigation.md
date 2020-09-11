@@ -536,6 +536,7 @@ This will match 'e's when followed by a space, but dont match the space
 
 call matchadd('MatchParen', '\vAPPLE([A-Z\s]*\))\@!', -1, -1 )
 call matchadd('MatchParen', '\vAPPLE', -1, -1 )
+call matchadd('MatchParen', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
 call clearmatches()
 
 

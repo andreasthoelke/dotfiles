@@ -47,9 +47,9 @@ nnoremap gsB      :call ReplEval(':browse ' . input( 'Browse module: ', expand('
 vnoremap gsB :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
 " Get :type from Psci for Purescript
-nnoremap get      :call ReplEval(':type ' . expand('<cWORD>'))<cr>
+nnoremap get      :call ReplEval(':type ' . expand('<cword>'))<cr>
 vnoremap get :<c-u>call ReplEval(':type ' . GetVisSel())<cr>
-nnoremap geT      :call ReplEval(':type ' . input( 'Get type: ', expand('<cWORD>')))<cr>
+nnoremap geT      :call ReplEval(':type ' . input( 'Get type: ', expand('<cword>')))<cr>
 vnoremap geT :<c-u>call ReplEval(':type ' . input( 'Get type: ', GetVisSel()))<cr>
 
 

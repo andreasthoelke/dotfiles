@@ -1,6 +1,4 @@
 
-
-
 " Todo: set purescript syntax!
 " ~/.vim/plugged/coc.nvim/autoload/coc/util.vim#/call%20coc#util#do_autocmd.'CocOpenFloat'.
 

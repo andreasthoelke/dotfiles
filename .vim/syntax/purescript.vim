@@ -13,7 +13,13 @@ endif
 syn match purescriptIdentifier "\<[_a-z]\(\w\|\'\)*\>"
 syn match purescriptNumber "0[xX][0-9a-fA-F]\+\|0[oO][0-7]\|[0-9]\+"
 syn match purescriptFloat "[0-9]\+\.[0-9]\+\([eE][-+]\=[0-9]\+\)\="
-syn keyword purescriptBoolean true false
+" syn keyword purescriptBoolean true false
+syn keyword purescriptState state
+
+" syn match purescriptStateKey "\vstate\.\zs\w{-}\ze\_s"
+" again, above line does not match - resorting to a matchadd
+" TODO this doesn't match either?!
+" call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
 
 " Delimiters:
 syn match purescriptDelimiter "[,;|.()[\]{}]"
@@ -43,6 +49,7 @@ syn match purescriptIdentifierDot1 "\v\s\zs\w{-}\ze\.\w"
 " could not get the above line to match RB.[json] this code:
 " , content: RB.json <$> body
 " so resorting to a matchadd
+" TODO - does this actually work - as matchadd takes a highlight group!
 call matchadd('purescriptIdentifier', '\v\.\zs\w{-}\ze\_s', -1, -1 )
 "  "\_s" matches space OR newline!
 
@@ -325,6 +332,9 @@ endfor
 
 " ─^  Conceal with unicode                               ▲
 
+
+
+
 syntax match concealedCommentDashes '--\s' contained conceal
 " syntax match concealedQuote '\s\zs"' contained conceal
 
@@ -332,6 +342,10 @@ syntax match concealedUndefinedType 'i::' conceal
 syntax match concealedUndefinedType 'undefined::' conceal
 
 syntax match concealedUndefinedType 'u:: forall a.' conceal
+
+
+" syn match purescriptStateKey "\vstate\.\zs\w{-}\ze\_s"
+call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
 
 " ─   Inline Tests conceals                              ■
 

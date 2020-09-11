@@ -62,6 +62,11 @@ spago ls packages - what is available in your current package-set
 spago install lists - lib version from package set! - will show up in spago.dhall dependencies
 spago ls deps - to confirm this shows up in dependencies
 
+### Package install
+" "spago install <packagename> && spago build"
+PursInstall echom jobstart("spago install " . <q-args> . " && spago build", g:ReplCallbacks)
+- Todo: " add :CocRestart and Prebuild to this
+
 ### React starter
 λ npm init
 λ npm install —save-dev purescript spago parcel-bundler
