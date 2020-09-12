@@ -126,9 +126,10 @@ p           - preview in split
 leader P    - preview in float-win
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
 g?          - show help
-### Filepaths
+### Filepaths Urls
 c-w f       - (on filepath) preview file content in horz-split
-leader of   - open filepath under cursor in flot win
+leader of   - open filepath under cursor in float win
+glc         - open Url in line in Chromium
 ### Arglist
 ,x          - toggle to from arglist (x, vis-sel, line-motion)
             - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
@@ -301,7 +302,9 @@ verb map Colo<c-n> - get a list of maps and where they are defined
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
 
 ## Links
+glc         - open Url in line in Chromium
 glb         - open URL in browser
+leader ol   - open 'links' file in float-win, then glc to view in Chromium
 
 gk          - follow rel-link
 lead lg/lG  - go to definition/ in split

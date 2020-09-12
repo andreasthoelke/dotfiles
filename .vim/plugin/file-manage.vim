@@ -17,6 +17,7 @@ nnoremap <leader>oP :tabe ~/Documents/PS/A/<cr>
 nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
+nnoremap <leader>ol :call FloatingBuffer( "~/.vim/notes/links" )<cr>
 
 " ─   CtrlP                                              ■
 
