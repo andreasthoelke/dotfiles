@@ -230,10 +230,13 @@ endfunc
 
 
 nnoremap <leader>P :call PreviewFileInFloatWin( getline('.') )<cr>
+nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
 
 func! PreviewFileInFloatWin( filePath )
   call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
 endfunc
+" call PreviewFileInFloatWin( "/Users/andreas.thoelke/.vim/notes/links" )
+
 
 
 func! MoveFilesFromLeftWinToRightWin( prompt )

@@ -276,10 +276,10 @@ command! -nargs=1 C call LaunchChromium2(<q-args>)
 " C 'https://tailwindcss.com/course/setting-up-tailwind-and-postcss'
 
 func! LaunchChromium2( url ) abort
-  if exists('g:launchChromium_job_id2')
-    call jobstop( g:launchChromium_job_id2 )
-    unlet g:launchChromium_job_id2
-  endif
+  " if exists('g:launchChromium_job_id2')
+  "   call jobstop( g:launchChromium_job_id2 )
+  "   unlet g:launchChromium_job_id2
+  " endif
   let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath2 . ' --app=' . shellescape( a:url ))
 endfunc
 

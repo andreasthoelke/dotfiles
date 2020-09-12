@@ -118,14 +118,17 @@ zt/b        - bottom/top
 
 ## Files
 \v \T       - browse-open file in new split/tab from the same project
+:e %mynewfile - this creates a new buffer in the current Dirvish folder!
 gp <c-o>v   - browse-open recent file in a split e.g. from a different project
 ### Dirvish
 t           - open in new tab
 p           - preview in split
 leader P    - preview in float-win
+:e %mynewfile - this creates a new buffer in the current Dirvish folder!
 g?          - show help
 ### Filepaths
 c-w f       - (on filepath) preview file content in horz-split
+leader of   - open filepath under cursor in flot win
 ### Arglist
 ,x          - toggle to from arglist (x, vis-sel, line-motion)
             - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
@@ -299,6 +302,7 @@ verb map Colo<c-n> - get a list of maps and where they are defined
 
 ## Links
 glb         - open URL in browser
+
 gk          - follow rel-link
 lead lg/lG  - go to definition/ in split
 gd ,gd     - go to definition /in split

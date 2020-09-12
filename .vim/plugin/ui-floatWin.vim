@@ -275,5 +275,70 @@ func! FloatWin__s(name, ...)
 endfunc
 
 
+" ─   More general Floating win                          ■
+
+scriptencoding utf-8
+
+" This function originates from https://www.reddit.com/r/neovim/comments/eq1xpt/how_open_help_in_floating_windows/; it isn't mine
+function! CreateCenteredFloatingWindow() abort
+    let width = min([&columns - 4, max([80, &columns - 20])])
+    let height = min([&lines - 4, max([20, &lines - 10])])
+    let top = ((&lines - height) / 2) - 1
+    let left = (&columns - width) / 2
+    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+    set winhl=Normal:Floating
+    let opts.row += 1
+    let opts.height -= 2
+    let opts.col += 2
+    let opts.width -= 4
+    let l:textbuf = nvim_create_buf(v:false, v:true)
+    let g:floatWin_win = nvim_open_win(l:textbuf, v:true, opts)
+    au BufWipeout <buffer> exe 'bw '.s:buf
+    return l:textbuf
+endfunction
+
+func! FloatingBuffer( filePath )
+  let opts = { 'focusable': v:true,
+        \ 'width': 50,
+        \ 'height': 10,
+        \ 'anchor': 'NW'
+        \}
+  let opts.relative = 'cursor'
+  let opts.col = 0
+  let opts.row = 1
+
+  " let l:textbuf = nvim_create_buf(v:false, v:true)
+  let g:floatWin_win = nvim_open_win( bufnr(a:filePath, v:true), v:true, opts)
+  " let g:floatWin_win = nvim_open_win(l:textbuf, v:true, opts)
+endfunc
+" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2" )
+" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links" )
+" let g:floatWin_win = nvim_open_win( "/Users/andreas.thoelke/.vim/notes/links", v:true, opts)
+" call PreviewFileInFloatWin( "/Users/andreas.thoelke/.vim/notes/links" )
+
+function! FloatingWindowHelp(query) abort
+    let l:buf = CreateCenteredFloatingWindow()
+    call nvim_set_current_buf(l:buf)
+    setlocal filetype=help
+    setlocal buftype=help
+    execute 'help ' . a:query
+endfunction
+
+command! -complete=help -nargs=? Help call FloatingWindowHelp(<q-args>)
+
+" func! FloatingBuffer ( filePath )
+"   let l:buf = CreateCenteredFloatingWindow()
+"   call nvim_set_current_buf(l:buf)
+"   " setlocal filetype=help
+"   execute 'e ' . a:filePath
+" endfunc
+
+
+
+" ─^  More general Floating win                          ▲
+
+
+
+
 
 

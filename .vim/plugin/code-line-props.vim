@@ -30,7 +30,34 @@ endfunc
 " call LaunchChromium2( 'https://www.stackage.org/lts-14.1/hoogle?q=map' )
 " call LaunchChromium2( "https://www.stackage.org/lts-14.1/hoogle?q=map" )
 
-func! ReplaceStringsInLines( lines, listListMap )
+func! GetFilePathAtCursor ()
+  let str = expand('<cWORD>')
+  let filepath = ReplaceStringsInLines( [str], [["'", ""], ['"', ''], [',', ''], [':', '']] )[0]
+  if filereadable( filepath )
+    return filepath
+  else
+    echoe ("Not a valid file path: " . filepath)
+  endif
+endfunc
+" echo GetFilePathAtCursor()
+" echo split('" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2"', '"' )
+
+
+func! GetEncloseInQuotesFromLine ( lineNum )
+  " let lastEncloseString = split( getline( a:lineNum ), '"' )[-1]
+  let str = matchstr(getline( a:lineNum ), '\v"\zs\S([^"]*)\ze"')
+  " The "\S" is to exclude vim-comments
+  return str
+endfunc
+" echo GetEncloseInQuotesFromLine( line('.') +1 )
+" /Users/andreas.thoelke/.vim/notes/links2
+" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2" )
+" echo split('" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2"', '"' )[-1]
+" echo split('" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2"', '"' )
+" echo split('/Users/andreas.thoelke/.vim/notes/links2 something', '\s' )
+" echo split('call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2"', '"' )[-1]
+" call LaunchChromium2( "https://www.stackage.org/lts-14.1/hoogle?q=map" )
+" echo filereadable( "eins" )
 
 func! VisualCol()
   return VisualColLine( line('.'), col('.'), virtcol('.') )
