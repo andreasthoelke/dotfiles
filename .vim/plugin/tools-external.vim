@@ -14,6 +14,8 @@ command! Browser :call OpenVisSel()
 vmap glb :call OpenVisSel()<cr>
 nnoremap glb :call HandleURL()<cr>
 
+nnoremap glc :call LaunchChromium2( GetUrlFromLine(line('.')) )<cr>
+
 command! ITerm :call OpenITerm()
 nnoremap gli :call OpenITerm()<cr>
 
@@ -245,6 +247,7 @@ command! -nargs=1 Chromium1 exec ':Start!' '/Applications/Chromium.app/Contents/
 " TODO try chromium-browser --force-device-scale-factor=0.79 - but can also set this globally in Chromium app settings
 
 let g:chromiumAppPath = "/Applications/Chromium.app/Contents/MacOS/Chromium"
+let g:chromiumAppPath2 = "/Applications/Chromium2.app/Contents/MacOS/Chromium"
 
 func! LaunchChromium( url ) abort
   if exists('g:launchChromium_job_id')
@@ -253,8 +256,12 @@ func! LaunchChromium( url ) abort
   endif
   let g:launchChromium_job_id = jobstart( g:chromiumAppPath . ' --app=' . shellescape( a:url ))
 endfunc
-" call LaunchChromium( 'http://purescript.org' )
+" call LaunchChromium2( 'http://purescript.org' )
 " call LaunchChromium( 'https://www.stackage.org/lts-14.1/hoogle?q=map' )
+" call LaunchChromium( 'http://localhost:8080' )
+" call LaunchChromium2( 'https://milesfrain.github.io/purescript-halogen/guide/03-Performing-Effects.html' )
+" call LaunchChromium2( 'https://github.com/purescript-halogen/purescript-halogen/blob/master/docs/guide/03-Performing-Effects.md' )
+" call LaunchChromium2( 'https://tailwindcss.com/course/setting-up-tailwind-and-postcss' )
 
 func! StopChromium()
   if exists('g:launchChromium_job_id')
@@ -263,6 +270,19 @@ func! StopChromium()
   endif
 endfunc
 " call StopChromium()
+
+
+command! -nargs=1 C call LaunchChromium2(<q-args>)
+" C 'https://tailwindcss.com/course/setting-up-tailwind-and-postcss'
+
+func! LaunchChromium2( url ) abort
+  if exists('g:launchChromium_job_id2')
+    call jobstop( g:launchChromium_job_id2 )
+    unlet g:launchChromium_job_id2
+  endif
+  let g:launchChromium_job_id2 = jobstart( g:chromiumAppPath2 . ' --app=' . shellescape( a:url ))
+endfunc
+
 
 " ─^  Launching Chromium                                 ▲
 

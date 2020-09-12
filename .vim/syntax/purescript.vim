@@ -14,7 +14,7 @@ syn match purescriptIdentifier "\<[_a-z]\(\w\|\'\)*\>"
 syn match purescriptNumber "0[xX][0-9a-fA-F]\+\|0[oO][0-7]\|[0-9]\+"
 syn match purescriptFloat "[0-9]\+\.[0-9]\+\([eE][-+]\=[0-9]\+\)\="
 " syn keyword purescriptBoolean true false
-syn keyword purescriptState state
+" syn keyword purescriptState state
 
 " syn match purescriptStateKey "\vstate\.\zs\w{-}\ze\_s"
 " again, above line does not match - resorting to a matchadd
@@ -345,7 +345,10 @@ syntax match concealedUndefinedType 'u:: forall a.' conceal
 
 
 " syn match purescriptStateKey "\vstate\.\zs\w{-}\ze\_s"
+call matchadd('purescriptState', '\vstate\.\ze\w', -1, -1 )
 call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
+call matchadd('purescriptState', '\vH\.\zemodify_\_s', -1, -1 )
+call matchadd('purescriptStateKey', '\vH\.\zsmodify_\ze\_s', -1, -1 )
 
 " ─   Inline Tests conceals                              ■
 

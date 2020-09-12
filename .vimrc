@@ -1596,8 +1596,9 @@ endif
 " Color: ----------------------------------
 
 " Hex Color editor vCooler.vim
-let g:vcoolor_map = 'glc'
+" let g:vcoolor_map = 'glc'
 command! ColorPicker VCoolor
+let g:vcoolor_disable_mappings = v:true
 
 " Files Buffer:  --------------------------------------------
 

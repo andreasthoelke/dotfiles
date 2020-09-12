@@ -77,10 +77,10 @@ func! HaskellSyntaxAdditions()
   " call matchadd('Conceal', '\\\%([^\\]\+→\)\@=', -1, -1, {'conceal': 'λ'}) |
 
   " Don't show quotes around text. note you can only identify text via the syntax coloring!
-  " call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
-  " call matchadd('Conceal', '""', -1, -1, {'conceal': '∅'})
+  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '""', -1, -1, {'conceal': '∅'})
 
-  " call matchadd('purescriptColon', '\v\zs\:\ze\s', -1, -1 )
+  call matchadd('purescriptColon', '\v\zs\:\ze\s', -1, -1 )
 
   " TODO this conflicts with `elem` and it unicode replacement
   " call matchadd('Conceal', '`', -1, -1, {'conceal': ''})
@@ -99,11 +99,6 @@ func! HaskellSyntaxAdditions()
   " hi! Conceal guibg=#000000
   " Issue: this also set the bg of other conceal chars
 
-
-  " call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
-  " call matchadd('MatchParen', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
-
-  " call matchadd('MatchParen', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
   " use this: ?
   " setlocal formatprg=stylish-haskell
 

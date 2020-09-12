@@ -22,6 +22,16 @@ func! GetVisSel()
   return Get_visual_selection()
 endfunc
 
+func! GetUrlFromLine ( lineNum )
+  let str = matchstr(getline( a:lineNum ), '[a-z]*:\/\/[^ >,;"]*')
+  return ReplaceStringsInLines( [str], [["'", ""]] )[0]
+endfunc
+" echo GetUrlFromLine( line('.') +1 )
+" call LaunchChromium2( 'https://www.stackage.org/lts-14.1/hoogle?q=map' )
+" call LaunchChromium2( "https://www.stackage.org/lts-14.1/hoogle?q=map" )
+
+func! ReplaceStringsInLines( lines, listListMap )
+
 func! VisualCol()
   return VisualColLine( line('.'), col('.'), virtcol('.') )
 endfunc

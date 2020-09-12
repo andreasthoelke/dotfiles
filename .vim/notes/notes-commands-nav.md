@@ -220,8 +220,9 @@ z] z[ zk    - beginning/end of current fold/prev fold
 g]/g[       - first/last char of prev yanked text
 
 
-### Actions
+## Actions Changes Edits
 S$          - substitute / replace to the end of the line
+cs['"/{(]   - change surrounding quotes/brackets e.g. {these once} to "these"
 <op>J/K     - yank, source lines to the end of the block. e.g.
 ,dJ (with cursor at start of line) - delete / cut into register
 yip         - yank the paragraph
@@ -288,6 +289,13 @@ leader rb   - to rename a binding and its occurences
 
 ## Vim
 MessagesShow - show past vim echoed text (show messages) in preview window
+verb command Colo<c-n> - get a list of commands and where they are defined
+verb map Colo<c-n> - get a list of maps and where they are defined
+\sm        - set syntax markdown - see  ~/.vim/plugin/notes-workflow.vim#/Set%20Syntax.
+:Alacritty - open new terminal and then vim instance
+
+### Notes
+~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
 
 ## Links
 glb         - open URL in browser
@@ -303,10 +311,14 @@ leader oS af/ip/\j or visSel - put lines into a scratch window
 note this alternative:
 leader wp af/ip ..
 
+## Infos
+leader2 lc[iB/ip] - count lines of code
+
 ### Todo
 getnextscratchpath from project root + create that dir, count files
 Ag search
 list all autocmd mksession
+search in :ChromeBookmarks
 
 #### Todo: highlight halogen and react-basic hooks functions
 like 'state' and 'onClick'

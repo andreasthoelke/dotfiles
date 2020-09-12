@@ -118,7 +118,6 @@ endfunc
 " endfunc}}}
 
 
-
 function! HandleURL()
   let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;"]*')
   " See https://regexr.com/41u3c
@@ -130,6 +129,7 @@ function! HandleURL()
   endif
 endfunction
 " Works on these lines no matter where the cursor is: test "http://yahoo.com" vs: test http://yahoo.com
+" TODO rather use GetUrlFromLine()
 
 " Just like windo, but restore the current window when done.
 function! WinDo(command)
