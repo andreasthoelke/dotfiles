@@ -124,6 +124,7 @@ gp <c-o>v   - browse-open recent file in a split e.g. from a different project
 t           - open in new tab
 p           - preview in split
 leader P    - preview in float-win
+leader of   - open file under cursor in float-win
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
 g?          - show help
 ### Filepaths Urls
@@ -326,6 +327,9 @@ getnextscratchpath from project root + create that dir, count files
 Ag search
 list all autocmd mksession
 search in :ChromeBookmarks
+
+highlight standalone 'state' and onClick. on(capital letter) - 'on' dark - but a lighter color for the rest
+~/Documents/PS/A/TestsA/webpack-reload/src/App/RandNum.purs#/--%20TODO.%20highlight
 
 #### Todo: highlight halogen and react-basic hooks functions
 like 'state' and 'onClick'

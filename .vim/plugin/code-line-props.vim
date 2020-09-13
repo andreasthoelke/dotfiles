@@ -41,6 +41,7 @@ func! GetFilePathAtCursor ()
 endfunc
 " echo GetFilePathAtCursor()
 " echo split('" call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2"', '"' )
+" /Users/andreas.thoelke/Documents/PS/A/TestsA/webpack-reload/.spago/console/v4.4.0/src/Effect/Class/Console.purs#:10:1
 
 
 func! GetEncloseInQuotesFromLine ( lineNum )

@@ -269,7 +269,10 @@ func! LCFilterLines ( lines )
   if a:lines == [] | return a:lines | endif
 
   if split( a:lines[0] )[0] == 'Hole'
-    return [ ' :: ' . trim( a:lines[ 2 ] ) ]
+    " return [ ' :: ' . trim( a:lines[ 2 ] ) ]
+    let firstTypeLine = a:lines[2]
+    let restLines = a:lines[3:]
+    return insert( restLines, ' :: ' . firstTypeLine[4:], 0 )
   else
     return a:lines
   endif
