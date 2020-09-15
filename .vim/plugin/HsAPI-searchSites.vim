@@ -282,10 +282,16 @@ let g:searchSites += [ {'label':'_Hoogle',     'baseUrl':'https://hoogle.haskell
       \}]
 
 " https://pursuit.purescript.org/search?q=fromLeft
-" Pursuit can only search for a module namespace (Data.List) *or* an identifier (e.g. fromLeft), not a combination of both
+" Pursuit can only search for a module namespace (Data.Either) *or* an identifier (e.g. fromLeft), not a combination of both
 " So searching for a module has to use the 'mainTerm' field
 let g:searchSites += [ {'label':'_Pursuit',    'baseUrl':'https://pursuit.purescript.org/'
       \, 'mainTerm':'search?q='
+      \}]
+
+" https://spacchetti.github.io/starsuit/#search:traverse
+" Starsuit can only search for a module namespace (Data.Either) *or* an identifier (e.g. fromLeft), not a combination of both
+let g:searchSites += [ {'label':'_T Starsuit Pursuit',    'baseUrl':'https://spacchetti.github.io/starsuit/'
+      \, 'mainTerm':'\#search:'
       \}]
 
 let g:searchSites += [ {'section':'Web help/ posts'} ]
@@ -296,6 +302,11 @@ let g:searchSites += [ {'label':'_Book Purscript',     'baseUrl':'https://book.p
       \, 'language':'+'
       \}]
 
+" https://jordanmartinez.github.io/purescript-jordans-reference-site/?search=
+let g:searchSites += [ {'label':'_Jordan M Reference',     'baseUrl':'https://jordanmartinez.github.io/purescript-jordans-reference-site/'
+      \, 'mainTerm':'?search='
+      \, 'language':'+'
+      \}]
 
 " https://www.google.de/search?q=traverse+Haskell
 " This usually features Stackoverflow

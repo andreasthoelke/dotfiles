@@ -1,3 +1,15 @@
+## Release notes v1.2
+Initial Purescript setup:
+- Coc-nvim
+- PsAPI browse
+- sparo repl
+  * getting types of variables via type holes into floating window
+- fuzzy search via language server call (gsD map)
+
+see documentation/notes here:
+  .vim/notes/notes-commands-nav.md
+  .vim/notes/purs-setup.md
+
 
 ## Release notes v1.1.2
 * syn match infixBacktick with enclosed conceals

@@ -315,3 +315,6 @@ On the right side move the cursor to the first conflicted hunk (e.g. using “]c
   * `glt`, `git remote -v` shows URL, then `c-\ n` to have termial text as normal buffer text
   * vis-select the url of the repo, the `glb` (`gx` does not work)
 
+Easy to read/lear?
+https://docs.github.com/en/github
+

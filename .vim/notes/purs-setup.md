@@ -223,7 +223,7 @@ nnoremap <silent> <leader>hK :call <SID>show_documentation()<CR>
 - which is mostly type
 - also works for Vim - docs (K is blocked currently by motion mappings)
 
-## Hs/PsAPI search
+# Hs/PsAPI search
 gsd/D
 - remove module prefix
 - limit count?
@@ -241,7 +241,7 @@ identifier is all I need, I think
 <leader>hii :call PsImportIdentifier( HsCursorKeyword() )<cr>
 <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', HsCursorKeyword()) )<cr>
 
-## Psc-ide
+# Psc-ide / purs ide
 works when started manually by
 call PSCIDEstart(0)
 call PSCIDEload(0, "")
@@ -253,6 +253,13 @@ call PSCIDEload(0, "")
   Psearch length
   Psearch abc
   echo PscAutoStart()
+### Documentation
+  https://github.com/purescript/documentation/blob/master/guides/psc-ide-FAQ.md#troubleshooting
+  https://github.com/purescript/spago#build-and-run-my-project
+  Purs ide configuration!:
+  https://github.com/nwolverson/vscode-ide-purescript/blob/110e9ac482708fd1bca7a71c95c600c3bcc9cda5/package.json#L79
+
+  to see a language server log use :CocInfo then look at: ## Output channel: languageserver.purescript
 
 ## Vimmers PS
 the Psearch results buffers shows a nicely syntax highlighted
@@ -321,6 +328,9 @@ stripAligningSpaces produces an error - so it's commented out
 
 nice example function
 ~/.vim/plugged/psc-ide-vim/ftplugin/purescript_pscide.vim#/call%20add.l.lines,%20"".
+
+
+
 
 
 
