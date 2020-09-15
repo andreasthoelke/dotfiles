@@ -259,10 +259,16 @@ exec 'hi! String guifg=' . g:color_sacramento_green_brighter
 hi! Boolean guifg=#66A279
 hi! String guifg=#66A279
 
-hi! purescriptState guibg=black guifg=#483F2F
-" hi! purescriptStateKey guibg=none guifg=#807460
-hi! purescriptStateKey guibg=none guifg=#6A6359
+hi! purescriptState guibg=black guifg=#554B37
+hi! purescriptStateKey guibg=none guifg=#80745D
+" hi! purescriptEvent guibg=black guifg=#99714F
+hi! purescriptEventKey guibg=none guifg=#884137
 
+hi! purescriptClasses guibg=none guifg=#364347
+" hi! purescriptClassesTW guifg=#7A8183
+hi! purescriptClassesBG guibg=none guifg=#364347
+
+" hi! purescriptStateKey guibg=none guifg=#807460
 " hi! purescriptState guifg=#BECACD guibg=#13354A
 " hi! purescriptState guifg=#BECACD guibg=#54320A
 " hi! purescriptState guibg=black guifg=#544136

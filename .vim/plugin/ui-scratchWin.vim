@@ -14,7 +14,8 @@ func! ActivateScratchWindow( bufferNameId )
     " There is no scratch buffer with 'bufferNameId' yet, so create a new buffer
     " this will also open a window (1)
     " exec 'new +resize20' . a:bufferNameId
-    exec 'botright 5new ' . a:bufferNameId
+    " exec 'botright 5new ' . a:bufferNameId
+    exec 'belowright 5new ' . a:bufferNameId
     " exec 'keepalt silent botright vertical 30split | buffer! ' . bufNr
   else
     " In case there is a buffer, check if it's open in a win

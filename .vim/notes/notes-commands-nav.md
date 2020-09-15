@@ -41,7 +41,8 @@ gsd/D       - to edit vis-sel and search for it
 gsk         - to insert info into buffer - using the module name (cursor on module shows module info!)
 gsK         - show info in float-win
 gsb/B       - browse module
-,atip/iB    - to HsTabu Type-sig align a range: Use l, \j or 'v' visual-sel
+leader t<motion> - tabularise type
+  off? ,atip/iB    - to HsTabu Type-sig align a range: Use l, \j or 'v' visual-sel
 2leader sm  - SplitModulesInLines
 2leader jm  - JoinModulesFromLines
 2leader ht  - HsTabu
@@ -182,11 +183,15 @@ dw          - align/pull inwards to the cursorH the first char to the right
 ,aii=       - will align to "=" inside indent block
 leader al   - easy align
 leader a-ii - align a 'case' block! to '->'
-leader ha (+m/vs) - type-sig align (motion or vis-sel) 'aB'-> error?
-              TODO leader haiB show missing function
+leader t<motion> - tabularise type sig
+  off? leader ha (+m/vs) - type-sig align (motion or vis-sel) 'aB'-> error?
+                TODO leader haiB show missing function
 leader hA   - type-sig align entire buffer. or "viB<space>ha<c-o>"
 ]e,[e       - move/shift line. (lines using vis-sel)
 \>          - push / shift text to the right  ~/.vim/plugin/utils-align.vim#/Push%20shift%20text
+leader sb/n - break line at cursor, indent to cursor col
+\,l/}       - intent the line to the current cursor col
+              TODO: use visual-sel to intent from a specific point of the line string. ~/.vim/plugin/utils-align.vim#/TODO.%20use%20visual-sel
 
 ## Purs Browse Module
 
@@ -333,7 +338,15 @@ highlight standalone 'state' and onClick. on(capital letter) - 'on' dark - but a
 
 #### Todo: highlight halogen and react-basic hooks functions
 like 'state' and 'onClick'
+this is overwriting my syntax-state matches?
+~/.vim/syntax/purescript.vim#/syn%20match%20purescriptIdentifierDot1
+should turn these into syntax statements  ~/.vim/syntax/purescript.vim#/call%20matchadd.'purescriptStateKey',%20'\vstate\.\zs\w{-}\ze\_s',
+use 2leader hhsg - to show syntax groups
+read the documentation here!: ~/.vim/plugin/syntax-color.vim#/STEP2A.%20If%20you
 
+function argument highlighing ~/.vim/syntax/purescript.vim#/TODO%20rather%20highlight
+https://github.com/pboettch/vim-highlight-cursor-words/blob/master/plugin/hicursorwords.vim
+https://stackoverflow.com/questions/1551231/highlight-variable-under-cursor-in-vim-like-in-netbeans
 
 
 

@@ -193,3 +193,14 @@ function! ToggleOption(option_name, ...)
   let option_prefix = enabled ? 'no' : ''
   exe 'set' . option_scope . ' ' . option_prefix . a:option_name
 endfunction
+
+" Keep term buffers running/open when closing the window
+" might want to consider 'winfixheight'
+augroup custom_term
+  autocmd!
+  autocmd TermOpen * setlocal bufhidden=hide
+augroup END
+
+
+
+

@@ -1,48 +1,4 @@
 
-" Old: ■
-" nnoremap <leader>>> :call IndentToCursorH()<CR>
-" nnoremap <leader><< :call IndentToCursorH()<CR>
-" TODO: maybe make a mapping "dwkwj<leader>>>" to indent haskell binds:
-" jsonValue ∷ Value
-"           ← decode (T.encodeUtf8 jsonTxt) ?? "Not a valid json!"
-"
-" function! IndentToCursorH()
-"   exec ("left " . (virtcol('.') - 1))
-" endfun ▲
-
-" ─   Indent to cursor H                                 ■
-
-" `leader >>` + motion or vis-sel with "v" indents the lines to the current cursor-horz position
-" nnoremap <silent> <leader>>> :set opfunc=Indent_op<cr>g@
-nnoremap <silent> <localleader>, :set opfunc=Indent_op<cr>g@
-" vnoremap <silent> <leader>>> :<c-u>call Indent_op( visualmode(), 1)<cr>
-vnoremap <silent> <localleader>, :<c-u>call Indent_op( visualmode(), 1)<cr>
-" Note: This does not work with "V"/ Visual-Block mode
-
-" Note for extending this:
-" Below is an example of how to perform multiple easy-alignments on a (motion-) range of lines.
-" So instead of running: "<leader>al,j "& "<leader>al,j2 ". you can just do "<leader>at,j"
-
-" Perform an align operation on a range of lines. An operator function can/needs to access the range as shown below
-func! Indent_op( motionType, ...)
-  normal! m'
-  " motionType could e.g. be 'char' here - but aligning will only use linewise here
-  let motionType = 'lines'
-  " Get the range of lines from either visual mode ( "'<") or an (operator pending) motion or text object
-  if a:0
-    let [l1, l2] = ["'<", "'>"]
-  else
-    let [l1, l2] = [line("'["), line("']")]
-  endif
-  " Format the range string
-  let range = l1.','.l2
-  execute range .  ("left " . (col('.') - 1))
-  " call JumpBackSkipCurrentLoc()
-endfunc
-
-" ─^  Indent to cursor H                                 ▲
-
-
 
 
 " Tabularize 1st and 2nd column of a motion or selected range of lines based on <space>

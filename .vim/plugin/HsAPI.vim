@@ -97,6 +97,7 @@ func! PsAPIQueryHandleResponse( response )
     call add( displayLines, displayLine3 )
   endfor
   call PsShowLinesInBuffer( displayLines )
+  " call FloatWin_ShowLines( displayLines )
 endfunc
 
 

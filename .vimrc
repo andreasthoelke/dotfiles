@@ -723,6 +723,8 @@ set nowrap
 " vim automatically breaks the line/starts a new line after 100 chars
 set textwidth=120
 
+set noequalalways
+
 " activate line wrapping for a window:
 " command! -nargs=* Wrap set wrap linebreak nolist
 " Todo: do I want linebreak and nolist?

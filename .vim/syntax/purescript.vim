@@ -344,11 +344,23 @@ syntax match concealedUndefinedType 'undefined::' conceal
 syntax match concealedUndefinedType 'u:: forall a.' conceal
 
 
-" syn match purescriptStateKey "\vstate\.\zs\w{-}\ze\_s"
-call matchadd('purescriptState', '\vstate\.\ze\w', -1, -1 )
-call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
-call matchadd('purescriptState', '\vH\.\zemodify_\_s', -1, -1 )
-call matchadd('purescriptStateKey', '\vH\.\zsmodify_\ze\_s', -1, -1 )
+" TODO rather highlight all function arguments
+" call matchadd('purescriptState', '\vstate%[\.]', -1, -1 )
+" call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
+" call matchadd('purescriptState', '\vH\.\zemodify_\_s', -1, -1 )
+" call matchadd('purescriptStateKey', '\vH\.\zsmodify_\ze\_s', -1, -1 )
+
+" call matchadd('purescriptEvent', '\vE\zs\.on\ze\u\i', -1, -1 )
+" call matchadd('purescriptEvent', '\vHE\.\zeon', -1, -1 )
+call matchadd('purescriptEventKey', '\vE\.\zson\u\w{-}\ze\_s', -1, -1 )
+" drop this as there are different ways to do CSS
+" call matchadd('purescriptClassesTW', '\vT\.\zs\w{-}\ze\W', -1, -1 )
+" call matchadd('purescriptClasses', '\vclasses', -1, -1 )
+" call matchadd('purescriptClassesBG', '\vclasses\s\[\zs.{-}\ze]', -1, -1 )
+call matchadd('purescriptClassesBG', '\vclasses\s\zs\[.{-}]', -1, -1 )
+" call matchadd('purescriptClassesBG', '\vcss\s\".{-}"', -1, -1 )
+call matchadd('purescriptClassesBG', '\vcss\s\"\zs.{-}\ze"', -1, -1 )
+call matchadd('purescriptClassesBG', '\vcss\ze\s\"', -1, -1 )
 
 " ─   Inline Tests conceals                              ■
 

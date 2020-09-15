@@ -129,4 +129,60 @@ endfunc
 " echo InsertStringAtLoc( 'XX', line('.'), col('.')-2 )
 
 
+nnoremap <leader>sb i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
+" nnoremap <leader>sn :echo col([line('.'),'$'])<CR>
+nnoremap <leader>sn i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
+" Vim will insert a newline (<CR>) followed by a number of spaces (<C-R>=repeat(' ',...)) equal to the difference between the column number of the end of the previous line (col([line('.')-1,'$'])) and the current column number (col('.'))
+
+
+
+" Old: ■
+" nnoremap <leader>>> :call IndentToCursorH()<CR>
+" nnoremap <leader><< :call IndentToCursorH()<CR>
+" TODO: maybe make a mapping "dwkwj<leader>>>" to indent haskell binds:
+" jsonValue ∷ Value
+"           ← decode (T.encodeUtf8 jsonTxt) ?? "Not a valid json!"
+"
+" function! IndentToCursorH()
+"   exec ("left " . (virtcol('.') - 1))
+" endfun ▲
+
+" ─   Indent to cursor H                                 ■
+
+" `leader >>` + motion or vis-sel with "v" indents the lines to the current cursor-horz position
+" nnoremap <silent> <leader>>> :set opfunc=Indent_op<cr>g@
+nnoremap <silent> <localleader>, :set opfunc=Indent_op<cr>g@
+" vnoremap <silent> <leader>>> :<c-u>call Indent_op( visualmode(), 1)<cr>
+vnoremap <silent> <localleader>, :<c-u>call Indent_op( visualmode(), 1)<cr>
+" Note: This does not work with "V"/ Visual-Block mode
+
+" TODO: use visual-sel to intent from a specific point of the line string. example
+" - MyActions will be a Sum type
+" - MyState will be a Product type
+" how to: take the length of the visual sel (vitual-cols?) and insert n-spaces at the left-most point of the visual-sel
+
+" Note for extending this:
+" Below is an example of how to perform multiple easy-alignments on a (motion-) range of lines.
+" So instead of running: "<leader>al,j "& "<leader>al,j2 ". you can just do "<leader>at,j"
+
+" Perform an align operation on a range of lines. An operator function can/needs to access the range as shown below
+func! Indent_op( motionType, ...)
+  normal! m'
+  " motionType could e.g. be 'char' here - but aligning will only use linewise here
+  let motionType = 'lines'
+  " Get the range of lines from either visual mode ( "'<") or an (operator pending) motion or text object
+  if a:0
+    let [l1, l2] = ["'<", "'>"]
+  else
+    let [l1, l2] = [line("'["), line("']")]
+  endif
+  " Format the range string
+  let range = l1.','.l2
+  execute range .  ("left " . (col('.') - 1))
+  " call JumpBackSkipCurrentLoc()
+endfunc
+
+" ─^  Indent to cursor H                                 ▲
+
+
 

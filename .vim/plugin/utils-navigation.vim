@@ -68,8 +68,8 @@ nmap <leader>wI <leader>wpiI<c-o><c-w>k
 " ─   Tabs                                               ■
 
 " next - prev tab
-nnoremap <c-f> gt
-nnoremap <c-d> gT
+nnoremap <silent> <c-f> :tabnext<cr>
+nnoremap <silent> <c-d> :tabprevious<cr>
 
 " Move tab commands are vim-repeatable
 map <localleader>t[ <Plug>TabmoveLeft
