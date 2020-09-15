@@ -22,9 +22,6 @@ Plug 'justinmk/vim-dirvish'
 Plug 'kristijanhusak/vim-dirvish-git'
 " Added a convenient "silent" 'z' buffer local map for the Shdo command window
 " Plug 'andreasthoelke/vim-dirvish'
-" test these
-" Plug 'vifm/neovim-vifm'
-" Plug 'vifm/vifm.vim'
 
 " Browser Integration: ---------
 " Plug 'carlosrocha/vim-chrome-devtools', { 'do': 'npm install && npm run build' }

@@ -138,9 +138,19 @@ glc         - open Url in line in Chromium
             leader oa   - show arglist in CtrlP. v/t to open. <c-s> to delete
 
 ### Move / Copy files
-yy in Dirvish - copy the full file path
-navigate to the destination path in Dirvish then `glt` to open a terminal at that location
-mv or cp then <c-[> to go to normal mode then `p` tp paste then insert and `.` to copy/move into current folder
+manual/low level:
+  yy in Dirvish - copy the full file path
+  navigate to the destination path in Dirvish then `glt` to open a terminal at that location
+  mv or cp then <c-[> to go to normal mode then `p` tp paste then insert and `.` to copy/move into current folder
+assisted:
+  - put two dirvish folders side by side. use e.g. \T\v
+  - the win/folderpath that has the cursor is the source (other on is the target of the move) (left/right does not matter)
+  - add files to the arglist (highlighted in red). use ,x(l/}/vis-sel)
+    - reset arglist with leader X
+    - show arglist with leader oa (CtrlPArgs)
+  - run the shell command with leader mv
+  - alternatively preview/edit the command with leader mV
+  detailed description: ~/.vim/plugin/file-manage.vim#/Move%20Files
 
 ## Command window
 ;           - then c-n and c-i and c-x c-f for completion.
@@ -332,6 +342,7 @@ getnextscratchpath from project root + create that dir, count files
 Ag search
 list all autocmd mksession
 search in :ChromeBookmarks
+tabline should show dirvish foldername
 
 highlight standalone 'state' and onClick. on(capital letter) - 'on' dark - but a lighter color for the rest
 ~/Documents/PS/A/TestsA/webpack-reload/src/App/RandNum.purs#/--%20TODO.%20highlight

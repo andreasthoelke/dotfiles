@@ -19,6 +19,17 @@ nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
 
 nnoremap <leader>ol :call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links" )<cr>
 
+
+nnoremap <leader>P :call PreviewFileInFloatWin( getline('.') )<cr>
+nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
+
+func! PreviewFileInFloatWin( filePath )
+  call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
+endfunc
+" call PreviewFileInFloatWin( "/Users/andreas.thoelke/.vim/notes/links" )
+
+
+
 " ─   CtrlP                                              ■
 
 " Notes:
@@ -216,28 +227,35 @@ command! -bang Args call fzf#run(fzf#wrap('args', {'source': argv()}, <bang>0))
 
 
 
-" Vifm: -----------------------------------------------------
-let g:vifmSplitWidth = 70
-let g:vifmFixWidth = 0
-
 " ─   Move Files                                         ■
+" Process:
+" - put two Dirvish folders side by side (source -> target)
+" - use ,x(l/j/vis-sel) in the left window to add to the arglist
+"   - leader oa to show current arglist
+"   - leader X to reset/clear arglist
+"   - do this regularly (also R to refesh Dirvish)
+" - leader mv will run the 'move' command.
+"   - <c-w>l to see the moved file in the other folder in 'red' (auto added to the arg list)
+"   - with the cursor still in the right win (related folder path is filtered as the tarket folder)
+"     run leader mv again to undo/redo to operation in reverse direction
+" - leader mV will show e.g.
+  " Shdo! mv %{} /Users/andreas.thoelke/Documents/PS/A/TestsA/webpack-reload/src/App/{}
+  " in command edit mode. placeholder "{}" will insert the arglist! and I can now change "mv" to "cp" or "rm", etc
+  " - <c-c><c-c> cancels the process
+  " - <c-c><cr> runs the Shdo! command to will show a buffer with the full command
+  " - leader leader z will run the shell script in that buffer
+  " - leader bd to delete that temp buffer
+  " - see the effect in the dirvish buffers. R? for leader X?
+  " - <c-w>L/H to reverse the command?
+
 
 nnoremap <leader>mv :call MoveFilesFromLeftWinToRightWin( 0 )<cr>
 nnoremap <leader>mV :call MoveFilesFromLeftWinToRightWin( 1 )<cr>q:<leader>"tP^W
 
+" The list of filenames in the current tab
 func! TabWinFilenames()
   return map( tabpagebuflist( tabpagenr() ), {_, bufnum -> bufname( bufnum ) } )
 endfunc
-
-
-nnoremap <leader>P :call PreviewFileInFloatWin( getline('.') )<cr>
-nnoremap <leader>of :call FloatingBuffer( GetFilePathAtCursor() )<cr>
-
-func! PreviewFileInFloatWin( filePath )
-  call FloatWin_ShowLines( readfile( a:filePath, "\n" ) )
-endfunc
-" call PreviewFileInFloatWin( "/Users/andreas.thoelke/.vim/notes/links" )
-
 
 
 func! MoveFilesFromLeftWinToRightWin( prompt )
@@ -263,21 +281,21 @@ func! MoveFilesFromLeftWinToRightWin( prompt )
     " Stop at the pre-filled command prompt, don't auto-run and close the Shdo buffer
     return
   else
+    " this opens a buffer with the full shell script!
     exec cmdStr
+    " this runs the shell script
+    call RunBufferAsShellScript()
+    wincmd c
+    call SetArglistfilesFolder( folderPathTarget )
   endif
-
-  call RunBufferAsShellScript()
-
-  call SetArglistfilesFolder( folderPathTarget )
-
-  wincmd w
-  if &filetype == 'dirvish'
-    Dirvish %
-  else
-    wincmd w
-    Dirvish %
-  endif
-  wincmd w
+  " wincmd p
+  " if &filetype == 'dirvish'
+  "   Dirvish %
+  " else
+  "   wincmd w
+  "   Dirvish %
+  " endif
+  " wincmd w
 endfunc
 
 
