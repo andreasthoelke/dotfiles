@@ -347,8 +347,8 @@ syntax match concealedUndefinedType 'u:: forall a.' conceal
 " TODO rather highlight all function arguments
 " call matchadd('purescriptState', '\vstate%[\.]', -1, -1 )
 " call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
-" call matchadd('purescriptState', '\vH\.\zemodify_\_s', -1, -1 )
-" call matchadd('purescriptStateKey', '\vH\.\zsmodify_\ze\_s', -1, -1 )
+call matchadd('purescriptState', '\vH\.\zemodify_\_s', -1, -1 )
+call matchadd('purescriptStateKey', '\vH\.\zsmodify_\ze\_s', -1, -1 )
 
 " call matchadd('purescriptEvent', '\vE\zs\.on\ze\u\i', -1, -1 )
 " call matchadd('purescriptEvent', '\vHE\.\zeon', -1, -1 )

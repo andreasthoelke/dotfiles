@@ -158,6 +158,7 @@ func! FloatWin_ShowLines( linesToShow, ... )
 
   silent doautocmd <nomodeline> User FloatPreviewWinOpen
 
+  echo 'hi'
   call FloatWin_FitWidthHeight()
   return g:floatWin_win
 endfunc

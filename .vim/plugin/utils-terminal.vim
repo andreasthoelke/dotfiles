@@ -4,8 +4,9 @@
 " nnoremap <silent> glt :below 20Term<cr>
 " Demo Expression Map:
 " In dirvish buffers use the filename % to cd terminal to this folder
-nnoremap <expr> glt (&ft=='dirvish') ? ':below 20Term cd %<CR>' : ':below 20Term<CR>'
-" uses the Term command: .vim/utils/utils-terminal.vim#/^comman.*%20Term%20
+nnoremap <expr> glT (&ft=='dirvish') ? ':below 7Term! cd %<CR>' : ':below 7Term!<CR>'
+
+nnoremap <silent><expr> glt (':Term ' . getline('.') . '<cr>:wincmd p<cr>')
 
 hi! TermCursorNC guibg=grey guifg=white
 
@@ -138,11 +139,14 @@ command! -nargs=* Ts call chansend( g:latest_term_id, [<q-args>, ''] )
 " send visual selection chars as command and replace the selection with the return val.
 " - or should this rather append after a "⇒"?
 
+let g:termCount = 0
+
 " Open Terminal buffer in horizontal split
-command! -count -nargs=* Term call Term(<q-args>, <count>)
-fun! Term(args, count)
+command! -bang -count -nargs=* Term call Term(<q-args>, <count>, <bang>0)
+fun! Term(args, count, bang)
   let cmd = "split "
-  let cmd = a:count ? a:count . cmd : cmd
+  let count = a:count ? a:count : 7
+  let cmd = count . cmd
   if a:args == ""
     let cmd = cmd . 'term://zsh'
   else
@@ -150,8 +154,12 @@ fun! Term(args, count)
     " Note that only "&& zsh" allows to use the terminal after the first command has finished.
   endif
   exec cmd
-  exe 'startinsert'
+  " exec 'startinsert'
+  if a:bang | startinsert | endif
+  let g:termCount += 1
+  exec 'keepalt' 'file' ('term' . g:termCount . ':' . a:args)
   call OnTermOpen()
+  if !a:bang | wincmd c | endif
 endf
 
 " TODO consider using https://github.com/kassio/neoterm

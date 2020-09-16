@@ -545,7 +545,7 @@ func! FnAreaForw()
   " Find the next hotspot keyword
   call SearchSkipSC( g:fnWirePttn, 'W' )
   if CursorIsInsideComment() || CursorIsInsideString()
-    normal! w
+    normal ,j
     call FnAreaForw()
   else
     " Now on the hotspot keyword make specific next/second steps
@@ -801,10 +801,11 @@ func! ExprOuterStartForw() " ■
 
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
-  call FlipToPairChar('')
+  " call FlipToPairChar('')
 
   " Approach: Find expression delimiter on the same bracket level, skip matches in Strings
-  let [sLine, sColumn] = searchpairpos( '{\|\[\|(', g:exprDelimPttn, '}\|\]\|)', 'nW', 'CursorIsInsideString()' )
+  " let [sLine, sColumn] = searchpairpos( '{\|\[\|(', g:exprDelimPttn, '}\|\]\|)', 'nW', 'CursorIsInsideString()' )
+  let [sLine, sColumn] = searchpos( g:exprDelimPttn, 'nW', 'CursorIsInsideString()' )
   " echo 'Delim found at: ' . sLine . ' - ' . sColumn
 
   " Set Cursor:
@@ -813,8 +814,9 @@ func! ExprOuterStartForw() " ■
     call setpos('.', [0, sLine, sColumn, 0] )
     " echo 'Delim motion to: ' . sLine . ' - ' . sColumn
     normal! lW
-    " Match found in a later line - move to the start of next line instead!
-  else
+  elseif v:false
+    " TODO temp disabled this to limit motion to line.
+    " "Match found in a later line - move to the start of next line instead!
     " Edge Case: When a () or [] occurs after the last delimiter, 'searchpair' below matches it
     if EmptyBracketAhead()
       " echo 'empty bracket skip to next line: ' . line('.')
@@ -917,7 +919,8 @@ func! ExprOuterStartBackw() " ■
   endif
 
   " Find expression delimiter on the same bracket level, skip matches in Strings
-  let [sLine, sCol] = searchpairpos( '{\|\[\|(', g:exprDelimPttn, '}\|\]\|)', 'bnW', 'CursorIsInsideString()' )
+  " let [sLine, sCol] = searchpairpos( '{\|\[\|(', g:exprDelimPttn, '}\|\]\|)', 'bnW', 'CursorIsInsideString()' )
+  let [sLine, sCol] = searchpos( g:exprDelimPttn, 'bnW', 'CursorIsInsideString()' )
   " echo 'Delim found at: ' . sLine . ' - ' . sCol
 
   if sLine == oLine
@@ -926,7 +929,8 @@ func! ExprOuterStartBackw() " ■
     " echo 'Delim motion to: ' . sLine . ' - ' . sCol
     normal! W
 
-  else
+  elseif v:false
+    " TODO temp disabled this to limit motion to line
     " Match found in preceding line, but move/test to move to the start of this line first
     normal! ^
     if col('.') == oCol || CursorOnSkipNextWordCharOrWord()

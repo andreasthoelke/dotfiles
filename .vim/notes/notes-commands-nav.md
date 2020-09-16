@@ -111,7 +111,9 @@ c-w p       - to jump back
 <leader>wI  - Pin Haskell imports
 c-w I       - resize/fit floatwin height width
 1<c-w>x     - swap window with the one above/at top of screen (2 is below)
-go, c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
+go    - bufferlist:
+  c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
+  c-ov/h to open offer in split
 
 ### Window scrolling
 c-e/y       - up/down
@@ -140,7 +142,7 @@ glc         - open Url in line in Chromium
 ### Move / Copy files
 manual/low level:
   yy in Dirvish - copy the full file path
-  navigate to the destination path in Dirvish then `glt` to open a terminal at that location
+  navigate to the destination path in Dirvish then `glT` to open a terminal at that location
   mv or cp then <c-[> to go to normal mode then `p` tp paste then insert and `.` to copy/move into current folder
 assisted:
   - put two dirvish folders side by side. use e.g. \T\v
@@ -307,7 +309,7 @@ leader lr/m - rename symbol with all it's live/active references
 ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a sortcut for a haskell function rename
 leader rb   - to rename a binding and its occurences
 
-## Vim
+# Vim
 MessagesShow - show past vim echoed text (show messages) in preview window
 verb command Colo<c-n> - get a list of commands and where they are defined
 verb map Colo<c-n> - get a list of maps and where they are defined
@@ -325,6 +327,15 @@ leader ol   - open 'links' file in float-win, then glc to view in Chromium
 gk          - follow rel-link
 lead lg/lG  - go to definition/ in split
 gd ,gd     - go to definition /in split
+
+## Terminal
+glT     - open a new terminal buffer in project root (also works in dirvish)
+glt     - runs the current line text in a hidden terminal buffer. find it in buffer list by the command string!
+:Term! npm run serve - run command in terminal buffer. (!) optionally opens the buffer in a split.
+\n      - to leave terminal insert mode but stay in buffer. to e.g. scroll/copy text
+c-w     - cancels the terminal process and deletes the terminal buffer
+          when in terminal insert mode, else just closes the window.
+
 
 ## Scratch window
 leader os  - ScratchWindow

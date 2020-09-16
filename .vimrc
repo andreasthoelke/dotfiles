@@ -1493,7 +1493,8 @@ map <localleader><c-h> :call EasyMotion#Paragraph(0, 1)<cr>
 map <localleader>l <Plug>(easymotion-lineforward)
 map <localleader>h <Plug>(easymotion-linebackward)
 " Jump to specific char within a word
-nmap <localleader>f <Plug>(easymotion-overwin-f)
+" nmap <localleader>f <Plug>(easymotion-overwin-f)
+nmap <localleader>f <Plug>(easymotion-bd-f)
 xmap <localleader>f <Plug>(easymotion-bd-f)
 omap <localleader>f <Plug>(easymotion-bd-f)
 " map t <Plug>(easymotion-tl)

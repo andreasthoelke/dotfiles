@@ -132,7 +132,10 @@ augroup dirvish_config
   autocmd FileType dirvish nnoremap <silent><buffer> P :call PreviewFileInFloatWin( getline('.') )<cr>
   " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
   autocmd FileType dirvish nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
+  " Todo: set a meaningful buffername to be seen in tabline
+  " autocmd FileType dirvish exe "keepalt file" fnamemodify(bufname(), ':.')
 augroup END
+
 
 " This can only show one char, no column space. the git plugin shows more styling
 " call dirvish#add_icon_fn({p -> p[-3:]=='.hs' ? "λ " : ''})
