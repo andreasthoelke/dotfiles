@@ -7,6 +7,9 @@
 nnoremap <expr> glT (&ft=='dirvish') ? ':below 7Term! cd %<CR>' : ':below 7Term!<CR>'
 
 nnoremap <silent><expr> glt (':Term ' . getline('.') . '<cr>:wincmd p<cr>')
+nnoremap <silent><expr> gLt (':Term ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
+nnoremap <silent><expr> gLT (':Term! ' . input('Cmd: ', getline('.')) . '<cr>:wincmd p<cr>')
+
 
 hi! TermCursorNC guibg=grey guifg=white
 

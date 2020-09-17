@@ -122,6 +122,12 @@ func! InsertStringAtLoc( str, line, col )
   let lineText = getline( a:line )
   let textBefore = lineText[:a:col]
   let textAfter = lineText[a:col+1:]
+  if a:col == -1
+    " quick fix for cursor positon 1
+    let textBefore = ""
+  endif
+  " echo textBefore
+  " echo textAfter
   normal! "_dd
   call append( a:line-1, textBefore . a:str . textAfter )
   normal! k

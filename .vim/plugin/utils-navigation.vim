@@ -59,8 +59,15 @@ nmap <leader>wp <Plug>(Visual-Split-SplitAbove)
 xmap <leader>wp <Plug>(Visual-Split-VSSplitAbove)
 
 " Pin Haskell imports
-nmap <leader>wI <leader>wpiI<c-o><c-w>k
+" nmap <leader>wI <leader>wpiI<c-o><c-w>k
+nmap <leader>wi <leader>wpiI<c-o>:call HsImportsJump( expand('<cword>') )<cr>
+nmap <leader>wI <leader>wpiI<c-o>:call HsImportsJump( "" )<cr>
 
+func! HsImportsJump ( term )
+  wincmd k
+  normal gg
+  call search( a:term )
+endfunc
 
 " ─^  Windows                                            ▲
 

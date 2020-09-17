@@ -1,4 +1,5 @@
 
+
 " ─   Coc nvim settings                                 ──
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -56,6 +57,18 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 nnoremap <leader>ld :CocList diagnostics<cr>
 
+" Use K to show documentation in preview window.
+nnoremap <silent> <leader>hK :call Show_documentation()<CR>
+" nnoremap <silent> get :call Show_documentation()<CR>
+
+function! Show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
 
 " GoTo code navigation. don't seem supported in purescript
 " nmap <silent> gd <Plug>(coc-definition)
@@ -65,17 +78,6 @@ nnoremap <leader>ld :CocList diagnostics<cr>
 
 nmap <silent>         gd <Plug>(coc-definition)
 nmap <silent> ,gd :sp<CR><Plug>(coc-definition)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> <leader>hK :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
 
 " this allows to open the menu and get suggestions without any characters typed already.
 inoremap <silent><expr> <c-space> coc#refresh()
@@ -408,3 +410,87 @@ set omnifunc=LanguageClient#complete
 
 
 " ─^  Completion                                         ▲
+
+
+" ─   Get types and Type holes                           ■
+
+" Get type via CocAction 'doHover':
+nnoremap <silent> gw :call CocAction('doHover')<cr>
+vnoremap <silent> gw :<c-u>call CocAction('doHover')<cr>
+
+
+" Get :type from Psci for Purescript:
+nnoremap \get      :call ReplEval(':type ' . expand('<cword>'))<cr>
+vnoremap \get :<c-u>call ReplEval(':type ' . GetVisSel())<cr>
+nnoremap \geT      :call ReplEval(':type ' . input( 'Get type: ', expand('<cword>')))<cr>
+vnoremap \geT :<c-u>call ReplEval(':type ' . input( 'Get type: ', GetVisSel()))<cr>
+
+
+nnoremap get      :call CreateTypeHole_LetInBind()<cr>
+nnoremap geT      :call CreateTypeHole_DoLetBind( HsCursorKeyword() )<cr>
+
+nnoremap gst      :call CreateTypeHole_DoLetBind( HsCursorKeyword() )<cr>
+vnoremap gst :<c-u>call CreateTypeHole_DoLetBind( GetVisSel() )<cr>
+nnoremap gsT      :call CreateTypeHole_DoLetBind( input( 'Identifier: ', HsCursorKeyword()) )<cr>
+vnoremap gsT :<c-u>call CreateTypeHole_DoLetBind( input( 'Identifier: ', GetVisSel()) )<cr>
+
+" nnoremap <leader>ht      :call CreateTypeHole_LetBind( HsCursorKeyword() )<cr>
+" vnoremap <leader>ht :<c-u>call CreateTypeHole_LetBind( GetVisSel() )<cr>
+" nnoremap <leader>hT      :call CreateTypeHole_LetBind( input( 'Identifier: ', HsCursorKeyword()) )<cr>
+" vnoremap <leader>hT :<c-u>call CreateTypeHole_LetBind( input( 'Identifier: ', GetVisSel()) )<cr>
+
+" nnoremap <leader>hh      :call ShowAndUndoTypeHole_LetBind()<cr>
+
+" let (_:: ?_) = 1 in
+
+func! CreateTypeHole_LetInBind ()
+  let s:holeLine= getline('.')
+  let holeString = "let (_:: ?_) = 1 in "
+  call setline('.', strpart(s:holeLine, 0, col('.') - 1) . holeString . strpart(s:holeLine, col('.') - 1))
+  call SetLC_DiagnosticsChanged_HandlerLetIn()
+endfunc
+
+func! SetLC_DiagnosticsChanged_HandlerLetIn ()
+  augroup LCDiagnosticsChanged
+    autocmd!
+    autocmd User LanguageClientDiagnosticsChanged call ShowAndUndoTypeHole_LetInBind()
+  augroup END
+endfunc
+
+func! ShowAndUndoTypeHole_LetInBind ()
+  call ShowLC_Diagnostics( line('.') )
+  silent! autocmd! LCDiagnosticsChanged
+  call setline('.', s:holeLine)
+endfunc
+
+
+func! CreateTypeHole_DoLetBind ( identifierInScope )
+  let lineText = IndentionString(IndentLevel(line('.')+1)) . 'let (e1 :: ?_) = ' . a:identifierInScope
+  call append( line('.'), lineText )
+  let s:lineNumOfHole = line('.') +1
+  call SetLC_DiagnosticsChanged_HandlerDoLet()
+endfunc
+
+func! SetLC_DiagnosticsChanged_HandlerDoLet ()
+  augroup LCDiagnosticsChanged
+    autocmd!
+    autocmd User LanguageClientDiagnosticsChanged call ShowAndUndoTypeHole_DoLetBind()
+  augroup END
+endfunc
+
+func! ShowAndUndoTypeHole_DoLetBind ()
+  call ShowLC_Diagnostics( line('.') +1 )
+  silent! autocmd! LCDiagnosticsChanged
+  exec s:lineNumOfHole 'delete _'
+  normal! k
+endfunc
+
+
+func! IndentionString ( indentionColumn )
+  return repeat( ' ', a:indentionColumn -1)
+endfunc
+
+
+" ─^  Get types and Type holes                           ▲
+
+

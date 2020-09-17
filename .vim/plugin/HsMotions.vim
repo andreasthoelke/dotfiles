@@ -91,7 +91,7 @@ let g:typeSigBind = '^[^=(]*\zs' . MakeOrPttn( ['∷', '::'] )
 
 let g:nextWordPttn = '\_s\+\zs\S'
 let g:infixOps = ['<$>', '<\*>', '\*>', '>>', '>>=', '++', '<>', '<|>', ':']
-let g:typeArgs = ['::', '∷', '=>', '⇒', '->', '→']
+let g:typeArgs = ['::', '∷', '=>', '⇒', '->', '→', '\.', '\~>']
 let g:columnSeps = ['::', '=', '->', '→', '<-', '←', '>', '$', '\<then', '\<else', 'deriving']
 let g:syntaxSym = ['<-', '←', '=', '\$', '`\w*`', '->', '→', '|', ',', '=' ]
 let g:syntaxWords = PrependSepWord( ['let', 'in', 'do', 'where', 'if', 'then', 'else', 'case', 'instance'] )
@@ -275,7 +275,7 @@ func! ParagNext()
   call JumpNextNonEmptyLine()
 endfunc
 func! JumpNextNonEmptyLine()
-  call search('^.\+')
+  call search('^.\+', 'W')
   call IfOnSpaceGoWord()
 endfunc
 func! IfOnSpaceGoWord()
@@ -376,8 +376,26 @@ func! IndentBlockStart()
   call setpos('.', [0, sLine, col('.'), 0] )
 endfunc
 
+" Move to (column 1/not indented code) block start or end. Just a quick fix because non intented lines/blocks dont with with ColumnLevelForwBackw
+func! ColumnLevelForwBackwCol1( direction )
+  let oLine = getpos('.')[1]
+  let sLine = ColumnBlockEndPosCol1( line('.'), a:direction )
+  if sLine == oLine
+    " Already at end of current indent block -> search for the next same indent line or column indent line
+    " Returns current line if not found
+    let sLine = FindLineWithIndentLevelOrColumnIndentLevel( oLine, 1, a:direction )
+    " echo '--'.sLine
+  endif
+  if sLine != oLine
+    call setpos('.', [0, sLine, col('.'), 0] )
+  endif
+endfunc
+
 func! ColumnLevelForwBackw( direction )
   normal! m'
+  " handle cursor positon 1 as a separate/simple case. Note: Alternatively WordStartColumns should return the 1 column - but attempted fix broke the column movement.
+  if col('.') == 1 | call ColumnLevelForwBackwCol1( a:direction ) | return | endif
+
   let oLine = getpos('.')[1]
   let sLine = ColumnBlockEndPos( line('.'), VisualCol(), a:direction )
   if sLine == oLine
@@ -387,6 +405,7 @@ func! ColumnLevelForwBackw( direction )
     " echo '--'.sLine
   endif
   if sLine != oLine
+    " TODO this causes the shift when scrolling with <c-j/k>?
     call SetCursorVisualCol( sLine, VisualCol() )
   endif
 endfunc
@@ -399,11 +418,27 @@ func! IndentBlockEndPos( lineNum, indentLevel, dir )
   return a:lineNum + (lineOffset - a:dir)
 endfunc
 
+" Get the last line in a block of lines that start at column 1
+func! ColumnBlockEndPosCol1( searchStartLine, dir )
+  let currTestLine = a:searchStartLine + a:dir
+  while 1
+    if IndentLevel( currTestLine ) != 1
+      " the test line is indented -> the previous line is the last line in the block
+      return currTestLine - a:dir
+    elseif abs(currTestLine - a:searchStartLine) > 30
+      return currTestLine
+    else
+      let currTestLine += a:dir
+    endif
+  endwhile
+endfunc
+" echo ColumnBlockEndPosCol1( line('.'), 1 )
+" echo ColumnBlockEndPosCol1( line('.'), -1 )
+" <- still block
 
 func! ColumnBlockEndPos( searchStartLine, searchForIndentLevel, dir )
   let currTestLine = a:searchStartLine + a:dir
-  let searching = 1
-  while searching
+  while 1
     let matchingColumns = functional#filter( {x->x==a:searchForIndentLevel}, WordStartVisualColumns( currTestLine ) )
     if !len( matchingColumns )
       return currTestLine - a:dir
@@ -414,6 +449,7 @@ func! ColumnBlockEndPos( searchStartLine, searchForIndentLevel, dir )
     endif
   endwhile
 endfunc
+" echo ColumnBlockEndPos( line('.'), VisualCol(), a:direction )
 
 func! FindLineWithIndentLevelOrColumnIndentLevel( searchStartLine, searchForIndentLevel, dir )
   let currTestLine = a:searchStartLine + a:dir
@@ -536,8 +572,11 @@ vmap iv ,Ho,L
 " TODO add long moves to jumplist as reverting moves would be challenging to perform?
 
 " This is the 'ballpark' motion - it gets you into constituting areas in a function
-nnoremap <silent> <c-m> :call FnAreaForw()<cr>
-nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
+" nnoremap <silent> <c-m> :call FnAreaForw()<cr>
+" nnoremap <silent> <c-i> :call FnAreaBackw()<cr>
+nnoremap <silent> <c-m> j^
+nnoremap <silent> <c-i> k^
+
 func! FnAreaForw()
   " Step back is needed to find keywords that are being skipped to from a prev keyword, e.g. a 'do' after '='
   normal! h
@@ -607,8 +646,10 @@ let g:hlAreaID = 0
 " call clearmatches()
 
 " LHS movement:
-nnoremap ,j j^
-nnoremap ,k k^
+" nnoremap ,j j^
+" nnoremap ,k k^
+nnoremap <silent> ,j :call FnAreaForw()<cr>
+nnoremap <silent> ,k :call FnAreaBackw()<cr>
 
 " Column movement:
 nnoremap <silent> I :call ColumnMotionForw()<cr>
@@ -1028,7 +1069,7 @@ nnoremap <silent> T :call CommaItemStartBackw()<cr>
 vnoremap <silent> T <esc>:call ChangeVisSel(function('CommaItemStartBackw'))<cr>
 " Can't remap omap t, as this is the 't'ill map
 " onoremap <silent> t :call CommaItemStartBackw()<cr>
-" Test: tttlvTot           v           |     v
+" Test: tttlvTot          v           |     v
 " allLanguages = [Haskell, Agda abc,  Idris, PureScript]
 func! CommaItemStartForw() " ■
   let [oLine, oCol] = getpos('.')[1:2]
@@ -1221,7 +1262,7 @@ func! ExprInnerStartForw()
   " When on bracket, jump to the end of the bracket
   call FlipToPairChar('')
   normal! W
-  if IsEmptyLine( line('.') )
+  if IsEmptyLine( line('.') ) && line('.') != line('$')
     call ExprInnerStartForw()
   endif
 endfunc

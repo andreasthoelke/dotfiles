@@ -46,11 +46,6 @@ vnoremap gsb :<c-u>call ReplEval(':browse ' . GetVisSel())<cr>
 nnoremap gsB      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
 vnoremap gsB :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
-" Get :type from Psci for Purescript
-nnoremap get      :call ReplEval(':type ' . expand('<cword>'))<cr>
-vnoremap get :<c-u>call ReplEval(':type ' . GetVisSel())<cr>
-nnoremap geT      :call ReplEval(':type ' . input( 'Get type: ', expand('<cword>')))<cr>
-vnoremap geT :<c-u>call ReplEval(':type ' . input( 'Get type: ', GetVisSel()))<cr>
 
 
 " a "complete" command with a "flex" matcher seems to be a main feature of PursIDE

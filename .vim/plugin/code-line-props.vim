@@ -406,3 +406,6 @@ endfunc
 func! CursorIsInsideStringOrComment()
   return CursorIsInsideComment() || CursorIsInsideString()
 endfunc
+
+
+

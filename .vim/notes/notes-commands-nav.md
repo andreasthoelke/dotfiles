@@ -14,7 +14,13 @@ gsd/D       - language client fuzzy search - with sources link
 gsb/B       - browse module via :browse in psci. use 2leader ht, leader t[,c-l | ip | J] and leader as [ip | ect]
 :set ft=text, leader sp - deactivate diagnostic in a buffer
 
-## Intero
+### Types of bindings in scope
+gw          - Coc hover type
+get         - get types of in scope/context bindings at cursor position
+geT         - get type of identifier under cursor in do-bind. also gst, gsT
+~/.vim/plugin/tools-langClientHIE-completion.vim#/Get%20types%20and
+
+## Purs repl / Ghci/ Intero
 leader io/l/k/h - intero open/load/kill/hide
 leader il   - load just the current module
 dr          - reload ghci
@@ -23,7 +29,8 @@ gw, gW      - show instantiated type at/vis-sel / generic type
               guardP :: Alternative f => (a -> Bool) -> a        -> f a
               -> instantiated     ((a, [a]) -> Bool) -> (a, [a]) -> Maybe (a, [a])
               ~/Documents/Haskell/6/HsTrainingTypeClasses1/src/Patterns.hs#/utakeWhile%20p%20=
-get         - show type of symbol or vis sel (also works when module not compiles)
+  not active:
+  get         - show type of symbol or vis sel (also works when module not compiles)
 ,gw         - insert type above
 gek         - kind at symbol or vis sel
 gei         - run symbol
@@ -331,6 +338,7 @@ gd ,gd     - go to definition /in split
 ## Terminal
 glT     - open a new terminal buffer in project root (also works in dirvish)
 glt     - runs the current line text in a hidden terminal buffer. find it in buffer list by the command string!
+gLt/T   - to prefill and edit line command string to running it in a hidden/visible term-buffer
 :Term! npm run serve - run command in terminal buffer. (!) optionally opens the buffer in a split.
 \n      - to leave terminal insert mode but stay in buffer. to e.g. scroll/copy text
 c-w     - cancels the terminal process and deletes the terminal buffer

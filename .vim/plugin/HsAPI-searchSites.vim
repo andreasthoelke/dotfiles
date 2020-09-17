@@ -303,7 +303,7 @@ let g:searchSites += [ {'label':'_Book Purscript',     'baseUrl':'https://book.p
       \}]
 
 " https://jordanmartinez.github.io/purescript-jordans-reference-site/?search=
-let g:searchSites += [ {'label':'_Jordan M Reference',     'baseUrl':'https://jordanmartinez.github.io/purescript-jordans-reference-site/'
+let g:searchSites += [ {'label':'_M Jordan Reference',     'baseUrl':'https://jordanmartinez.github.io/purescript-jordans-reference-site/'
       \, 'mainTerm':'?search='
       \, 'language':'+'
       \}]

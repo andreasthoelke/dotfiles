@@ -685,7 +685,7 @@ nnoremap <silent> <Leader>gf :pedit <C-r><C-f><cr>
 " List of what control-char do: https://www.reddit.com/r/vim/comments/4w0lib/do_you_use_insert_mode_keybindings/
 
 " Get time in command mode: "echo now" → "echo strftime('%X')"
-cabbrev now strftime('%X')
+" cabbrev now strftime('%X')
 
 " Defining Commands And Utility Example Commands: -----------------------------------------------------
 

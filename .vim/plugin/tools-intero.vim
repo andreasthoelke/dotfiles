@@ -77,9 +77,6 @@ vnoremap <localleader>ti :InteroInfoInsert<cr>
 
 " ─   Show Type-At symbol or selection                   ■
 
-nmap <silent> gw :call CocAction('doHover')<cr>
-vmap <silent> gw :<c-u>call CocAction('doHover')<cr>
-
 " TODO adapt this approach to use the spago/ghci/stack repl?
 " map gw :call SetReplCallbackFloatWin()<cr><Plug>InteroType
 " vmap gw :<c-u>call SetReplCallbackFloatWin()<cr>gv<Plug>InteroType
