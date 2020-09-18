@@ -61,8 +61,10 @@ hi MoreMsg         guifg=#E6DB74
 " hi Operator        guifg=#E0306F
 
 " complete menu
-hi Pmenu           guifg=#66D9EF guibg=#000000
-hi PmenuThumb      guifg=#66D9EF
+hi Pmenu           guifg=#54868E guibg=black
+hi PmenuSel        guifg=#54868E guibg=#1C2020
+" hi Pmenu           guifg=none guibg=none
+" hi PmenuSel        guifg=none guibg=none
 
 hi PreCondit       guifg=#A6E22E               gui=bold
 hi PreProc         guifg=#A6E22E

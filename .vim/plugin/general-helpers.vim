@@ -226,8 +226,6 @@ endfunction
 
 " Window Resize: -----------------------------------------------------------------
 
-nnoremap <leader>sp :set syntax=purescript<cr>
-
 
 
 " SOME TOOLS FUNTIONS TIPS: -------------------------------------------------

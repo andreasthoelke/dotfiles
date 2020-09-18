@@ -40,7 +40,7 @@ gel }/iI/ip - run multiple lines, e.g. imports
       gel/c/C     - show list of strings as lines
                     'gel' needs a list of strings, e.g. 'fmap (fmap show) $'
 ger         - Curl send sting in line to localhost, show response
-leader ht/T - type hole
+get/T       - type hole. (Todo: should not affect undo)
 
 
 ## Hs API Explore
@@ -322,6 +322,7 @@ verb command Colo<c-n> - get a list of commands and where they are defined
 verb map Colo<c-n> - get a list of maps and where they are defined
 \sm        - set syntax markdown - see  ~/.vim/plugin/notes-workflow.vim#/Set%20Syntax.
 :Alacritty - open new terminal and then vim instance
+c-g u      - will set an undo-mark
 
 ### Notes
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And
@@ -366,7 +367,8 @@ tabline should show dirvish foldername
 highlight standalone 'state' and onClick. on(capital letter) - 'on' dark - but a lighter color for the rest
 ~/Documents/PS/A/TestsA/webpack-reload/src/App/RandNum.purs#/--%20TODO.%20highlight
 
-#### Todo: highlight halogen and react-basic hooks functions
+### Todo:
+highlight halogen and react-basic hooks functions
 like 'state' and 'onClick'
 this is overwriting my syntax-state matches?
 ~/.vim/syntax/purescript.vim#/syn%20match%20purescriptIdentifierDot1
@@ -378,5 +380,6 @@ function argument highlighing ~/.vim/syntax/purescript.vim#/TODO%20rather%20high
 https://github.com/pboettch/vim-highlight-cursor-words/blob/master/plugin/hicursorwords.vim
 https://stackoverflow.com/questions/1551231/highlight-variable-under-cursor-in-vim-like-in-netbeans
 
+Show purescript syntax in Coc completion menu
 
 

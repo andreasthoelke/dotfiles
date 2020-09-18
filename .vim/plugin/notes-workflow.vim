@@ -614,6 +614,8 @@ nnoremap <localleader>sP :set syntax=python<cr>
 nnoremap <localleader>sd :set syntax=dirvish<cr>
 " TODO Note: a different leader key for all "set" operations? "set syntax help" = "\sh"
 
+nnoremap <leader>sp :set syntax=purescript<cr>:call HaskellSyntaxAdditions()<cr>
+
 " demos:
 abbrev mul Multiple<CR>lines
 

@@ -44,11 +44,11 @@ nnoremap <silent> gsi :call CocActionAsync('diagnosticInfo')<cr>
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+" if exists('*complete_info')
+"   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+" else
+"   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" endif
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -444,9 +444,9 @@ vnoremap gsT :<c-u>call CreateTypeHole_DoLetBind( input( 'Identifier: ', GetVisS
 " let (_:: ?_) = 1 in
 
 func! CreateTypeHole_LetInBind ()
-  let s:holeLine= getline('.')
-  let holeString = "let (_:: ?_) = 1 in "
-  call setline('.', strpart(s:holeLine, 0, col('.') - 1) . holeString . strpart(s:holeLine, col('.') - 1))
+  let g:holeLine= getline('.')
+  let holeString = "let (_:: ?_) = unit in "
+  call setline('.', strpart(g:holeLine, 0, col('.') - 1) . holeString . strpart(g:holeLine, col('.') - 1))
   call SetLC_DiagnosticsChanged_HandlerLetIn()
 endfunc
 
@@ -460,7 +460,7 @@ endfunc
 func! ShowAndUndoTypeHole_LetInBind ()
   call ShowLC_Diagnostics( line('.') )
   silent! autocmd! LCDiagnosticsChanged
-  call setline('.', s:holeLine)
+  call setline('.', g:holeLine)
 endfunc
 
 

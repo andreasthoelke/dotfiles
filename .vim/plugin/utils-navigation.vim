@@ -17,6 +17,25 @@ nnoremap <c-w>dl <c-w>l<c-w>c
 " Jump to rightmost window
 nnoremap <c-w>\ <c-w>5l
 
+nnoremap <c-w>J :call WinMove('j')<cr>
+nnoremap <c-w>K :call WinMove('k')<cr>
+nnoremap <c-w>H :call WinMove('h')<cr>
+nnoremap <c-w>L :call WinMove('l')<cr>
+
+func! WinMove (dir)
+  let filename = expand('%:p')
+  wincmd q
+  if     a:dir == 'j'
+    exec 'botright' '10split' filename
+  elseif a:dir == 'k'
+    exec 'topleft' 'split' filename
+  elseif a:dir == 'h'
+    exec 'topleft' '33vsplit' filename
+  elseif a:dir == 'l'
+    exec 'botright' '37vsplit' filename
+  endif
+endfunc
+
 " Split: current buffer left
 nnoremap <c-w>S :vs<cr>
 " new buffer left
@@ -192,8 +211,10 @@ endfunc
 
 
 func! ScrollUpFromMiddle( lines )
-  normal! zz
-  call ScrollUp( a:lines )
+  if winheight('%') >= 40
+    normal! zz
+    call ScrollUp( a:lines )
+  endif
 endfunc
 " call ScrollUpFromMiddle( 20 )
 

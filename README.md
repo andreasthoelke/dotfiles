@@ -1,20 +1,19 @@
 # dotfiles
 
 Vim setup focused on
-  * Markdown, Note writing
   * Haskell, Purescript development
+  * Markdown, Note writing
 
 ## Markdown writing
-  * `:Markdown` to launch Grip markdown preview in Chromium
+  * `:MarkdownPreview` to launch Grip markdown preview in Chromium
 
+![Screenshot Markdown](.vim/screenshots/ScreenShot-2019-01-27-markdown.png)
 ![Screenshot Markdown](.vim/screenshots/ScreenShot-2019-01-27-markdown.png)
 
 
 ## Haskell development
 
   * Custom colorscheme "Munsell-blue"
-  * Haskell syntax highlighting in Markbar.vim
-
 
 ![Screenshot Haskell](.vim/screenshots/ScreenShot-2019-01-27-haskell.png)
 
