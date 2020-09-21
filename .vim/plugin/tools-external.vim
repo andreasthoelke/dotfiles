@@ -45,6 +45,8 @@ let g:alacrittyConfig_path = '/Users/andreas.thoelke/.config/alacritty/alacritty
 " let g:somest = '--option "colors.primary.background='#ff00ff'"'
 
 nnoremap <silent> <leader>vo :silent call OpenInNewVimInstance( expand("%:p") )<cr>
+nnoremap <silent> <leader>vO :silent call OpenInNewVimInstance( '~/Documents/PS/A/' )<cr>
+nnoremap <silent> <leader><leader>vO :silent call OpenInNewVimInstance( '~/.vim/' )<cr>
 
 func! OpenInNewVimInstance ( filePath )
   let lineBase = '   - /Users/andreas.thoelke/Documents/vim/nvim-osx64-0.5.0/bin/nvim '

@@ -59,7 +59,7 @@ func! CreateAssertion()
 
   let nextIndex = GetNextAssertionIndex()
   let decSymbolName = GetTopLevSymbolName( lineNumPrevInlineTestDec )
-  let lineText = 'a' . nextIndex . '_' . funcName . ' = id ' . decSymbolName . ' == (i:: ' . funcReturnType . ')'
+  let lineText = 'a' . nextIndex . '_' . funcName . ' = identity ' . decSymbolName . ' == (u:: ' . funcReturnType . ')'
   call append( line('.') -1, lineText )
   normal k^ww
 endfunc

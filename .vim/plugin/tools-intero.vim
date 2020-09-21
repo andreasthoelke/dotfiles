@@ -175,15 +175,16 @@ endfunc
 nnoremap <silent> <leader>ro :call ReplStart()<cr>
 nnoremap <silent> <leader>rq :call ReplStop()<cr>
 nnoremap <silent> <leader>rl :call ReplEval('import ' . GetModuleName())<cr>
-nnoremap <silent> dr         :call ReplEval(':reload')<cr>
+" nnoremap <silent> dr         :call ReplEval(':reload')<cr>:call ReplReload_Refreshed( expand('%') )<cr>
+nnoremap <silent> dr         :call ReplReload()<cr>
 nnoremap          <leader>ri :exec "Pimport " . expand('<cword>')<cr>
 
 " Obsolete: use ~/.vim/plugin/HsAPI.vim#/Browse%20modules%20uses
 " nnoremap <silent> <leader>rb      :call ReplEval(':browse ' . input( 'Browse module: ', expand('<cWORD>')))<cr>
 " vnoremap <silent> <leader>rb :<c-u>call ReplEval(':browse ' . input( 'Browse module: ', GetVisSel()))<cr>
 
-nnoremap gei      :call ReplEval( GetReplExpr() )<cr>
-vnoremap gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
+nnoremap <silent> gei      :silent call ReplEval( GetReplExpr() )<cr>
+vnoremap <silent> gei :<c-u>call ReplEval( Get_visual_selection() )<cr>
 
 " now moved to ~/.vim/plugin/HsAPI.vim#/Get%20.type%20from
 " nnoremap get      :call ReplEval( ':type ' . expand('<cword>') )<cr>
@@ -210,6 +211,12 @@ func! ReplStop ()
   unlet g:PursReplID
 endfunc
 
+func! ReplReload ()
+  call jobsend(g:PursReplID, ':reload' . "\n")
+  " IMPORTANT: this uses `"` / double quotes for the newline ("\n") - single quotes don't work
+  call ReplReload_Refreshed( expand('%') )
+endfunc
+
 func! ReplLoadCurrentModule ()
   call ReplEval ( 'import ' . GetModuleName() )
 endfunc
@@ -234,8 +241,10 @@ let g:ReplCallbacks = {
       \ }
 
 func! ReplEval( expr )
-  " if a:expr == "" | return | endif
   if a:expr =~ '^.*--.*$' || a:expr =~ '^$' | return | endif
+  if ReplReload_FileNeedsReplReload(expand('%'))
+    call ReplReload()
+  endif
   call jobsend(g:PursReplID, a:expr . "\n")
 endfunc
 

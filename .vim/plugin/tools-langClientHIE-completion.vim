@@ -505,3 +505,39 @@ endfunc
 " ─^  Get types and Type holes                           ▲
 
 
+" ─   Repl Relead Tracking                               ■
+augroup LS_StatusChange
+  autocmd!
+  autocmd FileWritePost *.purs echo 'hi'
+augroup END
+
+" au! ag CursorMoved        *.vim :echo  line('.')
+
+au! ag TextChanged *.purs call ReplReload_TrackFileChange()
+
+let g:ReplReload_filesChanged = {}
+
+func! ReplReload_TrackFileChange ()
+  if MatchesInLine( line('.'), "e._" )
+    " don't register a reload-need when the cursor is on an 'e2_' line like  e2_pow = pow 4 4
+    return
+  endif
+  let curFile = expand('%')
+  let g:ReplReload_filesChanged[curFile] = v:true
+  " echo g:ReplReload_filesChanged
+endfunc
+
+func! ReplReload_FileNeedsReplReload ( fileName )
+  return has_key(g:ReplReload_filesChanged, a:fileName) && g:ReplReload_filesChanged[a:fileName]
+endfunc
+
+func! ReplReload_Refreshed ( fileName )
+  let g:ReplReload_filesChanged[a:fileName] = v:false
+  " let g:ReplReload_filesChanged = {}
+endfunc
+" echo ReplReload_FileNeedsReplReload(expand('%'))
+
+
+" ─^  Repl Relead Tracking                               ▲
+
+

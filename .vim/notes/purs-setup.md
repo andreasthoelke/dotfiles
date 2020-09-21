@@ -269,6 +269,8 @@ call PSCIDEload(0, "")
 ### Purs Language Server Documentation
 Configuration of the language server now actually works - but has to be done
 in CocConfig AND in vimmerps(!) config here: ~/.vim/plugin/tools-langClientHIE-completion.vim#/let%20g.vimmerps_config%20=
+note there is also!  ~/.vim/plugged/LanguageClient-neovim/.vim/settings.json#/{
+
 
   https://github.com/purescript/documentation/blob/master/guides/psc-ide-FAQ.md#troubleshooting
   https://github.com/purescript/spago#build-and-run-my-project
