@@ -389,4 +389,6 @@ https://stackoverflow.com/questions/1551231/highlight-variable-under-cursor-in-v
 
 Show purescript syntax in Coc completion menu
 
+Markdown live preview
+mdbook  https://rust-lang.github.io/mdBook/format/mdbook.html#including-portions-of-a-file
 

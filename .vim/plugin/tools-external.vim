@@ -28,15 +28,61 @@ nnoremap gle :call OpenCurrentFileInSystemEditor()<cr>
 
 command! OpenInExcel exec "silent !open % -a 'Microsoft Excel'"
 command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
+" Issue / Todo: this does not show the statusline scrollbar smoothly. Version 0.5.0
+" command! Alacritty5 exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/Alacritty.app/'"
 " Todo: start Alacritty with options
 " command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --option \"window.decoration\" \"none\"'"
 " command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --config-file /Users/andreas.thoelke/.config/alacritty/alacritty.yml"
 " command! Alacritty exec "silent !open -n '/Applications/Alacritty.app/"
+" exec '!open -n' g:alacrittyAppPath '--config-file' g:alacrittyConfig_startCmd_path
+" exec '!open -n' g:alacrittyAppPath '--option' '\"window.decoration\" \"none\"'
+" alacritty --option "colors.primary.background='#ff00ff'"
+" above all don't seem to with with the older version i use.
 
-func! OpenInNewVimInstance ( filepath )
-  exec "!open -n /Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --command nvim5"
+let g:alacrittyAppPath = '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'
+" let g:alacrittyConfig_startCmd_path = '/Users/andreas.thoelke/.config/alacritty/alacritty_startCmd.yml'
+let g:alacrittyConfig_path = '/Users/andreas.thoelke/.config/alacritty/alacritty.yml'
+" let g:somest = '--option "colors.primary.background='#ff00ff'"'
+
+nnoremap <silent> <leader>vo :silent call OpenInNewVimInstance( expand("%:p") )<cr>
+
+func! OpenInNewVimInstance ( filePath )
+  let lineBase = '   - /Users/andreas.thoelke/Documents/vim/nvim-osx64-0.5.0/bin/nvim '
+  let newStartVimLine = lineBase . a:filePath
+
+  let allConfLines = readfile( g:alacrittyConfig_path )
+  if     allConfLines[-6] == 'shell:'
+    let confLinesNormal = allConfLines[0:-3]
+    " echo 'Successfully reset alacritty.yml to normal state.'
+  elseif allConfLines[-4] == 'shell:'
+    let confLinesNormal = allConfLines
+    " echo 'Alacritty config file was already in normal state!'
+  else
+    echoe 'Warning! Alacritty config file is of unsusual length!'
+    return
+  endif
+
+  let newConfLines = add( confLinesNormal, '   - -c' )
+  let newConfLines = add( newConfLines, newStartVimLine )
+  call writefile( newConfLines, g:alacrittyConfig_path )
+  exec 'silent !open -n' g:alacrittyAppPath
+  call AlacrittyResetToNormalConfigFile()
 endfunc
+" WARN: super careful with the below - don't uncomment - as this causes a recursive call that might crash the Mac!
+" DONT UNCOMMENT: call OpenInNewVimInstance( '/Users/andreas.thoelke/.vim/notes/links2' )
+" DONT UNCOMMENT: call OpenInNewVimInstance( '/Users/andreas.thoelke/.vim/notes/links' )
 
+func! AlacrittyResetToNormalConfigFile ()
+  let allConfLines = readfile( g:alacrittyConfig_path )
+  if     allConfLines[-6] == 'shell:'
+    call writefile( allConfLines[0:-3], g:alacrittyConfig_path )
+    echo 'Successfully reset alacritty.yml to normal state.'
+  elseif allConfLines[-4] == 'shell:'
+    echo 'Alacritty config file was already in normal state!'
+  else
+    echo 'Warning! Alacritty config file is of unsusual length!'
+  endif
+endfunc
 
 fun! OpenITerm()
   let path = projectroot#guess()
