@@ -8,14 +8,61 @@ set splitright
 " Windows will always have status bar
 set laststatus=2
 
+" camspiers/lens.vim setup:
+let g:lens#disabled = 1
+let g:lens#disabled_filetypes = ['explorer', 'fzf']
+let g:lens#height_resize_min = 5
+let g:lens#height_resize_max = 12
+let g:lens#width_resize_min = 20
+let g:lens#width_resize_max = 90
+
+nnoremap <c-w>, :call lens#run()<cr>
+nnoremap ,<c-w>k <c-w>k:call lens#run()<cr>
+nnoremap ,<c-w>j <c-w>j:call lens#run()<cr>
+nnoremap ,<c-w>h <c-w>h:call lens#run()<cr>
+nnoremap ,<c-w>l <c-w>l:call lens#run()<cr>
+
+" call lens#toggle()
+" call lens#get_rows()
+" call lens#get_cols()
+
 " close win above, below, left, right
 nnoremap <c-w>dk <c-w>k<c-w>c
 nnoremap <c-w>dj <c-w>j<c-w>c
 nnoremap <c-w>dh <c-w>h<c-w>c<c-w>p
 nnoremap <c-w>dl <c-w>l<c-w>c
 
+nnoremap <c-w>Sk :call WinShift('k')<cr>
+nnoremap <c-w>Sj :call WinShift('j')<cr>
+nnoremap <c-w>Sh :call WinShift('h')<cr>
+nnoremap <c-w>Sl :call WinShift('l')<cr>
+
+func! WinShift(dir)
+  let filename = expand('%:p')
+  exec 'wincmd' a:dir
+  exec 'edit' filename
+endfunc
+
+nnoremap <c-w>xk :call WinSwap('k')<cr>
+nnoremap <c-w>xj :call WinSwap('j')<cr>
+nnoremap <c-w>xh :call WinSwap('h')<cr>
+nnoremap <c-w>xl :call WinSwap('l')<cr>
+
+func! WinSwap(dir)
+  let filename1 = expand('%:p')
+  exec 'wincmd' a:dir
+  let filename2 = expand('%:p')
+  exec 'edit' filename1
+  exec 'wincmd p'
+  exec 'edit' filename2
+  exec 'wincmd' a:dir
+endfunc
+
+nnoremap \e3 <c-^>
+nnoremap \^ <c-^>
+
 " Jump to rightmost window
-nnoremap <c-w>\ <c-w>5l
+nnoremap <c-w>\ <c-w>4l
 
 nnoremap <c-w>J :call WinMove('j')<cr>
 nnoremap <c-w>K :call WinMove('k')<cr>
@@ -28,7 +75,7 @@ func! WinMove (dir)
   if     a:dir == 'j'
     exec 'botright' '10split' filename
   elseif a:dir == 'k'
-    exec 'topleft' 'split' filename
+    exec 'topleft' '12split' filename
   elseif a:dir == 'h'
     exec 'topleft' '33vsplit' filename
   elseif a:dir == 'l'
@@ -37,7 +84,7 @@ func! WinMove (dir)
 endfunc
 
 " Split: current buffer left
-nnoremap <c-w>S :vs<cr>
+" nnoremap <c-w>S :vs<cr>
 " new buffer left
 nnoremap <c-w>N :vnew<cr>
 " Note: the standard map "<c-w>s" & "<c-w>n" will split below

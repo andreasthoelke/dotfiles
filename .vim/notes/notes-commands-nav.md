@@ -40,7 +40,8 @@ gel }/iI/ip - run multiple lines, e.g. imports
       gel/c/C     - show list of strings as lines
                     'gel' needs a list of strings, e.g. 'fmap (fmap show) $'
 ger         - Curl send sting in line to localhost, show response
-get/T       - type hole. (Todo: should not affect undo)
+get/T       - type hole. at cursor/ in do block (Todo: should not affect undo)
+leader cv   - VirtualtextClear
 
 
 ## Hs API Explore
@@ -121,6 +122,7 @@ c-w I       - resize/fit floatwin height width
 go    - bufferlist:
   c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
   c-ov/h to open offer in split
+\^ <c-^>     - to load the alternate (past) file or \e3 <c-^>
 
 ### Window scrolling
 c-e/y       - up/down
@@ -130,6 +132,7 @@ zt/b        - bottom/top
 \v \T       - browse-open file in new split/tab from the same project
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
 gp <c-o>v   - browse-open recent file in a split e.g. from a different project
+
 ### Dirvish
 t           - open in new tab
 p           - preview in split
@@ -137,10 +140,12 @@ leader P    - preview in float-win
 leader of   - open file under cursor in float-win
 :e %mynewfile - this creates a new buffer in the current Dirvish folder!
 g?          - show help
+K           - file info/ dir size/ last write
 ### Filepaths Urls
 c-w f       - (on filepath) preview file content in horz-split
 leader of   - open filepath under cursor in float win
 glc         - open Url in line in Chromium
+leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath
 ### Arglist
 ,x          - toggle to from arglist (x, vis-sel, line-motion)
             - " Tip: can add popular folders as well, then CtrlP-v/t to open the dirvish pane
@@ -323,6 +328,8 @@ verb map Colo<c-n> - get a list of maps and where they are defined
 \sm        - set syntax markdown - see  ~/.vim/plugin/notes-workflow.vim#/Set%20Syntax.
 :Alacritty - open new terminal and then vim instance
 c-g u      - will set an undo-mark
+
+" Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
 
 ### Notes
 ~/.vim/plugin/notes-workflow.vim#/Defining%20Commands%20And

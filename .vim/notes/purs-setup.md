@@ -162,6 +162,7 @@ use <c-o> to get to normal mode, then `?` to see help
 
 ### workspaces
 CocList folders - then <c-i> to delete and edit (try this)
+  `edit` allows to change the workspace path
 
 ### renaming
 TODO? - there is support in language server
@@ -241,7 +242,19 @@ identifier is all I need, I think
 <leader>hii :call PsImportIdentifier( HsCursorKeyword() )<cr>
 <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', HsCursorKeyword()) )<cr>
 
-# Psc-ide / purs ide
+# Psc-ide / purs ide / Language Server
+"psc-ide-vim" and "vimmers PS" need "LanguageClient neovim"
+these might launch a separate `purs ide` language server
+it's needed for the 'fuzzy / completion' querry I use in 'gsd' PsAPI
+which is originally based on `:Psearch length`
+
+it somehow starts (and errors - with no issues later) when first querried?
+
+## Server commands
+Todo: how to issue commands like this:
+" echo CocAction('runCommand', 'purescript.getAvailableModules')
+" echo LanguageClient_workspace_executeCommand('purescript.restartPscIde', [])
+
 works when started manually by
 call PSCIDEstart(0)
 call PSCIDEload(0, "")
@@ -253,11 +266,17 @@ call PSCIDEload(0, "")
   Psearch length
   Psearch abc
   echo PscAutoStart()
-### Documentation
+### Purs Language Server Documentation
+Configuration of the language server now actually works - but has to be done
+in CocConfig AND in vimmerps(!) config here: ~/.vim/plugin/tools-langClientHIE-completion.vim#/let%20g.vimmerps_config%20=
+
   https://github.com/purescript/documentation/blob/master/guides/psc-ide-FAQ.md#troubleshooting
   https://github.com/purescript/spago#build-and-run-my-project
   Purs ide configuration!:
-  https://github.com/nwolverson/vscode-ide-purescript/blob/110e9ac482708fd1bca7a71c95c600c3bcc9cda5/package.json#L79
+  "https://github.com/nwolverson/vscode-ide-purescript/blob/110e9ac482708fd1bca7a71c95c600c3bcc9cda5/package.json#L79"
+  .. this should mostly show the same:
+  https://github.com/neovim/nvim-lspconfig/blob/60133c47e0fd82556d7ca092546ebfa8d047466e/README.md#purescriptls
+  https://github.com/nwolverson/purescript-language-server/blob/master/src/LanguageServer/IdePurescript/Config.purs
 
   to see a language server log use :CocInfo then look at: ## Output channel: languageserver.purescript
 

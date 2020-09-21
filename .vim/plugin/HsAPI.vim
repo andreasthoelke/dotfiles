@@ -78,12 +78,12 @@ func! PsAPIQueryHandleResponse( response )
       let lineNumber = resultItem.definedAt.start[0]
       let colonNumber = resultItem.definedAt.start[1]
       let filePath    = resultItem.definedAt.name
+      let displayLine3 = filePath . '#:' . lineNumber . ':' . colonNumber
+    else
+      let displayLine3 = '-- -'
     endif
     let module = get(resultItem, "module", "")
-
-    " let displayLine1 = module . ' ' . filePath . '#:' . lineNumber . ':' . colonNumber
     let displayLine1 = module
-    let displayLine3 = filePath . '#:' . lineNumber . ':' . colonNumber
     " using h rel.txt format e.g. ~/.vimrc#:10:4
     let displayLine2 = resultItem.identifier . ' :: ' . resultItem.type
 

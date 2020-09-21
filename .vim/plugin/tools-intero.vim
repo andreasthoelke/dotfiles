@@ -270,6 +270,7 @@ func! ReplSimpleResponseHandler( lines )
   else
     let l:lines = ReplaceStringsInLines( a:lines, g:ReplaceBashEscapeStrings )
     call HsShowLinesInFloatWin( l:lines )
+    call VirtualtextShowMessage( a:lines[0], 'CommentSection' )
   endif
 endfunc
 " call PursReplReturnCB (["eins", "zwei"])

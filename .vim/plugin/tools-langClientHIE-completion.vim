@@ -107,6 +107,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 
 " echo CocAction('runCommand', 'purescript.getAvailableModules')
+" echo LanguageClient_workspace_executeCommand('purescript.restartPscIde', [])
 
 " ─^  Coc nvim settings                                  ▲
 
@@ -118,6 +119,16 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " let g:psc_ide_server_port = 38218
 
 let g:vimmerps_disable_mappings = v:true
+
+let g:vimmerps_config =
+    \ { 'autoStartPscIde': v:true
+    \ , 'pscIdePort': v:null
+    \ , 'autocompleteAddImport': v:true
+    \ , 'pursExe': 'purs'
+    \ , 'addSpagoSources': v:true
+    \ , 'censorWarnings': ["ShadowedName", "UnusedImport", "MissingTypeDeclaration"]
+    \ , 'addNpmPath': v:true
+    \ }
 
 " Test this: ~/Documents/Haskell/6/HsTrainingTypeClasses1/.vim/settings.json#/"languageServerHaskell".%20{
 " Issue: prevent intero+neomake to clear the LC warnings/loclist. temp neomake patch  ~/.vim/plugged/neomake/autoload/neomake/cmd.vim#/call%20setloclist.0,%20[],

@@ -204,7 +204,7 @@ set -o noclobber
 # Note Taking: {{{ -------------------------------------------------------
 
 # A Scratchpad
-alias vnote='nvim ~/notes/note-$(date +"%m-%d-%Y-%T")'
+alias vnote='nvim5 ~/notes/note-$(date +"%m-%d-%Y-%T")'
 
 notes() {
   if [ -n "$1" ]; then

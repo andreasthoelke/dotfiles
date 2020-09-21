@@ -48,6 +48,7 @@ Plug 'Yilin-Yang/vim-markbar'
 " Plug 'andreasthoelke/vim-markbar'
 " Creates vertical window-splits from visual-selections
 Plug 'wellle/visual-split.vim'
+Plug 'camspiers/lens.vim'
 
 " Used as tool functions for working with jumps
 Plug 'inkarkat/vim-ingo-library'

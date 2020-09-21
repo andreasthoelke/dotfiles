@@ -292,4 +292,19 @@ EOF
 endfunction
 " ─^  "unique functions"                                 ▲
 
+" Example of how to run a Python function!!
+" Note that you can't pass args - have to use a vim-var for this
+
+python << EOF
+import string
+import random
+import vim
+def RandChars():
+  cnt = int( vim.eval('g:pyarg') )
+  rstr = ''.join(random.choice(string.ascii_lowercase) for _ in range(cnt))
+  return rstr
+EOF
+" let g:pyarg = 5
+" echo pyeval('RandChars()')
+
 

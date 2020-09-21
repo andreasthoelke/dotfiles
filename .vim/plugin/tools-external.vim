@@ -33,6 +33,11 @@ command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/
 " command! Alacritty exec "silent !open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --config-file /Users/andreas.thoelke/.config/alacritty/alacritty.yml"
 " command! Alacritty exec "silent !open -n '/Applications/Alacritty.app/"
 
+func! OpenInNewVimInstance ( filepath )
+  exec "!open -n /Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/ --command nvim5"
+endfunc
+
+
 fun! OpenITerm()
   let path = projectroot#guess()
   exec 'silent !open -a iTerm ' . path
@@ -223,6 +228,31 @@ EOF
 
 " ─^  Reading config/ yaml files                         ▲
 
+func! AlacrittyFilePath ()
+  return '/Users/andreas.thoelke/.config/alacritty/alacritty.yml'
+endfunc
+
+
+python << EOF
+import yaml
+import vim
+def abtest():
+  filePath = vim.eval('AlacrittyFilePath()')
+  with open( filePath ) as alaconfr:
+  # with open("/Users/andreas.thoelke/Documents/Haskell/6/HsTrainingTypeClasses1/package.yaml", 'r') as packageFile:
+    packageObj = yaml.load(alaconfr, Loader=yaml.FullLoader)
+    packageObj['shell']['args'] = ['eins', 'zwei']
+
+  with open( filePath, 'w') as alaconfw:
+    data = yaml.dump( packageObj, alaconfw )
+
+  return packageObj['shell']['args']
+EOF
+" echo pyeval('abtest()')
+" Conclusion: this sort of almost works - it writes the array into the yaml file - but it messes up the sorting
+
+
+" - /Users/andreas.thoelke/Documents/vim/nvim-osx64-0.5.0/bin/nvim /Users/andreas.thoelke/.vim/notes/releases.md
 
 " ─   Launching Chromium                                 ■
 

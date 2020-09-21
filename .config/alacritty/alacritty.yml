@@ -304,6 +304,8 @@ shell:
  program: /usr/local/bin/zsh
  args:
    - --login
+   - -c
+   - /Users/andreas.thoelke/Documents/vim/nvim-osx64-0.5.0/bin/nvim /Users/andreas.thoelke/.vim/notes/releases.md
 
 # Key bindings
 #
