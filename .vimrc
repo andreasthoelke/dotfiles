@@ -875,6 +875,7 @@ func! PasteLastEchoText()
   exec "RedirMessagesBuf" histget("cmd", -1)
 endfunc
 
+nnoremap <leader>Sm :call ShowMessages()<cr>
 command! EchoTextPaste :call PasteLastEchoText()
 command! MessagesShow call ShowMessages()
 command! MessagesClear messages clear

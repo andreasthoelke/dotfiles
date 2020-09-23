@@ -518,7 +518,7 @@ au! ag TextChanged *.purs call ReplReload_TrackFileChange()
 let g:ReplReload_filesChanged = {}
 
 func! ReplReload_TrackFileChange ()
-  if MatchesInLine( line('.'), "e._" )
+  if MatchesInLine( line('.'), "^e._" ) || MatchesInLine( line('.'), "^cb." )
     " don't register a reload-need when the cursor is on an 'e2_' line like  e2_pow = pow 4 4
     return
   endif

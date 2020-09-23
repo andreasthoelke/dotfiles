@@ -13,7 +13,7 @@ endif
 syn match purescriptIdentifier "\<[_a-z]\(\w\|\'\)*\>"
 syn match purescriptNumber "0[xX][0-9a-fA-F]\+\|0[oO][0-7]\|[0-9]\+"
 syn match purescriptFloat "[0-9]\+\.[0-9]\+\([eE][-+]\=[0-9]\+\)\="
-" syn keyword purescriptBoolean true false
+syn keyword purescriptBoolean true false
 " syn keyword purescriptState state
 
 " syn match purescriptStateKey "\vstate\.\zs\w{-}\ze\_s"
@@ -163,7 +163,7 @@ syn match purescriptInfix "^\(infix\|infixl\|infixr\)\>\s\+\([0-9]\+\)\s\+\(type
   \ nextgroup=purescriptFunction,purescriptOperator,@purescriptComment
 
 " Operators:
-syn match purescriptOperator "\([-!#$%&\*\+/<=>\?@\\^|~:]\|\<_\>\)"
+syn match purescriptOperator "\([-!#_$%&\*\+/<=>\?@\\^|~:]\|\<_\>\)"
 syn match purescriptOperatorType "\%(\<instance\>.*\)\@40<!\(::\|∷\)"
   \ nextgroup=purescriptForall,purescriptType skipwhite skipnl skipempty
 syn match purescriptOperatorFunction "\(->\|<-\|[\\→←]\)"
@@ -504,7 +504,7 @@ highlight def link purescriptConditional Conditional
 highlight def link purescriptWhere purescriptKeyword
 highlight def link purescriptInfixKeyword purescriptKeyword
 
-highlight def link purescriptBoolean Boolean
+highlight def link purescriptBoolean Number
 highlight def link purescriptNumber Number
 highlight def link purescriptFloat Float
 

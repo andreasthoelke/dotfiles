@@ -256,6 +256,9 @@ let g:ReplaceBashEscapeStrings = [['[33m',''], ['[32m',''], ['[39m',''], ['[
 " - Splits a list of strings into lines
 " - Forwards other values
 func! ReplSimpleResponseHandler( lines )
+  " Not sure why there is sometimes an additional one line return value.
+  if len( a:lines ) == 1 | return | endif
+  " echom len(a:lines)
   " if (type(a:lines) != type(v:t_list))
   "   echom a:lines
   "   " call HsShowLinesInFloatWin( [a:lines] )
