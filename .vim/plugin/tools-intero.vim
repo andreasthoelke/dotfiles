@@ -248,8 +248,8 @@ func! ReplEval( expr )
   call jobsend(g:PursReplID, a:expr . "\n")
 endfunc
 
-" ANSI colors are incoded into the error messages and need to be removed (TODO there is also a setting for psci)
-let g:ReplaceBashEscapeStrings = [['[33m',''], ['[0m','']]
+" ANSI colors are incoded into the error messages and need to be removed (TODO there is also a setting for psci). e.g.  [32m'Done!'[39m
+let g:ReplaceBashEscapeStrings = [['[33m',''], ['[32m',''], ['[39m',''], ['[0m','']]
 
 " Separates 3 output types:
 " - Forwards multi-line repl-outputs
@@ -261,25 +261,27 @@ func! ReplSimpleResponseHandler( lines )
   "   " call HsShowLinesInFloatWin( [a:lines] )
   "   return
   " endif
+  let l:lines = ReplaceStringsInLines( a:lines, g:ReplaceBashEscapeStrings )
+  " echoe l:lines
+  " let l:lines = functional#filter( {x->x == ''}, l:lines )
 
-  if len( a:lines ) == 1
+  if len( l:lines ) == 3
     " Repl returned the typlical one value
-    let hsReturnVal = a:lines[0]
+    call VirtualtextShowMessage( l:lines[0], 'CommentSection' )
+    let hsReturnVal = l:lines[0]
     if hsReturnVal[0:1] == '["'
       " Detected list of strings: To split the list into lines, convert to vim list of line-strings!
       call HsShowLinesInFloatWin( eval ( hsReturnVal ) )
     else
       call HsShowLinesInFloatWin( [hsReturnVal] )
     endif
-  elseif len( a:lines ) == 0
+  elseif len( l:lines ) == 0
     echo "Repl returned 0 lines"
-  elseif len( a:lines ) > 15
-    let l:lines = ReplaceStringsInLines( a:lines, g:ReplaceBashEscapeStrings )
-    call PsShowLinesInBuffer( l:lines )
+  " elseif len( l:lines ) > 15
+  "   call PsShowLinesInBuffer( l:lines )
   else
-    let l:lines = ReplaceStringsInLines( a:lines, g:ReplaceBashEscapeStrings )
     call HsShowLinesInFloatWin( l:lines )
-    call VirtualtextShowMessage( a:lines[0], 'CommentSection' )
+    call VirtualtextShowMessage( join(l:lines[:1]), 'CommentSection' )
   endif
 endfunc
 " call PursReplReturnCB (["eins", "zwei"])

@@ -58,7 +58,6 @@ func! WinSwap(dir)
   exec 'wincmd' a:dir
 endfunc
 
-nnoremap \e3 <c-^>
 nnoremap \^ <c-^>
 
 " Jump to rightmost window

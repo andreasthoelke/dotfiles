@@ -1214,7 +1214,7 @@ let g:neomake_highlight_columns = 1
 let g:neomake_highlight_line = 1
 " Uses NVIMs nvim_buf_add_highlight feature
 
-nnoremap <leader>sc :sign unplace *<cr>
+nnoremap <leader>cs :sign unplace *<cr>
 
 command! SignsClear :sign unplace *
 command! ClearSigns :sign unplace *
@@ -1891,13 +1891,6 @@ func! MarkbarUpdate()
     call markbar#ui#RefreshMarkbar(g:__active_controller)
   endif
 endfunc
-
-
-func! WinIsOpen( filepath )
-  return len( functional#filter( {path-> path is# a:filepath}, TabWinFilenames() ) )
-endfunc
-" echo WinIsOpen( '( Markbar )' )
-" echo WinIsOpen( bufname( bufnr('%') ) )
 
 command! DelLocalMarks  exec 'delmarks a-z' | call ForceGlobalRemovalMarks()
 command! DelGlobalMarks exec 'delmarks A-Z' | call ForceGlobalRemovalMarks()

@@ -182,6 +182,8 @@ endfunc
 
 " ─^  TopLevel                                           ▲
 
+nnoremap \e ge
+
 " ─   Imports                                            ■
 
 onoremap <silent> iI :<c-u>call Imports_VisSel()<cr>

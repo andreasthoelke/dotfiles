@@ -328,6 +328,9 @@ verb map Colo<c-n> - get a list of maps and where they are defined
 \sm        - set syntax markdown - see  ~/.vim/plugin/notes-workflow.vim#/Set%20Syntax.
 :Alacritty - open new terminal and then vim instance
 c-g u      - will set an undo-mark
+leader cv  - clear virtual text
+leader cs  - clear signs column
+
 
 " Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
 
