@@ -1091,7 +1091,17 @@ nnoremap <silent> <leader>z :Goyo<cr>
 let g:goyo_width = '70%'
 let g:goyo_height = '70%'
 
+func! s:goyo_leave()
+  hi VertSplit       guifg=#000000 guibg=#080808
+endfunc
 
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" Issue: Re-applying the colorscheme causes my conceal chars to be highlighted in white - which I could not fix. On
+" the other had the below line does not seem needed except for my "hi VertSplit       guifg=#000000 guibg=#080808"
+" setting
+" execute 'colo '. get(g:, 'colors_name', 'default')
+" Note/ TODO: I had disable this line in the goyo plugin:
+" ~/.vim/plugged/goyo.vim/autoload/goyo.vim#/execute%20'colo%20'.
 
 
 " ALE: --------------------------------------------------------

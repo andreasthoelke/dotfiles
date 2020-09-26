@@ -118,7 +118,8 @@ c-w p       - to jump back
 \t]         - TabmoveRight /Left
 <leader>wI  - Pin Haskell imports
 c-w I       - resize/fit floatwin height width
-1<c-w>x     - swap window with the one above/at top of screen (2 is below)
+c-w x/S h/l/k/j - Swap with / Shift a window with the other adjacent window
+  1<c-w>x     - swap window with the one above/at top of screen (2 is below)
 go    - bufferlist:
   c-j/k, c-x - close a buffer in the ctrlP buffer list without opening it
   c-ov/h to open offer in split
@@ -356,6 +357,12 @@ gLt/T   - to prefill and edit line command string to running it in a hidden/visi
 c-w     - cancels the terminal process and deletes the terminal buffer
           when in terminal insert mode, else just closes the window.
 
+
+## Spell Checking
+Toggle with "yos" ":Spell"/ "SpellDE"/ "SpellEN" on. "set nospell" turns it off
+" Navigate errors: "]s" - "[s", show suggestions: "z=", rather: "ea" to go to insert mode at the end of the word, then
+" "c-x s" to open suggestion menu! TODO prevent proposing capitalized suggestions.
+" add to dictionary: "zg" undo "zug"
 
 ## Scratch window
 leader os  - ScratchWindow
