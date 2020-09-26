@@ -220,10 +220,12 @@ hi! purescriptColon guifg=#2D4E54
 hi! Operator guifg=#335A60
 
 
+
 " purescriptType > Type
 hi! Type guifg=#76E0D9 "middle blue"
 " hi! hsTypeComment guifg=#45837F "Types in comments - toned down: brightness: 88 -> 51
 hi! link hsTypeComment Comment
+" hi! link hsForall Comment
 
 " purescriptTypeVar > Identifier
 hi! Identifier guifg=#AAB27C "Misty moss - shift sage yellow from red to green"

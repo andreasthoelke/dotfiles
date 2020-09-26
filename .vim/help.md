@@ -244,7 +244,7 @@ Y/I         - columns - based on unaligned syntax e.g do bindings
 J/K         - Word column corners Forw/Backw (based on aligned visibleColumns)
 t/T         - next/prev list item
 ]t/[t       - into next/prev inner list
-]T          - end of list (to append new elements)
+]T          - end of list (to append new elements) brackets
   TODO - this got overwritten by coc diagnostic next/prev
 [g ]g       - go back to last insert start/end. or native \`[ \`]
 z] z[ zk    - beginning/end of current fold/prev fold
@@ -330,6 +330,7 @@ verb map Colo<c-n> - get a list of maps and where they are defined
 c-g u      - will set an undo-mark
 leader cv  - clear virtual text
 leader cs  - clear signs column
+leader vo/O - open current file/PS folder in new vim instance
 
 
 " Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how

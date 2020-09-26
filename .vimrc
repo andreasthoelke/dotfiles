@@ -123,7 +123,7 @@ Plug 'KabbAmine/vCoolor.vim'
 " Highlight
 " Plug 't9md/vim-quickhl'
 " fullscreen mode
-" Plug 'junegunn/goyo.vim'
+Plug 'junegunn/goyo.vim'
 " Plug 'junegunn/limelight.vim'
 " Note taking with vim
 " Plug 'fmoralesc/vim-pad', { 'branch': 'devel' }
@@ -600,12 +600,15 @@ endif
 
 " Fonts: -------------------------------------------------------------------------
 
-
+" finish
 
 " Color:  ------------------------------------------------------------------------
 
-set background=dark
-colorscheme munsell-blue-molokai
+if !exists('g:colors_name')
+  " && g:colors_name != 'munsell-blue-molokai'
+  set background=dark
+  colorscheme munsell-blue-molokai
+endif
 
 " set background=light
 " colorscheme PaperColor
@@ -1080,6 +1083,13 @@ set termguicolors
 " Cursor Speed: run this in terminal (seemed to not have an effect when last tested): "defaults write NSGlobalDomain KeyRepeat -int 0" for max speed - "2" is the setting from system preferences
 
 " General: ---------------------------------------------------------------------------
+
+" Goyo Zen view:
+
+nnoremap <silent> <leader>oz :Goyo<cr>
+nnoremap <silent> <leader>z :Goyo<cr>
+let g:goyo_width = '70%'
+let g:goyo_height = '70%'
 
 
 

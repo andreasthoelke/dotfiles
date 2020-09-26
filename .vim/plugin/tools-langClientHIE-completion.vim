@@ -506,10 +506,10 @@ endfunc
 
 
 " ─   Repl Relead Tracking                               ■
-augroup LS_StatusChange
-  autocmd!
-  autocmd FileWritePost *.purs echo 'hi'
-augroup END
+" augroup LS_StatusChange
+"   autocmd!
+"   autocmd FileWritePost *.purs echo 'hi'
+" augroup END
 
 " au! ag CursorMoved        *.vim :echo  line('.')
 

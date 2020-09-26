@@ -214,6 +214,7 @@ command! ExtractGenSigs :g/∷.*⇒/t$
 nnoremap <BS> J
 
 " This 'undo's a line break while staying in insert mode
+" TODO this has confusing behavior
 inoremap <BS> <c-o>k<c-o>J
 
 " Line break (with indention)

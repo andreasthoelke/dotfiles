@@ -68,7 +68,7 @@ syn match purescriptFunction "\%(\<instance\s\+\|\<class\s\+\)\@18<!\<[_a-z]\k*'
 
 " Class:
 syn region purescriptClassDecl start="^\%(\s*\)class\>"ms=e-5 end="\<where\>\|$"
-  \ contains=hsArrow,hsTypeColon,hsConstraintArrow,purescriptClass,purescriptClassName,purescriptDelimiter,purescriptOperatorTypeSig,purescriptOperatorType,purescriptOperator,purescriptType,purescriptWhere
+  \ contains=hsArrow,hsTypeColon,hsConstraintArrow,hsConstraintArrowBackw,purescriptClass,purescriptClassName,purescriptDelimiter,purescriptOperatorTypeSig,purescriptOperatorType,purescriptOperator,purescriptType,purescriptWhere
   \ nextgroup=purescriptClass
   \ skipnl
 syn match purescriptClass "\<class\>" containedin=purescriptClassDecl contained
@@ -231,61 +231,75 @@ syn cluster purescriptComment contains=purescriptLineComment,purescriptBlockComm
 syn sync minlines=50
 
 
+
+syntax match concealedCommentDashes '--\s' contained conceal
+" syntax match concealedQuote '\s\zs"' contained conceal
+
+syntax match concealedUndefinedType 'i::' conceal
+syntax match concealedUndefinedType 'undefined::' conceal
+
+syntax match concealedUndefinedType 'u:: forall a.' conceal
+
+
 " ─   Conceal with unicode                               ■
 
-let g:HsCharsToUnicode = [
-      \  ['->',           '→', 'hsArrow']
-      \, ['\s\zs<-',           '←', 'hsArrowBackw']
-      \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
-      \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
-      \, ['::',                '∷', 'hsTypeColon']
-      \, ['forall\ze\s',       '∀', 'hsForall']
-      \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
-      \, [' \zs\.',            '∘', 'Normal']
-      \, [' \zs<<<\ze\s',      '∘', 'Normal']
-      \, ['<\$>',          '⫩', 'Normal']
-      \, ['<\#>',          '⧕', 'Normal']
-      \, [' \zs<\*>',          '⟐', 'Normal']
-      \, [' \zs>>',            '≫', 'Normal']
-      \, ['>>=\ze\s',           '⫦', 'Normal']
-      \, [' \zs=<<',           '⫣', 'Normal']
-      \, [' \zs-<',           '⩹', 'Normal']
-      \, [' \zs\`flipElem\`',  '∋', 'Normal']
-      \, [' \zs<|>',           '‖', 'Normal']
-      \, [' \zs>=>',           '↣', 'Normal']
-      \, [' \zs<=<',           '↢', 'Normal']
-      \, [' \zs<<<<\ze\s',      '…', 'Normal']
-      \, [' \zs==',            '≡', 'Normal']
-      \, [' \zs/\\',            '|', 'Normal']
-      \, ['==',            '≡', 'Normal']
-      \, ['/=',            '≠', 'Normal']
-      \, ['/=\ze ',            '≠', 'Normal']
-      \, [' \zs<>',            '◇', 'Normal']
-      \, ['<>',            '◇', 'Normal']
-      \, ['mempty',        '∅', 'Normal']
-      \, ['subtract',        '-', 'Normal']
-      \, ['flip\s',        '◖', 'Normal']
-      \, ['fmap\s',        'ꜛ', 'Normal']
-      \, ['lift\s',        '˄', 'Normal']
-      \, ['bool\ze\s',        '?', 'Normal']
-      \, [' \zsempty',        '∅', 'Normal']
-      \, [' \zs++',            '⧺', 'Normal']
-      \, ['<=\ze\s',            '≤', 'Normal']
-      \, ['>=\ze ',            '≥', 'Normal']
-      \, ['Integer',           'ℤ', 'hsInteger']
-      \]
+func! HsConcealWithUnicode ()
 
-      " \, [' \zs<|>',           '⦶', 'Normal']
-            " \, [' \zs<|>',           '‖', 'Normal']
-            " ε
-                  " \, ['<\#>',          '≚', 'Normal']
-                        " \, [' \zs/\\',            '⨆', 'Normal']
+  let g:HsCharsToUnicode = [
+        \  ['->',           '→', 'hsArrow']
+        \, ['\s\zs<-',           '←', 'hsArrowBackw']
+        \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
+        \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
+        \, ['::',                '∷', 'hsTypeColon']
+        \, ['forall\ze\s',       '∀', 'hsForall']
+        \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
+        \, [' \zs\.',            '∘', 'Normal']
+        \, [' \zs<<<\ze\s',      '∘', 'Normal']
+        \, ['<\$>',          '⫩', 'Normal']
+        \, ['<\#>',          '⧕', 'Normal']
+        \, [' \zs<\*>',          '⟐', 'Normal']
+        \, [' \zs>>',            '≫', 'Normal']
+        \, ['>>=\ze\s',           '⫦', 'Normal']
+        \, [' \zs=<<',           '⫣', 'Normal']
+        \, [' \zs-<',           '⩹', 'Normal']
+        \, [' \zs\`flipElem\`',  '∋', 'Normal']
+        \, [' \zs<|>',           '‖', 'Normal']
+        \, [' \zs>=>',           '↣', 'Normal']
+        \, [' \zs<=<',           '↢', 'Normal']
+        \, [' \zs<<<<\ze\s',      '…', 'Normal']
+        \, [' \zs==',            '≡', 'Normal']
+        \, [' \zs/\\',            '|', 'Normal']
+        \, ['==',            '≡', 'Normal']
+        \, ['/=',            '≠', 'Normal']
+        \, ['/=\ze ',            '≠', 'Normal']
+        \, [' \zs<>',            '◇', 'Normal']
+        \, ['<>',            '◇', 'Normal']
+        \, ['mempty',        '∅', 'Normal']
+        \, ['subtract',        '-', 'Normal']
+        \, ['flip\s',        '◖', 'Normal']
+        \, ['fmap\s',        'ꜛ', 'Normal']
+        \, ['lift\s',        '˄', 'Normal']
+        \, ['bool\ze\s',        '?', 'Normal']
+        \, [' \zsempty',        '∅', 'Normal']
+        \, [' \zs++',            '⧺', 'Normal']
+        \, ['<=\ze\s',            '≤', 'Normal']
+        \, ['>=\ze ',            '≥', 'Normal']
+        \, ['Integer',           'ℤ', 'hsInteger']
+        \]
 
-" https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
+  " \, [' \zs<|>',           '⦶', 'Normal']
+  " \, [' \zs<|>',           '‖', 'Normal']
+  " ε
+  " \, ['<\#>',          '≚', 'Normal']
+  " \, [' \zs/\\',            '⨆', 'Normal']
 
-for [pttn, concealUnicodeSym, syntaxGroup] in g:HsCharsToUnicode
-  exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
-endfor
+  " https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
+
+  for [pttn, concealUnicodeSym, syntaxGroup] in g:HsCharsToUnicode
+    exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
+  endfor
+
+endfunc
 
 " Note: These IDs need to be included in the 'contains=' section of e.g. 'purescriptFunctionDecl', etc
 " syntax match hsArrow                '\s\zs->' conceal cchar=→
@@ -333,15 +347,6 @@ endfor
 " ─^  Conceal with unicode                               ▲
 
 
-
-
-syntax match concealedCommentDashes '--\s' contained conceal
-" syntax match concealedQuote '\s\zs"' contained conceal
-
-syntax match concealedUndefinedType 'i::' conceal
-syntax match concealedUndefinedType 'undefined::' conceal
-
-syntax match concealedUndefinedType 'u:: forall a.' conceal
 
 
 " TODO rather highlight all function arguments
@@ -488,6 +493,8 @@ hi! def link markbarMarkdownComment Comment
 
 " ─^  Markbar                                            ▲
 
+" TODO: for some reason this must be here/at a later stage, to avoid white blocks at concealed chars when resourcing vimrc
+call HsConcealWithUnicode()
 
 " highlight links
 highlight def link purescriptModule Include

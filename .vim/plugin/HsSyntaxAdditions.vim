@@ -39,6 +39,7 @@ nnoremap <leader>cm :call clearmatches()<cr>
 " ─   Haskell                                           ──
 func! HaskellSyntaxAdditions()
   call CodeMarkupSyntaxHighlights()
+  " call HsConcealWithUnicode()
   " Conceal comment marker string
   " call matchadd('Conceal', '-- ', -1, -1, {'conceal': ''})
   " call matchadd('Conceal', '-- ', 12, -1, {'conceal': ''})
@@ -169,6 +170,7 @@ endfunc " ▲
 " function! vim2hs#haskell#conceal#wide() " {_{{
 " function! vim2hs#haskell#conceal#bad() " {_{{
 " let g:idris_conceal = 1}}}
+
 
 
 
