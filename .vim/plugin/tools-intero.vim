@@ -653,6 +653,18 @@ endfunc
 " req "abc"
 
 
+" TODO when is a Node js call useful?
+nnoremap gen :call NodeJSRunFunction( expand('<cword>'), '' )<cr>
+" nnoremap geN :call WebserverRequestResponse( '-v --raw' )<cr>
+func! NodeJSRunFunction( fnName, arg )
+  let jsFilePath = './output/' . GetModuleName() . '/index'
+  let nodeCmd = 'require("' . jsFilePath . '").' . a:fnName . '(' . a:arg . ')'
+  let l:cmd = 'node -e ' . shellescape( nodeCmd )
+  " echoe l:cmd
+  let l:resultLines = split( system( l:cmd ), '\n' )
+  call HsShowLinesInFloatWin( l:resultLines )
+endfunc
+" echo system( "node -e " . shellescape("require('./output/Main/index').main()") )
 
 
 

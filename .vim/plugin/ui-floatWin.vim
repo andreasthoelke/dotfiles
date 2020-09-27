@@ -59,13 +59,13 @@ nnoremap <leader>acc :call ExecRange( "ShowInFloatWin", 10, 20 )<cr>
 nnoremap <leader>aff :call FloatWin_ShowLines( testText1 )<cr>
 " let info = split(info, "\n", 1)
 
-nnoremap <c-w>[ :call FloatWin_close()<cr>
+nnoremap <silent> <c-w>[ :call FloatWin_close()<cr>
 " there is also a "<c-[>" map
 " nnoremap <c-w>i :call nvim_set_current_win( g:coc_last_float_win )<cr>
-nnoremap <c-w>i :call nvim_set_current_win( nvim_win_is_valid( g:coc_last_float_win ) ? g:coc_last_float_win : g:floatWin_win )<cr>gg
+nnoremap <silent> <c-w>i :call nvim_set_current_win( nvim_win_is_valid( g:coc_last_float_win ) ? g:coc_last_float_win : g:floatWin_win )<cr>gg
 " nnoremap <c-w>i <Plug>(coc-float-jump)
 
-nnoremap <c-w>I :call FloatWin_FitWidthHeight()<cr>
+nnoremap <silent> <c-w>I :call FloatWin_FitWidthHeight()<cr>
 
 " Copied most parts from https://github.com/ncm2/float-preview.nvim
 

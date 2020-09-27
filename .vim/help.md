@@ -116,7 +116,7 @@ c-w dk      - close the window above
 c-w \       - to jump to rightmost/mark/tag bar window
 c-w p       - to jump back
 \t]         - TabmoveRight /Left
-<leader>wI  - Pin Haskell imports
+leader wi/I - Pin [and jump to cword] Haskell imports
 c-w I       - resize/fit floatwin height width
 c-w x/S h/l/k/j - Swap with / Shift a window with the other adjacent window
   1<c-w>x     - swap window with the one above/at top of screen (2 is below)

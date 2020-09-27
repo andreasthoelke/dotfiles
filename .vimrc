@@ -1629,7 +1629,7 @@ let g:vcoolor_disable_mappings = v:true
 
 " let g:rootmarkers = ['.projectroot', 'bower.json', 'package.json', 'stack.yaml', '*.cabal', 'README.md', '.git']
 " Prioritise looking for git repo roots
-let g:rootmarkers = ['package.json', '.git', 'stack.yaml', '*.cabal', 'README.md']
+let g:rootmarkers = ['package.json', '.git', 'spago.dhall', '.gitignore', 'stack.yaml', '*.cabal', 'README.md']
 
 "
 " open file relative to project-root
@@ -1675,8 +1675,8 @@ func! SetWorkingDirectory(path)
 endfunc
 
 " Change Working Directory: ---------------
-nnoremap <expr>dpr ":lcd " . projectroot#guess() . "\n"
-nnoremap <expr>dpR ":cd "  . projectroot#guess() . "\n"
+nnoremap <expr><leader>dpr ":lcd " . projectroot#guess() . "\n"
+nnoremap <expr><leader>dpR ":cd "  . projectroot#guess() . "\n"
 " Also consider using ":ProjectRootCD"
 
 
