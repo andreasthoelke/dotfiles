@@ -42,6 +42,7 @@ gel }/iI/ip - run multiple lines, e.g. imports
 ger         - Curl send sting in line to localhost, show response
 get/T       - type hole. at cursor/ in do block (Todo: should not affect undo)
 leader cv   - VirtualtextClear
+gen         - runs an Effect top-level val in NodeJS.
 
 
 ## Hs API Explore

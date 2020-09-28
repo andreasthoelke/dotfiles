@@ -653,8 +653,8 @@ endfunc
 " req "abc"
 
 
-" TODO when is a Node js call useful?
-nnoremap gen :call NodeJSRunFunction( expand('<cword>'), '' )<cr>
+"Note: when is a Node js call useful?
+nnoremap geN :call NodeJSRunFunction( expand('<cword>'), '' )<cr>
 " nnoremap geN :call WebserverRequestResponse( '-v --raw' )<cr>
 func! NodeJSRunFunction( fnName, arg )
   let jsFilePath = './output/' . GetModuleName() . '/index'
@@ -665,6 +665,27 @@ func! NodeJSRunFunction( fnName, arg )
   call HsShowLinesInFloatWin( l:resultLines )
 endfunc
 " echo system( "node -e " . shellescape("require('./output/Main/index').main()") )
+" "one could console.log the return value of functions:
+" const { abc, main } = require('./output/Main');
+" console.log( abc(22) );
+" console.log( require('./output/Main').cbdk0 );
+
+nnoremap gen :call NodeJSRunBinding()<cr>
+
+func! NodeJSRunBinding()
+  let jsFilePath = './output/' . GetModuleName() . '/index'
+  let symName = GetTopLevSymbolName( line('.') )
+  let nodeCmd = 'console.log( require("' . jsFilePath . '").' . symName . ');'
+  let l:cmd = 'node -e ' . shellescape( nodeCmd )
+  " echoe l:cmd
+  let l:resultLines = split( system( l:cmd ), '\n' )
+  call HsShowLinesInFloatWin( l:resultLines )
+  call VirtualtextShowMessage( join(l:resultLines[:1]), 'CommentSection' )
+endfunc
+
+" This actually works. but one would need to delay the call a bit as only the prev change is picked up
+" au! ag TextChanged *.purs call NodeJSRunBinding()
+
 
 
 
