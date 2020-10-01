@@ -3,7 +3,7 @@
 [g / ]g     - prev/next error/warning
 ged         - show diagnostic message in float-win (Lang client)
 gsi         - coc diagnostic - the same as above?
-gd ,gd     - go to definition /in split
+\gd ,gd/D   - go to definition in floating/split
 lead lg/lG  - go to definition/ in split
 lead lb     - show references of current symbol
 lead ls/S Ls - list symbols

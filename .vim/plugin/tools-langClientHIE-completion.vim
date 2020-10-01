@@ -74,8 +74,10 @@ endfunction
 " nmap <silent> gi <Plug>(coc-implementation)
 " nmap <silent> gr <Plug>(coc-references)
 
-nmap <silent>         gd <Plug>(coc-definition)
-nmap <silent> ,gd :sp<CR><Plug>(coc-definition)
+nmap <silent>            gd <Plug>(coc-definition)
+nmap <silent> ,gd :vsplit<CR><Plug>(coc-definition)
+nmap <silent> \gd :call FloatingBuffer(expand('%'))<CR><Plug>(coc-definition)
+nmap <silent> gD :split<CR><Plug>(coc-definition)
 
 " this allows to open the menu and get suggestions without any characters typed already.
 inoremap <silent><expr> <c-space> coc#refresh()
