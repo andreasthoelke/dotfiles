@@ -21,11 +21,11 @@ set shortmess+=c
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<C-i>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<C-i>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -55,8 +55,6 @@ nnoremap <silent> gsi :call CocActionAsync('diagnosticInfo')<cr>
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-nnoremap <leader>ld :CocList diagnostics<cr>
-
 " Use K to show documentation in preview window.
 nnoremap <silent> <leader>hK :call Show_documentation()<CR>
 " nnoremap <silent> get :call Show_documentation()<CR>
@@ -81,6 +79,8 @@ nmap <silent> ,gd :sp<CR><Plug>(coc-definition)
 
 " this allows to open the menu and get suggestions without any characters typed already.
 inoremap <silent><expr> <c-space> coc#refresh()
+
+
 
 " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
@@ -196,6 +196,14 @@ map <Leader>lR :LanguageClientStop<cr>:LanguageClientStart<cr>
 
 " not available for Purescript - but maybe for Haskell?
 map <leader>lt <Plug>(coc-type-definition)
+
+nnoremap <leader>Ld :CocList diagnostics<cr>
+nnoremap <leader>Ls :CocList symbols<cr>
+nnoremap <leader>Lf :CocList folders<cr>
+nnoremap <leader>La :CocList actions<cr>
+nnoremap <leader>Lc :CocList commands<cr>
+
+
 
 " less clutter while having many warnings - or faster glimpse into the issue?
 let g:LanguageClient_useVirtualText = "No"

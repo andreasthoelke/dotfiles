@@ -1,4 +1,11 @@
 
+" Also note the formatting related settings:
+" Settings in ftplugin:
+" ~/.vim/ftplugin/purescript.vim#/setlocal%20comments=s1fl.{-,mb.-,ex.-},.--%20commentstring=--\
+" setlocal comments=s1fl:{-,mb:-,ex:-},:-- commentstring=--\ %s
+" setlocal formatoptions-=t formatoptions+=croql
+" ~/.vim/indent/purescript.vim#/setlocal%20indentexpr=GetHaskellIndent..
+
 " Learn: \hu, \hU, \ht, leader if
 " TODO ?
 

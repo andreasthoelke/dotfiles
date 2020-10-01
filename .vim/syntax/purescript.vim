@@ -254,12 +254,12 @@ func! HsConcealWithUnicode ()
         \, ['forall\ze\s',       '∀', 'hsForall']
         \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
         \, [' \zs\.',            '∘', 'Normal']
-        \, [' \zs<<<\ze\s',      '∘', 'Normal']
+        \, ['<<<',      '∘', 'Normal']
         \, ['<\$>',          '⫩', 'Normal']
         \, ['<\#>',          '⧕', 'Normal']
         \, [' \zs<\*>',          '⟐', 'Normal']
         \, [' \zs>>',            '≫', 'Normal']
-        \, ['>>=\ze\s',           '⫦', 'Normal']
+        \, ['>>=\ze\_s',           '⫦', 'Normal']
         \, [' \zs=<<',           '⫣', 'Normal']
         \, [' \zs-<',           '⩹', 'Normal']
         \, [' \zs\`flipElem\`',  '∋', 'Normal']
@@ -277,6 +277,7 @@ func! HsConcealWithUnicode ()
         \, ['mempty',        '∅', 'Normal']
         \, ['subtract',        '-', 'Normal']
         \, ['flip\s',        '◖', 'Normal']
+        \, ['map\s',        'ꜛ', 'Normal']
         \, ['fmap\s',        'ꜛ', 'Normal']
         \, ['lift\s',        '˄', 'Normal']
         \, ['bool\ze\s',        '?', 'Normal']
@@ -292,6 +293,7 @@ func! HsConcealWithUnicode ()
   " ε
   " \, ['<\#>',          '≚', 'Normal']
   " \, [' \zs/\\',            '⨆', 'Normal']
+        " \, [' \zs<<<\ze\s',      '∘', 'Normal']
 
   " https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
 

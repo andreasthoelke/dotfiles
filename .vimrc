@@ -337,7 +337,7 @@ Plug 'thalesmello/webcomplete.vim'
 call plug#end()
 " ----------------------------------------------------------------------------------
 
-" This deletes all autocmds of that have the 'ag' tag/group so they aren't registered again when the vimrc is re-sourced
+" This deletes all autocmds that have the 'ag' tag/group so they aren't registered again when the vimrc is re-sourced
 augroup ag
   au!
 augroup end
@@ -354,7 +354,7 @@ filetype plugin on
 
 
 " Increase this for debugging
-set verbose=0
+" set verbose=0
 " Will write a log file with debug level 9
 " vim -V9myVim.log
 
@@ -685,6 +685,14 @@ nnoremap yoW :ToggleWhitespace<cr>
 " https://vi.stackexchange.com/questions/15505/highlight-whole-todo-comment-line
  "▲▲
 
+" setlocal formatoptions=jcroql
+" setlocal formatoptions=cr
+" set formatoptions=tcqj
+
+" Settings in ftplugin:
+~/.vim/ftplugin/purescript.vim#/setlocal%20comments=s1fl.{-,mb.-,ex.-},.--%20commentstring=--\
+" setlocal comments=s1fl:{-,mb:-,ex:-},:-- commentstring=--\ %s
+" setlocal formatoptions-=t formatoptions+=croql
 
 
 " Style Colors: ----------------------------

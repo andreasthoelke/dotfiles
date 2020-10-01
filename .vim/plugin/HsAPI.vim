@@ -279,8 +279,8 @@ func! GetAPICmdStr( query, limit, infoFlag )
   return 'hoogle "' . a:query . '" -n=' . a:limit . infoArg
 endfunc
 
-nnoremap <leader>hii :call PsImportIdentifier( expand('<cWORD>') )<cr>
-nnoremap <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', expand('<cWORD>')) )<cr>
+nnoremap <leader>hii :call PsImportIdentifier( expand('<cword>') )<cr>
+nnoremap <leader>hiI :call PsImportIdentifier( input( 'Import identifier: ', expand('<cword>')) )<cr>
 vnoremap <leader>hii :<c-u>call PsImportIdentifier( GetVisSel() )<cr>
 vnoremap <leader>hiI :<c-u>call PsImportIdentifier( input( 'Import identifier: ', GetVisSel()) )<cr>
 

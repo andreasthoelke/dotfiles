@@ -169,11 +169,17 @@ TODO? - there is support in language server
 other utils are ~/.vim/plugin/HsMotions.vim#/nnoremap%20<leader>hrb%20.call
 nnoremap <leader>hrb :call BindingRename()<cr>
 
+### debugging
+CocList services
+try out? -> https://github.com/microsoft/language-server-protocol-inspector
+
 ### just some command i tried
 CocList --normal location
 CocNext
 CocList files
 CocList commands
+CocList sources  - how to prioritise completion sources!
+CocList <c-i> - to see all useful! options
 CocInstall coc-actions
 CocInstall coc-browser
 CocList sources

@@ -5,10 +5,14 @@ ged         - show diagnostic message in float-win (Lang client)
 gsi         - coc diagnostic - the same as above?
 gd ,gd     - go to definition /in split
 lead lg/lG  - go to definition/ in split
+lead lb     - show references of current symbol
+lead ls/S Ls - list symbols
 leader lk   - Symbol documentation
 leader la   - Code action → import symbol!
+    all options:  ~/.vim/plugin/tools-langClientHIE-completion.vim#/nnoremap%20<leader>lm%20.call
 insert c-i  - show completions with type sig!
-insert c-n  - non LC show omnicomplete (symbols of other buffers..?)
+insert c-p /n/p - open drop down list
+insert c-xu - this shows language client type sigs!!
 leader ld   - CocList diagnostics
 gsd/D       - language client fuzzy search - with sources link
 gsb/B       - browse module via :browse in psci. use 2leader ht, leader t[,c-l | ip | J] and leader as [ip | ect]
@@ -19,6 +23,12 @@ gw          - Coc hover type
 get         - get types of in scope/context bindings at cursor position
 geT         - get type of identifier under cursor in do-bind. also gst, gsT
 ~/.vim/plugin/tools-langClientHIE-completion.vim#/Get%20types%20and
+
+### Coc
+CocList symbols  - allows to fuzzy-search and jump to all loaded symbols!
+CocList commands
+CocList sources  - how to prioritise completion sources!
+CocList <c-i> - to see all useful! options
 
 ## Purs repl / Ghci/ Intero
 leader io/l/k/h - intero open/load/kill/hide
@@ -42,7 +52,7 @@ gel }/iI/ip - run multiple lines, e.g. imports
 ger         - Curl send sting in line to localhost, show response
 get/T       - type hole. at cursor/ in do block (Todo: should not affect undo)
 leader cv   - VirtualtextClear
-gen         - runs an Effect top-level val in NodeJS.
+gen/N       - runs an top-level val/function with no args in NodeJS.
 
 
 ## Hs API Explore
@@ -218,6 +228,7 @@ leader hA   - type-sig align entire buffer. or "viB<space>ha<c-o>"
 leader sb/n - break line at cursor, indent to cursor col
 \,l/}       - intent the line to the current cursor col
               TODO: use visual-sel to intent from a specific point of the line string. ~/.vim/plugin/utils-align.vim#/TODO.%20use%20visual-sel
+Note: the custom indentexpr that is used: ~/.vim/indent/purescript.vim#/setlocal%20indentexpr=GetHaskellIndent..
 
 ## Purs Browse Module
 
@@ -324,7 +335,8 @@ ga \raf     - highlight/search symbol, \r + range of the replace. leader-rb is a
 leader rb   - to rename a binding and its occurences
 
 # Vim
-MessagesShow - show past vim echoed text (show messages) in preview window
+leader Sm   - :MessagesShow - show past vim echoed text (show messages) in preview window
+            - output of any single command: RedirMessagesWin verb set comments?
 verb command Colo<c-n> - get a list of commands and where they are defined
 verb map Colo<c-n> - get a list of maps and where they are defined
 \sm        - set syntax markdown - see  ~/.vim/plugin/notes-workflow.vim#/Set%20Syntax.

@@ -131,7 +131,7 @@ nnoremap <leader>es :call Stubs_ExpandATypeSign()<cr>
 func! Stubs_ExpandATypeSign()
   let symbName = GetTopLevSymbolName( line('.') )
   let indentChars = repeat( ' ', col('.')-1)
-  let lineText = indentChars . symbName . ' :: a'
+  let lineText = indentChars . symbName . ' :: _'
   call append( line('.') -1, lineText )
   normal! k$lb
 endfunc
@@ -148,7 +148,7 @@ func! Stubs_ExpandTermLevelFromTypeSign()
   let argTypes = HsExtractArgTypesFromTypeSigStr( getline( line('.') ) )
   let argTypesStr = join( ArgTypesToSuggestedArgNames( argTypes ), ' ' )
   let indentChars = repeat( ' ', col('.')-1)
-  let lineText = indentChars . symbName . ' ' . argTypesStr . ' = undefined'
+  let lineText = indentChars . symbName . ' ' . argTypesStr . ' = u'
   call append( line('.'), lineText )
   normal! j$b
 endfunc
