@@ -690,7 +690,7 @@ nnoremap yoW :ToggleWhitespace<cr>
 " set formatoptions=tcqj
 
 " Settings in ftplugin:
-~/.vim/ftplugin/purescript.vim#/setlocal%20comments=s1fl.{-,mb.-,ex.-},.--%20commentstring=--\
+" ~/.vim/ftplugin/purescript.vim#/setlocal%20comments=s1fl.{-,mb.-,ex.-},.--%20commentstring=--\
 " setlocal comments=s1fl:{-,mb:-,ex:-},:-- commentstring=--\ %s
 " setlocal formatoptions-=t formatoptions+=croql
 
@@ -1860,8 +1860,11 @@ cmap <c-v> <plug>EasyClipCommandModePaste
 " Also use
 
 " This keeps the cursor at the position where the paste occured
-nmap p <Plug>G_EasyClipPasteAfter`[
-nmap P <Plug>G_EasyClipPasteBefore`[
+" nmap p <Plug>G_EasyClipPasteAfter`[
+" nmap P <Plug>G_EasyClipPasteBefore`[
+nmap p <Plug>G_EasyClipPasteUnformattedAfter`[
+nmap P <Plug>G_EasyClipPasteUnformattedBefore`[
+
 " Note: not sure what these do - the cursor pos is not maintained. now added "`[" which moves the cursor to the beginning
 xmap p <Plug>XEasyClipPaste`[
 xmap P <Plug>XEasyClipPaste`[

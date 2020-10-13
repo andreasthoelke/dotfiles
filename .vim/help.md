@@ -210,6 +210,7 @@ leader ll   - open Loclist
 Go (in LLi) - jump to line (but stay in LocList)
 c-m/i       - next/prev in QFL
 p           - does not work! .. could set up a split?
+censor/filter warnings:  ~/.vim/plugin/tools-langClientHIE-completion.vim#/\%20,%20'censorWarnings'.
 
 ## Align, Indent, format
 \,l/j/}     - intent range of lines to current cursor-column
@@ -242,7 +243,7 @@ leader leader sa 'StripAligningSpaces'<cr>
 leader leader hu 'HsUnicode'<cr>
 leader leader hU 'HsUnUnicode'<cr>
 
-## Motions
+# Motions
 g;          - to revert the InsertLeave jump
 gI^- <cr>   - to prefix the current line with a '- ' without moving the cursor
 leader j    - break line (with indention)
@@ -265,6 +266,7 @@ z] z[ zk    - beginning/end of current fold/prev fold
 ,j/k        - beginning of next/prev line
 ,J/K        - end/start of indent block
 g]/g[       - first/last char of prev yanked text
+\e          - move to the end of the previous word
 
 
 ## Actions Changes Edits

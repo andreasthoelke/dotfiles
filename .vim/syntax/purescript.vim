@@ -50,7 +50,7 @@ syn match purescriptIdentifierDot1 "\v\s\zs\w{-}\ze\.\w"
 " , content: RB.json <$> body
 " so resorting to a matchadd
 " TODO - does this actually work - as matchadd takes a highlight group!
-call matchadd('purescriptIdentifier', '\v\.\zs\w{-}\ze\_s', -1, -1 )
+" call matchadd('purescriptIdentifier', '\v\.\zs\w{-}\ze\_s', -1, -1 )
 "  "\_s" matches space OR newline!
 
 " Constructor:
@@ -251,22 +251,30 @@ func! HsConcealWithUnicode ()
         \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
         \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
         \, ['::',                '∷', 'hsTypeColon']
+        \, ['\$',                '⦙', 'hsTypeColon']
         \, ['forall\ze\s',       '∀', 'hsForall']
+        \, ['SProxy\ze\s',       '⨆', 'hsForall']
+        \, ['\s\zsUnit',         '◯', 'hsForall']
+        \, ['\s\zsunit',         '○', 'hsForall']
         \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
-        \, [' \zs\.',            '∘', 'Normal']
+        \, [' \zs\.\ze\_s',      '∘', 'Normal']
         \, ['<<<',      '∘', 'Normal']
         \, ['<\$>',          '⫩', 'Normal']
+        \, ['<\$\ze\_s',          '◁', 'Normal']
         \, ['<\#>',          '⧕', 'Normal']
         \, [' \zs<\*>',          '⟐', 'Normal']
         \, [' \zs>>',            '≫', 'Normal']
         \, ['>>=\ze\_s',           '⫦', 'Normal']
-        \, [' \zs=<<',           '⫣', 'Normal']
+        \, ['=<<',           '⫣', 'Normal']
         \, [' \zs-<',           '⩹', 'Normal']
         \, [' \zs\`flipElem\`',  '∋', 'Normal']
+        \, [' \zs\`traverse_\`',  '≚', 'Normal']
+        \, [' \zs\`traverse\`',  '≚', 'Normal']
         \, [' \zs<|>',           '‖', 'Normal']
         \, [' \zs>=>',           '↣', 'Normal']
         \, [' \zs<=<',           '↢', 'Normal']
         \, [' \zs<<<<\ze\s',      '…', 'Normal']
+        \, ['\.\.',               '‥', 'Normal']
         \, [' \zs==',            '≡', 'Normal']
         \, [' \zs/\\',            '|', 'Normal']
         \, ['==',            '≡', 'Normal']
@@ -280,6 +288,7 @@ func! HsConcealWithUnicode ()
         \, ['map\s',        'ꜛ', 'Normal']
         \, ['fmap\s',        'ꜛ', 'Normal']
         \, ['lift\s',        '˄', 'Normal']
+        \, ['void\s',        'ˍ', 'Normal']
         \, ['bool\ze\s',        '?', 'Normal']
         \, [' \zsempty',        '∅', 'Normal']
         \, [' \zs++',            '⧺', 'Normal']
@@ -296,6 +305,9 @@ func! HsConcealWithUnicode ()
         " \, [' \zs<<<\ze\s',      '∘', 'Normal']
 
   " https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
+" ◁ 
+" s ⦙ <- note that these fancy symbols can seemingly not be pasted into Vim from the website - so I open this file in
+" TextEdit and paste these symbols there
 
   for [pttn, concealUnicodeSym, syntaxGroup] in g:HsCharsToUnicode
     exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
@@ -360,6 +372,7 @@ call matchadd('purescriptStateKey', '\vH\.\zsmodify_\ze\_s', -1, -1 )
 " call matchadd('purescriptEvent', '\vE\zs\.on\ze\u\i', -1, -1 )
 " call matchadd('purescriptEvent', '\vHE\.\zeon', -1, -1 )
 call matchadd('purescriptEventKey', '\vE\.\zson\u\w{-}\ze\_s', -1, -1 )
+call matchadd('purescriptEventKey', '\v\W\zson\u\w{-}\ze\W', -1, -1 )
 " drop this as there are different ways to do CSS
 " call matchadd('purescriptClassesTW', '\vT\.\zs\w{-}\ze\W', -1, -1 )
 " call matchadd('purescriptClasses', '\vclasses', -1, -1 )

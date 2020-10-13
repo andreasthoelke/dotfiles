@@ -300,8 +300,8 @@ endfunction
 
 func! FloatingBuffer( filePath )
   let opts = { 'focusable': v:true,
-        \ 'width': 50,
-        \ 'height': 10,
+        \ 'width': 65,
+        \ 'height': 15,
         \ 'anchor': 'NW'
         \}
   let opts.relative = 'cursor'

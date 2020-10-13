@@ -143,6 +143,8 @@ leader ld :CocList diagnostics will show a fuzzy/fzf list
 in the line of the warning/error a gsi will refresh Coc-Diagnostic window
 `ged` does the same with language client - is a bit more consise
 
+censor/filter warnings:  ~/.vim/plugin/tools-langClientHIE-completion.vim#/\%20,%20'censorWarnings'.
+
 alternatively:
 :CocDiagnostics will show a quickfix list
 leader qq, then ]q[q ]Q[Q p to preview

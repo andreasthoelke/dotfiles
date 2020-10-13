@@ -13,8 +13,8 @@ let g:lens#disabled = 1
 let g:lens#disabled_filetypes = ['explorer', 'fzf']
 let g:lens#height_resize_min = 5
 let g:lens#height_resize_max = 12
-let g:lens#width_resize_min = 20
-let g:lens#width_resize_max = 90
+let g:lens#width_resize_min = 30
+let g:lens#width_resize_max = 100
 
 nnoremap <c-w>, :call lens#run()<cr>
 nnoremap ,<c-w>k <c-w>k:call lens#run()<cr>
@@ -126,7 +126,7 @@ xmap <leader>wp <Plug>(Visual-Split-VSSplitAbove)
 " Pin Haskell imports
 " nmap <leader>wI <leader>wpiI<c-o><c-w>k
 nmap <leader>wi <leader>wpiI<c-o>:call HsImportsJump( expand('<cword>') )<cr>
-nmap <leader>wI <leader>wpiI<c-o>:call HsImportsJump( "" )<cr>
+nmap <leader>wI <leader>wpiI<c-w>k
 
 func! HsImportsJump ( term )
   wincmd k

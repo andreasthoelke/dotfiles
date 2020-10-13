@@ -182,6 +182,7 @@ endfunc
 
 " ─^  TopLevel                                           ▲
 
+" Move to the end of the previous word
 nnoremap \e ge
 
 " ─   Imports                                            ■
