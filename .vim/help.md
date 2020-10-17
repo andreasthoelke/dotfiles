@@ -213,7 +213,7 @@ p           - does not work! .. could set up a split?
 censor/filter warnings:  ~/.vim/plugin/tools-langClientHIE-completion.vim#/\%20,%20'censorWarnings'.
 
 ## Align, Indent, format
-\,l/j/}     - intent range of lines to current cursor-column
+\,l/j/}     - indent range of lines to current cursor-column
 dw          - align/pull inwards to the cursorH the first char to the right
 `>ii`         - shift lines of indent block to the right
 ,a(motion)(sel) - run a multi-col align template on motion or vis sel

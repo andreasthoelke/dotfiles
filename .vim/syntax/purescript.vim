@@ -42,7 +42,12 @@ syn match hsTypeVarComment "\<[_a-z]\(\w\|\'\)*\>" contained
       \ containedin=hsFunctionDeclComment
 
 " Records:
-syn match purescriptRecordKeys "\v\s\zs\w{-}\ze\:\s"
+syn match purescriptRecordKeys "\v\W\w{-}\ze\:\s"
+syn match purescriptRecordKeys "\v\W\w{-}\ze\s\:\:\s"
+syn match purescriptRecordKeys "\v\{\w{-}\ze\s\=\s"
+syn match purescriptRecordKeys "\v\,\w{-}\ze\s\=\s"
+" TODO this does not match?!
+syn match purescriptRecordKeys "\v\w\.\zs\w{-}\ze\_s"
 syn match purescriptIdentifierDot1 "\v\s\zs\w{-}\ze\.\w"
 " highlight def link purescriptIdentifierDot1 purescriptIdentifier
 " syn match purescriptIdentifierDot2 "\v\.\zs\w{-}\ze\s"
@@ -242,6 +247,7 @@ syntax match concealedUndefinedType 'u:: forall a.' conceal
 
 
 " ─   Conceal with unicode                               ■
+        " \, ['forall\ze\s',       '∀', 'hsForall']
 
 func! HsConcealWithUnicode ()
 
@@ -251,9 +257,9 @@ func! HsConcealWithUnicode ()
         \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
         \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
         \, ['::',                '∷', 'hsTypeColon']
-        \, ['\$',                '⦙', 'hsTypeColon']
-        \, ['forall\ze\s',       '∀', 'hsForall']
-        \, ['SProxy\ze\s',       '⨆', 'hsForall']
+        \, ['\s\$',               '⦙', 'hsTypeColon']
+        \, ['\sforall.*\.\s',       ' ', 'hsForall']
+        \, ['SProxy\ze\s',       '⟟', 'hsForall']
         \, ['\s\zsUnit',         '◯', 'hsForall']
         \, ['\s\zsunit',         '○', 'hsForall']
         \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
@@ -261,6 +267,7 @@ func! HsConcealWithUnicode ()
         \, ['<<<',      '∘', 'Normal']
         \, ['<\$>',          '⫩', 'Normal']
         \, ['<\$\ze\_s',          '◁', 'Normal']
+        \, ['\s\zs\$>\ze\_s',     '▷', 'Normal']
         \, ['<\#>',          '⧕', 'Normal']
         \, [' \zs<\*>',          '⟐', 'Normal']
         \, [' \zs>>',            '≫', 'Normal']
@@ -283,18 +290,25 @@ func! HsConcealWithUnicode ()
         \, [' \zs<>',            '◇', 'Normal']
         \, ['<>',            '◇', 'Normal']
         \, ['mempty',        '∅', 'Normal']
+        \, ['pure\ze\s',        '⫐', 'Normal']
         \, ['subtract',        '-', 'Normal']
         \, ['flip\s',        '◖', 'Normal']
         \, ['map\s',        'ꜛ', 'Normal']
         \, ['fmap\s',        'ꜛ', 'Normal']
         \, ['lift\s',        '˄', 'Normal']
-        \, ['void\s',        'ˍ', 'Normal']
+        \, ['liftEffect',        '▫', 'Normal']
+        \, ['liftAff',        '•', 'Normal']
+        \, ['void',        'ˍ', 'Normal']
         \, ['bool\ze\s',        '?', 'Normal']
         \, [' \zsempty',        '∅', 'Normal']
         \, [' \zs++',            '⧺', 'Normal']
         \, ['<=\ze\s',            '≤', 'Normal']
         \, ['>=\ze ',            '≥', 'Normal']
         \, ['Integer',           'ℤ', 'hsInteger']
+        \, ['Array\s',           '⟦', 'hsInteger']
+        \, ['List\s',           '❲', 'hsInteger']
+        \, ['Boolean',           '∪', 'hsInteger']
+        \, ['Tuple',           '⋁', 'hsInteger']
         \]
 
   " \, [' \zs<|>',           '⦶', 'Normal']
@@ -304,8 +318,12 @@ func! HsConcealWithUnicode ()
   " \, [' \zs/\\',            '⨆', 'Normal']
         " \, [' \zs<<<\ze\s',      '∘', 'Normal']
 
+" https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode
+
   " https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
-" ◁ 
+" ◁ • ▵ ⌃ ˄ ⌤ ⌃ ^ ˆ ▴ ▴ ▵ ◭ △ ▵ ◬ ◿ ⧍ ˩ ┘ ┙˼ ⟟ ⎒ ⍑ ⍝ ⍡ ⁐ ⁍ ⁕ ⁎ • ▪ ▫ ᛫ ⍛ ▫
+" ⍨ ⎨⎭⎵⏠‣ ‥ 
+" ⨀ ⪽ ⟐ ⦷ ⦵ ⦿ ⧁ ⌀ ⌀ ⌓ ⌯ ⌔ ● ◊ ◇ ◆ ◁ ⭘ ⌸ 
 " s ⦙ <- note that these fancy symbols can seemingly not be pasted into Vim from the website - so I open this file in
 " TextEdit and paste these symbols there
 
@@ -373,6 +391,7 @@ call matchadd('purescriptStateKey', '\vH\.\zsmodify_\ze\_s', -1, -1 )
 " call matchadd('purescriptEvent', '\vHE\.\zeon', -1, -1 )
 call matchadd('purescriptEventKey', '\vE\.\zson\u\w{-}\ze\_s', -1, -1 )
 call matchadd('purescriptEventKey', '\v\W\zson\u\w{-}\ze\W', -1, -1 )
+call matchadd('purescriptEventKey', '\v\W\zson\u\w{-}\ze\_s', -1, -1 )
 " drop this as there are different ways to do CSS
 " call matchadd('purescriptClassesTW', '\vT\.\zs\w{-}\ze\W', -1, -1 )
 " call matchadd('purescriptClasses', '\vclasses', -1, -1 )
