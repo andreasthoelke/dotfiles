@@ -660,6 +660,8 @@ func! NodeJSRunFunction( fnName, arg )
   let jsFilePath = './output/' . GetModuleName() . '/index'
   let nodeCmd = 'require("' . jsFilePath . '").' . a:fnName . '(' . a:arg . ')'
   let l:cmd = 'node -e ' . shellescape( nodeCmd )
+  " nice test: measure the time the node app is running:
+  " let l:cmd = 'time node -e ' . shellescape( nodeCmd )
   " echoe l:cmd
   let l:resultLines = split( system( l:cmd ), '\n' )
   call HsShowLinesInFloatWin( l:resultLines )

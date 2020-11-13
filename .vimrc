@@ -109,11 +109,11 @@ Plug 'plexigras/promptline.vim'
 
 " Colorschemes: ------------------
 " Plug 'tomasr/molokai'
-Plug 'NLKNguyen/papercolor-theme'
+" Plug 'NLKNguyen/papercolor-theme'
 " Another colorscheme used (where?)
 " Plug 'dim13/smyck.vim'
-Plug 'yosiat/oceanic-next-vim'
-Plug 'cormacrelf/vim-colors-github'
+" Plug 'yosiat/oceanic-next-vim'
+" Plug 'cormacrelf/vim-colors-github'
 
 Plug 'chrisbra/Colorizer'
 Plug 'KabbAmine/vCoolor.vim'
@@ -635,7 +635,7 @@ endif
 highlight! TermCursorNC guibg=red guifg=white ctermbg=1 ctermfg=15
 
 
-
+let g:colorizer_use_virtual_text = 1
 
 " Style Colors: ----------------------------{{{
 " Change colors in the colorscheme: Open vimfiles/colors/molokai
@@ -1585,7 +1585,12 @@ nnoremap / :set hlsearch<cr>:noh<cr>/\v
 " Search visually selected text
 vnoremap // y/<C-R>"<CR>
 
-
+func! VimSearch( )
+  " exec 'set hlsearch'
+  " exec 'nohlsearch'
+  exec "normal /\v"
+endfunc
+" call VimSearch()
 
 " HOW TO SEARCH:
 
@@ -1616,13 +1621,13 @@ func! HiSearchCursorWord()
   set hlsearch
 endfunc
 
-" The Silver Searcher
-if executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-  " let g:ctrlp_use_caching = 0
-endif
-
+" " The Silver Searcher
+" if executable('ag')
+"   " Use ag over grep
+"   set grepprg=ag\ --nogroup\ --nocolor
+"   " let g:ctrlp_use_caching = 0
+" endif
+"
 " Color: ----------------------------------
 
 " Hex Color editor vCooler.vim
@@ -1716,7 +1721,7 @@ au ag User NeomakeJobFinished call QuickfixRefeshStyle()
 function! QuickfixRefeshStyle()
   if len( filter(getqflist(), 'v:val.type == "e"') ) > 0
     exec 'copen'
-    exec 'set syntax=purescript'
+    exec 'set syntax=purescript1'
     exec 'setlocal modifiable'
     " exec 'call PurescriptUnicode()'
     exec 'setlocal nomodifiable'

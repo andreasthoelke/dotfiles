@@ -119,6 +119,7 @@ let g:dirvish_mode = ':sort ,^.*[\/],'
 
 " let g:dirvish_relative_paths = 1
 
+
 augroup dirvish_config
   autocmd!
   " Map `t` to open in new tab.
@@ -132,10 +133,13 @@ augroup dirvish_config
   autocmd FileType dirvish nnoremap <silent><buffer> P :call PreviewFileInFloatWin( getline('.') )<cr>
   " Map `gh` to hide dot-prefixed files.  Press `R` to "toggle" (reload).
   autocmd FileType dirvish nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>
+  " autocmd FileType dirvish nmap <silent><buffer> / 
   " Todo: set a meaningful buffername to be seen in tabline
   " autocmd FileType dirvish exe "keepalt file" fnamemodify(bufname(), ':.')
 augroup END
 
+" TODO: i tried to overwrite dirvishes custom search mapping here. Instead i've now just commented
+" this out in the source here  ~/.vim/plugged/vim-dirvish/ftplugin/dirvish.vim#/if%20s.sep%20==
 
 " This can only show one char, no column space. the git plugin shows more styling
 " call dirvish#add_icon_fn({p -> p[-3:]=='.hs' ? "λ " : ''})

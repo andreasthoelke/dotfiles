@@ -251,7 +251,7 @@ endfunc
 
 func! s:formatBuffer()
   "Syntax
-  set syntax=purescript
+  set syntax=purescript1
   " Delete commented lines
   exec "g/--/d"
   " Put namespace in separate line. For all lines, line break after big-word (no trailing whitespace), comment the module line
@@ -270,7 +270,7 @@ func! HoogleFormatInfoOutput()
   normal! ddi-- 
   call append( 1, l:sig)
   normal! jo{-
-  set syntax=purescript
+  set syntax=purescript1
   normal gg
 endfunc
 

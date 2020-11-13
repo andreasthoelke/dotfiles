@@ -13,7 +13,7 @@
 
 " TODO invalid win ID error
 func! CocCustomFloatStyle()
-  call nvim_win_set_option( g:coc_last_float_win, 'syntax', 'purescript')
+  call nvim_win_set_option( g:coc_last_float_win, 'syntax', 'purescript1')
 endfunc
 
 
@@ -41,6 +41,7 @@ let testText1 = ["-- Partially applying a binary Type constructor (type level fu
 
 let g:floatWin_scratchBuf_Id = 0
 let g:floatWin_win = 0
+let g:floatWin_win_Pers = 0
 
 
 " let g:floatWin_scratchBuf_Id = nvim_create_buf( v:false, v:true )
@@ -106,7 +107,7 @@ func! FloatWin_ShowLines( linesToShow, ... )
   if !g:floatWin_scratchBuf_Id
     " unlisted-buffer & scratch-buffer (nobuflisted, buftype=nofile, bufhidden=hide, noswapfile)
     let g:floatWin_scratchBuf_Id = nvim_create_buf( v:false, v:true )
-    call nvim_buf_set_option( g:floatWin_scratchBuf_Id, 'syntax', 'purescript')
+    call nvim_buf_set_option( g:floatWin_scratchBuf_Id, 'syntax', 'purescript1')
   endif
 
   " Just push the text into the buffer:
@@ -278,6 +279,11 @@ endfunc
 
 " ─   More general Floating win                          ■
 
+" use this with marks jumps: e.g. gz'M
+nnoremap <silent> gz :call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/empty" )<cr>
+" nnoremap <silent> gZ :call FloatingBuffer(expand('%'))<cr>
+nnoremap <silent> gZ :call FloatingBuffer(expand('%'))<cr>
+
 scriptencoding utf-8
 
 " This function originates from https://www.reddit.com/r/neovim/comments/eq1xpt/how_open_help_in_floating_windows/; it isn't mine
@@ -309,7 +315,7 @@ func! FloatingBuffer( filePath )
   let opts.row = 1
 
   " let l:textbuf = nvim_create_buf(v:false, v:true)
-  let g:floatWin_win = nvim_open_win( bufnr(a:filePath, v:true), v:true, opts)
+  let g:floatWin_win_Pers = nvim_open_win( bufnr(a:filePath, v:true), v:true, opts)
   " let g:floatWin_win = nvim_open_win(l:textbuf, v:true, opts)
 endfunc
 " call FloatingBuffer( "/Users/andreas.thoelke/.vim/notes/links2" )

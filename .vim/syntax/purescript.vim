@@ -10,16 +10,19 @@ if exists("b:current_syntax")
 endif
 
 " Values:
-syn match purescriptIdentifier "\<[_a-z]\(\w\|\'\)*\>"
+" syn match purescriptIdentifier "\<[_a-z]\(\w\|\'\)*\>"
+syn match purescriptIdentifier "[_a-z]\(\w\|\'\)*"
+" issue: _2  and  (_+10) need to be highlighted as identifier and number
 syn match purescriptNumber "0[xX][0-9a-fA-F]\+\|0[oO][0-7]\|[0-9]\+"
+" syn match purescriptNumber "\<[0-9]\+\>\|\<0[xX][0-9a-fA-F]\+\>\|\<0[oO][0-7]\+\>\|\<0[bB][10]\+\>"
 syn match purescriptFloat "[0-9]\+\.[0-9]\+\([eE][-+]\=[0-9]\+\)\="
 syn keyword purescriptBoolean true false
-" syn keyword purescriptState state
+syn keyword purescriptState state
 
 " syn match purescriptStateKey "\vstate\.\zs\w{-}\ze\_s"
 " again, above line does not match - resorting to a matchadd
 " TODO this doesn't match either?!
-" call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze\_s', -1, -1 )
+call matchadd('purescriptStateKey', '\vstate\.\zs\w{-}\ze(\W|\_s)', -1, -1 )
 
 " Delimiters:
 syn match purescriptDelimiter "[,;|.()[\]{}]"
@@ -29,7 +32,7 @@ syn match purescriptDelimiter "[,;|.()[\]{}]"
 "   \ containedin=purescriptTypeAlias
 "   \ nextgroup=purescriptType,purescriptTypeVar skipwhite
 " Note: changed this! from the above
-syn match purescriptType "\<[_A-Z]\(\w\|\'\)*\>" contained
+syn match purescriptType "\<[_A-Z]\(\w\|\'\)*\>" contained contains=hsInteger
       \ containedin=purescriptData,purescriptNewtype,purescriptTypeAlias,purescriptFunctionDecl
 syn match purescriptTypeVar "\<[_a-z]\(\w\|\'\)*\>" contained
   \ containedin=purescriptClassDecl,purescriptData,purescriptNewtype,purescriptTypeAlias,purescriptFunctionDecl
@@ -43,12 +46,11 @@ syn match hsTypeVarComment "\<[_a-z]\(\w\|\'\)*\>" contained
 
 " Records:
 syn match purescriptRecordKeys "\v\W\w{-}\ze\:\s"
-syn match purescriptRecordKeys "\v\W\w{-}\ze\s\:\:\s"
-syn match purescriptRecordKeys "\v\{\w{-}\ze\s\=\s"
-syn match purescriptRecordKeys "\v\,\w{-}\ze\s\=\s"
+syn match purescriptRecordKeys "\v\W\zs\w{-}\ze\s\:\:\s" contains=hsForall
+" syn match purescriptRecordKeys "\v[{,].{-}\zs\w{-}\ze\s::"
 " TODO this does not match?!
-syn match purescriptRecordKeys "\v\w\.\zs\w{-}\ze\_s"
 syn match purescriptIdentifierDot1 "\v\s\zs\w{-}\ze\.\w"
+syn match purescriptLens1 "\v\s\zs_\w{-}\ze(\W|\_s)"
 " highlight def link purescriptIdentifierDot1 purescriptIdentifier
 " syn match purescriptIdentifierDot2 "\v\.\zs\w{-}\ze\s"
 " could not get the above line to match RB.[json] this code:
@@ -65,9 +67,11 @@ syn region purescriptConstructorDecl matchgroup=purescriptConstructor start="\<[
   \ contains=hsTypeColon,purescriptType,purescriptTypeVar,purescriptDelimiter,purescriptOperatorType,purescriptOperatorTypeSig,@purescriptComment
 
 
+
 " Function:
 " syn match purescriptFunction "\%(\<instance\s\+\|\<class\s\+\)\@18<!\<[_a-z]\(\w\|\'\)*\>" contained
-syn match purescriptFunction "\%(\<instance\s\+\|\<class\s\+\)\@18<!\<[_a-z]\k*'\?" contained
+" note: uncommented this! -> hsMainSig
+" syn match purescriptFunction "\%(\<instance\s\+\|\<class\s\+\)\@18<!\<[_a-z]\k*'\?" contained
 " syn match purescriptFunction "\<[_a-z]\(\w\|\'\)*\>" contained
 " syn match purescriptFunction "(\%(\<class\s\+\)\@18<!\(\W\&[^(),\"]\)\+)" contained extend
 
@@ -126,6 +130,16 @@ syn match purescriptImportHiding "hiding"
 " ^\(\s*\)\(\(foreign\s\+import\)\_s\+\)\?\(\S\|\'\)*\_s\{-}\(::\|∷\)
 
 
+" syn match hsMainSig "^[_a-z]\(\w\|\'\)*\s\::\s" conceal containedin=purescriptFunction
+syn match hsMainSig "^[_a-z]\(\w\|\'\)*\s\::\s" conceal containedin=purescriptFunctionDeclStart
+syn match hsSubSig "^\s*\zs[_a-z]\(\w\|\'\)*\s\::\s" conceal containedin=purescriptFunctionDeclStart
+
+syn match hsForall "forall.*\w\.\s" conceal containedin=purescriptFunctionDeclStart
+
+" todo: this needs a negative lookaround(?) to avoid matching on aa f {a = 11}
+syn match hsTopLevelBind "\v^[_a-z](\w|\'){-}\ze\s.{-}\=\_s"
+syn match hsTopLevelBind "\v^\s*\zs[_a-z](\w|\'){-}\ze\s.{-}\=\_s"
+
 " Function declaration:
 syn region purescriptFunctionDecl
   \ excludenl start="^\z(\s*\)\(\(foreign\s\+import\)\_s\+\)\?\(\S\|\'\)*\_s\{-}\(::\|∷\)"
@@ -149,10 +163,11 @@ syn region hsFunctionDeclComment
       \ end="$"me=s-1,re=s-1 keepend contains=hsConstraintArrow,hsTypeColon,hsArrow,hsTypeVarComment,hsTypeComment
 
 " Keywords:
-syn keyword purescriptConditional if then else
-syn keyword purescriptStatement do case of in ado
-syn keyword purescriptLet let
-syn keyword purescriptWhere where
+" syn keyword purescriptConditional if iF then else
+" syn keyword purescriptConditional if iF
+" syn keyword purescriptStatement do in ado
+" syn keyword purescriptLet let
+" syn keyword purescriptWhere where
 syn match purescriptStructure "\<\(data\|newtype\|type\|kind\)\>"
   \ nextgroup=purescriptType skipwhite
 syn keyword purescriptStructure derive
@@ -160,7 +175,7 @@ syn keyword purescriptStructure instance
   \ nextgroup=purescriptFunction skipwhite
 
 " Highlight the FnWireframe navigation spots
-syn keyword fnWireframe where do let case if
+syn keyword fnWireframe where do let otherwise in
 " Infix
 syn match purescriptInfixKeyword "\<\(infix\|infixl\|infixr\)\>"
 syn match purescriptInfix "^\(infix\|infixl\|infixr\)\>\s\+\([0-9]\+\)\s\+\(type\s\+\)\?\(\S\+\)\s\+as\>"
@@ -168,7 +183,7 @@ syn match purescriptInfix "^\(infix\|infixl\|infixr\)\>\s\+\([0-9]\+\)\s\+\(type
   \ nextgroup=purescriptFunction,purescriptOperator,@purescriptComment
 
 " Operators:
-syn match purescriptOperator "\([-!#_$%&\*\+/<=>\?@\\^|~:]\|\<_\>\)"
+syn match purescriptOperator "\([-!#$%&\*\+/<=>\?@\\^|~:]\|\<_\>\)"
 syn match purescriptOperatorType "\%(\<instance\>.*\)\@40<!\(::\|∷\)"
   \ nextgroup=purescriptForall,purescriptType skipwhite skipnl skipempty
 syn match purescriptOperatorFunction "\(->\|<-\|[\\→←]\)"
@@ -220,6 +235,8 @@ syn match hsElemNot "notElem`" conceal cchar=∉ containedin=infixBacktick
 syn match infixBacktick "`[_A-Za-z][A-Za-z0-9_\.]*`" contains=infixBacktickTick,hsElem,hsElemNot,compForwBin
 " Note: it was important to have this encompassing match *after* the included matches!!
 
+
+        " \, ["^[_a-z]\(\w\|\'\)*\s\ze::",            '|', 'Normal']
 " Tests:
 " -- cbnb0 = `any` `eins` `elem` `test`
 " Previous implementation
@@ -228,7 +245,7 @@ syn match infixBacktick "`[_A-Za-z][A-Za-z0-9_\.]*`" contains=infixBacktickTick,
 
 
 " Comment:
-syn match purescriptLineComment "---*\([^-!#$%&\*\+./<=>\?@\\^|~].*\)\?$" contains=@Spell,concealedTLbindInComment,concealedCommentDashes,concealedTLbindTypeInComment,m4,mbr1
+syn match purescriptLineComment "---*\([^-!#$%&\*\+./<=>\?@\\^|~].*\)\?$" contains=@Spell,concealedTLbindInComment,concealedCommentDashes,concealedTLbindTypeInComment,m4,mbr1,hsArrow,hsTypeColon,Normal,hsConstraintArrow
 syn region purescriptBlockComment start="{-" end="-}" fold
   \ contains=purescriptBlockComment,@Spell
 syn cluster purescriptComment contains=purescriptLineComment,purescriptBlockComment,@Spell
@@ -257,9 +274,7 @@ func! HsConcealWithUnicode ()
         \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
         \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
         \, ['::',                '∷', 'hsTypeColon']
-        \, ['\s\$',               '⦙', 'hsTypeColon']
-        \, ['\sforall.*\.\s',       ' ', 'hsForall']
-        \, ['SProxy\ze\s',       '⟟', 'hsForall']
+        \, ['\$',               '⦙', 'hsTypeColon']
         \, ['\s\zsUnit',         '◯', 'hsForall']
         \, ['\s\zsunit',         '○', 'hsForall']
         \, ['\\\%([^\\]\+\)\@=', 'λ', 'Normal']
@@ -283,13 +298,11 @@ func! HsConcealWithUnicode ()
         \, [' \zs<<<<\ze\s',      '…', 'Normal']
         \, ['\.\.',               '‥', 'Normal']
         \, [' \zs==',            '≡', 'Normal']
-        \, [' \zs/\\',            '|', 'Normal']
         \, ['==',            '≡', 'Normal']
         \, ['/=',            '≠', 'Normal']
         \, ['/=\ze ',            '≠', 'Normal']
         \, [' \zs<>',            '◇', 'Normal']
         \, ['<>',            '◇', 'Normal']
-        \, ['mempty',        '∅', 'Normal']
         \, ['pure\ze\s',        '⫐', 'Normal']
         \, ['subtract',        '-', 'Normal']
         \, ['flip\s',        '◖', 'Normal']
@@ -298,17 +311,25 @@ func! HsConcealWithUnicode ()
         \, ['lift\s',        '˄', 'Normal']
         \, ['liftEffect',        '▫', 'Normal']
         \, ['liftAff',        '•', 'Normal']
-        \, ['void',        'ˍ', 'Normal']
+        \, ['void',        'ˍ', 'notInComment']
         \, ['bool\ze\s',        '?', 'Normal']
-        \, [' \zsempty',        '∅', 'Normal']
+        \, ['if\s',        '⊺', 'notInComment']
+        \, ['then\s',        '˼', 'notInComment']
+        \, ['else\s',        '˼', 'notInComment']
+        \, ['case\s',        '⌋', 'notInComment']
+        \, ['\sof\_s',        ' ', 'notInComment']
+        \, [' \zs\%[m]empty\ze(\W|\_s)',        '∅', 'notInComment']
         \, [' \zs++',            '⧺', 'Normal']
         \, ['<=\ze\s',            '≤', 'Normal']
         \, ['>=\ze ',            '≥', 'Normal']
+        \, ['SProxy',       '▯', 'hsForall']
+        \, ['SProxy :: SProxy',       '▯', 'hsForall']
         \, ['Integer',           'ℤ', 'hsInteger']
         \, ['Array\s',           '⟦', 'hsInteger']
         \, ['List\s',           '❲', 'hsInteger']
         \, ['Boolean',           '∪', 'hsInteger']
-        \, ['Tuple',           '⋁', 'hsInteger']
+        \, ['Tuple\s',           'T', 'hsInteger']
+        \, ['/\\',            '|', 'Normal']
         \]
 
   " \, [' \zs<|>',           '⦶', 'Normal']
@@ -321,9 +342,9 @@ func! HsConcealWithUnicode ()
 " https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode
 
   " https://unicode-table.com/en/blocks/miscellaneous-mathematical-symbols-b/
-" ◁ • ▵ ⌃ ˄ ⌤ ⌃ ^ ˆ ▴ ▴ ▵ ◭ △ ▵ ◬ ◿ ⧍ ˩ ┘ ┙˼ ⟟ ⎒ ⍑ ⍝ ⍡ ⁐ ⁍ ⁕ ⁎ • ▪ ▫ ᛫ ⍛ ▫
-" ⍨ ⎨⎭⎵⏠‣ ‥ 
-" ⨀ ⪽ ⟐ ⦷ ⦵ ⦿ ⧁ ⌀ ⌀ ⌓ ⌯ ⌔ ● ◊ ◇ ◆ ◁ ⭘ ⌸ 
+" ◁ • ▵ ⌃ ˄ ⌤ ⌃ ^ ˆ ▴ ▴ ▵ ◭ △ ▵ ◬ ◿ ⧍ ˩ ⌋ ⦙ ⫶ | ┘ ┙˼ ⟟ ⎒ ⍑ ⍝ ⍡ ⁐ ⁍ ⁕ ⁎ • ▪ ▫ ᛫ ⍛ ▫ ■▪▮▯▰▱▴◗◿
+" ⍨ ⎨⎭⎵⏠‣ ‥ ⬜ ⬚ ⭕ ⎧⍿⥰ ⌄ ⅀ ≀ ⋆ ⍿ ⊺
+" ⨀ ⪽ ⟐ ⦷ ⦵ ⦿ ⧁ ⌀ ⌀ ⌓ ⌯ ⌔ ● ◊ ◇ ◆ ◁ ⨞ ⭘ ⌸ ◫ ∧ ⋁ ⟑ ⨆
 " s ⦙ <- note that these fancy symbols can seemingly not be pasted into Vim from the website - so I open this file in
 " TextEdit and paste these symbols there
 
@@ -584,7 +605,9 @@ highlight def link purescriptFunction Function
 highlight def link purescriptType Type
 highlight def link purescriptComment Comment
 
-" has no effect!?
+
 " highlight def link hsArrow Comment
+" highlight! def link hsTopLevelBind Function
+" hi! hsTopLevelBind guibg=none guifg=#554B37
 
 let b:current_syntax = "purescript"

@@ -212,6 +212,7 @@ hi! purescriptIdentifier guifg=#BECACD "white-grey"
 "sort of nice soft yellow ..
 " hi! purescriptIdentifierDot1 guifg=#BECA00
 hi! purescriptIdentifierDot1 guifg=#8E989A
+hi! purescriptLens1 guifg=#6E7B84
 hi! purescriptRecordKeys guifg=#42727A
 hi! purescriptDelimiter guifg=#2D4F54
 " hi! purescriptOperator guifg=#32575E
@@ -222,7 +223,9 @@ hi! Operator guifg=#335A60
 
 
 " purescriptType > Type
-hi! Type guifg=#76E0D9 "middle blue"
+" hi! Type guifg=#76E0D9 "middle blue"
+" hi! Type guifg=#6DC2BC "middle blue"
+hi! Type guifg=#548F84
 " hi! hsTypeComment guifg=#45837F "Types in comments - toned down: brightness: 88 -> 51
 hi! link hsTypeComment Comment
 " hi! link hsForall Comment
@@ -239,8 +242,8 @@ hi! DataConstructor guifg=#983B4D "smoky topaz red"
 hi! purescriptConstructor guifg=#607062
 
 " purescipt Import section
-hi! def link purescriptModule Function
-hi! def link purescriptImport Function
+hi! def link purescriptModule Comment
+hi! def link purescriptImport Comment
 hi! def link purescriptImportParams Statement
 hi! def link purescriptImportAs Type
 " hi! def link purescriptRecordKeys Identifier
@@ -263,8 +266,10 @@ exec 'hi! String guifg=' . g:color_sacramento_green_brighter
 hi! Boolean guifg=#66A279
 hi! String guifg=#66A279
 
-hi! purescriptState guibg=black guifg=#554B37
-hi! purescriptStateKey guibg=none guifg=#80745D
+hi! hsTopLevelBind guifg=#459AB3 guibg=#0C0C0C
+
+hi! purescriptState guibg=#141414 guifg=#3A3935
+hi! purescriptStateKey guibg=none guifg=#807A6F
 " hi! purescriptEvent guibg=black guifg=#99714F
 hi! purescriptEventKey guibg=none guifg=#884137
 
@@ -300,7 +305,7 @@ exec 'hi! Delimiter guifg=' . g:color_ming_green
 " purescriptStatement (do and let) > Statement
 exec 'hi! Statement guifg=' . g:color_ming_green
 
-exec 'hi! fnWireframe guifg=' . g:color_ming_green . ' guibg=#000000'
+hi! fnWireframe guifg=#2B5766 guibg=#0C0C0C
 
 " purescriptConditional > Conditional
 exec 'hi! Conditional guifg=' . g:color_ming_green

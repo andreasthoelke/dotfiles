@@ -23,6 +23,10 @@ function! SyntaxStack()
   call append(line('.'),  l:synList )
 endfunc
 
+function! SynStack()
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+
 " STEP2A: If you want a color that is already present in the in the colorscheme
 " you can just find the name of the highlight group/id (see below)
 " Show the syntax group and the related active highlightgroup

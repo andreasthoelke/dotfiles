@@ -90,10 +90,10 @@ let g:typeSigBind = '^[^=(]*\zs' . MakeOrPttn( ['∷', '::'] )
 
 
 let g:nextWordPttn = '\_s\+\zs\S'
-let g:infixOps = ['<$>', '<\*>', '<\#>','\*>', '>>', '>>=', '++', '<>', '<|>', ':']
+let g:infixOps = ['<<<', '<$>', '<\*>', '<\#>','\*>', '=<<', '>>', '>>=', '++', '<>', '<|>', ':']
 let g:typeArgs = ['::', '∷', '=>', '⇒', '->', '→', '\.', '\~>']
-let g:columnSeps = ['::', '=', '->', '→', '<-', '←', '>', '$', '\<then', '\<else', 'deriving']
-let g:syntaxSym = ['<-', '←', '=', '\$', '`\w*`', '->', '→', '|', ',', '=' ]
+let g:columnSeps = ['::', '=', '->', '<-', '>', '$', '\<then', '\<else', 'deriving']
+let g:syntaxSym = ['<-', '=', '\$', '`\w*`', '->', '|', ',', '=' ]
 let g:syntaxWords = PrependSepWord( ['let', 'in', 'do', 'where', 'if', 'then', 'else', 'case', 'instance'] )
 let g:numOps   = ['+', '-', '\*', '&&']
 " let g:fnWirePttn = MakeOrPttn( AppendSpace( ['^[^ -][^=(]*\zs∷', '^[^ -][^=(]*\zs::', 'where', 'do', ' \zsin', '^[^-].*\zsof', 'then', 'let'] ) )
@@ -101,7 +101,7 @@ let g:fnWire1Pttns = NotInCommentLine( PrependSpace( AppendSpace( ['where', 'do'
 let g:fnWirePttn = MakeOrPttn( [g:topLevTypeSig . g:multilineTilAfterEqual] + g:fnWire1Pttns + ['.do\_s*\zs'] )
 " this pattern ('.do\_s*\zs') makes sure that "React.do" is included as a function ballpark
 " let g:rhsPttn = MakeOrPttn( ['→', '->', '←', '<-', '='] )
-let g:exprDelimPttn = MakeOrPttn( AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
+let g:exprDelimPttn = MakeOrPttn( ['(', '[', '{'] + AppendSpace(['\s\zs\.'] + g:infixOps + g:typeArgs + g:syntaxSym + g:syntaxWords + g:numOps) )
 " let g:exprDelimPttn = MakeOrPttn( AsSeparateWord(g:infixOps + g:typeArgs + g:syntax + g:numOps) )
 
 let g:columnSepsPttn = MakeOrPttn( AppendSpace( g:columnSeps ) )
@@ -857,7 +857,9 @@ func! ExprOuterStartForw() " ■
     " Forward and backward matches on the same line
     call setpos('.', [0, sLine, sColumn, 0] )
     " echo 'Delim motion to: ' . sLine . ' - ' . sColumn
-    normal! lW
+    if !CursorIsOnOpeningBracket() " If on opening bracket, make sure to jump into the bracket
+      normal! lW
+    endif
   elseif v:false
     " TODO temp disabled this to limit motion to line.
     " "Match found in a later line - move to the start of next line instead!
@@ -875,16 +877,16 @@ func! ExprOuterStartForw() " ■
       normal! W
     endif
     " The first char of a new line is not always a good landing place
-    if CursorOnSkipNextWordCharOrWord()
+    " if CursorOnSkipNextWordCharOrWord()
       " Just jump to the next word, which might be another undesirable word ..
-      normal! W
-    endif
+      " normal! W
+    " endif
   endif
 
   " Escape Again: Additional escapes from unwanted spots
-  if CursorOnSkipNextWordCharOrWord()
-    normal! W
-  endif
+  " if CursorOnSkipNextWordCharOrWord()
+  "   normal! W
+  " endif
   if IsEmptyLine( line('.') )
     call ExprOuterStartForw()
   endif
@@ -908,7 +910,7 @@ func! ExprOuterEndForw() " ■
 
   let [oLine, oCol] = getpos('.')[1:2]
   " When on bracket, jump to the end of the bracket
-  call FlipToPairChar('')
+  " call FlipToPairChar('')
   normal! e
 
   " Approach: Find expression delimiter on the same bracket level, skip matches in Strings
@@ -971,7 +973,9 @@ func! ExprOuterStartBackw() " ■
     " Match on the same line
     call setpos('.', [0, sLine, sCol, 0] )
     " echo 'Delim motion to: ' . sLine . ' - ' . sCol
-    normal! W
+    if !CursorIsOnOpeningBracket() " If on opening bracket, make sure to jump into the bracket
+      normal! W
+    endif
 
   elseif v:false
     " TODO temp disabled this to limit motion to line
@@ -1263,7 +1267,7 @@ func! ExprInnerStartForw()
   endif
 
   " When on bracket, jump to the end of the bracket
-  call FlipToPairChar('')
+  " call FlipToPairChar('')
   normal! W
   if IsEmptyLine( line('.') ) && line('.') != line('$')
     call ExprInnerStartForw()
@@ -1335,18 +1339,20 @@ func! ExprInnerStartBackw()
     normal! k$ll
   endif
 
-  " 
-  if IsColOfLastChar( col('.')-1 ) || CursorIsAtStartOfWord()
-    if ClosPairAtEndOfPrevWord()
-      call search('\S\(\s\|\n\)', 'b')
-      " flip to the start of the bracket. If on a quote, flip to a preceding quote mark
-      call FlipToPairChar('b')
-    else
-      call NormalMoveBack()
-    endif
-  else
-    call NormalMoveBack()
-  endif
+  " disabled bracket navigation as it is confusing
+  " if IsColOfLastChar( col('.')-1 ) || CursorIsAtStartOfWord()
+  "   if ClosPairAtEndOfPrevWord()
+  "     call search('\S\(\s\|\n\)', 'b')
+  "     " flip to the start of the bracket. If on a quote, flip to a preceding quote mark
+  "     call FlipToPairChar('b')
+  "   else
+  "     call NormalMoveBack()
+  "   endif
+  " else
+  "   call NormalMoveBack()
+  " endif
+
+  call NormalMoveBack()
 
   if IsEmptyLine( line('.') )
     call ExprInnerStartBackw()

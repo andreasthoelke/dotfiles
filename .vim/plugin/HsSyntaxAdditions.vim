@@ -92,7 +92,7 @@ func! HaskellSyntaxAdditions()
   set concealcursor=ni
   " Run this line to see the concealed text if curso is on line
   " set concealcursor=
-  set syntax=purescript
+  " set syntax=purescript
   " This will add one space before the foldmarker comment with doing "zfaf"
   set commentstring=\ --\ \%s
   " This refresh of the highlight is needed to have a black icon/indicator for a folded function, e.g the following line

@@ -122,6 +122,13 @@ fun! GrepSearch(selType, mode)
     exec 'Frepo "' . keyw . '"'
   endif
 endfun
+
+nnoremap gsR :call SearchRepo( GetInputStr('Search in repo: ') )<cr>
+
+fun! SearchRepo( keyw )
+  exec 'Frepo "' . a:keyw . '"'
+endfunc
+
 " Vim Grepper: ------------------------------
 
 
@@ -279,6 +286,7 @@ endfun
 
 
 
+" deprecated: use HsAPI-search-sites!
 command! -nargs=1 GithubSearch  :call GithubSearch(<args>)
 command! -nargs=1 SearchGithub  :call GithubSearch(<args>)
 
@@ -411,6 +419,10 @@ function! GetStringTillEndOfLine()
   return strpart( getline('.'), col('.') - 1 )
 endfunction
 
+nnoremap <leader>sb i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
+" nnoremap <leader>sn :echo col([line('.'),'$'])<CR>
+nnoremap <leader>sn i<CR><C-R>=repeat(' ',col([line('.')-1,'$'])-col('.'))<CR><Esc>l
+" Vim will insert a newline (<CR>) followed by a number of spaces (<C-R>=repeat(' ',...)) equal to the difference between the column number of the end of the previous line (col([line('.')-1,'$'])) and the current column number (col('.'))
 
 
 

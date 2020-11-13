@@ -102,12 +102,14 @@ gsd         - hoogle search word under cursor or vis-sel
 gsD <c-f>   - hoogle edit vis-sel or wuc: gsD then <c-f> .. <c-c><cr> (?)
 gsh         - search hoogle.org
 gse         - explore definition (haskell-code-explorer.com)
+gsR         - Grep search in the current repo! cursor-word editable.
 Fhask, Frepo - search local haskell code exampes: /6/HsTraining1/** 6/HsTrainingBook2/** ~/.vim/utils/utils-search.vim#/command.%20-nargs=1%20Fhask 
+            - use single quotes for :Frepo 'multiple words'
 }{          - jump files on search results
 Fdeleted    - deleted code in repo
 Lines, GFiles?, BCommits, Maps, Helptags
 gso, gsO    - to search on websites e.g. pursuit.org
-gsI         - :GithubSearch of word or visSel
+gsI         - (deprecated) :GithubSearch of word or visSel
 gsi         - show coc diagnostic info of cursor position (cursor needs to be on the error or info)
 
 ### Search in project folder
@@ -311,6 +313,7 @@ c-n/p       - next/prev mark
 o           - open mark at cursor
 c-x         - delete mark
 DelLocalMarks, DelGlobalMarks
+gz'M        - use empty floating win with marks jumps: e.g. gz'M
 
 ## Bookmarks Shortcuts
 ~/.vim/plugin/file-manage.vim#/Shortcuts%20to%20popular

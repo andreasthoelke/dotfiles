@@ -33,7 +33,7 @@ func! ActivateScratchWindow( bufferNameId )
   endif
   call MakeBufferDisposable()
   set filetype=purescript_scratch
-  set syntax=purescript
+  set syntax=purescript1
 endfunc
 " call ActivateScratchWindow('Test2')
 
@@ -58,7 +58,7 @@ func! ScratchWinNext_Show( linesToShow, resize )
   " exec ('belowright 5new Scratch' . g:ScratchBufferCounter)
   " call MakeBufferDisposable()
   set filetype=purescript_scratch
-  set syntax=purescript
+  set syntax=purescript1
   call append( line(1), a:linesToShow )
 
   if a:resize == 'auto'
