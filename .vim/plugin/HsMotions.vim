@@ -92,8 +92,8 @@ let g:typeSigBind = '^[^=(]*\zs' . MakeOrPttn( ['∷', '::'] )
 let g:nextWordPttn = '\_s\+\zs\S'
 let g:infixOps = ['<<<', '<$>', '<\*>', '<\#>','\*>', '=<<', '>>', '>>=', '++', '<>', '<|>', ':']
 let g:typeArgs = ['::', '∷', '=>', '⇒', '->', '→', '\.', '\~>']
-let g:columnSeps = ['::', '=', '->', '<-', '>', '$', '\<then', '\<else', 'deriving']
-let g:syntaxSym = ['<-', '=', '\$', '`\w*`', '->', '|', ',', '=' ]
+let g:columnSeps = ['::', '=', '->', '<-', '>', '$', '#', '\<then', '\<else', 'deriving']
+let g:syntaxSym = ['<-', '=', '\$', '\#', '`\w*`', '->', '|', ',', '=' ]
 let g:syntaxWords = PrependSepWord( ['let', 'in', 'do', 'where', 'if', 'then', 'else', 'case', 'instance'] )
 let g:numOps   = ['+', '-', '\*', '&&']
 " let g:fnWirePttn = MakeOrPttn( AppendSpace( ['^[^ -][^=(]*\zs∷', '^[^ -][^=(]*\zs::', 'where', 'do', ' \zsin', '^[^-].*\zsof', 'then', 'let'] ) )

@@ -51,7 +51,7 @@ hi Folded          guifg=#465457 guibg=#111111
 hi Identifier      guifg=#FD971F
 hi Ignore          guifg=#808080 guibg=bg
 hi IncSearch       guifg=#C4BE89 guibg=#000000
-hi Label           guifg=#E6DB74               gui=none
+hi Label           guifg=#3A768C               gui=none
 hi Macro           guifg=#C4BE89               gui=italic
 hi SpecialKey      guifg=#66D9EF               gui=italic
 
@@ -72,7 +72,7 @@ hi Question        guifg=#66D9EF
 hi Repeat          guifg=#F92672               gui=bold
 hi SpecialChar     guifg=#F92672               gui=bold
 hi SpecialComment  guifg=#7E8E91
-hi Special         guifg=#66D9EF guibg=bg      gui=italic
+hi Special         guifg=#2F646E guibg=bg      gui=italic
 if has("spell")
     hi SpellBad    guisp=#FF0000 gui=undercurl
     hi SpellCap    guisp=#7070F0 gui=undercurl
@@ -86,7 +86,8 @@ hi StatusLine guibg=#000000 gui=bold
 hi StatusLineNC guibg=#000000 gui=bold
 
 
-hi StorageClass    guifg=#FD971F               gui=italic
+" hi StorageClass    guifg=#FD971F               gui=italic
+hi StorageClass    guifg=#3A768C               gui=none
 hi Structure       guifg=#66D9EF
 hi Tag             guifg=#F92672               gui=italic
 " hi Title           guifg=#ef5939
@@ -116,7 +117,7 @@ hi Constant             cterm=none ctermbg=none ctermfg=12          gui=none    
 hi PreProc              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
 hi Type                 cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#72BCD6
 hi Statement            cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
-hi Special              cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#d7d7d7
+" hi Special              cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#d7d7d7
 hi String               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
 hi Number               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
 hi Underlined           cterm=none ctermbg=none ctermfg=5           gui=underline   guibg=#272727
@@ -267,6 +268,7 @@ hi! Boolean guifg=#66A279
 hi! String guifg=#66A279
 
 hi! hsTopLevelBind guifg=#459AB3 guibg=#0C0C0C
+hi! tsBind guifg=#459AB3
 
 hi! purescriptState guibg=#141414 guifg=#3A3935
 hi! purescriptStateKey guibg=none guifg=#807A6F
@@ -405,9 +407,14 @@ hi link QuickmenuNumber hsTypeComment
 " Vim Native HighlighGroups:
 " This is where to set the main background color
 " hi Normal          guifg=#F8F8F2 guibg=#1B1D1E
-hi Normal          guifg=#F8F8F2 guibg=#151719
+" hi Normal          guifg=#F8F8F2 guibg=#151719
+" hi Normal          guifg=#48636E guibg=#151719
+hi Normal          guifg=#3F5C66 guibg=#151719
+" I made the Normal color a 'default grey' - similar to how Comment was before
+" to distinguish I dimmed down the comment brightness
 
-hi Comment         guifg=#3D5862
+" hi Comment         guifg=#3D5862
+hi Comment         guifg=#344B53
 
 " Conceal: Leaving the default link to Operator currently
 " hi conceal         guifg=#BCBCBC guibg=none
@@ -515,16 +522,16 @@ hi! def link tsxTagName purescriptFunction
 " hi tsxComponentName guifg=#E06C75
 hi! def link tsxComponentName Identifier
 " hi tsxCloseComponentName guifg=#E06C75
-hi! def link tsxCloseComponentName Function
+" hi! def link tsxCloseComponentName Function
 " orange
 " hi tsxCloseString guifg=#F99575
 hi! def link tsxCloseString purescriptIdentifier
 
 " hi tsxCloseTag guifg=#F99575
-hi! def link tsxCloseTag Function
+" hi! def link tsxCloseTag Function
 
 " hi tsxCloseTagName guifg=#F99575
-hi! def link tsxCloseTagName purescriptFunction
+" hi! def link tsxCloseTagName purescriptFunction
 
 " hi tsxAttributeBraces guifg=#F99575
 hi! def link tsxAttributeBraces Conditional
@@ -540,7 +547,7 @@ hi! def link tsxAttrib Type
 hi tsxTypeBraces guifg=#999999
 " dark-grey
 hi tsxTypes guifg=#666666
-hi! foldBraces guifg=#666666
+" hi! foldBraces guifg=#666666
 
 " hi ReactState guifg=#000000
 hi! def link ReactState DataConstructor

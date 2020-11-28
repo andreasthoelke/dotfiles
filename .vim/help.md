@@ -169,7 +169,7 @@ leader fpc/C - :FilepathCopy[Abs]. also :PasteFilepath
 manual/low level:
   yy in Dirvish - copy the full file path
   navigate to the destination path in Dirvish then `glT` to open a terminal at that location
-  mv or cp then <c-[> to go to normal mode then `p` tp paste then insert and `.` to copy/move into current folder
+  mv or cp ("cp -r" to copy a folder) then <c-[> to go to normal mode then `p` to paste then insert and `.` to copy/move into current folder
 assisted:
   - put two dirvish folders side by side. use e.g. \T\v
   - the win/folderpath that has the cursor is the source (other on is the target of the move) (left/right does not matter)
@@ -350,7 +350,9 @@ c-g u      - will set an undo-mark
 leader cv  - clear virtual text
 leader cs  - clear signs column
 leader vo/O - open current file/PS folder in new vim instance
-
+~/.vim/plugin/syntax-color.vim#/STEP1.%20FIND%20THE
+  Find color: nnoremap <leader><leader>hsc :call SyntaxColor()<CR>
+  Find syntax: nnoremap <leader><leader>hhsg :call SyntaxStack()<CR>
 
 " Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
 

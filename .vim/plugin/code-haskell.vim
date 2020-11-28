@@ -272,5 +272,21 @@ fun! HaskellProjectName1()
   return fnamemodify('package.yaml', ':p:h:t')
 endfun
 
+function! GetImportedIdentifiers()
+  let words = []
+  for lineNum in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+    let line = getline( lineNum )
+    if ! line =~ 'Concur'
+      continue
+    endif
+    " get text within brackets
+    let firstWord  = get( split( getline( lineNum ) ), 0 )
+    let moduleName = get( split( getline( lineNum ) ), 1 )
+    if firstWord == "module"
+      break
+    endif
+  endfor
+  return moduleName
+endfun
 
 

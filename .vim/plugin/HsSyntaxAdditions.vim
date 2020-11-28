@@ -4,6 +4,7 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.js call HaskellSyntaxAdditions()
 
 " au ag BufNewFile,BufRead *.purs setfiletype purescript
 " this is now moved to ftdetect folder - not sure if this is needed
@@ -82,6 +83,11 @@ func! HaskellSyntaxAdditions()
   call matchadd('Conceal', '""', -1, -1, {'conceal': '∅'})
 
   call matchadd('purescriptColon', '\v\zs\:\ze\s', -1, -1 )
+
+  " syn match hsTopLevelBind '\v\w\s\zs\w{-}\ze\s.{-}\=\_s'
+  " With const!!!
+  " call matchadd('SpecialKey', '\w\s\zs\w{-}\ze\s.{-}\=\_s', -1, -1 )
+  " call clearmatches()
 
   " TODO this conflicts with `elem` and it unicode replacement
   " call matchadd('Conceal', '`', -1, -1, {'conceal': ''})

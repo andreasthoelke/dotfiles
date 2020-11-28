@@ -164,6 +164,7 @@ Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'mityu/vim-applescript'
 Plug 'vmchale/dhall-vim'
+Plug 'jparise/vim-graphql'
 " Flutter/Dart
 Plug 'dart-lang/dart-vim-plugin'
 " Does things like go to definition
@@ -694,6 +695,11 @@ nnoremap yoW :ToggleWhitespace<cr>
 " setlocal comments=s1fl:{-,mb:-,ex:-},:-- commentstring=--\ %s
 " setlocal formatoptions-=t formatoptions+=croql
 
+" With the curson no one side of a parentheses / bracket the matching side will be highlighted
+set matchpairs+=<:>
+" these are not needed!
+" packadd! matchit
+" let match_skip = "0"
 
 " Style Colors: ----------------------------
 
