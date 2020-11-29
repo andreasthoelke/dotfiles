@@ -4,7 +4,7 @@ au ag BufNewFile,BufRead,WinNew *.hs call HaskellSyntaxAdditions()
 au ag BufNewFile,BufRead        *.hs call HaskellMaps()
 
 au ag BufNewFile,BufRead,WinNew *.purs call HaskellSyntaxAdditions()
-au ag BufNewFile,BufRead,WinNew *.js call HaskellSyntaxAdditions()
+au ag BufNewFile,BufRead,WinNew *.js call JsSyntaxAdditions()
 
 " au ag BufNewFile,BufRead *.purs setfiletype purescript
 " this is now moved to ftdetect folder - not sure if this is needed
@@ -36,6 +36,12 @@ endfunc
 
 nnoremap <leader>cm :call clearmatches()<cr>
 
+func! JsSyntaxAdditions()
+  call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', '// ', -1, -1, {'conceal': ''})
+  call matchadd('Conceal', "'", -1, -1, {'conceal': ''})
+  set conceallevel=2
+endfunc
 
 " ─   Haskell                                           ──
 func! HaskellSyntaxAdditions()

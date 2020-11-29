@@ -4,6 +4,11 @@
 " Version: 0.1
 " Credits: Zhao Yi, Claudio Fleiner, Scott Shattuck, Jose Elera Campana
 
+
+" Also see vim-jsx-typescript:
+" ~/.vim/plugged/vim-jsx-typescript/after/syntax/tsx.vim#/syntax%20match%20tsxTypes
+
+
 if !exists("main_syntax")
   if version < 600
     syntax clear
@@ -43,6 +48,8 @@ if !exists("typescript_ignore_typescriptdoc")
 
 " This is custom
 syntax match tsBind '\v\s\zs\w{-}\ze\_s\='
+" syntax match tsRecordKeys '\v\s\zs\S\w{-}\ze\:'
+syntax match tsRecordKeys '\v\w{-}\ze\:'
 
 " syntax coloring for JSDoc comments (HTML)
 "unlet b:current_syntax
@@ -211,6 +218,31 @@ syn match typescriptParens "[()]"
 syn match typescriptEndColons "[;,]"
 syn match typescriptLogicSymbols "\(&&\)\|\(||\)\|\(!\)"
 syn match typescriptOpSymbols "=\{1,3}\|!==\|!=\|<\|>\|>=\|<=\|++\|+=\|--\|-="
+
+
+" ─   Conceal with unicode                               ■
+
+func! TsConcealWithUnicode ()
+
+  let g:TsCharsToUnicode = [
+        \  ['->',           '→', 'hsArrow']
+        \, ['\s\zs<-',           '←', 'hsArrowBackw']
+        \, ['===',            '≡', 'Normal']
+        \, ['\s\zs=>',           '⇒', 'hsConstraintArrow']
+        \, ['\s\zs<=',           '⇐', 'hsConstraintArrowBackw']
+        \]
+
+  for [pttn, concealUnicodeSym, syntaxGroup] in g:TsCharsToUnicode
+    exec 'syntax match ' . syntaxGroup .' "'. pttn .'" conceal cchar='. concealUnicodeSym
+  endfor
+
+endfunc
+
+call TsConcealWithUnicode()
+
+" call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
+
+syn keyword HooksKeywords useState usePreloadedQuery useFragment useEffect useMemo useCallback
 
 " typescriptFold Function {{{
 

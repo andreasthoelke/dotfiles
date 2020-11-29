@@ -516,6 +516,9 @@ hi Quote ctermbg=109 guifg=#83a598
 
 " ─   Typescript / React                                ──
 
+" hi! def link tsRecordKeys purescriptRecordKeys
+hi! tsRecordKeys guifg=#2C5B62
+
 " dark red
 " hi tsxTagName guifg=#E06C75
 hi! def link tsxTagName purescriptFunction
@@ -537,11 +540,13 @@ hi! def link tsxCloseString purescriptIdentifier
 hi! def link tsxAttributeBraces Conditional
 
 " hi tsxEqual guifg=#F99575
-hi! def link tsxEqual purescriptFunction
+hi! def link tsxEqual Keyword
 
 " yellow
 " hi tsxAttrib guifg=#F8BD7F cterm=italic
-hi! def link tsxAttrib Type
+hi! def link tsxAttrib purescriptRecordKeys
+" hi! def link tsxAttrib Type
+" hi tsxAttrib guifg=#006666
 
 " light-grey
 hi tsxTypeBraces guifg=#999999
@@ -558,8 +563,11 @@ hi! def link ReactProps DataConstructor
 hi ApolloGraphQL guifg=#CB886B
 hi Events ctermfg=204 guifg=#56B6C2
 hi ReduxKeywords ctermfg=204 guifg=#C678DD
-" hi ReduxHooksKeywords ctermfg=204 guifg=#C176A7
-hi! def link ReduxHooksKeywords DataConstructor
+" hi HooksKeywords ctermfg=204 guifg=#C176A7
+hi! def link HooksKeywords DataConstructor
+" hi! def link typescriptGlobalObjects purescriptConstructor
+hi! typescriptGlobalObjects guifg=#607062 gui=italic
+hi! typescriptGlobalNodeObjects guifg=#607062 gui=italic
 
 hi WebBrowser ctermfg=204 guifg=#56B6C2
 hi ReactLifeCycleMethods ctermfg=204 guifg=#D19A66
