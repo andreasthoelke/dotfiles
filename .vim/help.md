@@ -8,6 +8,7 @@ lead lg/lG  - go to definition/ in split
 lead lb     - show references of current symbol
 lead ls/S Ls - list symbols
 leader lk   - Symbol documentation
+leader hK   - coc showDocumentation
 leader la   - Code action → import symbol!
     all options:  ~/.vim/plugin/tools-langClientHIE-completion.vim#/nnoremap%20<leader>lm%20.call
 insert c-i  - show completions with type sig!
@@ -374,7 +375,7 @@ glt     - runs the current line text in a hidden terminal buffer. find it in buf
 gLt/T   - to prefill and edit line command string to running it in a hidden/visible term-buffer
 :Term! npm run serve - run command in terminal buffer. (!) optionally opens the buffer in a split.
 \n      - to leave terminal insert mode but stay in buffer. to e.g. scroll/copy text
-c-w     - cancels the terminal process and deletes the terminal buffer
+c-w-c   - cancels the terminal process and deletes the terminal buffer
           when in terminal insert mode, else just closes the window.
 
 

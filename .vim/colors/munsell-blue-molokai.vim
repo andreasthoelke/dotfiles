@@ -521,16 +521,21 @@ hi! tsRecordKeys guifg=#2C5B62
 
 " dark red
 " hi tsxTagName guifg=#E06C75
-hi! def link tsxTagName purescriptFunction
+hi! def link tsxTagName Function
 " hi tsxComponentName guifg=#E06C75
-hi! def link tsxComponentName Identifier
+hi! def link tsxComponentName Function
 " hi tsxCloseComponentName guifg=#E06C75
 " hi! def link tsxCloseComponentName Function
+hi tsxCloseComponentName guifg=#008EB8
 " orange
 " hi tsxCloseString guifg=#F99575
 hi! def link tsxCloseString purescriptIdentifier
 
 " hi tsxCloseTag guifg=#F99575
+" hi! def link tsxCloseTag Normal
+hi tsxCloseTagName guifg=#1C6277
+" orange
+
 " hi! def link tsxCloseTag Function
 
 " hi tsxCloseTagName guifg=#F99575
@@ -557,17 +562,21 @@ hi tsxTypes guifg=#666666
 " hi ReactState guifg=#000000
 hi! def link ReactState DataConstructor
 
-" hi ReactProps guifg=#D19A66
-hi! def link ReactProps DataConstructor
+hi ReactProps guifg=#607062 gui=italic
+" hi! def link ReactProps purescriptConstructor
 
 hi ApolloGraphQL guifg=#CB886B
 hi Events ctermfg=204 guifg=#56B6C2
 hi ReduxKeywords ctermfg=204 guifg=#C678DD
 " hi HooksKeywords ctermfg=204 guifg=#C176A7
-hi! def link HooksKeywords DataConstructor
+" hi! def link HooksKeywords DataConstructor
+hi! HooksKeywords guifg=#804D57
+hi! def link ReduxHooksKeywords HooksKeywords
 " hi! def link typescriptGlobalObjects purescriptConstructor
 hi! typescriptGlobalObjects guifg=#607062 gui=italic
 hi! typescriptGlobalNodeObjects guifg=#607062 gui=italic
+hi! def link graphqlType purescriptType
+hi! def link graphqlString purescriptLineComment
 
 hi WebBrowser ctermfg=204 guifg=#56B6C2
 hi ReactLifeCycleMethods ctermfg=204 guifg=#D19A66
