@@ -141,11 +141,14 @@ let g:vimmerps_config =
 " ghc-options: -fdefer-typed-holes -fwarn-incomplete-patterns -frefinement-level-hole-fits=1 -XPartialTypeSignatures
 " Also note ~/Documents/Haskell/6/HsTrainingTypeClasses1/.hlint.yaml#/#%20Ignore%20some
 
+autocmd BufReadPost *.kt setlocal filetype=kotlin
 
 " ─   Language Client HIE                                ■
 
 " let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper'] }
-let g:LanguageClient_serverCommands = { 'purescript': ['purescript-language-server', '--stdio', '--config', '{}'] }
+" let g:LanguageClient_serverCommands = { 'purescript': ['purescript-language-server', '--stdio', '--config', '{}'] }
+let g:LanguageClient_serverCommands = { 'kotlin': ["kotlin-language-server"] }
+
 " let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml', 'spago.dhall']
 
 let g:LanguageClient_autoStart = 1

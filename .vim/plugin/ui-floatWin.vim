@@ -237,7 +237,7 @@ func! FloatWin_close()
     let g:floatWin_win = 0
     let s:last_winargs = []
   endif
-  call coc#util#float_hide()
+  " call coc#util#float_hide()
 endfunc
 
 func! FloatWin_display_width(lines, max_width)
