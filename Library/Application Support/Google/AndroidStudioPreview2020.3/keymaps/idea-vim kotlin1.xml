@@ -1,0 +1,31 @@
+<keymap version="1" name="idea-vim kotlin1" parent="Mac OS X 10.5+">
+  <action id="Android.Designer.AddDeepLink" />
+  <action id="Android.Designer.NextDevice" />
+  <action id="CloseContent">
+    <keyboard-shortcut first-keystroke="meta w" />
+    <keyboard-shortcut first-keystroke="back_slash" second-keystroke="x" />
+  </action>
+  <action id="Debug" />
+  <action id="EditorRight">
+    <keyboard-shortcut first-keystroke="right" />
+  </action>
+  <action id="HippieBackwardCompletion" />
+  <action id="NextTab">
+    <keyboard-shortcut first-keystroke="shift meta close_bracket" />
+    <keyboard-shortcut first-keystroke="ctrl right" />
+    <keyboard-shortcut first-keystroke="ctrl f" />
+  </action>
+  <action id="PreviousTab">
+    <keyboard-shortcut first-keystroke="shift meta open_bracket" />
+    <keyboard-shortcut first-keystroke="ctrl left" />
+    <keyboard-shortcut first-keystroke="ctrl d" />
+  </action>
+  <action id="TodoViewGroupByFlattenPackage" />
+  <action id="UsageGrouping.DirectoryStructure" />
+  <action id="android.deploy.ApplyChanges">
+    <keyboard-shortcut first-keystroke="ctrl meta e" />
+  </action>
+  <action id="android.deploy.CodeSwap">
+    <keyboard-shortcut first-keystroke="shift ctrl meta e" />
+  </action>
+</keymap>
