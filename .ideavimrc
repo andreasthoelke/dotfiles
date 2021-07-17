@@ -1,0 +1,116 @@
+
+set NERDTree
+"set easymotion
+set surround
+set commentary
+set ideajoin
+" set ReplaceWithRegister
+" set argtextobj
+" set exchange
+
+" let mapleader= " "
+set ignorecase
+set smartcase
+set matchpairs
+
+"" -- Suggested options --
+" Show a few lines of context around the cursor. Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff=8
+
+" system clipboard
+vmap <leader>yiw "+yiw
+nmap <leader>yiw "+yiw
+vmap <leader>y "+y
+vmap <leader>d "_d
+nmap <leader>y "+yy
+nmap <leader>p "+p
+nmap <leader>P "+P
+vmap <leader>p "+p
+vmap <leader>P "+P
+
+" nmap <leader>ab :call search( '{\|\[\|(', 'nW' )<cr>
+nmap <leader>ab /{\|(<cr>:noh<cr>
+
+nnoremap g- :noh<cr>
+
+"" nnoremap <silent> ga viw:action Find<CR>
+
+
+" formatting
+nnoremap == :action ReformatCode <CR>
+vnoremap == :action ReformatCode <CR>
+
+" Do incremental searching.
+set hlsearch
+set incsearch
+
+" Don't use Ex mode, use Q for formatting.
+map Q gq
+nnoremap <C-j> jjj
+nnoremap <C-k> kkk
+nnoremap <c-y> 4<c-y>
+nnoremap <c-e> 4<c-e>
+
+" nnoremap \t. :t.<cr>
+nnoremap <c-h> k{w
+nnoremap <c-l> }w
+
+nnoremap <c-n> :action MethodDown <CR>
+nnoremap <c-p> :action MethodUp <CR>
+
+nnoremap I /{<cr>:noh<cr>w
+nnoremap Y ?{<cr>?{<cr>:noh<cr>w
+
+nnoremap gi /(<cr>:noh<cr>w
+nnoremap gy ?(<cr>?(<cr>:noh<cr>w
+
+nnoremap ]g :action GotoNextError <CR>
+nnoremap [g :action GotoPreviousError <CR>
+
+""" Common settings -------------------------
+" set showmode
+" set so=5
+set incsearch
+" set nu
+nnoremap ; :
+set ideastatusicon=gray
+
+nnoremap [<space> O<esc>j
+nnoremap ]<space> o<esc>k
+
+nnoremap <space>ot :NERDTreeFind<cr>
+nnoremap <space>oT :NERDTreeClose<cr>
+
+nnoremap <space>z :action ToggleDistractionFreeMode <cr>
+nnoremap ger :action Run <cr>
+nnoremap gsd :action GotoDeclaration <cr>
+
+" nnoremap <leader>> i <esc>
+nnoremap ,> i <esc>
+
+nnoremap <c-i> :action GotoPrevElementUnderCaretUsage <cr>
+nnoremap <c-m> :action GotoNextElementUnderCaretUsage <cr>
+
+noremap [[ :action EditorCodeBlockStart <cr>
+noremap ]] :action EditorCodeBlockEnd <cr>
+
+noremap g[ :action EditorCodeBlockStart <cr>
+noremap g] :action EditorCodeBlockEnd <cr>
+
+" nnoremap ger :ech 'hi'<cr>
+" ger get - run"
+
+"" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
+"" Map \r to the Reformat Code action
+"map \r <Action>(ReformatCode)
+
+"" Map <leader>d to start debug
+"map <leader>d <Action>(Debug)
+nnoremap n <Action>(FindNext)<CR>
+"" Map \b to toggle the breakpoint on the current line
+"map \b <Action>(ToggleLineBreakpoint)
+
+set ideastrictmode
+" Find more examples here: https://jb.gg/share-ideavimrc
+syClipPasteUnformattedBefore`[u]

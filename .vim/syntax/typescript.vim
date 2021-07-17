@@ -242,7 +242,7 @@ call TsConcealWithUnicode()
 
 " call matchadd('Conceal', '"', -1, -1, {'conceal': ''})
 
-syn keyword HooksKeywords useState usePreloadedQuery useFragment useEffect useMemo useCallback
+syn keyword HooksKeywords useState usePreloadedQuery useFragment useEffect useMemo useRef useCallback
 
 " typescriptFold Function {{{
 

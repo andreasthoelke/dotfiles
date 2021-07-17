@@ -165,6 +165,8 @@ Plug 'peitalin/vim-jsx-typescript'
 Plug 'mityu/vim-applescript'
 Plug 'vmchale/dhall-vim'
 Plug 'jparise/vim-graphql'
+Plug 'udalov/kotlin-vim'
+
 " Flutter/Dart
 Plug 'dart-lang/dart-vim-plugin'
 " Does things like go to definition
