@@ -1,26 +1,76 @@
 <keymap version="1" name="idea-vim kotlin1" parent="Mac OS X 10.5+">
+  <action id="ActivateAndroidEmulatorToolWindow">
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="e" />
+  </action>
   <action id="Android.Designer.AddDeepLink" />
   <action id="Android.Designer.NextDevice" />
-  <action id="CloseContent">
-    <keyboard-shortcut first-keystroke="meta w" />
-    <keyboard-shortcut first-keystroke="back_slash" second-keystroke="x" />
+  <action id="Android.RunLayoutInspector">
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="l" />
   </action>
+  <action id="ChangesView.ToggleCommitUi" />
+  <action id="CheckinProject" />
   <action id="Debug" />
+  <action id="Diff.ApplyLeftSide" />
   <action id="EditorRight">
     <keyboard-shortcut first-keystroke="right" />
   </action>
+  <action id="ExpressionTypeInfo" />
+  <action id="GoToTab1">
+    <keyboard-shortcut first-keystroke="ctrl meta 1" />
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="1" />
+  </action>
+  <action id="GoToTab2">
+    <keyboard-shortcut first-keystroke="ctrl meta 2" />
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="2" />
+  </action>
+  <action id="GoToTab3">
+    <keyboard-shortcut first-keystroke="ctrl meta 3" />
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="3" />
+  </action>
+  <action id="GoToTab4">
+    <keyboard-shortcut first-keystroke="ctrl meta 4" />
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="4" />
+  </action>
+  <action id="GoToTab5">
+    <keyboard-shortcut first-keystroke="ctrl meta 5" />
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="5" />
+  </action>
+  <action id="GotoChangedFile" />
+  <action id="GotoClass" />
   <action id="HippieBackwardCompletion" />
+  <action id="Images.Thumbnails.Hide">
+    <keyboard-shortcut first-keystroke="meta w" />
+  </action>
+  <action id="InsertLiveTemplate" />
+  <action id="NextEditorTab">
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="p" />
+  </action>
   <action id="NextTab">
     <keyboard-shortcut first-keystroke="shift meta close_bracket" />
     <keyboard-shortcut first-keystroke="ctrl right" />
     <keyboard-shortcut first-keystroke="ctrl f" />
+  </action>
+  <action id="PreviousEditorTab">
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="i" />
   </action>
   <action id="PreviousTab">
     <keyboard-shortcut first-keystroke="shift meta open_bracket" />
     <keyboard-shortcut first-keystroke="ctrl left" />
     <keyboard-shortcut first-keystroke="ctrl d" />
   </action>
+  <action id="ReopenClosedTab">
+    <keyboard-shortcut first-keystroke="meta o" second-keystroke="meta o" />
+  </action>
+  <action id="Terminal.ClearBuffer">
+    <keyboard-shortcut first-keystroke="meta l" />
+  </action>
   <action id="TodoViewGroupByFlattenPackage" />
+  <action id="Tree-selectNextSibling">
+    <keyboard-shortcut first-keystroke="meta j" />
+  </action>
+  <action id="Tree-selectPreviousSibling">
+    <keyboard-shortcut first-keystroke="meta k" />
+  </action>
   <action id="UsageGrouping.DirectoryStructure" />
   <action id="android.deploy.ApplyChanges">
     <keyboard-shortcut first-keystroke="ctrl meta e" />

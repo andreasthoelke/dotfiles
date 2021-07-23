@@ -1,4 +1,9 @@
 
+## Android Studio / Kotlin
+Path to Android Studio config files:
+~ Library / ApplicationSupport / Google / AndroidStudioPreview2020.3  git add colors/Munsell-blue\ Kotlin.icls -f                                        master
+
+
 ## Language client
 [g / ]g     - prev/next error/warning
 ged         - show diagnostic message in float-win (Lang client)
@@ -316,7 +321,7 @@ c-x         - delete mark
 DelLocalMarks, DelGlobalMarks
 gz'M        - use empty floating win with marks jumps: e.g. gz'M
 
-## Bookmarks Shortcuts
+## Bookmarks Shortcuts / Popular links
 ~/.vim/plugin/file-manage.vim#/Shortcuts%20to%20popular
 leader ou :tabe ~/.vim/utils
 leader or :vnew ~/.vim/plugin
@@ -355,6 +360,8 @@ leader vo/O - open current file/PS folder in new vim instance
   Find color: nnoremap <leader><leader>hsc :call SyntaxColor()<CR>
   Find syntax: nnoremap <leader><leader>hhsg :call SyntaxStack()<CR>
 
+Alacritty config file: .config/alacritty/alacritty.yml
+
 " Example of how to run a Python function:  ~/.vim/plugin/utils-stubs.vim#/Example%20of%20how
 
 ### Notes
@@ -368,6 +375,8 @@ leader ol   - open 'links' file in float-win, then glc to view in Chromium
 gk          - follow rel-link
 lead lg/lG  - go to definition/ in split
 gd ,gd     - go to definition /in split
+
+leader fpc - copy current file path
 
 ## Terminal
 glT     - open a new terminal buffer in project root (also works in dirvish)

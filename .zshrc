@@ -83,6 +83,7 @@ export KITTY_CONFIG_DIRECTORY="/Users/andreas.thoelke/.config/kitty"
 export SPOTIFY_API_KEY="BQBS1cU_h47_9uAAWwDS2ZYgttFF7tcqmWv4LPfZ"
 
 alias alacritty="open -n '/Users/andreas.thoelke/Documents/temp/alacritty/target/release/osx/Alacritty.app/'"
+# Alacritty config file: .config/alacritty/alacritty.yml
 
 alias npmpath='/Users/andreas.thoelke/.npm/bin'
 alias npmp='/Users/andreas.thoelke/.npm/bin'

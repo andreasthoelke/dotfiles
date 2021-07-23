@@ -4,14 +4,32 @@ set NERDTree
 set surround
 set commentary
 set ideajoin
-" set ReplaceWithRegister
+set ReplaceWithRegister
+nmap S <Plug>ReplaceWithRegisterOperator
 " set argtextobj
 " set exchange
+" Plug 'machakann/vim-highlightedyank'
+set highlightedyank
+
+" argument text objects: aa, ia
+set argtextobj
+" gcc, gc + motion, v_gc
+set commentary
+" cx{motion} to select, again to exchange
+set exchange
+set highlightedyank
+" ys, cs, ds, S
+" set surround
+" [count]["x]gr{motion}, [count]["x]grr, {Visual}["x]gr
+set ReplaceWithRegister
+" entire buffer text object: ae
+set textobj-entire
 
 " let mapleader= " "
 set ignorecase
 set smartcase
 set matchpairs
+set ideamarks
 
 "" -- Suggested options --
 " Show a few lines of context around the cursor. Note that this makes the
@@ -29,10 +47,11 @@ nmap <leader>P "+P
 vmap <leader>p "+p
 vmap <leader>P "+P
 
-" nmap <leader>ab :call search( '{\|\[\|(', 'nW' )<cr>
-nmap <leader>ab /{\|(<cr>:noh<cr>
+nnoremap <space>ab :echo 'hi'<cr>
 
 nnoremap g- :noh<cr>
+
+nnoremap d \"_d
 
 "" nnoremap <silent> ga viw:action Find<CR>
 
@@ -41,8 +60,14 @@ nnoremap g- :noh<cr>
 nnoremap == :action ReformatCode <CR>
 vnoremap == :action ReformatCode <CR>
 
+nnoremap <BS> J
+" AutoIndentLines
+
+nnoremap gw :action ExpressionTypeInfo <cr> 
+nnoremap gsk :action QuickJavaDoc <cr> 
+
 " Do incremental searching.
-set hlsearch
+" set hlsearch
 set incsearch
 
 " Don't use Ex mode, use Q for formatting.
@@ -52,51 +77,126 @@ nnoremap <C-k> kkk
 nnoremap <c-y> 4<c-y>
 nnoremap <c-e> 4<c-e>
 
-" nnoremap \t. :t.<cr>
+
+" changelist back = g,
+
+nnoremap \t. :t.<cr>
+
+" ----------------- Code navigation -----------------
+" actually 'gd' is predefined
+nnoremap gsd :action GotoDeclaration <cr>
+
 nnoremap <c-h> k{w
 nnoremap <c-l> }w
 
 nnoremap <c-n> :action MethodDown <CR>
 nnoremap <c-p> :action MethodUp <CR>
 
-nnoremap I /{<cr>:noh<cr>w
-nnoremap Y ?{<cr>?{<cr>:noh<cr>w
+noremap I /{<cr>:noh<cr>w
+noremap Y ?{<cr>?{<cr>:noh<cr>w
 
 nnoremap gi /(<cr>:noh<cr>w
 nnoremap gy ?(<cr>?(<cr>:noh<cr>w
 
-nnoremap ]g :action GotoNextError <CR>
-nnoremap [g :action GotoPreviousError <CR>
+nnoremap g, /,<cr>:noh<cr>w
+nnoremap t /,<cr>:noh<cr>w
+nnoremap g< ?<<cr>?(<cr>:noh<cr>w
+nnoremap T ?<<cr>?(<cr>:noh<cr>w
+
+" go to start/end of parentheses.
+" TODO: using /\v this also works with regex or search! \{|\[
+nnoremap ]t /)<cr>:noh<cr>
+nnoremap [t ?(<cr>:noh<cr>
+
+" break code line at cursor pos
+nnoremap <space>j i<cr><c-[>l
+" push code to the right
+noremap \> i <esc>
+
+" go prev/next highlighted symbol
+nnoremap <c-i> :action GotoPrevElementUnderCaretUsage <cr>
+nnoremap <c-m> :action GotoNextElementUnderCaretUsage <cr>
+
+" Move in 'camel humps' words
+map ,e ]w
+map ,ge ]b
+map ,w :action EditorNextWordInDifferentHumpsMode <cr>
+map ,b :action EditorPreviousWordInDifferentHumpsMode <cr>
+
+" Code block start/end
+noremap [[ :action EditorCodeBlockStart <cr>
+noremap ]] :action EditorCodeBlockEnd <cr>
+noremap g[ :action EditorCodeBlockStart <cr>
+noremap g] :action EditorCodeBlockEnd <cr>
+
+" move lines up/down
+map ]e :action MoveLineDown <cr>
+map [e :action MoveLineUp <cr>
+
+" ----------------- Code navigation -----------------
+
+
 
 """ Common settings -------------------------
 " set showmode
 " set so=5
 set incsearch
+set noh
 " set nu
 nnoremap ; :
-set ideastatusicon=gray
 
 nnoremap [<space> O<esc>j
 nnoremap ]<space> o<esc>k
 
-nnoremap <space>ot :NERDTreeFind<cr>
-nnoremap <space>oT :NERDTreeClose<cr>
+
+nnoremap <space>gg :action EditorToggleShowGutterIcons <cr>
+
+" Tree-selectNext is mapped to j/k in main keymaps
+" this doesn't work should show warning message
+" nnoremap ged :action EditorShowGutterIconTooltip <cr>
+
+nnoremap <space><space>sv :action IdeaVim.ReloadVimRc.reload <cr>
+
 
 nnoremap <space>z :action ToggleDistractionFreeMode <cr>
+
 nnoremap ger :action Run <cr>
-nnoremap gsd :action GotoDeclaration <cr>
 
-" nnoremap <leader>> i <esc>
-nnoremap ,> i <esc>
 
-nnoremap <c-i> :action GotoPrevElementUnderCaretUsage <cr>
-nnoremap <c-m> :action GotoNextElementUnderCaretUsage <cr>
+" Files, bookmarks, actions
+noremap <space>om :action ShowBookmarks <cr>
+noremap <space>oa :action GotoAction <cr>
+noremap <space>of :action GotoFile <cr>
+noremap gp :action GotoFile <cr>
+nnoremap <space>on :NERDTreeFind<cr>
+nnoremap <space>oN :NERDTreeClose<cr>
+" Structure tool window / 'Tag' window in vim
+nnoremap <space>ot :action ActivateStructureToolWindow <cr>
+" <c-p/n> to navigate, <c-[> to jump to code while keeping structure open. use cmd-w to close.
 
-noremap [[ :action EditorCodeBlockStart <cr>
-noremap ]] :action EditorCodeBlockEnd <cr>
 
-noremap g[ :action EditorCodeBlockStart <cr>
-noremap g] :action EditorCodeBlockEnd <cr>
+
+" --------------- ERROR-LIST & WARNINGS --------------
+" show diagnostics list/ quicklist and move cursor to it. can be closed with
+nnoremap gsd :action ActivateProblemsViewToolWindow <cr>
+nnoremap gsi :action ShowErrorDescription <cr>
+" execute diagnostics/ code actions menu!
+nnoremap ged :action ShowIntentionActions <cr>
+" navigate warnings and errors
+nnoremap ]g :action GotoNextError <CR>
+nnoremap [g :action GotoPreviousError <CR>
+" nnoremap <space>ab :action QuickImplementations <cr> " not working?"
+nnoremap <space>lk :action QuickJavaDoc <cr>
+" --------------- ERROR-LIST & WARNINGS --------------
+
+" --------------- WINDOW ----------------------------
+nnoremap \x :action CloseContent <cr>
+
+nnoremap <space>ov :e ~/.ideavimrc<cr>
+
+
+" search in very magic mode (enabling easy regex)
+nnoremap / /\v
 
 " nnoremap ger :ech 'hi'<cr>
 " ger get - run"
@@ -114,3 +214,6 @@ nnoremap n <Action>(FindNext)<CR>
 set ideastrictmode
 " Find more examples here: https://jb.gg/share-ideavimrc
 syClipPasteUnformattedBefore`[u]
+
+" there is some other 'n' map, preventing the usual search-next/prev"
+unmap n

@@ -13,6 +13,8 @@ nnoremap <leader>oh :vnew ~/Documents/Haskell/6/<cr>
 nnoremap <leader>oH :tabe ~/Documents/Haskell/6/<cr>
 nnoremap <leader>op :vnew ~/Documents/PS/A/<cr>
 nnoremap <leader>oP :tabe ~/Documents/PS/A/<cr>
+nnoremap <leader>ok :vnew ~/Documents/MobileDev/JPCompose/<cr>
+nnoremap <leader>oK :tabe ~/Documents/MobileDev/JPCompose/<cr>
 
 nnoremap \v :exec "vnew " . expand('%:p:h')<cr>
 nnoremap \T :exec "tabe " . expand('%:p:h')<cr>
